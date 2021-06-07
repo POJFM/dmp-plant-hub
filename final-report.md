@@ -8,24 +8,43 @@
 
 ## Zadání v bodech: 
 
-- hardwarové řešení - stanovení cílů, volba hardware (řídící jednotka, senzory, akční členy) Vantuch 
+### Vantuch
+1. hardwarové řešení - stanovení cílů, volba hardware (řídící jednotka, senzory, akční členy) Vantuch 
 
-- návrh obvodu a plošného spoje Vantuch 
+2. návrh obvodu a plošného spoje Vantuch 
 
-- fyzická realizace Vantuch 
+3. fyzická realizace Vantuch 
 
-- naprogramování řídící jednotky Vantuch 
+4. naprogramování řídící jednotky Vantuch 
 
-- softwarové řešení - stanovení cílů, volba sw platformy a konkrétního software SIkora 
+### Sikora
 
-- konfigurace RPi jako webového serveru SIkora 
+5. softwarové řešení - stanovení cílů, volba sw platformy a konkrétního software SIkora 
 
-- vytvoření databáze SIkora 
+6. konfigurace RPi jako webového serveru SIkora 
 
-- vytvoření front end SIkora 
+7. vytvoření databáze SIkora 
 
-- vytvoření back end SIkora 
+8. vytvoření front end SIkora 
 
-- nastavení bezpečnosti SIkora 
+9. vytvoření back end SIkora 
 
-- ověření funkčnosti - společně 
+10. nastavení bezpečnosti SIkora 
+
+11. ověření funkčnosti - společně 
+
+## část maturitní práce Jakub Vantuch
+### 1.Hardwarové řešení
+#### Mé cíly
+- Mým cílem je vytvořit funkční zavlažovací systém ovládaný mikropočítačem RaspberryPi, s automatickým spouštěním na základě vlhkosti půdy.
+- Systém GardenBot dále získává informace o teplotě, vlhkosti a tlaku vzduchu a promítá je ve svém webovém rozhraní.
+- Jelikož voda časem z nádrže dojde systém GardenBot snímá stav hladiny vody v nádrži a včas upozorní, že je třeba doplnit vodu.
+
+#### Zvolený hardware
+- mikropočítač RaspberryPi 3
+- senzor teploty, vlhkosti a tlaku vzduchu DHT11
+- kapacitní čidlo pro měření vlhkosti půdy
+- senzor hladiny vody
+- Ponorné mini čerpadlo eses
+- tranzistor 2n2222
+- LED diody
