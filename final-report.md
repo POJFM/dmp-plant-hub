@@ -64,3 +64,18 @@
 - Toto čerpadlo se skládá z DC motoru na němž je upevněna centrifuga pro čerpání vody a vlastního pouzdra, z kterého vede otvor pro napojení odtokové hadičky.
 
 ### 2. Návrh obvodu a plošného spoje
+![alt text](./circuit.png)
+#### senzor teploty, vlhkosti DHT11
+- je zapojen do zdroje 5V a země a jeho signální pin je připojen k GPIO pinu 16.
+
+#### kapacitní čidlo pro měření vlhkosti půdy
+- je zapojeno do zdroje 5V a země a jeho signální pin je připojen k GPIO pinu 15.
+
+#### senzor hladiny vody
+- je zapojen do zdroje 3.3V a země a jeho signální pin je připojen k GPIO pinu 11.
+
+#### Ponorné mini čerpadlo eses
+- je zapojeno přes tranzistor do zdroje 5V a země. Jeho spuštění a vypnutí je ovládáno otevřením a zavřením tranzistoru, jehož báze je připojena na GPIO pin 12.
+
+#### LED dioda
+- je zapojena přes 1K ohmový rezistor do země a na GPIO pin 13. LED dioda slouží jako přídávná signalizace nízké hladiny vody v nádrži.
