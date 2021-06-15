@@ -55,8 +55,9 @@
 
   #### Kapacitní čidlo pro měření vlhkosti půdy
   - kapacitní čidlo se skládá ze dvou vodivých desek a převodníku. Čidlo funguje na způsob kapacitoru avšak jeho kapacita je ovlivněna vlhkostí, která ovlivňuje dielektrikum mezi dvouma deskama.
-  #### Senzor hladiny vody
-  - Senzor hladiny vody se skládá z několika otevřených konců obvodu a převodníku. Otevřené konce obvodu jsou ponořeny do vody, a voda, jakožto průměrný elektrický vodič, takhle uzavře obvod. Čím hlouběji otevřené konce ponoříme tím menší bude rezistivita.
+
+  #### Ultrasonický senzor
+  - Ultrasonický senzor vydává zvukové vlny na vysoké frekvenci, neslyšitelné pro lidské ucho. Poté čeká, až se zvuk odrazí zpět, a vypočítá vzdálenost na základě času měřeného od vysílání zvukové vlny k zpětnému příjmutí.
 
   - Všechny naměřené údaje jsou v převodníku daného senzoru přepočítány na jednotky dané veličiny a odeslány analogovým signálem do řídící jednotky.
 
@@ -67,26 +68,26 @@
 #### Zapojení
 ![alt text](./circuit.png)
   #### Senzor teploty a vlhkosti vzduchu DHT11
-  - je zapojen do zdroje 5V a země a jeho signální pin je připojen k GPIO pinu 16.
+  - je zapojen do zdroje 5V a země a jeho signální pin je připojen k pinu GPIO23.
 
   #### Kapacitní čidlo pro měření vlhkosti půdy
-  - je zapojeno do zdroje 5V a země a jeho signální pin je připojen k GPIO pinu 15.
+  - je zapojeno do zdroje 3.3V a země a jeho signální pin je připojen k pinu GPIO22.
 
-  #### Senzor hladiny vody
-  - je zapojen do zdroje 3.3V a země a jeho signální pin je připojen k GPIO pinu 11.
+  #### Ultrasonický senzor
+  - je zapojen do zdroje 5V a země a jeho piny jsou pomocí I2C sběrnice připojen k pinům GPIO2 a GPIO3.
 
   #### Ponorné mini čerpadlo eses
-  - je zapojeno přes tranzistor do zdroje 5V a země. Jeho spuštění a vypnutí je ovládáno otevřením a zavřením tranzistoru, jehož báze je připojena na GPIO pin 12.
+  - je zapojeno přes tranzistor do zdroje 5V a země. Jeho spuštění a vypnutí je ovládáno otevřením a zavřením tranzistoru, jehož báze je připojena k pinu GPIO18.
 
   #### LED dioda
-  - je zapojena přes 1K ohmový rezistor do země a na GPIO pin 13. LED dioda slouží jako přídávná signalizace nízké hladiny vody v nádrži.
+  - je zapojena přes 1K ohmový rezistor do země a na pin GPIO27. LED dioda slouží jako přídávná signalizace nízké hladiny vody v nádrži.
 
 #### Funkcionalita
   #### 1. Fáze inicializace
   - Půda musí být ze začátku suchá. Kapacitní čidlo pro měření vlhkosti půdy zastrčíme co nejhlouběji do půdy. RaspberryPi bude chvíli sbírat data a pak je zprůměruje do hodnoty, která bude sloužit jako limit pro spuštění čerpadla.
-  - Ve webovém rozhraní jde navíc ještě manuálně nastavit hranice teploty a vlhkosti vzduchu. Senzor teploty a vlhkosti vzduchu je v provozu hned po zapojení GardenBota, takže uvede momentální teplotu pro představu limitní hodnoty k nastavení.
-  - Nastavit se dá také množství vody, které bude přečerpáno při jednom spuštění a jaká je hranice pro přijatelnou výšku hladiny vody v nádrži. Pokud nejsou tyto hodnoty uvedeny čerpadlo bude vodu přečerpávat dokud se nezmění hodnota kapacitního čidla pro měření vlhkosti půdy a senzor hladiny vody použije výchozí nastavení.
+  - Ve webovém rozhraní jde navíc ještě manuálně nastavit hranice teploty a vlhkosti vzduchu pro spuštění čerpadla.
+  - Nastavit se dá také množství vody, které bude přečerpáno při jednom spuštění a jaká je hranice pro přijatelnou výšku hladiny vody v nádrži. Pokud nejsou tyto hodnoty uvedeny čerpadlo bude vodu přečerpávat dokud se nezmění hodnota kapacitního čidla pro měření vlhkosti půdy a ultrasonický senzor použije výchozí nastavení.
   #### 2. Fáze měření
   - Kapacitní čidlo pro měření vlhkosti půdy a senzor teploty a vlhkosti vzduchu průběžně posílají naměřená data do RaspberryPi, kde se ukládají do databáze. Jestliže naměřené hodnoty překročí limitní hodnoty RaspberryPi pošle signál pro otevření tranzistoru což spustí čerpadlo, které začne čerpat vodu. Voda se čerpá tak dlouho dokud kapacitní čidlo pro měření vlhkosti půdy nezmění svou hodnotu nebo dokud není vyčerpán limit vody na jedno spuštění.
   #### 3. Fáze kontroly
-  - Po ukončení přečerpávání se spustí senzor hladiny vody a změří výšku hladiny vody. Naměřená data poté odešlě do RaspberryPi kde se uloží do databáze. Pokud bude naměřená hodnota nižší než je limitní hodnota začne blikat LED dioda a RaspberryPi odešle upozornění o doplnění nádrže do webového rozhraní. Jakmile bude hladina doplněna signalizace se vypne.
+  - Po ukončení přečerpávání se spustí ultrasonický senzor a změří výšku hladiny vody. Naměřená data poté odešlě do RaspberryPi kde se uloží do databáze. Pokud bude naměřená hodnota nižší než je limitní hodnota začne blikat LED dioda a RaspberryPi odešle upozornění o doplnění nádrže do webového rozhraní. Jakmile bude hladina doplněna signalizace se vypne.
