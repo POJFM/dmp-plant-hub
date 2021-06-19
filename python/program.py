@@ -4,6 +4,7 @@ import spidev
 import Adafruit_DHT
 import time
 import array
+from termcolor import colored
 
 GPIO.setmode(GPIO.BCM)
 
@@ -16,8 +17,10 @@ PUMP = 18
 LED = 27
 
 # Web
-# pump flow => 0.6 l/min
-manualWaterOverdrawn, manualWaterLevel, manualTemp, manualHum
+manualWaterOverdrawn=0
+manualWaterLevel=0
+manualTemp=0
+manualHum=0
 initializationState=False # btn on web after init is completed
 
 # Code
@@ -26,6 +29,7 @@ initialization=False
 waterLevel=0 # on init measures 5 times, appends the values into an array and then averages the values into single value
 moistureLevel=0
 WaterOverdrawnLevel=0
+pumpFlow=0.6 # litr/min
 
 # Functions
 def waterLevelMeasure():
@@ -61,12 +65,16 @@ def moistureMeasure():
     spi. open (0, 1)
     answer = spi. xfer ([1, 128, 0])
     if 0 <= answer [1] <= 3:
-    value = 1023 - ((answer [1] * 256) + answer [2])
-    percentage value = ((value / max) * 100)
-    return percentage
+      value = 1023 - ((answer [1] * 256) + answer [2])
+
+    value = ((value / max) * 100)
+    return value
 
 def arithmeticMean(list):
     return sum(list) / len(list)
+
+def timeToOverdraw():
+    return manualWaterOverdrawn / pumpFlow
 
 # IO
 GPIO.setup(TRIG ,GPIO.OUT)
@@ -79,13 +87,14 @@ GPIO.setup(LED ,GPIO.OUT)
 GPIO.output(TRIG, False)
 
 # Initialization sequence
-print("Starting initialization sequence...")
+print(colored('Starting initialization sequence...', 'green'))
 time.sleep(2)
 
 # init measurement
 waterLevelAvg= []
 moistureAvg= []
 
+count=0
 while count < 5:
   waterLevelAvg.append(waterLevelMeasure())
   moistureAvg.append(moistureMeasure())
@@ -94,45 +103,45 @@ while count < 5:
 
 moistureLevel = arithmeticMean(moistureAvg)
 
-
-
 # wait for initializationState from web then get values
+printWait=True
+while initializationState:
+  if printWait:
+    print(colored('Waiting for initialization sequence to finish...', 'green'))
+    printWait = False
+  time.sleep(1)
 
+if bool(manualWaterLevel):
+  waterLevel = manualWaterLevel
+else:
+  waterLevel = arithmeticMean(waterLevelAvg) - 2
 
+if bool(manualWaterOverdrawn):
+  WaterOverdrawnLevel = manualWaterOverdrawn
 
-
-if initializationState = True:
-  if bool(manualWaterLevel):
-    waterLevel = manualWaterLevel
-  else:
-    waterLevel = arithmeticMean(waterLevelAvg) - 2
-
-  if bool(manualWaterOverdrawn):
-    WaterOverdrawnLevel = manualWaterOverdrawn
-
-  print(f"Water level is set to: {round(waterLevel, 2)}")
-  print(f"Measured moisture level: {round(moistureLevel, 2)}")
-  time.sleep(3)
-  initialization = True
-  print("GardenBot is coming to life...🥬🤖...")
+print(colored(f'Water level is set to: {round(waterLevel, 2)}', 'blue'))
+print(colored(f'Measured moisture level: {round(moistureLevel, 2)}', 'blue'))
+time.sleep(2)
+initialization = True
+print(colored('GardenBot is coming to life...🥬🤖...', 'green'))
+time.sleep(1)
 
 # Measurement sequence
 while initialization:
-  if waterLevelMeasure() < moistureLevel:
-    print("Soil is drying out, starting irrigation...")
-    # time passed from running pump will be represented as liters
-    tic = time.perf_counter()
-    while waterLevelMeasure() < moistureLevel or flowMeasure < WaterOverdrawnLevel:
-      toc = time.perf_counter()
-      GPIO.output(PUMP, True);
+  if moistureMeasure() < moistureLevel:
+    print(colored('Soil is drying out, starting irrigation...', 'green'))
     
+    # time passed from running pump will be represented as liters
+    flowMeasure=0
+    t0 = time.time()
+    while waterLevelMeasure() < moistureLevel or flowMeasure < timeToOverdraw():
+      t1 = time.time()
+      GPIO.output(PUMP, True);
+      flowMeasure = t1 - t0
 
-    # after pump stops run checking sequence
-
-
-    # Checking sequence
+    # after pump stops run Checking sequence
     if waterLevelMeasure() < waterLevel:
-      print("!Water tank limit level reached!")
+      print(colored('!Water tank limit level reached!', 'red'))
       while waterLevelMeasure() < waterLevel:
         GPIO.output(LED, True);
         time.sleep(0.5)
@@ -144,3 +153,8 @@ while initialization:
   else:
     GPIO.output(PUMP, False);
 
+  DHTMeasureValues = DHTMeasure()
+  print(colored(f'Temperature: {DHTMeasureValues[0]}', 'blue'))
+  print(colored(f'Humidity: {DHTMeasureValues[1]}', 'blue'))
+  print(colored(f'Soil moisture: {moistureMeasure()}', 'blue'))
+  time.sleep(1)

@@ -91,3 +91,8 @@
   - Kapacitní čidlo pro měření vlhkosti půdy a senzor teploty a vlhkosti vzduchu průběžně posílají naměřená data do RaspberryPi, kde se ukládají do databáze. Jestliže naměřené hodnoty překročí limitní hodnoty RaspberryPi pošle signál pro otevření tranzistoru což spustí čerpadlo, které začne čerpat vodu. Voda se čerpá tak dlouho dokud kapacitní čidlo pro měření vlhkosti půdy nezmění svou hodnotu nebo dokud není vyčerpán limit vody na jedno spuštění.
   #### 3. Fáze kontroly
   - Po ukončení přečerpávání se spustí ultrasonický senzor a změří výšku hladiny vody. Naměřená data poté odešlě do RaspberryPi kde se uloží do databáze. Pokud bude naměřená hodnota nižší než je limitní hodnota začne blikat LED dioda a RaspberryPi odešle upozornění o doplnění nádrže do webového rozhraní. Jakmile bude hladina doplněna signalizace se vypne.
+
+### 3. fyzická realizace
+
+### 4. naprogramování řídící jednotky
+- Řídící jednotku jsem naprogramoval ve vysokoúrovňovém skriptovacím programovacím jazyce python
