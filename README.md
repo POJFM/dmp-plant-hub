@@ -1,7 +1,5 @@
-# garden-bot
+# plant-hub
 dlouhodobka
-
-# !!!změna => místo water level senzoru ultrasonický senzor a potřebujem ADC převodník (MCP3008)
 
 # Bot
 - Rpi (Web server and controller)
