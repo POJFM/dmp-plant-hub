@@ -14,6 +14,7 @@ dlouhodobka
 - Next.js
 - React Admin
 - Dev deployment on Vercel
+- [UI and other graphics](https://www.figma.com/file/7gMKRPDOrkKOT5GKmOmfsu/PlantHub?node-id=0%3A1)
 
 # Sources
 - https://bastlirna.hwkitchen.cz/zavlazovaci-system-s-gprs-ovladanim/
