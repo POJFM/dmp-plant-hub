@@ -1,8 +1,8 @@
-# Projekt GardenBot
+# Projekt PlantHub
 
 ## Popis: Chytrá péče o vaše rostliny a monitorování jejich životních funkcí.
 
-## Doba trvání projektu: 1-1,5 roku.
+## Doba trvání práce na projektu: 1 - 1,5 roku
 
 ## Náklady na projekt:
 
