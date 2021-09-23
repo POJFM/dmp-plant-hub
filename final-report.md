@@ -4,38 +4,38 @@
 
 ## Autoři:		Filip Sikora, Jakub Vantuch 
 
-## Název:		GardenBot 
+## Název:		PlantHub
 
 ## Zadání v bodech: 
 
 ### Vantuch
-1. hardwarové řešení - stanovení cílů, volba hardware (řídící jednotka, senzory, akční členy)
+- hardwarové řešení - stanovení cílů, volba hardware (řídící jednotka, senzory, akční členy)
 
-2. návrh obvodu a plošného spoje
+- návrh obvodu a plošného spoje
 
-3. fyzická realizace
+- fyzická realizace
 
-4. naprogramování řídící jednotky
+- naprogramování řídící jednotky
 
 ### Sikora
 
-5. softwarové řešení - stanovení cílů, volba sw platformy a konkrétního software
+- softwarové řešení - stanovení cílů, volba sw platformy a konkrétního software
 
-6. konfigurace RPi jako webového serveru
+- konfigurace RPi jako webového serveru
 
-7. vytvoření databáze
+- vytvoření databáze
 
-8. vytvoření front end
+- vytvoření front end
 
-9. vytvoření back end
+- vytvoření back end
 
-10. nastavení bezpečnosti
+- nastavení bezpečnosti
 
 ### Společně
 
-11. interaktivní ovládání GardenBota z webového UI
+- interaktivní ovládání GardenBota z webového UI
 
-12. ověření funkčnosti
+- ověření funkčnosti
 
 ## 1. část maturitní práce - Jakub Vantuch
 #### Mé cíly
