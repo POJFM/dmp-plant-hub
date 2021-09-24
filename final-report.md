@@ -4,11 +4,12 @@
 
 ## Autoři:		Filip Sikora, Jakub Vantuch 
 
-## Název:		PlantHub
+## Název:	Automatický zavlažovací systém PlantHub
 
 ## Zadání v bodech: 
 
 ### Vantuch
+
 - hardwarové řešení - stanovení cílů, volba hardware (řídící jednotka, senzory, akční členy)
 
 - návrh obvodu a plošného spoje
@@ -16,6 +17,10 @@
 - fyzická realizace
 
 - naprogramování řídící jednotky
+
+- interaktivní ovládání PlanHubu z webového UI
+
+- Ověření funkčnosti
 
 ### Sikora
 
@@ -31,21 +36,19 @@
 
 - nastavení bezpečnosti
 
-### Společně
+- interaktivní ovládání PlanHubu z webového UI
 
-- interaktivní ovládání GardenBota z webového UI
-
-- ověření funkčnosti
+- Ověření funkčnosti
 
 ## 1. část maturitní práce - Jakub Vantuch
 #### Mé cíly
 - Mým cílem je vytvořit funkční zavlažovací systém ovládaný mikropočítačem RaspberryPi, s automatickým spouštěním na základě vlhkosti půdy.
-- Systém GardenBot dále získává informace o teplotě, vlhkosti a tlaku vzduchu a promítá je ve svém webovém rozhraní.
-- Jelikož voda časem z nádrže dojde systém GardenBot snímá stav hladiny vody v nádrži a včas upozorní, že je třeba doplnit vodu.
+- Systém PlantHub dále získává informace o teplotě, vlhkosti a tlaku vzduchu a promítá je ve svém webovém rozhraní.
+- Jelikož voda časem z nádrže dojde systém PlantHub snímá stav hladiny vody v nádrži a včas upozorní, že je třeba doplnit vodu.
 
 ### 1.Hardwarové řešení
 #### Mikropočítač RaspberryPi 3
-- RaspberryPi je jednodeskový mikropočítač s operačním systémem o velikosti platební karty. Neobsahuje displej ani úložiště pouze konektory USB, Ethernet, HDMI a konektor pro univerzální použití (GPIO). V projektu GardenBot představuje RaspberryPi hlavní řídící jednotku obvodu a zároveň webový server pro webové rozhraní. 
+- RaspberryPi je jednodeskový mikropočítač s operačním systémem o velikosti platební karty. Neobsahuje displej ani úložiště pouze konektory USB, Ethernet, HDMI a konektor pro univerzální použití (GPIO). V projektu PlantHub představuje RaspberryPi hlavní řídící jednotku obvodu a zároveň webový server pro webové rozhraní. 
 
 #### Senzory
   #### Senzor teploty a vlhkosti vzduchu DHT11 (Digital hum temp)
