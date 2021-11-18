@@ -1,0 +1,200 @@
+{
+	"cod": "200",
+	"message": 0,
+	"cnt": 5,
+	"list": [
+		{
+			"dt": 1636675200,
+			"main": {
+				"temp": 2.25,
+				"feels_like": 0.31,
+				"temp_min": 2.25,
+				"temp_max": 3.65,
+				"pressure": 1024,
+				"sea_level": 1024,
+				"grnd_level": 988,
+				"humidity": 100,
+				"temp_kf": -1.4
+			},
+			"weather": [
+				{
+					"id": 800,
+					"main": "Clear",
+					"description": "clear sky",
+					"icon": "01n"
+				}
+			],
+			"clouds": {
+				"all": 0
+			},
+			"wind": {
+				"speed": 1.88,
+				"deg": 206,
+				"gust": 2.22
+			},
+			"visibility": 10000,
+			"pop": 0,
+			"sys": {
+				"pod": "n"
+			},
+			"dt_txt": "2021-11-12 00:00:00"
+		},
+		{
+			"dt": 1636686000,
+			"main": {
+				"temp": 2.6,
+				"feels_like": 2.6,
+				"temp_min": 2.6,
+				"temp_max": 3.3,
+				"pressure": 1024,
+				"sea_level": 1024,
+				"grnd_level": 988,
+				"humidity": 93,
+				"temp_kf": -0.7
+			},
+			"weather": [
+				{
+					"id": 800,
+					"main": "Clear",
+					"description": "clear sky",
+					"icon": "01n"
+				}
+			],
+			"clouds": {
+				"all": 0
+			},
+			"wind": {
+				"speed": 1.19,
+				"deg": 211,
+				"gust": 1.22
+			},
+			"visibility": 10000,
+			"pop": 0,
+			"sys": {
+				"pod": "n"
+			},
+			"dt_txt": "2021-11-12 03:00:00"
+		},
+		{
+			"dt": 1636696800,
+			"main": {
+				"temp": 2.7,
+				"feels_like": 2.7,
+				"temp_min": 2.7,
+				"temp_max": 2.92,
+				"pressure": 1024,
+				"sea_level": 1024,
+				"grnd_level": 988,
+				"humidity": 88,
+				"temp_kf": -0.22
+			},
+			"weather": [
+				{
+					"id": 800,
+					"main": "Clear",
+					"description": "clear sky",
+					"icon": "01d"
+				}
+			],
+			"clouds": {
+				"all": 0
+			},
+			"wind": {
+				"speed": 0.29,
+				"deg": 190,
+				"gust": 0.58
+			},
+			"visibility": 10000,
+			"pop": 0,
+			"sys": {
+				"pod": "d"
+			},
+			"dt_txt": "2021-11-12 06:00:00"
+		},
+		{
+			"dt": 1636707600,
+			"main": {
+				"temp": 7.45,
+				"feels_like": 7.45,
+				"temp_min": 7.45,
+				"temp_max": 7.45,
+				"pressure": 1023,
+				"sea_level": 1023,
+				"grnd_level": 988,
+				"humidity": 65,
+				"temp_kf": 0
+			},
+			"weather": [
+				{
+					"id": 800,
+					"main": "Clear",
+					"description": "clear sky",
+					"icon": "01d"
+				}
+			],
+			"clouds": {
+				"all": 0
+			},
+			"wind": {
+				"speed": 0.58,
+				"deg": 54,
+				"gust": 0.81
+			},
+			"visibility": 10000,
+			"pop": 0,
+			"sys": {
+				"pod": "d"
+			},
+			"dt_txt": "2021-11-12 09:00:00"
+		},
+		{
+			"dt": 1636718400,
+			"main": {
+				"temp": 10.08,
+				"feels_like": 8.63,
+				"temp_min": 10.08,
+				"temp_max": 10.08,
+				"pressure": 1021,
+				"sea_level": 1021,
+				"grnd_level": 986,
+				"humidity": 57,
+				"temp_kf": 0
+			},
+			"weather": [
+				{
+					"id": 800,
+					"main": "Clear",
+					"description": "clear sky",
+					"icon": "01d"
+				}
+			],
+			"clouds": {
+				"all": 0
+			},
+			"wind": {
+				"speed": 1.26,
+				"deg": 31,
+				"gust": 1.22
+			},
+			"visibility": 10000,
+			"pop": 0,
+			"sys": {
+				"pod": "d"
+			},
+			"dt_txt": "2021-11-12 12:00:00"
+		}
+	],
+	"city": {
+		"id": 3076127,
+		"name": "Frýdek-Místek",
+		"coord": {
+			"lat": 49.6833,
+			"lon": 18.35
+		},
+		"country": "CZ",
+		"population": 59416,
+		"timezone": 3600,
+		"sunrise": 1636609917,
+		"sunset": 1636643366
+	}
+}

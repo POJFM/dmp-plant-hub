@@ -1,0 +1,13 @@
+overwrite: true
+schema: "https://serene-carlsbad-caverns-55233.herokuapp.com/graphql"
+#documents: "./src/**/*.ts"
+#documents: "./graphql/queries.graphql.ts"
+documents: "./src/graphql/test.ts"
+generates:
+  src/generated/graphql.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHooks: true

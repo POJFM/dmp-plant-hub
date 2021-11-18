@@ -1,0 +1,45 @@
+{
+  "name": "plant-hub-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:prod": "node src/index.ts",
+    "dev": "nodemon src/index.ts",
+    "test": "env-cmd ./config/test.env jest --watch --runInBand"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.5.0",
+    "@typescript-eslint/parser": "^4.5.0",
+    "apollo-server": "^2.9.6",
+    "apollo-server-express": "^2.9.16",
+    "bcryptjs": "^2.4.3",
+    "connect-session-sequelize": "^6.1.1",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.1.0",
+    "email-validator": "^2.0.4",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "graphql": "^14.5.8",
+    "graphql-resolvers": "^0.4.2",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
+    "moment": "^2.25.1",
+    "pg": "^7.17.1",
+    "sequelize": "^5.21.3",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-react": "^7.6.3",
+    "@types/node": "^16.11.7",
+    "faker": "^4.1.0",
+    "nodemon": "^2.0.3",
+    "prettier": "^2.4.1"
+  },
+  "author": "",
+  "license": "ISC"
+}
