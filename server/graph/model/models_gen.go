@@ -2,19 +2,18 @@
 
 package model
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+type Measurement struct {
+	Moisture       float64 `json:"moisture"`
+	Temperature    float64 `json:"temperature"`
+	Humidity       float64 `json:"humidity"`
+	WaterLevel     float64 `json:"waterLevel"`
+	WaterOverdrawn float64 `json:"waterOverdrawn"`
 }
 
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
-}
-
-type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+type NewMeasurement struct {
+	Moisture       float64 `json:"moisture"`
+	Temperature    float64 `json:"temperature"`
+	Humidity       float64 `json:"humidity"`
+	WaterLevel     float64 `json:"waterLevel"`
+	WaterOverdrawn float64 `json:"waterOverdrawn"`
 }

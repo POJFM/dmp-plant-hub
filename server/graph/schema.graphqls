@@ -1,28 +1,25 @@
-# GraphQL schema example
-#
-# https://gqlgen.com/getting-started/
-
-type Todo {
-  id: ID!
-  text: String!
-  done: Boolean!
-  user: User!
+type Measurement {
+    moisture: Float!
+    temperature: Float!
+    humidity: Float!
+    waterLevel: Float!
+    waterOverdrawn: Float!
 }
 
-type User {
-  id: ID!
-  name: String!
-}
-
+# TODO: vymyslet query pomoci timestamp range somehow
 type Query {
-  todos: [Todo!]!
+    measurement(id: ID!): Measurement!
+    measurements: [Measurement!]
 }
 
-input NewTodo {
-  text: String!
-  userId: String!
+input NewMeasurement {
+    moisture: Float!
+    temperature: Float!
+    humidity: Float!
+    waterLevel: Float!
+    waterOverdrawn: Float!
 }
 
 type Mutation {
-  createTodo(input: NewTodo!): Todo!
+    createMeasurement(input: NewMeasurement): Measurement!
 }
