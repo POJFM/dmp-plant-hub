@@ -1,31 +1,14 @@
 # plant-hub
-dlouhodobka
+Ultra advanced smart zavlažovací systém.
 
-# Bot
-- Rpi (Web server and controller)
-- Python
+# Server
+- chad GoLang + GraphQL stack
+- Postgres DB :5420
 
-# Web server
-- Node.js
-- Websocket
-- PostgreSQL
-
-# Web app
-- Next.js
-- React Admin
-- Dev deployment on Vercel
+# Web app (client)
+- React
 - [UI and other graphics](https://www.figma.com/file/7gMKRPDOrkKOT5GKmOmfsu/PlantHub?node-id=0%3A1)
 
-# Sources
-- https://bastlirna.hwkitchen.cz/zavlazovaci-system-s-gprs-ovladanim/
-- https://www.youtube.com/watch?v=QdHvS0D1zAI
-- https://www.youtube.com/watch?v=H35lb198IZQ
-- https://www.reichelt.com/magazin/en/sensor-database-on-the-raspberry-pi/
-- https://leanpub.com/RPiMRE/read
-- https://www.w3schools.com/nodejs/nodejs_raspberrypi_webserver_websocket.asp
-
-# Languages
-- Javascript
-- Typescript
-- Python
-- Shell script
+# TODO
+- [ ] port na golang serveru :5000
+- [ ] podle public ip zjistit GPS souřadnice pro weather API
