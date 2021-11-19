@@ -90,10 +90,10 @@ export const useStyles = makeStyles({
 		padding: '5px',
 	},
 	cardTwoLeft: {
-		marginRight: '-5px',
+		marginRight: '-6px',
 	},
 	cardTwoRight: {
-		marginLeft: '-5px',
+		marginLeft: '-6px',
 	},
 	cardRow: {
 		paddingTop: '5px',
@@ -150,4 +150,8 @@ export const useStyles = makeStyles({
 	refreshButtonHover: {
 		cursor: 'pointer'
 	},
+	icon: {
+		width: '50px',
+		maxHeight: '100%'
+	}
 })

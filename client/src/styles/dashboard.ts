@@ -13,5 +13,24 @@ export const useDashboardStyles = makeStyles({
 		display: 'flex',
 		'justify-content': 'right',
 		'align-items': 'right',
+	},
+	weatherForecastTimeWrapper: {
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	weatherForecastTime: {
+		fontSize: '1.6rem',
+	},
+	weatherForecastValue: {
+		fontSize: '0.9rem'
+	},
+	weatherForecastValueIcon: {
+		width: '25px',
+		maxHeight: '100%'
+	},
+	weatherForecastIcon: {
+		width: '75px',
+		maxHeight: '100%'
 	}
 })
