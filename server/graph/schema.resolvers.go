@@ -7,15 +7,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/model"
 )
 
-var db = database.Connect()
-
 func (r *mutationResolver) CreateMeasurement(ctx context.Context, input *model.NewMeasurement) (*model.Measurement, error) {
-	return db.Save(input, ctx), nil
+	return r.DB.Save(input, ctx), nil
 }
 
 func (r *queryResolver) Measurement(ctx context.Context, id string) (*model.Measurement, error) {
