@@ -7,16 +7,13 @@ import (
 
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
-
-	//"github.com/SPSOAFM-IT18/dmp-plant-hub/utils"
-
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
 )
 
-const defaultPort = "8080"
+const defaultPort = "5000"
 
 // Web
 // Objemový limit
