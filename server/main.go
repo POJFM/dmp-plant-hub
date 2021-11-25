@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -13,7 +14,7 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
 )
 
-const defaultPort = "8080"
+const defaultPort = "5000"
 
 func main() {
 	port := os.Getenv("PORT")
