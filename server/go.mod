@@ -4,6 +4,8 @@ go 1.17
 
 require (
 	github.com/99designs/gqlgen v0.14.0
+	github.com/d2r2/go-shell v0.0.0-20211022052110-f591c27e3e2e
+	github.com/davecgh/go-spew v1.1.1
 	github.com/uptrace/bun v1.0.17
 	github.com/uptrace/bun/dialect/pgdialect v1.0.17
 	github.com/uptrace/bun/driver/pgdriver v1.0.17

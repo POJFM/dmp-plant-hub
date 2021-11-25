@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
 	"log"
 	"net/http"
 	"os"
@@ -19,6 +20,9 @@ func main() {
 	if port == "" {
 		port = defaultPort
 	}
+
+	temp, hum := sensors.ReadDHT()
+	log.Printf("temp: %s, hum: %s", temp, hum)
 
 	var db = database.Connect()
 

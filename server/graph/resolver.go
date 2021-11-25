@@ -1,6 +1,8 @@
 package graph
 
-import "github.com/SPSOAFM-IT18/dmp-plant-hub/database"
+import (
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
+)
 
 // This file will not be regenerated automatically.
 //
