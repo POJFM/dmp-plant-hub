@@ -1,23 +1,19 @@
 import { useState } from 'react'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
-import { useStyles } from '../../styles/rootStyles'
 
 export default function SaveButton({ ...props }: any) {
-  const classes = useStyles()
-  const [buttonHover, setButtonHover] = useState(false)
+	const [buttonHover, setButtonHover] = useState(false)
 
-  return (
-    <div className={classes.buttonWrapper}>
-      <Card
-        className={`${classes.button} ${buttonHover && classes.buttonHover}`}
-        onMouseOver={() => setButtonHover(true)}
-        onMouseOut={() => setButtonHover(false)}
-      >
-        <CardContent>
-          <span className={classes.buttonText}>Uložit</span>
-        </CardContent>
-      </Card>
-    </div>
-  )
+	return (
+		<div className="button-wrapper">
+			<Card className="button hover:button">
+				<CardContent>
+					<div className="button hover:button-hover">
+						<span className="button-text">Uložit</span>
+					</div>
+				</CardContent>
+			</Card>
+		</div>
+	)
 }

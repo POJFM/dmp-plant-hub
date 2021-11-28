@@ -9,6 +9,7 @@
     "@pmmmwh/react-refresh-webpack-plugin": "0.4.3",
     "@reduxjs/toolkit": "^1.6.2",
     "@svgr/webpack": "5.5.0",
+    "@tailwindcss/postcss7-compat": "^2.2.17",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -27,7 +28,6 @@
     "babel-plugin-named-asset-import": "^0.3.7",
     "babel-preset-react-app": "^10.0.0",
     "bfj": "^7.0.2",
-    "bootstrap": "^5.1.3",
     "camelcase": "^6.1.0",
     "case-sensitive-paths-webpack-plugin": "2.3.0",
     "chart.js": "^3.6.0",
@@ -55,11 +55,12 @@
     "jest-circus": "26.6.0",
     "jest-resolve": "26.6.0",
     "jest-watch-typeahead": "0.6.1",
-    "mini-css-extract-plugin": "0.11.3",
+    "mini-css-extract-plugin": "^2.4.5",
     "optimize-css-assets-webpack-plugin": "5.0.4",
     "pnp-webpack-plugin": "1.6.4",
+    "postcss": "^8",
     "postcss-flexbugs-fixes": "4.2.1",
-    "postcss-loader": "3.0.0",
+    "postcss-loader": "^6.2.1",
     "postcss-normalize": "8.0.1",
     "postcss-preset-env": "6.7.0",
     "postcss-safe-parser": "5.0.2",
@@ -72,12 +73,15 @@
     "react-refresh": "^0.8.3",
     "react-router-dom": "^5.3.0",
     "react-scripts": "^4.0.3",
+    "react-scroll-wheel-handler": "^2.1.0",
     "redux": "^4.1.2",
     "resolve": "1.18.1",
     "resolve-url-loader": "^3.1.2",
     "sass-loader": "^10.0.5",
     "semver": "7.3.2",
     "style-loader": "1.3.0",
+    "tailwind": "^4.0.0",
+    "tailwindcss": "^2.2.19",
     "terser-webpack-plugin": "4.2.3",
     "ts-node": "^10.4.0",
     "ts-pnp": "1.2.0",
@@ -90,9 +94,12 @@
     "workbox-webpack-plugin": "5.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",                 
-    "build": "react-scripts build",                 
-    "test": "react-scripts test --env=jsdom",   
+    "start": "yarn watch:css && react-scripts start",
+    "build": "yarn build:css && react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "build:css": "postcss src/styles/tailwind.css -o src/styles/main.css",
+    "watch:css": "postcss src/styles/tailwind.css -o src/styles/main.css",
     "codegen": "graphql-codegen --config codegen.yml"
   },
   "eslintConfig": {
@@ -114,9 +121,10 @@
     ]
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.0",
     "concurrently": "^6.3.0",
     "nodemon": "^2.0.14",
-    "prettier": "^2.4.1"
+    "postcss-cli": "^9.0.2"
   },
   "jest": {
     "roots": [

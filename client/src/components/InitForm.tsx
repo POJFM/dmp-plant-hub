@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react'
-import { useStyles } from './../styles/rootStyles'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import TextInputField from './fields/TextInputField'
 import SaveButton from './buttons/SaveButton'
 
 export default function InitForm() {
-	const classes = useStyles()
-		const [currentMoistureLevel, setCurrentMoistureLevel] = useState(0)
+	const [currentMoistureLevel, setCurrentMoistureLevel] = useState(0)
 	const [currentWaterLevel, setCurrentWaterLevel] = useState(0)
 	const [currentWaterOverdrawnLevel, setCurrentWaterOverdrawnLevel] = useState(0)
 	const [currentLocation, setCurrentLocation] = useState(0)
@@ -25,34 +23,31 @@ export default function InitForm() {
 	}, [])
 
 	return (
-		<div className={classes.initForm}>
-			<Card className={`${classes.card} ${classes.initFormCard}`}>
+		<div className="init-form">
+			<Card className="card w-400px h-500px">
 				<CardContent>
-					<div className="row">
-						<div className="col">
-							<div className={`row ${classes.cardRow} ${classes.initFormCardRow} ${classes.initFormCardRowFirst}`}>
-								<TextInputField
-									key="moistureLevelLimit"
-									name="Vlhkostní limit (%)"
-									defaultValue={currentMoistureLevel}
-								/>
-							</div>
-							<div className={`row ${classes.cardRow} ${classes.initFormCardRow}`}>
-								<TextInputField key="waterLevelLimit" name="Limit hladiny vody (cm)" defaultValue={currentWaterLevel} />
-							</div>
-							<div className={`row ${classes.cardRow} ${classes.initFormCardRow}`}>
-								<TextInputField
-									key="waterOverdrawnLevelLimit"
-									name="Limit přečerpané vody (l)"
-									defaultValue={currentWaterOverdrawnLevel}
-								/>
-							</div>
-							<div className={`row ${classes.cardRow} ${classes.initFormCardRow}`}>
-								<TextInputField key="location" name="Lokace" defaultValue={currentLocation} />
-							</div>
-							<div className={`row ${classes.cardRow} ${classes.initFormCardRow}`}>
-								<SaveButton /* onClick={() => saveValues()} */ />
-							</div>
+					<div className="flex-col p-3">
+						<div className="flex-row flex-center p-1 pt-5px mt-2">
+							<span className="title-1">Inicializační sekvence</span>
+						</div>
+						<div className="flex-row p-1 pt-5px mt-2">
+							<TextInputField key="moistureLevelLimit" name="Vlhkostní limit (%)" defaultValue={currentMoistureLevel} />
+						</div>
+						<div className="flex-row p-1 pt-5px mt-2">
+							<TextInputField key="waterLevelLimit" name="Limit hladiny vody (cm)" defaultValue={currentWaterLevel} />
+						</div>
+						<div className="flex-row p-1 pt-5px mt-2">
+							<TextInputField
+								key="waterOverdrawnLevelLimit"
+								name="Limit přečerpané vody (l)"
+								defaultValue={currentWaterOverdrawnLevel}
+							/>
+						</div>
+						<div className="flex-row p-1 pt-5px mt-2">
+							<TextInputField key="location" name="Lokace" defaultValue={currentLocation} />
+						</div>
+						<div className="flex-row-reverse p-1 pt-5px mt-2">
+							<SaveButton /* onClick={() => saveValues()} */ />
 						</div>
 					</div>
 				</CardContent>

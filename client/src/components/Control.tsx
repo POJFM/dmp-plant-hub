@@ -1,31 +1,27 @@
 import { useEffect } from 'react'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
-import { useStyles } from './../styles/rootStyles'
-import { useControlStyles } from './../styles/control'
 
 export default function Control(props: any) {
-  const controlClasses = useControlStyles()
-  const classes = useStyles()
   useEffect(() => {
     document.title = 'Plant Hub | Control'
   }, [])
 
   return (
-    <div className="col control">
-      <Card className={classes.card}>
+    <div className="control">
+      <Card className="card">
         <CardContent>
-          <div className="row">
-            <div className="col">
-              <div className={`row ${classes.cardRow}`}>
-                <span>Manual irrigation</span>
+          <div className="flex-row">
+            <div className="flex-col">
+              <div className="flex-row pt-5px">
+                <span className="title-1">Manuální zavlažování</span>
               </div>
               {/* show only when manual irrigation is active */}
-              <div className={`row ${classes.cardRow}`}>
-                <span>Time passed: </span>
+              <div className="flex-row pt-5px">
+                <span>Uplynulo času: </span>
               </div>
-              <div className={`row ${classes.cardRow}`}>
-                <span>Water overdrown: </span>
+              <div className="flex-row pt-5px">
+                <span>Vody využito: </span>
               </div>
             </div>
           </div>

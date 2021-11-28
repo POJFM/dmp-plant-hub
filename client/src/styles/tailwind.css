@@ -1,0 +1,220 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates&display=swap');
+
+.root,
+#root,
+#docs-root {
+	--bg: #F5F5D1;
+	--green: #66BC3E;
+	--lightGreen: #7FD059;
+	--lighterGreen: #A2E782;
+	--darkGreen: #54A82D;
+	--white: #ffffff;
+	--transition: all .2s ease-in-out;
+}
+
+@layer utilities {
+	html, body {
+		padding: 0;
+		margin: 0;
+		font-family: 'Montserrat Alternates', sans-serif;
+		max-width: 100%;
+		overflow-x: hidden;
+		font-weight: 500;
+	}
+
+	[class*='flex-'] {
+		display: flex;
+	}
+
+	.flex-center {
+		justify-content: center;
+		align-items: center;
+	}
+
+	.init-form {
+		position: fixed;
+		top: 0;
+		left: 0;
+		background: rgba(0, 0, 0, 0.6);
+		z-index: 2;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.app {
+		background: var(--bg);
+	}
+
+	.sidebar {
+		height: 100vh;
+		background: var(--green);
+	}
+
+	.sidebar-row {
+		padding: 15px;
+		transition: var(--transition);
+	}
+
+	.sidebar-row-hover {
+		background: var(--lightGreen);
+		cursor: pointer;
+	}
+
+	.red {
+		color: red
+	}
+
+	.sidebar-row-active {
+		background: var(--lighterGreen);
+		cursor: pointer;
+	}
+
+	.sidebar-row-top {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.sidebar-title {
+		color: var(--white);
+		font-weight: 600;
+		font-size: 1.6em;
+	}
+
+	.sidebar-row-tf {
+		color: var(--white);
+		font-weight: 600;
+		transition: var(--transition);
+		display: flex;
+		align-items: center;
+		margin-left: 0.652rem;
+	}
+
+	.sidebar-row-tf-active {
+		color: var(--green);
+		font-weight: 600;
+		transition: var(--transition);
+		display: flex;
+		align-items: center;
+	}
+
+	.sidebar-text {
+		margin-left: '10px';
+	}
+
+	.card {
+		margin: 0.625rem;
+		margin-bottom: 0;
+		padding: 5px;
+	}
+
+	.card-left {
+		margin: 0.625rem 0.312rem 0 0.625rem;
+		padding: 5px;
+	}
+
+	.card-right {
+		margin: 0.625rem 0.625rem 0 0.312rem;
+		padding: 5px;
+	}
+
+	.title-1 {
+		font-size: 1.5em;
+		font-weight: 600;
+	}
+
+	.title-2 {
+		font-size: 1.1em;
+	}
+
+	.refresh-button-wrapper {
+		position: relative;
+	}
+
+	.refresh-button {
+		float: right;
+		display: flex;
+		justify-content: right;
+		align-items: right;
+	}
+
+	.input-field {
+		border-bottom: 1px solid var(--darkGreen);
+		padding: 0 10px;
+		position: relative;
+	}
+
+	.input-field-editable {
+		border-bottom: 1px solid var(--darkGreen);
+		padding: 0 10px;
+		position: relative;
+	}
+
+	.input-field-label {
+		color: var(--darkGreen);
+		font-size: 0.8em;
+		position: absolute;
+	}
+
+	.input-field-input {
+		border: none;
+		font-size: 1.2em;
+		outline: 0;
+	}
+
+	.button-wrapper {
+		padding: 0;
+		position: relative;
+	}
+
+	.button {
+		background: var(--green);
+		transition: var(--transition);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100px;
+		height: 50px;
+		margin-top: 10px;
+	}
+
+	.button-text {
+		color: var(--white);
+		font-size: 1.2em;
+		font-weight: 600;
+		margin-top: -1px;
+	}
+
+	/* width */
+	::-webkit-scrollbar {
+		height: 10px;
+		background: var(--white);
+	}
+
+	/* Handle */
+	::-webkit-scrollbar-thumb {
+		background: var(--green);
+		border-radius: 3px;
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background: var(--lightGreen);
+	}
+
+	@variants hover, focus {
+		.refresh-button {
+			cursor: pointer;
+		}
+
+		.button-hover {
+			background: var(--lightGreen);
+			cursor: pointer;
+		}
+	}
+}

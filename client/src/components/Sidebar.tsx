@@ -4,10 +4,8 @@ import { Link } from 'react-router-dom'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import SettingsIcon from '@material-ui/icons/Settings'
 import ControlIcon from '@material-ui/icons/ControlCamera'
-import { useStyles } from './../styles/rootStyles'
 
 export default function Sidebar(props: any) {
-	const classes = useStyles()
 	const [linkHover, setlinkHover] = useState('off')
 	const [activeLink, setActiveLink] = useState('blank')
 	useEffect(() => {
@@ -15,31 +13,27 @@ export default function Sidebar(props: any) {
 	}, [])
 
 	return (
-		<div className={`row ${classes.sidebar}`}>
-			<div className="col">
-				<div className="row">
-					{/* <div className={`col ${classes.sidebarRow}`}></div> */}
-					<div className={`${classes.sidebarRow} ${classes.sidebarRowTop}`}>
-						<img src="/assets/logo/logo-icon.png" className={classes.sidebarLogo} />
-						<span className={`${classes.sidebarTitle} ${classes.sidebarRow}`}>PlantHub</span>
+		<div className="sidebar">
+			<div className="flex-col">
+				<div className="flex-row">
+					{/* <div className={`col sidebar-row`}></div> */}
+					<div className="sidebar-row sidebar-row-top">
+						<img src="/assets/logo/logo-icon.png" className="w-16 max-h-full" />
+						<span className="sidebar-row sidebar-title">PlantHub</span>
 					</div>
 				</div>
 				<Link to="/">
 					<div
-						className={`row ${classes.sidebarRow} ${linkHover === 'dashboard' && classes.sidebarRowHover} ${
-							activeLink === '/' && classes.sidebarRowActive
+						className={`flex-row sidebar-row ${linkHover === 'dashboard' && 'sidebar-row-hover'} ${
+							activeLink === '/' && 'sidebar-row-active'
 						}`}
 						onMouseEnter={() => setlinkHover('dashboard')}
 						onMouseLeave={() => setlinkHover('off')}
 						onClick={() => setActiveLink('/')}
 					>
-						<div className={`${classes.sidebarTextField} ${activeLink === '/' && classes.sidebarRowTextFieldActive}`}>
+						<div className={`flex-row sidebar-row-tf ${activeLink === '/' && 'sidebar-row-tf-active'}`}>
 							<DashboardIcon />
-							<span
-								className={`${classes.sidebarTextField} ${classes.sidebarText} ${
-									activeLink === '/' && classes.sidebarRowTextFieldActive
-								}`}
-							>
+							<span className={`sidebar-row-tf ml-1 title-2 ${activeLink === '/' && 'sidebar-row-tf-active'}`}>
 								Dashboard
 							</span>
 						</div>
@@ -47,23 +41,17 @@ export default function Sidebar(props: any) {
 				</Link>
 				<Link to="/control">
 					<div
-						className={`row ${classes.sidebarRow} ${linkHover === 'control' && classes.sidebarRowHover} ${
-							activeLink === '/control' && classes.sidebarRowActive
+						className={`flex-row sidebar-row ${linkHover === 'control' && 'sidebar-row-hover'} ${
+							activeLink === '/control' && 'sidebar-row-active'
 						}`}
 						onMouseEnter={() => setlinkHover('control')}
 						onMouseLeave={() => setlinkHover('off')}
 						onClick={() => setActiveLink('/control')}
 					>
-						<div
-							className={`col ${classes.sidebarTextField} ${
-								activeLink === '/control' && classes.sidebarRowTextFieldActive
-							}`}
-						>
+						<div className={`flex-row sidebar-row-tf ${activeLink === '/control' && 'sidebar-row-tf-active'}`}>
 							<ControlIcon />
 							<span
-								className={`${classes.sidebarTextField} ${classes.sidebarText} ${
-									activeLink === '/control' && classes.sidebarRowTextFieldActive
-								}`}
+								className={`sidebar-row-tf ml-1 title-2 ${activeLink === '/control' && 'sidebar-row-tf-active'}`}
 							>
 								Control
 							</span>
@@ -72,23 +60,17 @@ export default function Sidebar(props: any) {
 				</Link>
 				<Link to="/settings">
 					<div
-						className={`row ${classes.sidebarRow} ${linkHover === 'settings' && classes.sidebarRowHover} ${
-							activeLink === '/settings' && classes.sidebarRowActive
+						className={`flex-row sidebar-row ${linkHover === 'settings' && 'sidebar-row-hover'} ${
+							activeLink === '/settings' && 'sidebar-row-active'
 						}`}
 						onMouseEnter={() => setlinkHover('settings')}
 						onMouseLeave={() => setlinkHover('off')}
 						onClick={() => setActiveLink('/settings')}
 					>
-						<div
-							className={`col ${classes.sidebarTextField} ${
-								activeLink === '/settings' && classes.sidebarRowTextFieldActive
-							}`}
-						>
+						<div className={`flex-row sidebar-row-tf ${activeLink === '/settings' && 'sidebar-row-tf-active'}`}>
 							<SettingsIcon />
 							<span
-								className={`${classes.sidebarTextField} ${classes.sidebarText} ${
-									activeLink === '/settings' && classes.sidebarRowTextFieldActive
-								}`}
+								className={`sidebar-row-tf ml-1 title-2 ${activeLink === '/settings' && 'sidebar-row-tf-active'}`}
 							>
 								Settings
 							</span>
