@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+//import { settings } from '../graphql/queries'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import EditableField from './fields/EditableField'
@@ -53,6 +54,9 @@ export default function Settings() {
 							<div className="flex-row">
 								<div className="flex-col">
 									<div className="flex-row pt-2">
+										<span>Typ grafu: </span>
+									</div>
+									<div className="flex-row pt-2">
 										<span>Jazyk: </span>
 									</div>
 									<div className="flex-row pt-2">
@@ -63,6 +67,9 @@ export default function Settings() {
 									</div>
 								</div>
 								<div className="flex-col ml-3">
+									<div className="flex-row pt-1">
+										<EnumEditableField key="theme" values={[{ label: 'Spojnicový' }, { label: 'Sloupcový' }]} />
+									</div>
 									<div className="flex-row pt-1">
 										<EnumEditableField key="theme" values={[{ label: 'Česky' }, { label: 'Anglicky' }]} />
 									</div>

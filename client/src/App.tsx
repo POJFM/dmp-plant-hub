@@ -7,7 +7,7 @@ import Control from './components/Control'
 import Settings from './components/Settings'
 import InitForm from './components/InitForm'
 
-import './styles/main.css';
+import './styles/main.css'
 
 export default function App() {
 	const [visited, setVisited] = useState(false)

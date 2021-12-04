@@ -1,7 +1,7 @@
 const colors = require('tailwindcss/colors')
 module.exports = {
 	purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
-	darkMode: 'class',
+	mode: 'jit',
 	theme: {
 		extend: {
 			colors: {
@@ -14,11 +14,15 @@ module.exports = {
 				transition: 'var(--transition)',
 			},
 		},
+		fontFamily: {
+			default: ['Montserrat Alternates', 'sans-serif'],
+		},
 		colors: {
 			transparent: 'transparent',
 			current: 'currentColor',
 		},
 	},
+	darkMode: 'class',
 	variants: {
 		extend: {},
 	},

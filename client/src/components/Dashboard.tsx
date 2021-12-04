@@ -3,16 +3,20 @@ import axios from 'axios'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 //import { RefreshButton } from './buttons/RefreshButton'
+import { useQuery } from '@apollo/client'
+import { plantState, plantStateHistory, irrigationHistory, posts } from '../graphql/queries'
 import {
-	Chart,
+	Chart as ChartJS,
 	CategoryScale,
-	LineController,
-	LineElement,
-	PointElement,
 	LinearScale,
+	PointElement,
+	LineElement,
+	BarElement,
 	Title,
-	ChartType,
+	Tooltip,
+	Legend,
 } from 'chart.js'
+import { LiveMeasurementsChart, WaterConsumptionChart, IrrigationChart, MeasurementsHistoryChart } from './Chart'
 import ReactScrollWheelHandler from 'react-scroll-wheel-handler'
 
 export default function Dashboard() {
@@ -21,6 +25,14 @@ export default function Dashboard() {
 	const [weather, setWeather] = useState<any>()
 	const [currentLatitude, setCurrentLatitude] = useState('')
 	const [currentLongitude, setCurrentLongitude] = useState('')
+	const { loading, error, data } = useQuery(posts)
+	console.log(data)
+	// TEST
+	const settings = { chartType: 0 }
+
+	useEffect(() => {
+		document.title = 'Plant Hub | Dashboard'
+	}, [])
 
 	// fetch('/measure')
 	// 	.then((res) => res.json())
@@ -60,7 +72,7 @@ export default function Dashboard() {
 				const date = new Date()
 				var currentTime = `${date.getHours()}`
 				currentTime.length === 1 && (currentTime = 0 + currentTime)
-				response.data.properties.timeseries.map( 
+				response.data.properties.timeseries.map(
 					(timeseries: any, i: number) => String(/..(?=:)/.exec(timeseries.time)) === currentTime && (currentItem = i)
 				)
 				setWeather(response.data.properties.timeseries.slice(currentItem, 15 + currentItem))
@@ -96,66 +108,21 @@ export default function Dashboard() {
 		}, [])
 		return elRef
 	}
-	useEffect(() => {
-		document.title = 'Plant Hub | Dashboard'
-	}, [])
 
-	Chart.register(CategoryScale, LineController, LineElement, PointElement, LinearScale, Title)
+	ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend)
 
-	const irrigationChart = new Chart('irrigationChart', {
-		type: 'line',
-		data: {
-			labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-			datasets: [
-				{
-					label: 'Moisture',
-					backgroundColor: 'rgb(255, 99, 132)',
-					borderColor: 'rgb(0, 0, 255)',
-					data: [5, 8, 10, 20, 5, 35, 20],
-					yAxisID: 'm',
-				},
-				{
-					label: 'Temperature',
-					backgroundColor: 'rgb(255, 99, 132)',
-					borderColor: 'rgb(0, 255, 0)',
-					data: [8, 1, 10, 20, 5, 35, 20],
-					yAxisID: 't',
-				},
-				{
-					label: 'Humidity',
-					backgroundColor: 'rgb(255, 99, 132)',
-					borderColor: 'rgb(255, 0, 0)',
-					data: [10, 7, 10, 20, 5, 35, 20],
-					yAxisID: 'h',
-				},
-			],
+	/* 	ChartJS.scaleService.updateScaleDefaults('category', {
+		gridLines: {
+				drawBorder: false,
+				drawOnChartArea: false,
+				drawTicks: false
 		},
-		options: {
-			interaction: {
-				mode: 'index',
-				intersect: false,
-			},
-			scales: {
-				m: {
-					type: 'linear',
-					display: true,
-					position: 'left',
-				},
-				t: {
-					type: 'linear',
-					display: true,
-					position: 'left',
-				},
-				h: {
-					type: 'linear',
-					display: true,
-					position: 'left',
-				},
-			},
+		ticks: {
+				// autoSkip: false,
+				padding: 20
 		},
-	})
-
-	irrigationChart.destroy()
+		maxBarThickness: 10
+}); */
 
 	const weatherForecastBullshitToIcons = (weatherState: string) => {
 		if (weatherState?.includes('rainandthunder')) {
@@ -189,66 +156,9 @@ export default function Dashboard() {
 		}
 	}
 
-	const waterConsumptionChart = new Chart('waterConsumptionChart', {
-		type: 'line',
-		data: {
-			labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-			datasets: [
-				{
-					label: 'Moisture',
-					backgroundColor: 'rgb(255, 99, 132)',
-					borderColor: 'rgb(0, 0, 255)',
-					data: [5, 8, 10, 20, 5, 35, 20],
-					yAxisID: 'm',
-				},
-				{
-					label: 'Temperature',
-					backgroundColor: 'rgb(255, 99, 132)',
-					borderColor: 'rgb(0, 255, 0)',
-					data: [8, 1, 10, 20, 5, 35, 20],
-					yAxisID: 't',
-				},
-				{
-					label: 'Humidity',
-					backgroundColor: 'rgb(255, 99, 132)',
-					borderColor: 'rgb(255, 0, 0)',
-					data: [10, 7, 10, 20, 5, 35, 20],
-					yAxisID: 'h',
-				},
-			],
-		},
-		options: {
-			responsive: false,
-			maintainAspectRatio: false,
-			interaction: {
-				mode: 'index',
-				intersect: false,
-			},
-			scales: {
-				m: {
-					type: 'linear',
-					display: true,
-					position: 'left',
-				},
-				t: {
-					type: 'linear',
-					display: true,
-					position: 'left',
-				},
-				h: {
-					type: 'linear',
-					display: true,
-					position: 'left',
-				},
-			},
-		},
-	})
-
-	waterConsumptionChart.destroy()
-
 	return (
 		<div className="dashboard">
-			<Card className="card">
+			<Card className="card h-52">
 				<CardContent>
 					<div className="flex-row">
 						<div className="flex-col w-4/12">
@@ -289,7 +199,11 @@ export default function Dashboard() {
 								</div>
 							</div>
 						</div>
-						<div className="flex-col w-8/12">live measurements line graph</div>
+						<div className="flex-col w-8/12">
+							<div className="flex-row h-44 -mt-2">
+								<LiveMeasurementsChart chartType={settings.chartType} />
+							</div>
+						</div>
 					</div>
 				</CardContent>
 			</Card>
@@ -306,38 +220,37 @@ export default function Dashboard() {
 										rightHandler={(e) => console.log('scroll right')}
 									>
 										<div /* ref={() => useHorizontalScroll} */ className="flex-row overflow-x-scroll">
-											{weather &&
-												weather?.map((weatherItem: any) => {
-													return (
-														<div className="flex-col mx-2 mb-2 weatherWrapper">
-															<div className="flex-row flex-center">
-																<div className="flex-col">
-																	<span className="text-2xl">{/..(?=:).../.exec(weatherItem.time)}</span>
-																</div>
-															</div>
+											{weather?.map((weatherItem: any) => {
+												return (
+													<div className="flex-col mx-2 mb-2 weatherWrapper">
+														<div className="flex-row flex-center">
 															<div className="flex-col">
-																<div className="flex-row flex-center text-xs">
-																	<img src="/assets/icons/dashboard/temperature.svg" className="w-8 max-h-full" />
-																	<span> {weatherItem.data.instant.details.air_temperature}°C</span>
-																</div>
-																<div className="flex-row flex-center text-xs">
-																	<img src="/assets/icons/dashboard/humidity.svg" className="w-8 max-h-full" />
-																	<span> {weatherItem.data.instant.details.relative_humidity}%</span>
-																</div>
-															</div>
-															<div className="flex-row">
-																<div className="flex-col flex-center">
-																	<img
-																		src={`/assets/icons/weatherForecast/${weatherForecastBullshitToIcons(
-																			weatherItem?.data.next_1_hours?.summary?.symbol_code
-																		)}.svg`}
-																		className="w-20 max-h-full"
-																	/>
-																</div>
+																<span className="text-2xl">{/..(?=:).../.exec(weatherItem.time)}</span>
 															</div>
 														</div>
-													)
-												})}
+														<div className="flex-col">
+															<div className="flex-row flex-center text-xs">
+																<img src="/assets/icons/dashboard/temperature.svg" className="w-8 max-h-full" />
+																<span> {weatherItem.data.instant.details.air_temperature}°C</span>
+															</div>
+															<div className="flex-row flex-center text-xs">
+																<img src="/assets/icons/dashboard/humidity.svg" className="w-8 max-h-full" />
+																<span> {weatherItem.data.instant.details.relative_humidity}%</span>
+															</div>
+														</div>
+														<div className="flex-row">
+															<div className="flex-col flex-center">
+																<img
+																	src={`/assets/icons/weatherForecast/${weatherForecastBullshitToIcons(
+																		weatherItem?.data.next_1_hours?.summary?.symbol_code
+																	)}.svg`}
+																	className="w-20 max-h-full"
+																/>
+															</div>
+														</div>
+													</div>
+												)
+											})}
 										</div>
 									</ReactScrollWheelHandler>
 								</CardContent>
@@ -348,11 +261,11 @@ export default function Dashboard() {
 						<div className="flex-col w-full">
 							<Card className="card-left">
 								<CardContent>
-									<div className="flex-row">
+									<div className="flex-row ">
 										<span>Historie zavlažování</span>
 									</div>
-									<div /* className="flex-row" */>
-										<canvas id="irrigationChart"></canvas>
+									<div className="flex-row h-80">
+										<IrrigationChart chartType={settings.chartType} />
 									</div>
 								</CardContent>
 							</Card>
@@ -360,13 +273,19 @@ export default function Dashboard() {
 					</div>
 				</div>
 				<div className="flex-col w-6/12">
-					<Card className="card-right">
+					<Card className="card-right h-full">
 						<CardContent>
 							<div className="flex-row">
-								<span className="">Spotřeba vody</span>
+								<span>Spotřeba vody</span>
 							</div>
-							<div className="flex-row">
-								<canvas id="waterConsumtionChart" width="240px" height="240px"></canvas>
+							<div className="flex-row h-60">
+								<WaterConsumptionChart chartType={settings.chartType} />
+							</div>
+							<div className="flex-row mt-3">
+								<span>Historie měření</span>
+							</div>
+							<div className="flex-row h-72">
+								<MeasurementsHistoryChart chartType={settings.chartType} />
 							</div>
 						</CardContent>
 					</Card>
