@@ -39,8 +39,8 @@ export default function App() {
 						<Route exact path="/settings" component={Settings} />
 					</Switch>
 				</div>
-				{/* <InitForm /> */}
-				{!visited && <InitForm />}
+				<InitForm />
+				{/* {!visited && <InitForm />} */}
 			</Router>
 		</div>
 	)

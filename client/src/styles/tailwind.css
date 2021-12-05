@@ -16,6 +16,8 @@
 	--lighterGreen: #A2E782;
 	--darkGreen: #54A82D;
 	--white: #ffffff;
+	--inactiveGrey: #9FA69B;
+	--inactiveLightGrey: #CCCCCC;
 	--transition: all .2s ease-in-out;
 }
 
@@ -116,20 +118,23 @@
 		margin: 0.625rem;
 		margin-bottom: 0;
 		padding: 5px;
+		border-radius: 10px !important;
 	}
 
 	.card-left {
 		margin: 0.625rem 0.312rem 0 0.625rem;
 		padding: 5px;
+		border-radius: 10px !important;
 	}
 
 	.card-right {
 		margin: 0.625rem 0.625rem 0 0.312rem;
 		padding: 5px;
+		border-radius: 10px !important;
 	}
 
 	.title-1 {
-		font-size: 1.5em;
+		font-size: 1.575em;
 		font-weight: 600;
 	}
 
@@ -152,6 +157,27 @@
 		border-bottom: 1px solid var(--darkGreen);
 		padding: 0 10px;
 		position: relative;
+		transition: var(--transition);
+	}
+
+	.input-field-inactive {
+		border-bottom: 1px solid var(--inactiveGrey);
+		padding: 0 10px;
+		position: relative;
+	}
+
+	.input-field-inactive .input-field-label {
+		color: var(--inactiveGrey);
+		font-size: 0.8em;
+		position: absolute;
+	}
+
+	.input-field-inactive .input-field-input {
+		border: none;
+		font-size: 1.2em;
+		color: var(--inactiveGrey);
+		outline: 0;
+		pointer-events: none;
 	}
 
 	.input-field-editable {
@@ -164,17 +190,111 @@
 		color: var(--darkGreen);
 		font-size: 0.8em;
 		position: absolute;
+		transition: var(--transition);
+	}
+
+	.input-field-toggle-checkbox-wrapper {
+		position: relative;
+		display: inline-block;
+		width: 56px;
+		height: 28px;
 	}
 
 	.input-field-input {
 		border: none;
 		font-size: 1.2em;
 		outline: 0;
+		transition: var(--transition);
+	}
+
+	.input-field-input-toggle-wrapper {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: var(--inactiveGrey);
+		-webkit-transition: .4s;
+		transition: .4s;
+		border-radius: 34px;
+	}
+
+	.input-field-input-toggle {
+		opacity: 0;
+		width: 0;
+		height: 0;
+	}
+
+	.input-field-input-toggle-slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: var(--inactiveLightGrey);
+		-webkit-transition: .4s;
+		transition: .4s;
+		border-radius: 34px;
+	}
+
+	.input-field-input-toggle-slider:before {
+		position: absolute;
+		content: "";
+		height: 20px;
+		width: 20px;
+		left: 4px;
+		bottom: 4px;
+		background-color: white;
+		-webkit-transition: .4s;
+		transition: .4s;
+		border-radius: 50%;
+	}
+
+	.input-field-input-toggle-slider-active {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: var(--inactiveLightGrey);
+		-webkit-transition: .4s;
+		transition: .4s;
+		border-radius: 34px;
+		background-color: var(--lightGreen);
+	}
+
+	.input-field-input-toggle-slider-active:before {
+		position: absolute;
+		content: "";
+		height: 20px;
+		width: 20px;
+		left: 4px;
+		bottom: 4px;
+		background-color: white;
+		-webkit-transition: .4s;
+		transition: .4s;
+		border-radius: 50%;
+		-webkit-transform: translateX(28px);
+		-ms-transform: translateX(28px);
+		transform: translateX(28px);
 	}
 
 	.button-wrapper {
 		padding: 0;
 		position: relative;
+	}
+
+	.button-card {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100px;
+		height: 50px;
+		margin-top: 10px;
+		border-radius: 8px;
 	}
 
 	.button {
@@ -186,6 +306,18 @@
 		width: 100px;
 		height: 50px;
 		margin-top: 10px;
+	}
+
+	.button-inactive {
+		background: var(--inactiveLightGrey);
+		transition: var(--transition);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100px;
+		height: 50px;
+		margin-top: 10px;
+		pointer-events: none;
 	}
 
 	.button-text {

@@ -107,13 +107,6 @@ export function LiveMeasurementsChart({ chartType }: any) {
 }
 
 export const WaterConsumptionChart = ({ chartType }: any) => {
-	console.log(chartType)
-	console.log(typeof chartType)
-	console.log(ChartType.LINE)
-	console.log(typeof ChartType.LINE)
-	console.log(chartType === ChartType.LINE)
-	console.log(chartType === ChartType.BAR)
-
 	const waterConsumptionChartData = {
 		data: {
 			labels: months,

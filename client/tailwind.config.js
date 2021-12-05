@@ -11,6 +11,8 @@ module.exports = {
 				lighterGreen: 'var(--lighterGreen)',
 				darkGreen: 'var(--darkGreen)',
 				white: 'var(--white)',
+				inactiveGrey: 'var(--inactiveGrey)',
+				inactiveLightGrey: 'var(--inactiveLightGrey)',
 				transition: 'var(--transition)',
 			},
 		},
