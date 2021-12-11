@@ -33,7 +33,6 @@ export default function App() {
 							exact
 							path="/"
 							component={Dashboard}
-							// render={() => <Dashboard city={currentLocation} />}
 						/>
 						<Route exact path="/control" component={Control} />
 						<Route exact path="/settings" component={Settings} />

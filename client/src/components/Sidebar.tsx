@@ -50,9 +50,7 @@ export default function Sidebar(props: any) {
 					>
 						<div className={`flex-row sidebar-row-tf ${activeLink === '/control' && 'sidebar-row-tf-active'}`}>
 							<ControlIcon />
-							<span
-								className={`sidebar-row-tf ml-1 title-2 ${activeLink === '/control' && 'sidebar-row-tf-active'}`}
-							>
+							<span className={`sidebar-row-tf ml-1 title-2 ${activeLink === '/control' && 'sidebar-row-tf-active'}`}>
 								Control
 							</span>
 						</div>
@@ -69,9 +67,7 @@ export default function Sidebar(props: any) {
 					>
 						<div className={`flex-row sidebar-row-tf ${activeLink === '/settings' && 'sidebar-row-tf-active'}`}>
 							<SettingsIcon />
-							<span
-								className={`sidebar-row-tf ml-1 title-2 ${activeLink === '/settings' && 'sidebar-row-tf-active'}`}
-							>
+							<span className={`sidebar-row-tf ml-1 title-2 ${activeLink === '/settings' && 'sidebar-row-tf-active'}`}>
 								Settings
 							</span>
 						</div>

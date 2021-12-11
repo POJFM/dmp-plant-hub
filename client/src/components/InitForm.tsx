@@ -1,132 +1,267 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Component } from 'react'
+import axios from 'axios'
+import { useMutation } from '@apollo/client'
+import { createSettings } from '../graphql/mutations'
+import Map from './Map'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import TextInputField from './fields/TextInputField'
 import ToggleButton from './buttons/ToggleButton'
 import SaveButton from './buttons/SaveButton'
 
-export default function InitForm() {
-	const [currentMoistureLevel, setCurrentMoistureLevel] = useState(0)
-	const [currentWaterLevel, setCurrentWaterLevel] = useState(0)
-	const [currentWaterOverdrawnLevel, setCurrentWaterOverdrawnLevel] = useState(0)
-	const [currentLocation, setCurrentLocation] = useState('Frýdek-Místek')
-	const [saveButtonState, setSaveButtonState] = useState('true')
-	const [automaticIrrigationState, setAutomaticIrrigationState] = useState('true')
-	const [scheduledIrrigationState, setScheduledIrrigationState] = useState('false')
+export default function InitForm(props: any) {
+	const [createSettingsData, { data, loading, error }] = useMutation(createSettings),
+		[saveButtonState, setSaveButtonState] = useState(true),
+		[automaticIrrigationState, setAutomaticIrrigationState] = useState(true),
+		[scheduledIrrigationState, setScheduledIrrigationState] = useState(false),
+		[limitValues, setLimitValues] = useState<any>(),
+		[moistureLimit, setMoistureLimit] = useState<number>(),
+		[waterAmountLimit, setWaterAmountLimit] = useState<number>(),
+		[waterLevelLimit, setWaterLevelLimit] = useState<number>(),
+		[hoursRange, setHoursRange] = useState<number>(),
+		[initCoords, setInitCoords] = useState(true),
+		[location, setLocation] = useState<string>(),
+		[coords, setCoords] = useState(false),
+		[latitude, setLatitude] = useState<number>(),
+		[longitude, setLongitude] = useState<number>(),
+		[mapClicked, setMapClicked] = useState(false)
 
-	useEffect(() => {
-		document.title = 'Plant Hub | Initialization'
+	interface IGetCoordsProps {
+		label: string
+	}
 
-		fetch('/init/measured')
-			.then((res) => res.json())
-			.then((data) => {
-				setCurrentMoistureLevel(data.moistureLevel)
-				setCurrentWaterLevel(data.waterLevel)
-				setCurrentWaterOverdrawnLevel(data.waterOverdrawnLevel)
-				setCurrentLocation(data.location)
+	// Initial coords from user's position
+	class GetCoords extends Component<IGetCoordsProps> {
+		constructor(props: any) {
+			super(props)
+			this.state = {}
+		}
+
+		componentDidMount() {
+			navigator.geolocation.getCurrentPosition((position) => {
+				setLatitude(position.coords.latitude)
+				setLongitude(position.coords.longitude)
+				setInitCoords(false)
 			})
-	}, [])
+		}
+		render(): JSX.Element {
+			return <></>
+		}
+	}
+
+	const fetchLocationFromCoords = () => {
+		axios
+			.request({
+				method: 'GET',
+				url: `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`,
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			})
+			.then((res) => {
+				setLocation(
+					res.data.results[0].components?.town ||
+						res.data.results[0].components?.village ||
+						res.data.results[0].components?.city
+				)
+				setCoords(true)
+			})
+			.catch((error) => {
+				console.error(error)
+			})
+	}
+
+	setTimeout(() => fetchLocationFromCoords(), coords ? 100_000_000 : 1000)
+
+	const fetchCoordsFromLocation = (searchLocationValue: any) => {
+		axios
+			.request({
+				method: 'GET',
+				url: `https://api.opencagedata.com/geocode/v1/json?q=${searchLocationValue}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`,
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			})
+			.then((res) => {
+				// "cz"
+				res.data.results.map((result: any) => {
+					if (result.components.country_code === 'cz') {
+						setLatitude(result?.geometry.lat)
+						setLongitude(result?.geometry.lng)
+					}
+				})
+				setCoords(true)
+			})
+			.catch((error) => {
+				console.error(error)
+			})
+	}
+
+	/* 	const initMeasurements = () => {
+		axios
+			.request({
+				method: 'GET',
+				url: `${process.env.REACT_APP_GO_API_URL}/init/measured`,
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			})
+			.then((res) => {
+				setMoistureLimit(res.data.moistureLimit)
+				setWaterLevelLimit(res.data.waterLevelLimit)
+				setWaterAmountLimit(res.data.waterAmountLimit)
+				setLimitValues(true)
+			})
+			.catch((error) => {
+				console.error(error)
+			})
+	}
+
+	setTimeout(() => initMeasurements(), limitValues ? 100_000_000 : 3000) */
 
 	const updateToggleState = (type: string) => {
 		if (type === 'automaticIrrigation') {
-			if (automaticIrrigationState === 'false') {
-				setAutomaticIrrigationState('true')
-				setSaveButtonState('true')
+			if (automaticIrrigationState === false) {
+				setAutomaticIrrigationState(true)
+				setSaveButtonState(true)
 			} else {
-				setAutomaticIrrigationState('false')
-				if (scheduledIrrigationState === 'false') {
-					setSaveButtonState('false')
+				setAutomaticIrrigationState(false)
+				if (scheduledIrrigationState === false) {
+					setSaveButtonState(false)
 				}
 			}
 		}
 
 		if (type === 'scheduledIrrigation') {
-			if (scheduledIrrigationState === 'false') {
-				setScheduledIrrigationState('true')
-				setSaveButtonState('true')
+			if (scheduledIrrigationState === false) {
+				setScheduledIrrigationState(true)
+				setSaveButtonState(true)
 			} else {
-				setScheduledIrrigationState('false')
-				if (automaticIrrigationState === 'false') {
-					setSaveButtonState('false')
+				setScheduledIrrigationState(false)
+				if (automaticIrrigationState === false) {
+					setSaveButtonState(false)
 				}
 			}
 		}
 	}
 
+	useEffect(() => {
+		if (
+			document.querySelector(
+				'#root > div > div.init-form > div > div > div > div.flex-col.pl-5 > div > div > div > div:nth-child(2) > div:nth-child(2) > div > div:nth-child(4) > div'
+			)
+		) {
+			const address = document.getElementsByClassName('address-line')
+			for (var i = 0; i < address.length; i++) {
+				if (address[i].getAttribute('jsinstance') === `${i}` || /(\d\d\d \d\d)/.exec(address[i].innerHTML)) {
+					const selectedAddress = address[i].innerHTML.replace(`${/...\s\d\d\s/.exec(address[i].innerHTML)}`, '')
+					fetchCoordsFromLocation(selectedAddress)
+					setLocation(`${selectedAddress}`)
+					document.querySelectorAll('#location')[0].innerHTML = selectedAddress
+				}
+			}
+		}
+		setMapClicked(false)
+	}, [mapClicked])
+
 	return (
 		<div className="init-form">
-			<Card className="card w-400px h-500px">
-				<CardContent>
-					<div className="flex-col p-3">
-						<div className="flex-row flex-center p-1 mb-2">
-							<span className="title-1">PlantHub - Inicializace</span>
-						</div>
-						<div className="flex-row mb-2">
-							<div className="flex-col p-1 pt-5px mt-2">
-								<div className="flex-row">
-									<span className="title-2">Automaticky</span>
-								</div>
-								<div className="flex-row mt-2">
-									<span className="title-2">Plánovaně</span>
-								</div>
+			<Card className="card p-0-i">
+				<CardContent className="p-0-i">
+					<div className="flex-row">
+						<div className="flex-col pl-8 pt-8 pr-3">
+							<div className="flex-row flex-center p-1 mb-2">
+								<span className="title-1">PlantHub - Inicializace</span>
 							</div>
-							<div className="flex-col p-1 pt-5px mt-2 ml-2">
-								<div className="flex-row">
-									<div onClick={() => updateToggleState('automaticIrrigation')}>
-										<ToggleButton key="limitsTrigger" toggleState={automaticIrrigationState} />
+							<div className="flex-row mb-2">
+								<div className="flex-col p-1 pt-5px mt-2">
+									<div className="flex-row">
+										<span className="title-2">Automaticky</span>
+									</div>
+									<div className="flex-row mt-2">
+										<span className="title-2">Plánovaně</span>
 									</div>
 								</div>
-								<div className="flex-row mt-2">
-									<div onClick={() => updateToggleState('scheduledIrrigation')}>
-										<ToggleButton key="scheduledTrigger" toggleState={scheduledIrrigationState} />
+								<div className="flex-col p-1 pt-5px mt-2 ml-2">
+									<div className="flex-row">
+										<div onClick={() => updateToggleState('automaticIrrigation')}>
+											<ToggleButton item="limitsTrigger" toggleState={automaticIrrigationState} />
+										</div>
+									</div>
+									<div className="flex-row mt-2">
+										<div onClick={() => updateToggleState('scheduledIrrigation')}>
+											<ToggleButton item="scheduledTrigger" toggleState={scheduledIrrigationState} />
+										</div>
 									</div>
 								</div>
 							</div>
+							<div className="flex-row p-1 pt-5px mt-2" onBlur={(data: any) => setMoistureLimit(data.target.value)}>
+								<TextInputField
+									item="moistureLimit"
+									name="Limit vlhkosti půdy (%)"
+									defaultValue={moistureLimit}
+									active={automaticIrrigationState}
+								/>
+							</div>
+							<div className="flex-row p-1 pt-5px mt-2" onBlur={(data: any) => setWaterAmountLimit(data.target.value)}>
+								<TextInputField
+									item="waterAmountLimit"
+									name="Limit objemu nádrže (l)"
+									defaultValue={waterAmountLimit}
+									active={automaticIrrigationState}
+								/>
+							</div>
+							<div className="flex-row p-1 pt-5px mt-2" onBlur={(data: any) => setWaterLevelLimit(data.target.value)}>
+								<TextInputField
+									item="waterLevelLimit"
+									name="Limit hladiny vody (cm)"
+									defaultValue={waterLevelLimit}
+									active={automaticIrrigationState}
+								/>
+							</div>
+							<div className="flex-row p-1 pt-5px mt-2" onBlur={(data: any) => setHoursRange(data.target.value)}>
+								<TextInputField
+									item="hourRange"
+									name="Rozsah hodin (h)"
+									defaultValue={hoursRange}
+									active={scheduledIrrigationState}
+								/>
+							</div>
+							<div
+								className="flex-row p-1 pt-5px mt-2"
+								onBlur={(data: any) => fetchCoordsFromLocation(data.target.value)}
+							>
+								<TextInputField item="location" name="Lokace" defaultValue={location} active="true" />
+							</div>
+							<div className="flex-row p-1 pt-5px mt-2">
+								<SaveButton
+									onClick={() =>
+										createSettingsData({
+											variables: {
+												limitsTrigger: automaticIrrigationState,
+												waterLevelLimit: waterLevelLimit,
+												waterAmountLimit: waterAmountLimit,
+												moistureLimit: moistureLimit,
+												scheduledTrigger: scheduledIrrigationState,
+												hoursRange: hoursRange,
+												chartType: 0,
+												theme: 0,
+												language: 0,
+												location: location,
+											},
+										})
+									}
+									active={saveButtonState}
+								/>
+							</div>
 						</div>
-						<div className="flex-row p-1 pt-5px mt-2">
-							<TextInputField
-								key="moistureLevelLimit"
-								name="Vlhkostní limit (%)"
-								defaultValue={currentMoistureLevel}
-								active={automaticIrrigationState}
-							/>
-						</div>
-						<div className="flex-row p-1 pt-5px mt-2">
-							<TextInputField
-								key="moistureLevelLimit"
-								name="Vlhkostní limit (%)"
-								defaultValue={currentMoistureLevel}
-								active={automaticIrrigationState}
-							/>
-						</div>
-						<div className="flex-row p-1 pt-5px mt-2">
-							<TextInputField
-								key="waterLevelLimit"
-								name="Limit hladiny vody (cm)"
-								defaultValue={currentWaterLevel}
-								active={automaticIrrigationState}
-							/>
-						</div>
-						<div className="flex-row p-1 pt-5px mt-2">
-							<TextInputField
-								key="waterOverdrawnLevelLimit"
-								name="Limit přečerpané vody (l)"
-								defaultValue={currentWaterOverdrawnLevel}
-								active={automaticIrrigationState}
-							/>
-						</div>
-						<div className="flex-row p-1 pt-5px mt-2">
-							<TextInputField key="hourRange" name="Rozsah hodin (h)" active={scheduledIrrigationState} />
-						</div>
-						<div className="flex-row p-1 pt-5px mt-2">
-							<TextInputField key="location" name="Lokace" defaultValue={currentLocation} active="true" />
-						</div>
-						<div className="flex-row-reverse p-1 pt-5px mt-2">
-							<SaveButton /* onClick={() => saveValues()} */ active={saveButtonState} />
+						<div className="flex-col pl-5" onClick={() => setMapClicked(true)}>
+							<Map lat={latitude || 0} lon={longitude || 0} />
 						</div>
 					</div>
 				</CardContent>
 			</Card>
+			{initCoords && <GetCoords {...props} />}
 		</div>
 	)
 }

@@ -1,11 +1,10 @@
-import { useState } from 'react'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 
 export default function SaveButton({ props, active }: any) {
 	let activeClass
-  active === 'true' && (activeClass = 'button hover:button-hover')
-  active === 'false' && (activeClass = 'button-inactive')
+	active && (activeClass = 'button hover:button-hover')
+	!active && (activeClass = 'button-inactive')
 
 	return (
 		<div className="button-wrapper">

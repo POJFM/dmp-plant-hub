@@ -5,7 +5,13 @@ export default function EditableField({ key, defaultValue }: any) {
 
 	return (
 		<div className="float-left inline-block input-field" onClick={() => setActiveLabel(true)}>
-			<input type="text" id="name" className="float-left inline-block input-field-input" name={key} value={defaultValue} />
+			<input
+				type="text"
+				id="name"
+				className="float-left inline-block input-field-input"
+				name={key}
+				value={defaultValue}
+			/>
 		</div>
 	)
 }

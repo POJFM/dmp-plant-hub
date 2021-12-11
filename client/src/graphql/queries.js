@@ -8,7 +8,7 @@ export const settings = gql`
 			limitsTrigger
 			waterLevelLimit
 			waterAmountLimit
-			moistureLimit
+			moistLimit
 			scheduledTrigger
 			hoursRange
 			chartType
@@ -18,51 +18,33 @@ export const settings = gql`
 		}
 	}
 `
-// LIVE DATA
-export const plantState = gql`
-	query plantState($limit: Int = 10) {
-		plantState(limit: $limit) {
-			id
-			humidity
-			temperature
-			moisture
-		}
-	}
-`
 
-export const plantStateHistory = gql`
-	query plantState($limit: Int = 10) {
-		plantState(limit: $limit) {
+export const dashboard = gql`
+	query dashboard {
+		dashboard {
 			id
-			timestamp
-			humidity
-			temperature
-			moisture
-		}
-	}
-`
-
-export const irrigationHistory = gql`
-	query irrigationHistory($limit: Int = 10) {
-		irrigationHistory(limit: $limit) {
-			id
-			timestamp
-			humidity
-			temperature
-			moisture
-			waterLevel
-			waterAmount
-			waterOverdrawn
-		}
-	}
-`
-
-// TEST
-export const posts = gql`
-	query posts {
-		posts {
-			id
-			title
+			irrigationHistory {
+				id
+				timestamp
+				hum
+				temp
+				moist
+				waterLevel
+				waterAmount
+				waterOverdrawn
+			}
+			plantState {
+				id
+				timestamp
+				hum
+				temp
+				moist
+			}
+			settings {
+				chartType
+				lat
+				lon
+			}
 		}
 	}
 `
