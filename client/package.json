@@ -80,6 +80,8 @@
     "react-router-dom": "^5.3.0",
     "react-scripts": "^4.0.3",
     "react-scroll-wheel-handler": "^2.1.0",
+    "react-spinners": "^0.11.0",
+    "react-typescript-checkmark": "^1.2.2",
     "redux": "^4.1.2",
     "resolve": "1.18.1",
     "resolve-url-loader": "^3.1.2",

@@ -28,12 +28,7 @@ const monthsTranslate: any = {
 		},
 		plugins: {
 			legend: {
-				position: 'top' as const,
-				labels: {
-					font: {
-						family: "'Montserrat Alternates', 'sans-serif'",
-					},
-				},
+				display: false,
 			},
 		},
 	}
@@ -131,6 +126,11 @@ export const WaterConsumptionChart = ({ chartType }: any) => {
 		},
 		options: {
 			...chartOptions,
+			plugins: {
+				legend: {
+					display: false,
+				},
+			},
 			scales: {
 				yAxis1: {
 					ticks: {
@@ -190,6 +190,11 @@ export function IrrigationChart({ chartType }: any) {
 		},
 		options: {
 			...chartOptions,
+			plugins: {
+				legend: {
+					display: false,
+				},
+			},
 			scales: {
 				yAxis1: {
 					ticks: {

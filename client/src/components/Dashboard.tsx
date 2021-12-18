@@ -147,19 +147,19 @@ export default function Dashboard() {
 						<div className="flex-col w-4/12">
 							<div className="flex-row">
 								<div className="flex-col ml-5">
-									<div className="flex-row pt-5px">
+									<div className="flex-row pt-5px" title="Teplota vzduchu">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/temperature.svg" />
 										</span>
 										<span className="flex-col">{`${temperature}°C`}</span>
 									</div>
-									<div className="flex-row pt-5px">
+									<div className="flex-row pt-5px" title="Vlhkost vzduchu">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/humidity.svg" />
 										</span>
 										<span className="flex-col">{`${humidity}%`}</span>
 									</div>
-									<div className="flex-row pt-5px">
+									<div className="flex-row pt-5px" title="Vlhkost půdy">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/moisture.svg" />
 										</span>
@@ -167,17 +167,23 @@ export default function Dashboard() {
 									</div>
 								</div>
 								<div className="flex-col ml-5">
-									<div className="flex-row pt-5px">
+									<div className="flex-row pt-5px" title="Výška vody v nádrži">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterLevel.svg" />
 										</span>
 										<span className="flex-col">{/* {`${data.irrigationHistory.waterLevel}cm`} */}0cm</span>
 									</div>
-									<div className="flex-row pt-5px">
+									<div className="flex-row pt-5px" title="Objem vody v nádrži">
+										<span className="flex-col w-12 max-h-full">
+											<img src="/assets/icons/dashboard/waterOverdrawn.svg" />{/* {`${data.irrigationHistory.waterAmount}l`} */}
+										</span>
+										<span className="flex-col">{/* {`${data.irrigationHistory.waterAmount}l`} */}5l</span>
+									</div>
+									<div className="flex-row pt-5px" title="Celkový vyčerpaný objem vody">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterOverdrawn.svg" />
 										</span>
-										<span className="flex-col">{/* {`${data.irrigationHistory.waterAmount}l`} */}0l</span>
+										<span className="flex-col">{/* {`${data.irrigationHistory.waterAmount}l`} */}56l</span>
 									</div>
 								</div>
 							</div>
@@ -251,7 +257,7 @@ export default function Dashboard() {
 									<div className="flex-row ">
 										<span>Historie zavlažování</span>
 									</div>
-									<div className="flex-row h-80">
+									<div className="flex-row 2xl:h-96 lg:h-52">
 										<IrrigationChart chartType={settings.chartType} />
 									</div>
 								</CardContent>
@@ -265,13 +271,13 @@ export default function Dashboard() {
 							<div className="flex-row">
 								<span>Spotřeba vody</span>
 							</div>
-							<div className="flex-row h-56">
+							<div className="flex-row 2xl:h-64 lg:h-48">
 								<WaterConsumptionChart chartType={settings.chartType} />
 							</div>
 							<div className="flex-row mt-3">
 								<span>Historie měření</span>
 							</div>
-							<div className="flex-row h-72">
+							<div className="flex-row 2xl:h-80 lg:h-52">
 								<MeasurementsHistoryChart chartType={settings.chartType} />
 							</div>
 						</CardContent>

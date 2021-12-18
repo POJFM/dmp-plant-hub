@@ -32,7 +32,9 @@ export default function Sidebar(props: any) {
 						onClick={() => setActiveLink('/')}
 					>
 						<div className={`flex-row sidebar-row-tf ${activeLink === '/' && 'sidebar-row-tf-active'}`}>
-							<DashboardIcon />
+							<div className="text-2xl flex items-center">
+								<DashboardIcon />
+							</div>
 							<span className={`sidebar-row-tf ml-1 title-2 ${activeLink === '/' && 'sidebar-row-tf-active'}`}>
 								Dashboard
 							</span>
@@ -49,7 +51,9 @@ export default function Sidebar(props: any) {
 						onClick={() => setActiveLink('/control')}
 					>
 						<div className={`flex-row sidebar-row-tf ${activeLink === '/control' && 'sidebar-row-tf-active'}`}>
-							<ControlIcon />
+							<div className="text-2xl flex items-center">
+								<ControlIcon />
+							</div>
 							<span className={`sidebar-row-tf ml-1 title-2 ${activeLink === '/control' && 'sidebar-row-tf-active'}`}>
 								Control
 							</span>
@@ -66,7 +70,9 @@ export default function Sidebar(props: any) {
 						onClick={() => setActiveLink('/settings')}
 					>
 						<div className={`flex-row sidebar-row-tf ${activeLink === '/settings' && 'sidebar-row-tf-active'}`}>
-							<SettingsIcon />
+							<div className="text-2xl flex items-center">
+								<SettingsIcon />
+							</div>
 							<span className={`sidebar-row-tf ml-1 title-2 ${activeLink === '/settings' && 'sidebar-row-tf-active'}`}>
 								Settings
 							</span>
