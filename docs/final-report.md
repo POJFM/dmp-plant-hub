@@ -73,8 +73,8 @@
   #### Senzor teploty a vlhkosti vzduchu DHT11
   - je zapojen do zdroje 5V a země a jeho signální pin je připojen k pinu GPIO23.
 
-  #### Kapacitní čidlo pro měření vlhkosti půdy
-  - je zapojeno do zdroje 3.3V a země a jeho signální pin je připojen k pinu GPIO22.
+  #### Kapacitní analogové čidlo pro měření vlhkosti půdy
+  - je zapojeno do zdroje 3.3V a země a protože RaspberryPi pracuje pouze digitálně, je jeho signální pin připojen k analogově digitálnímu převodníku MCP3008.
 
   #### Ultrasonický senzor
   - je zapojen do zdroje 5V a země a jeho piny jsou pomocí I2C sběrnice připojen k pinům GPIO2 a GPIO3.
@@ -91,11 +91,39 @@
   - Ve webovém rozhraní jde navíc ještě manuálně nastavit hranice teploty a vlhkosti vzduchu pro spuštění čerpadla.
   - Nastavit se dá také množství vody, které bude přečerpáno při jednom spuštění a jaká je hranice pro přijatelnou výšku hladiny vody v nádrži. Pokud nejsou tyto hodnoty uvedeny čerpadlo bude vodu přečerpávat dokud se nezmění hodnota kapacitního čidla pro měření vlhkosti půdy a ultrasonický senzor použije výchozí nastavení.
   #### 2. Fáze měření
-  - Kapacitní čidlo pro měření vlhkosti půdy a senzor teploty a vlhkosti vzduchu průběžně posílají naměřená data do RaspberryPi, kde se ukládají do databáze. Jestliže naměřené hodnoty překročí limitní hodnoty RaspberryPi pošle signál pro otevření tranzistoru což spustí čerpadlo, které začne čerpat vodu. Voda se čerpá tak dlouho dokud kapacitní čidlo pro měření vlhkosti půdy nezmění svou hodnotu nebo dokud není vyčerpán limit vody na jedno spuštění.
-  #### 3. Fáze kontroly
+  - Kapacitní čidlo pro měření vlhkosti půdy a senzor teploty a vlhkosti vzduchu průběžně posílají naměřená data do RaspberryPi, kde se ukládají do databáze. Jestliže naměřené hodnoty překročí limitní hodnoty RaspberryPi pošle signál pro otevření tranzistoru což spustí čerpadlo.
+  #### 3. Fáze zavlažování
+  -  Čerpadlo začne čerpat vodu a zavlažovat rostlinu. Voda se čerpá tak dlouho dokud kapacitní čidlo pro měření vlhkosti půdy nezmění svou hodnotu nebo dokud není vyčerpán limit přečerpané vody na jedno spuštění.
+  #### 4. Fáze kontroly
   - Po ukončení přečerpávání se spustí ultrasonický senzor a změří výšku hladiny vody. Naměřená data poté odešlě do RaspberryPi kde se uloží do databáze. Pokud bude naměřená hodnota nižší než je limitní hodnota začne blikat LED dioda a RaspberryPi odešle upozornění o doplnění nádrže do webového rozhraní. Jakmile bude hladina doplněna signalizace se vypne.
 
 ### 3. fyzická realizace
 
 ### 4. naprogramování řídící jednotky
 - Řídící jednotku jsem naprogramoval ve vysokoúrovňovém skriptovacím programovacím jazyce python
+
+### 5. interaktivní ovládání PlanHubu z webového UI
+
+### 6. Ověření funkčnosti
+
+## 2. část maturitní práce - Filip Sikora
+#### Mé cíly
+-
+-
+-
+### 1. softwarové řešení - stanovení cílů, volba sw platformy a konkrétního software
+
+### 2. konfigurace RPi jako webového serveru
+
+### 3. vytvoření databáze
+
+### 4. vytvoření front end
+- Webovou aplikaci jsme vytvořili ve frameworku React.js založeném na javascriptu. Webová aplikace komunikuje s backendem pomocí GraphQl API.
+
+### 5. vytvoření back end
+
+### 6. nastavení bezpečnosti
+
+### 7. interaktivní ovládání PlanHubu z webového UI
+
+### 8. Ověření funkčnosti
