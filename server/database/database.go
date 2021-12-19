@@ -31,7 +31,7 @@ func Connect() *DB {
 	return &DB{db}
 }
 
-func (db *DB) Save(input *model.NewMeasurement, ctx context.Context) *model.Measurement {
+func (db *DB) SaveMeasurement(input *model.NewMeasurement, ctx context.Context) *model.Measurement {
 	//_, err := db.NewInsert().Model(&input).TableExpr("measurements").Exec()
 	_, err := db.DB.NewInsert().Model(input).ModelTableExpr("measurements").Exec(ctx)
 	if err != nil {
@@ -45,3 +45,5 @@ func (db *DB) Save(input *model.NewMeasurement, ctx context.Context) *model.Meas
 		WaterOverdrawn: input.WaterOverdrawn,
 	}
 }
+
+// func (db *DB) UpdateSettings(input *model.Settings, ctx context.Context) *model.Settings {}

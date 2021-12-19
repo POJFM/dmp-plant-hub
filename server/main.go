@@ -5,12 +5,12 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
 )
 
 const defaultPort = "5000"
@@ -34,6 +34,10 @@ var moistureLevel float32
 var waterOverdrawnLevel float32
 var pumpFlow float32 // liter/min
 
+type kokotak struct {
+	*sensors.PinOut
+}
+
 func main() {
 	//Pins()
 	//InitializationSequence(manualWaterOverdrawn, manualWaterLevel, waterLevel, moistureLevel, waterOverdrawnLevel, initializationState, initialization)
@@ -44,8 +48,19 @@ func main() {
 		port = defaultPort
 	}
 
-	temp, hum := sensors.ReadDHT()
-	log.Printf("temp: %s, hum: %s", temp, hum)
+	/*temp, hum, retried := sensors.ReadDHT()
+	log.Printf("temp: %s, hum: %s, retried: %s", temp, hum, retried)
+	kokot := 1
+	for kokot < 100 {
+		kokot += kokot
+		kokotinec := sensors.Pins()
+		log.Printf("jsi kokot: %v", sensors.PinOut.ReadWaterLevel(kokotinec))
+	}*/
+
+	var kokot = sensors.Pins()
+
+	var foo = kokot.ReadWaterLevel()
+	log.Println(foo)
 
 	var db = database.Connect()
 
