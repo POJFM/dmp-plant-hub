@@ -2,13 +2,14 @@ import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-
-import 'bootstrap/dist/css/bootstrap.css'
-import './styles/globals.css'
+import { ApolloProvider } from '@apollo/client'
+import client from './apollo/client'
 
 ReactDOM.render(
 	<StrictMode>
-		<App />
+		<ApolloProvider client={client}>
+			<App />
+		</ApolloProvider>
 	</StrictMode>,
 	document.getElementById('root')
 )

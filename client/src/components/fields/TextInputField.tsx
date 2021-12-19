@@ -1,16 +1,14 @@
-import { useState } from 'react'
-import { useStyles } from '../../styles/rootStyles'
+export default function TextInputField({ item, name, defaultValue, active }: any) {
+	let activeClass
+	active && (activeClass = 'input-field')
+	!active && (activeClass = 'input-field-inactive')
 
-export default function TextInputField({ key, name, defaultValue }: any) {
-  const classes = useStyles()
-  const [activeLabel, setActiveLabel] = useState(false)
-
-  return (
-    <div className={classes.inputField} onClick={() => setActiveLabel(true)}>
-      <label htmlFor="name" className={classes.inputFieldLabel}>
-        {name}
-      </label>
-      <input type="text" id="name" className={classes.inputFieldInput} name={key} value={defaultValue} />
-    </div>
-  )
+	return (
+		<div className={activeClass}>
+			<label htmlFor="name" className="input-field-label">
+				{name}
+			</label>
+			<input type="text" id={item} className="input-field-input mt-4" name={item} defaultValue={defaultValue} />
+		</div>
+	)
 }

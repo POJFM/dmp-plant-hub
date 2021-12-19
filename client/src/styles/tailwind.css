@@ -1,0 +1,378 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.root,
+#root,
+#docs-root {
+	--bg: #F5F5D1;
+	--green: #66BC3E;
+	--lightGreen: #7FD059;
+	--lighterGreen: #A2E782;
+	--darkGreen: #54A82D;
+	--white: #ffffff;
+	--inactiveGrey: #9FA69B;
+	--inactiveLightGrey: #CCCCCC;
+	--warningRed: #DB4C4C;
+	--irrigationBlue: #78CEFF;
+	--transition: all .2s ease-in-out;
+}
+
+@layer utilities {
+	html, body {
+		padding: 0;
+		margin: 0;
+		font-family: 'Montserrat Alternates', sans-serif;
+		max-width: 100%;
+		overflow: hidden;
+		font-weight: 500;
+	}
+
+	[class*='flex-'] {
+		display: flex;
+	}
+
+	.p-0-i {
+		padding: 0 !important;
+	}
+
+	.flex-center {
+		justify-content: center;
+		align-items: center;
+	}
+
+	.MuiSvgIcon-root {
+		font-size: unset !important;
+	}
+
+	.app {
+		background: var(--bg);
+	}
+
+	.sidebar {
+		height: 100vh;
+		background: var(--green);
+	}
+
+	.sidebar-row {
+		padding: 15px;
+		transition: var(--transition);
+	}
+
+	.sidebar-row-hover {
+		background: var(--lightGreen);
+		cursor: pointer;
+	}
+
+	.red {
+		color: red
+	}
+
+	.sidebar-row-active {
+		background: var(--lighterGreen);
+		cursor: pointer;
+	}
+
+	.sidebar-row-top {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.sidebar-title {
+		color: var(--white);
+		font-weight: 600;
+		font-size: 1.6em;
+	}
+
+	.sidebar-row-tf {
+		color: var(--white);
+		font-weight: 600;
+		transition: var(--transition);
+		display: flex;
+		align-items: center;
+		margin-left: 0.652rem;
+	}
+
+	.sidebar-row-tf-active {
+		color: var(--green);
+		font-weight: 600;
+		transition: var(--transition);
+		display: flex;
+		align-items: center;
+	}
+
+	.sidebar-text {
+		margin-left: '10px';
+	}
+
+	.card {
+		margin: 0.625rem;
+		margin-bottom: 0;
+		padding: 5px;
+		border-radius: 10px !important;
+	}
+
+	.card-left {
+		margin: 0.625rem 0.312rem 0 0.625rem;
+		padding: 5px;
+		border-radius: 10px !important;
+	}
+
+	.card-right {
+		margin: 0.625rem 0.625rem 0 0.312rem;
+		padding: 5px;
+		border-radius: 10px !important;
+	}
+
+	.title-1 {
+		font-size: 1.575em;
+		font-weight: 600;
+	}
+
+	.title-2 {
+		font-size: 1.1em;
+	}
+
+	.refresh-button-wrapper {
+		position: relative;
+	}
+
+	.refresh-button {
+		float: right;
+		display: flex;
+		justify-content: right;
+		align-items: right;
+	}
+
+	.input-field {
+		border-bottom: 1px solid var(--darkGreen);
+		padding: 0 10px;
+		position: relative;
+		transition: var(--transition);
+	}
+
+	.input-field-inactive {
+		border-bottom: 1px solid var(--inactiveGrey);
+		padding: 0 10px;
+		position: relative;
+	}
+
+	.input-field-inactive .input-field-label {
+		color: var(--inactiveGrey);
+		font-size: 0.8em;
+		position: absolute;
+	}
+
+	.input-field-inactive .input-field-input {
+		border: none;
+		font-size: 1.2em;
+		color: var(--inactiveGrey);
+		outline: 0;
+		pointer-events: none;
+	}
+
+	.input-field-editable {
+		border-bottom: 1px solid var(--darkGreen);
+		padding: 0 10px;
+		position: relative;
+	}
+
+	.input-field-label {
+		color: var(--darkGreen);
+		font-size: 0.8em;
+		position: absolute;
+		transition: var(--transition);
+	}
+
+	.input-field-toggle-checkbox-wrapper {
+		position: relative;
+		display: inline-block;
+		width: 56px;
+		height: 28px;
+	}
+
+	.input-field-input {
+		border: none;
+		font-size: 1.2em;
+		outline: 0;
+		transition: var(--transition);
+	}
+
+	.input-field-input-toggle-wrapper {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: var(--inactiveGrey);
+		-webkit-transition: .4s;
+		transition: .4s;
+		border-radius: 34px;
+	}
+
+	.input-field-input-toggle {
+		opacity: 0;
+		width: 0;
+		height: 0;
+	}
+
+	.input-field-input-toggle-slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		-webkit-transition: .4s;
+		transition: .4s;
+		border-radius: 34px;
+	}
+
+	.input-field-input-toggle-slider:before {
+		position: absolute;
+		background-color: var(--white);
+		content: "";
+		height: 20px;
+		width: 20px;
+		left: 4px;
+		bottom: 4px;
+		-webkit-transition: .4s;
+		transition: .4s;
+		border-radius: 50%;
+	}
+
+	.input-field-input-toggle-slider-inactive {
+		background-color: var(--inactiveLightGrey);
+	}
+
+	.input-field-input-toggle-slider-active {
+		background-color: var(--lightGreen);
+	}
+
+	.input-field-input-toggle-slider-active:before {
+		-webkit-transform: translateX(28px);
+		-ms-transform: translateX(28px);
+		transform: translateX(28px);
+	}
+
+	.input-field-input-toggle-slider-values-0 {
+		background-color: var(--lightGreen);
+	}
+
+	.input-field-input-toggle-slider-values-1 {
+		background-color: var(--lightGreen);
+	}
+
+	.input-field-input-toggle-slider-values-1:before {
+		-webkit-transform: translateX(28px);
+		-ms-transform: translateX(28px);
+		transform: translateX(28px);
+	}
+
+	.button-wrapper {
+		padding: 0;
+		position: relative;
+	}
+
+	.button-card {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100px;
+		height: 50px;
+		margin-top: 10px;
+		border-radius: 8px;
+	}
+
+	.button {
+		background: var(--green);
+		transition: var(--transition);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100px;
+		height: 50px;
+		margin-top: 10px;
+	}
+
+	.button-inactive {
+		background: var(--inactiveLightGrey);
+		transition: var(--transition);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100px;
+		height: 50px;
+		margin-top: 10px;
+		pointer-events: none;
+	}
+
+	.button-text {
+		color: var(--white);
+		font-size: 1.2em;
+		font-weight: 600;
+		margin-top: -1px;
+	}
+
+	/* width */
+	::-webkit-scrollbar {
+		height: 10px;
+		background: var(--white);
+	}
+
+	/* Handle */
+	::-webkit-scrollbar-thumb {
+		background: var(--green);
+		border-radius: 3px;
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background: var(--lightGreen);
+	}
+
+	@variants hover, focus {
+		.refresh-button {
+			cursor: pointer;
+		}
+
+		.button-hover {
+			background: var(--lightGreen);
+			cursor: pointer;
+		}
+	}
+}
+
+.init-form {
+	position: fixed;
+	top: 0;
+	left: 0;
+	background: rgba(0, 0, 0, 0.6);
+	z-index: 2;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.notification {
+	display: block;
+	position: absolute;
+	top: 0;
+	width: 24rem;
+	filter: drop-shadow(0 0 5px var(--inactiveGrey));
+	transition: var(--transition);
+	animation: TranslateDown 0.75s linear forwards;
+}
+
+@keyframes TranslateDown {
+  from {transform: translateY(-8rem);}
+  to {transform: translateY(0);}
+}

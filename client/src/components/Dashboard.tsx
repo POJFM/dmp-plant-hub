@@ -1,345 +1,337 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
-import { RefreshButton } from './buttons/RefreshButton'
+//import { RefreshButton } from './buttons/RefreshButton'
+import { useQuery } from '@apollo/client'
+import { dashboard } from '../graphql/queries'
 import {
-	Chart,
+	Chart as ChartJS,
 	CategoryScale,
-	LineController,
-	LineElement,
-	PointElement,
 	LinearScale,
+	PointElement,
+	LineElement,
+	BarElement,
 	Title,
-	ChartType,
+	Tooltip,
+	Legend,
 } from 'chart.js'
-import { useStyles } from './../styles/rootStyles'
-import { useDashboardStyles } from './../styles/dashboard'
+import { LiveMeasurementsChart, WaterConsumptionChart, IrrigationChart, MeasurementsHistoryChart } from './Chart'
+import ReactScrollWheelHandler from 'react-scroll-wheel-handler'
+import { getMonths } from 'src/utils'
 
 export default function Dashboard() {
-	const dashboardClasses = useDashboardStyles()
-	const classes = useStyles()
-	const [temperature, setTemperature] = useState(0)
-	const [humidity, setHumidity] = useState(0)
-	const [weather, setWeather] = useState<any>()
-	const [currentLatitude, setCurrentLatitude] = useState('')
-	const [currentLongitude, setCurrentLongitude] = useState('')
+	const [currentTemp, setCurrentTemp] = useState(0),
+		[currentMoist, setCurrentMoist] = useState(0),
+		[currentHum, setCurrentHum] = useState(0),
+		[temp, setTemp] = useState<any>(),
+		[moist, setMoist] = useState<any>(),
+		[hum, setHum] = useState<any>(),
+		[irrigationCount, setIrrigationCount] = useState<number>(),
+		[months, setMonths] = useState<any>(),
+		[weather, setWeather] = useState<any>()
 
-	// fetch('/measure')
-	// 	.then((res) => res.json())
-	// 	.then((data) => {
-	// 		setTemperature(data.temperature)
-	// 		setHumidity(data.humidity)
-	// 	})
-	// 	.then((err) => {
-	// 		console.log(err)
-	// 	})
+	const { loading, error, data } = useQuery(dashboard)
+	// TEST
+	const settings = { chartType: 0 }
+	// END TEST
 
-	// fetch('/init/measured')
-	// 	.then((res) => res.json())
-	// 	.then((data) => {
-	// 		setCurrentLatitude(data?.latitude)
-	// 		setCurrentLongitude(data?.longitude)
-	// 	})
-	// 	.then((err: any) => {
-	// 		console.log(err)
-	// 	})
+	useEffect(() => {
+		document.title = 'Plant Hub | Dashboard'
+		
+		const currentMonth = new Date().getMonth()
+		console.log(currentMonth)
+		setMonths(getMonths())
+		console.log(months)
 
-	console.log(`${process.env.REACT_APP_FORECAST_API_URL}?lat=49.68333&lon=18.35`)
+		for (let i = currentMonth; i < 12; i++) {
+			let month: number
+			// data.IrrigationHistory.map((item: any) => {
+			// 	item.timestamp === 'regex na jeden měsíc a číslo z loopu podle current month' && month++
+			// })
+			//irrigationCount.push(month)
+			console.log(i)
+			i > 10 && (i = 0)
+			i === currentMonth - 1 && (i = 12)
+		}
+	}, [])
 
 	//https://graphql.org/blog/rest-api-graphql-wrapper/
 	const fetchWeatherForecast = () => {
 		axios
-		.request({
-			method: 'GET',
-			url: `${process.env.REACT_APP_FORECAST_API_URL}?lat=49.68333&lon=18.35`,
-			//url: `${process.env.REACT_APP_FORECAST_API_URL}?lat=${currentLatitude}&lon=${currentLongitude}`,
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		})
-		.then((response) => {
-			setWeather(response.data.properties.timeseries.slice(0, 5))
-		})
-		.catch((error) => {
-			console.error(error)
-		})
+			.request({
+				method: 'GET',
+				url: `https://api.openweathermap.org/data/2.5/onecall?lat=${49.68333}&lon=${18.35}&exclude=daily,minutely,alerts&units=metric&appid=${
+					process.env.REACT_APP_FORECAST_API_KEY
+				}`,
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			})
+			.then((res) => {
+				setWeather(res.data.hourly.slice(0, 15)) //
+			})
+			.catch((error) => {
+				console.error(error)
+			})
 	}
 
 	// Fetch on render then every 30mins
 	setTimeout(() => fetchWeatherForecast(), weather ? 300_000 : 1)
 
-	useEffect(() => {
-		document.title = 'Plant Hub | Dashboard'
+	console.log(
+		`https://api.openweathermap.org/data/2.5/onecall?lat=${49.68333}&lon=${18.35}&exclude=daily,minutely,alerts&units=metric&appid=${
+			process.env.REACT_APP_FORECAST_API_KEY
+		}`
+	)
 
-		Chart.register(CategoryScale, LineController, LineElement, PointElement, LinearScale, Title)
-
-		const irrigationChart = new Chart('irrigationChart', {
-			type: 'line',
-			data: {
-				labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-				datasets: [
-					{
-						label: 'Moisture',
-						backgroundColor: 'rgb(255, 99, 132)',
-						borderColor: 'rgb(0, 0, 255)',
-						data: [5, 8, 10, 20, 5, 35, 20],
-						yAxisID: 'm',
-					},
-					{
-						label: 'Temperature',
-						backgroundColor: 'rgb(255, 99, 132)',
-						borderColor: 'rgb(0, 255, 0)',
-						data: [8, 1, 10, 20, 5, 35, 20],
-						yAxisID: 't',
-					},
-					{
-						label: 'Humidity',
-						backgroundColor: 'rgb(255, 99, 132)',
-						borderColor: 'rgb(255, 0, 0)',
-						data: [10, 7, 10, 20, 5, 35, 20],
-						yAxisID: 'h',
-					},
-				],
-			},
-			options: {
-				interaction: {
-					mode: 'index',
-					intersect: false,
+	const liveMeasurements = () => {
+		axios
+			.request({
+				method: 'GET',
+				url: `${process.env.REACT_APP_GO_API_URL}/live/measure`,
+				headers: {
+					'Content-Type': 'application/json',
 				},
-				scales: {
-					m: {
-						type: 'linear',
-						display: true,
-						position: 'left',
-					},
-					t: {
-						type: 'linear',
-						display: true,
-						position: 'left',
-					},
-					h: {
-						type: 'linear',
-						display: true,
-						position: 'left',
-					},
-				},
-			},
-		})
-	}, [])
+			})
+			.then((res) => {
+				setCurrentTemp(res.data.temp)
+				setCurrentHum(res.data.hum)
+				setCurrentMoist(res.data.moist)
+				temp.push(res.data.temp)
+				hum.push(res.data.hum)
+				moist.push(res.data.moist)
+			})
+			.catch((error) => {
+				console.error(error)
+			})
+	}
 
-	const weatherForecastBullshitToIcons = (weatherState: string) => {
-		if (weatherState.includes('rainandthunder')) {
-			return 'rainAndThunder'
-		} else if (weatherState.includes('snowandthunder')) {
-			return 'snowAndThunder'
-		} else if (weatherState.includes('partlycloudy')) {
-			if (weatherState.includes('night')) {
-				return 'partlyCloudyNight'
-			} else {
-				return 'partlyCloudy'
+	setTimeout(() => liveMeasurements(), 1000)
+
+	const useHorizontalScroll = () => {
+		const elRef = useRef()
+		useEffect(() => {
+			const el = elRef.current
+			if (el) {
+				const onWheel = (e: any) => {
+					if (e.deltaY == 0) return
+					e.preventDefault()
+					//@ts-ignore
+					el.scrollTo({
+						//@ts-ignore
+						left: el.scrollLeft + e.deltaY,
+						behavior: 'smooth',
+					})
+				}
+				//@ts-ignore
+				el.addEventListener('wheel', onWheel)
+				//@ts-ignore
+				return () => el.removeEventListener('wheel', onWheel)
 			}
-		} else if (weatherState.includes('clearsky')) {
-			if (weatherState.includes('night')) {
-				return 'clearskyNight'
-			} else {
-				return 'clearsky'
-			}
-		} else if (weatherState.includes('fair')) {
+		}, [])
+		return elRef
+	}
+
+	ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend)
+
+	// // Reduce the animation steps for demo clarity.
+	// var myLiveChart = new Chart(ctx).Line(startingData, {animationSteps: 15});
+
+	// setInterval(function(){
+	// 	// Get a random index point
+	// 	var indexToUpdate = Math.round(Math.random() * startingData.labels.length);
+
+	// 	// Update one of the points in the second dataset
+	// 	myLiveChart.datasets[1].points[indexToUpdate].value = Math.random() * 100;
+
+	// 	myLiveChart.update();
+	// }, 5000);
+
+	const weatherForecastDataToIcons = (weatherState: any) => {
+		if (weatherState.icon.includes('01d')) {
+			return 'clearsky'
+		} else if (weatherState.icon.includes('01n')) {
+			return 'clearskyNight'
+		} else if (weatherState.icon.includes('02d')) {
 			return 'fair'
-		} else if (weatherState.includes('snow')) {
+		} else if (weatherState.icon.includes('02n')) {
+			return 'fairNight'
+		} else if (weatherState.description.includes('snow')) {
 			return 'snow'
-		} else if (weatherState.includes('fog')) {
-			return 'fog'
-		} else if (weatherState.includes('rain')) {
+		} else if (weatherState.description.includes('mist')) {
+			return 'mist'
+		} else if (weatherState.description.includes('rain')) {
 			return 'rain'
-		} else if (weatherState.includes('sleet')) {
+		} else if (weatherState.description.includes('sleet') || weatherState.description.includes('Sleet')) {
 			return 'sleet'
-		} else if (weatherState.includes('cloudy')) {
+		} else if (weatherState.description.includes('scattered clouds')) {
+			return 'partlyCloudy'
+		} else if (
+			weatherState.description.includes('broken clouds') ||
+			weatherState.description.includes('overcast clouds')
+		) {
 			return 'cloudy'
+		} else if (weatherState.description.includes('thunderstorm')) {
+			return 'rainAndThunder'
 		}
 	}
 
-	// const waterConsumptionChart = new Chart('waterConsumptionChart', {
-	// 	type: 'line',
-	// 	data: {
-	// 		labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-	// 		datasets: [
-	// 			{
-	// 				label: 'Moisture',
-	// 				backgroundColor: 'rgb(255, 99, 132)',
-	// 				borderColor: 'rgb(0, 0, 255)',
-	// 				data: [5, 8, 10, 20, 5, 35, 20],
-	// 				yAxisID: 'm',
-	// 			},
-	// 			{
-	// 				label: 'Temperature',
-	// 				backgroundColor: 'rgb(255, 99, 132)',
-	// 				borderColor: 'rgb(0, 255, 0)',
-	// 				data: [8, 1, 10, 20, 5, 35, 20],
-	// 				yAxisID: 't',
-	// 			},
-	// 			{
-	// 				label: 'Humidity',
-	// 				backgroundColor: 'rgb(255, 99, 132)',
-	// 				borderColor: 'rgb(255, 0, 0)',
-	// 				data: [10, 7, 10, 20, 5, 35, 20],
-	// 				yAxisID: 'h',
-	// 			},
-	// 		],
-	// 	},
-	// 	options: {
-	// 		responsive: false,
-	// 		maintainAspectRatio: false,
-	// 		interaction: {
-	// 			mode: 'index',
-	// 			intersect: false,
-	// 		},
-	// 		scales: {
-	// 			m: {
-	// 				type: 'linear',
-	// 				display: true,
-	// 				position: 'left',
-	// 			},
-	// 			t: {
-	// 				type: 'linear',
-	// 				display: true,
-	// 				position: 'left',
-	// 			},
-	// 			h: {
-	// 				type: 'linear',
-	// 				display: true,
-	// 				position: 'left',
-	// 			},
-	// 		},
-	// 	},
-	// })
 	return (
-		<div className="col dashboard">
-			<Card className={classes.card}>
+		<div className="dashboard">
+			<Card className="card h-52">
 				<CardContent>
-					<div className="row">
-						<div className="col">
-							<div className="row">
-								<div className="col">
-									<div className={`row ${classes.cardRow}`}>
-										<span className="col">
-											<img src="/assets/icons/dashboard/temperature.svg" className={classes.icon} />
+					<div className="flex-row">
+						<div className="flex-col w-4/12">
+							<div className="flex-row">
+								<div className="flex-col ml-5">
+									<div className="flex-row pt-5px" title="Teplota vzduchu">
+										<span className="flex-col w-12 max-h-full">
+											<img src="/assets/icons/dashboard/temperature.svg" />
 										</span>
-										<span className="col">{temperature}°C</span>
+										<span className="flex-col">{`${currentTemp}°C`}</span>
 									</div>
-									<div className={`row ${classes.cardRow}`}>
-										<span className="col">
-											<img src="/assets/icons/dashboard/humidity.svg" className={classes.icon} />
+									<div className="flex-row pt-5px" title="Vlhkost vzduchu">
+										<span className="flex-col w-12 max-h-full">
+											<img src="/assets/icons/dashboard/humidity.svg" />
 										</span>
-										<span className="col">{humidity}%</span>
+										<span className="flex-col">{`${currentHum}%`}</span>
 									</div>
-									<div className={`row ${classes.cardRow}`}>
-										<span className="col">
-											<img src="/assets/icons/dashboard/moisture.svg" className={classes.icon} />
+									<div className="flex-row pt-5px" title="Vlhkost půdy">
+										<span className="flex-col w-12 max-h-full">
+											<img src="/assets/icons/dashboard/moisture.svg" />
 										</span>
-										<span className="col">0%</span>
+										<span className="flex-col">{`${currentMoist}%`}</span>
 									</div>
 								</div>
-								<div className="col">
-									<div className={`row ${classes.cardRow}`}>
-										<span className="col">
-											<img src="/assets/icons/dashboard/waterLevel.svg" className={classes.icon} />
+								<div className="flex-col ml-5">
+									<div className="flex-row pt-5px" title="Výška vody v nádrži">
+										<span className="flex-col w-12 max-h-full">
+											<img src="/assets/icons/dashboard/waterLevel.svg" />
 										</span>
-										<span className="col">0cm</span>
+										<span className="flex-col">{/* {`${data.irrigationHistory.waterLevel}cm`} */}0cm</span>
 									</div>
-									<div className={`row ${classes.cardRow}`}>
-										<span className="col">
-											<img src="/assets/icons/dashboard/waterOverdrawn.svg" className={classes.icon} />
+									<div className="flex-row pt-5px" title="Objem vody v nádrži">
+										<span className="flex-col w-12 max-h-full">
+											<img src="/assets/icons/dashboard/waterOverdrawn.svg" />
 										</span>
-										<span className="col">0l</span>
+										<span className="flex-col">{/* {`${data.irrigationHistory.waterAmount}l`} */}5l</span>
+									</div>
+									<div className="flex-row pt-5px" title="Celkový vyčerpaný objem vody">
+										<span className="flex-col w-12 max-h-full">
+											<img src="/assets/icons/dashboard/waterOverdrawn.svg" />
+										</span>
+										<span className="flex-col">{/* {`${data.irrigationHistory.waterAmount}l`} */}56l</span>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div className="col"></div>
+						<div className="flex-col w-8/12">
+							<div className="flex-row h-44 -mt-2">
+								<LiveMeasurementsChart
+									chartType={settings.chartType}
+									temp={temp}
+									hum={hum}
+									moist={moist} /* data.settings.chartType */
+								/>
+							</div>
+						</div>
 					</div>
 				</CardContent>
 			</Card>
-			<div className="row">
-				<div className="col">
-					<div className="row">
-						<div className="col">
-							<Card className={`${classes.card} ${classes.cardTwoLeft}`}>
+			<div className="flex-row">
+				<div className="flex-col w-6/12">
+					<div className="flex-row">
+						<div className="flex-col w-full">
+							<Card className="card-left">
 								<CardContent>
-									<div className="row">
-										{weather &&
-											weather?.map((weatherItem: any) => {
+									<ReactScrollWheelHandler
+										upHandler={(e) => console.log('scroll up')}
+										downHandler={(e) => console.log('scroll down')}
+										leftHandler={(e) => console.log('scroll left')}
+										rightHandler={(e) => console.log('scroll right')}
+									>
+										<div /* ref={() => useHorizontalScroll} */ className="flex-row overflow-x-scroll">
+											{weather?.map((weatherItem: any, i: number) => {
+												const date = new Date()
+												let time = date.getHours() + i
+												time > 23 && (time = i)
+
 												return (
-													<div className="col">
-														<div className="row">
-															<div className="col flex-center">
-																<span className={dashboardClasses.weatherForecastTime}>
-																	{/..(?=:).../.exec(weatherItem.time)}
-																</span>
+													<div className="flex-col mx-2 mb-2 weatherWrapper">
+														<div className="flex-row mx-2 w-14 flex-center">
+															<div className="flex-col">
+																<span className="text-2xl">{`${time}:00`}</span>
 															</div>
 														</div>
-														<div className="row">
-															<div className={`col flex-center ${dashboardClasses.weatherForecastValue}`}>
-																<span>
-																	<img
-																		src="/assets/icons/dashboard/temperature.svg"
-																		className={dashboardClasses.weatherForecastValueIcon}
-																	/>
-																</span>
-																<span> {weatherItem.data.instant.details.air_temperature}°C</span>
+														<div className="flex-col">
+															<div className="flex-row text-xs">
+																<img src="/assets/icons/dashboard/temperature.svg" className="w-8 max-h-full" />
+																<span> {`${weatherItem.temp}°C`}</span>
 															</div>
-															<div className={`col flex-center ${dashboardClasses.weatherForecastValue}`}>
-																<span>
-																	<img
-																		src="/assets/icons/dashboard/humidity.svg"
-																		className={dashboardClasses.weatherForecastValueIcon}
-																	/>
-																</span>
-																<span> {weatherItem.data.instant.details.relative_humidity}%</span>
+															<div className="flex-row text-xs">
+																<img src="/assets/icons/dashboard/humidity.svg" className="w-8 max-h-full" />
+																<span> {`${weatherItem.humidity}%`}</span>
 															</div>
 														</div>
-														<div className="row">
-															<div className="col flex-center">
+														<div className="flex-row">
+															<div className="flex-col flex-center">
 																<img
-																	src={`/assets/icons/weatherForecast/${weatherForecastBullshitToIcons(
-																		weatherItem.data.next_1_hours.summary.symbol_code
+																	src={`/assets/icons/weatherForecast/${weatherForecastDataToIcons(
+																		weatherItem.weather[0]
 																	)}.svg`}
-																	className={dashboardClasses.weatherForecastIcon}
+																	className="dashboard w-14 h-full"
 																/>
 															</div>
 														</div>
 													</div>
 												)
 											})}
-									</div>
+										</div>
+									</ReactScrollWheelHandler>
 								</CardContent>
 							</Card>
 						</div>
 					</div>
-					<div className="row">
-						<div className="col">
-							<Card className={`${classes.card} ${classes.cardTwoLeft}`}>
+					<div className="flex-row">
+						<div className="flex-col w-full">
+							<Card className="card-left">
 								<CardContent>
-									<div className="row">
+									<div className="flex-row ">
 										<span>Historie zavlažování</span>
 									</div>
-									<div /* className={`row ${dashboardClasses.canvas}`} */>
-										<canvas id="irrigationChart"></canvas>
+									<div className="flex-row 2xl:h-96 lg:h-52">
+										<IrrigationChart
+											chartType={settings.chartType}
+											moist={moist}
+											hum={hum}
+											temp={temp}
+											irrigationCount={irrigationCount}
+										/>
 									</div>
 								</CardContent>
 							</Card>
 						</div>
 					</div>
 				</div>
-				<div className="col">
-					<Card className={`${classes.card} ${classes.cardTwoRight}`}>
+				<div className="flex-col w-6/12">
+					<Card className="card-right h-full">
 						<CardContent>
-							<div className="row">
-								<p>Spotřeba vody</p>
+							<div className="flex-row">
+								<span>Spotřeba vody</span>
 							</div>
-							<div className={`row ${dashboardClasses.canvas}`}>
-								{/* <canvas id="waterConsumtionChart" width="240px" height="240px"></canvas> */}
+							<div className="flex-row 2xl:h-64 lg:h-48">
+								<WaterConsumptionChart
+									chartType={settings.chartType}
+									waterOverdrawn={5 /* data.irrigationHistory.waterOverdrawn */}
+									irrigationCount={irrigationCount}
+								/>
+							</div>
+							<div className="flex-row mt-3">
+								<span>Historie měření</span>
+							</div>
+							<div className="flex-row 2xl:h-80 lg:h-52">
+								<MeasurementsHistoryChart chartType={settings.chartType} moist={moist} hum={hum} temp={temp} />
 							</div>
 						</CardContent>
 					</Card>
