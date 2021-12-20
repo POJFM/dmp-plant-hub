@@ -6,12 +6,29 @@ type Measurement {
     waterOverdrawn: Float!
 }
 
+enum Enum {
+    0
+    1
+}
+
+type Settings {
+    limitsTrigger: Boolean!
+    waterLevelLimit: Float!
+    waterAmountLimit: Float!
+    moistureLimit: Float!
+    scheduledTrigger: Boolean!
+    hourRange: Float!
+    chartType: Int!
+    theme: Int!
+}
+
 # TODO: vymyslet query pomoci timestamp range somehow
 type Query {
     measurement(id: ID!): Measurement!
     measurements: [Measurement!]
 }
 
+# vymrdat in favor of Measurement type ???
 input NewMeasurement {
     moisture: Float!
     temperature: Float!

@@ -229,11 +229,11 @@ func decodeDHTxxPulses(sensorType SensorType, pulses []Pulse) (temperature float
 			sum, calcSum, b0, b1, b2, b3))
 		return -1, -1, err
 	} else {
-		log.Fatal("CRCs verified: checksum from sensor(%v) = calculated checksum(%v=%v+%v+%v+%v)",
+		log.Printf("CRCs verified: checksum from sensor(%v) = calculated checksum(%v=%v+%v+%v+%v)",
 			sum, calcSum, b0, b1, b2, b3)
 	}
 	// debug output for 5 bytes
-	log.Fatal("Decoded from DHTxx sensor: [%d, %d, %d, %d, %d]", b0, b1, b2, b3, sum)
+	log.Printf("Decoded from DHTxx sensor: [%d, %d, %d, %d, %d]", b0, b1, b2, b3, sum)
 	// extract temperature and humidity depending on sensor type
 	temperature, humidity = 0.0, 0.0
 	if sensorType == DHT11 {
@@ -270,7 +270,7 @@ func printPulseArrayForDebug(pulses []Pulse) {
 	// 		pulse.Value, pulse.Duration))
 	// }
 	// lg.Debugf("Pulse count %d:\n%v", len(pulses), buf.String())
-	log.Fatal("Pulses received from DHTxx sensor: %v", pulses)
+	log.Printf("Pulses received from DHTxx sensor: %v", pulses)
 }
 
 // ReadDHTxx send activation request to DHTxx sensor via specific pin.
@@ -296,7 +296,7 @@ func ReadDHTxx(sensorType SensorType, pin int,
 		return -1, -1, err
 	}
 	// output debug information
-	printPulseArrayForDebug(pulses)
+	//printPulseArrayForDebug(pulses)
 	// decode pulses
 	temp, hum, err := decodeDHTxxPulses(sensorType, pulses)
 	if err != nil {

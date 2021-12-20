@@ -12,7 +12,7 @@ import (
 )
 
 func (r *mutationResolver) CreateMeasurement(ctx context.Context, input *model.NewMeasurement) (*model.Measurement, error) {
-	return r.DB.Save(input, ctx), nil
+	return r.DB.SaveMeasurement(input, ctx), nil
 }
 
 func (r *queryResolver) Measurement(ctx context.Context, id string) (*model.Measurement, error) {
