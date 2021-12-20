@@ -1,5 +1,7 @@
+import axios from 'axios'
+
 export const getMonths = () => {
-  let months = []
+	let months = []
 	const monthsTranslate = {
 			Jan: 'Leden',
 			Feb: 'Únor',
@@ -19,8 +21,49 @@ export const getMonths = () => {
 		sortedMonths = [...monthsOrigin.slice(0, currentMonth), ...monthsOrigin.slice(currentMonth)]
 
 	sortedMonths.map((sortedMonth) => months?.push(monthsTranslate[`${sortedMonth}`]))
-  console.log(months)
-	console.log(currentMonth)
-	console.log(sortedMonths)
-  return months
+
+	return months
+}
+
+export const fetchLocationFromCoords = (latitude, longitude) => {
+	axios
+		.request({
+			method: 'GET',
+			url: `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`,
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+		.then((res) => {
+			return (
+				res.data.results[0].components?.town ||
+				res.data.results[0].components?.village ||
+				res.data.results[0].components?.city
+			)
+		})
+		.catch((error) => {
+			console.error(error)
+		})
+}
+
+export const fetchCoordsFromLocation = (searchLocationValue) => {
+	console.log(searchLocationValue)
+	axios
+		.request({
+			method: 'GET',
+			url: `https://api.opencagedata.com/geocode/v1/json?q=${searchLocationValue}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`,
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+		.then((res) => {
+			res.data.results.map((item) => {
+				if (item.components.country_code === 'cz') {
+					return { lat: item?.geometry.lat, lon: item?.geometry.lng }
+				}
+			})
+		})
+		.catch((error) => {
+			console.error(error)
+		})
 }

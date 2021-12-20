@@ -1,7 +1,7 @@
 import { useEffect, useState, Component } from 'react'
 import axios from 'axios'
 import { useMutation } from '@apollo/client'
-import { createSettings } from '../graphql/mutations'
+import { updateSettings } from '../graphql/mutations'
 import Map from './Map'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
@@ -10,7 +10,7 @@ import ToggleButton from './buttons/ToggleButton'
 import SaveButton from './buttons/SaveButton'
 
 export default function InitForm(props: any) {
-	const [createSettingsData, { data, loading, error }] = useMutation(createSettings),
+	const [createSettingsData, { data, loading, error }] = useMutation(updateSettings),
 		[saveButtonState, setSaveButtonState] = useState(true),
 		[automaticIrrigationState, setAutomaticIrrigationState] = useState(true),
 		[scheduledIrrigationState, setScheduledIrrigationState] = useState(false),
@@ -248,6 +248,8 @@ export default function InitForm(props: any) {
 												theme: 0,
 												language: 0,
 												location: location,
+												lat: latitude,
+												lon: longitude,
 											},
 										})
 									}

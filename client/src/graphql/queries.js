@@ -15,6 +15,8 @@ export const settings = gql`
 			theme
 			language
 			location
+			lat
+			lon
 		}
 	}
 `

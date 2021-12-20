@@ -1,16 +1,18 @@
 import { useState } from 'react'
 
-export default function EditableField({ key, defaultValue }: any) {
-	const [activeLabel, setActiveLabel] = useState(false)
+export default function EditableField({ key, defaultValue, active, width }: any) {
+	let activeClass
+	active && (activeClass = 'input-field')
+	!active && (activeClass = 'input-field-inactive')
 
 	return (
-		<div className="float-left inline-block input-field" onClick={() => setActiveLabel(true)}>
+		<div className={`float-left inline-block ${activeClass}`}>
 			<input
 				type="text"
-				id="name"
-				className="float-left inline-block input-field-input"
+				id={key}
+				className={`w-${width} text-center float-left inline-block input-field-input`}
 				name={key}
-				value={defaultValue}
+				defaultValue={defaultValue}
 			/>
 		</div>
 	)
