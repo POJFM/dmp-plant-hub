@@ -1,6 +1,6 @@
 import { useEffect, useState, Component } from 'react'
 import axios from 'axios'
-import { useMutation } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { updateSettings } from '../graphql/mutations'
 import Map from './Map'
 import Card from '@material-ui/core/Card'
@@ -8,16 +8,19 @@ import CardContent from '@material-ui/core/CardContent'
 import TextInputField from './fields/TextInputField'
 import ToggleButton from './buttons/ToggleButton'
 import SaveButton from './buttons/SaveButton'
+import { settingsCheck } from './../graphql/queries'
 
 export default function InitForm(props: any) {
-	const [createSettingsData, { data, loading, error }] = useMutation(updateSettings),
+	const [createSettingsData] = useMutation(updateSettings),
+		{ data } = useQuery(settingsCheck),
+		[formActiveState, setFormActiveState] = useState(false),
 		[saveButtonState, setSaveButtonState] = useState(true),
 		[automaticIrrigationState, setAutomaticIrrigationState] = useState(true),
 		[scheduledIrrigationState, setScheduledIrrigationState] = useState(false),
 		[limitValues, setLimitValues] = useState<any>(),
-		[moistureLimit, setMoistureLimit] = useState<number>(),
-		[waterAmountLimit, setWaterAmountLimit] = useState<number>(),
-		[waterLevelLimit, setWaterLevelLimit] = useState<number>(),
+		[moistLimit, setMoistLimit] = useState<number>(), // createSettingsData.moistLimit
+		[waterAmountLimit, setWaterAmountLimit] = useState<number>(), // empty
+		[waterLevelLimit, setWaterLevelLimit] = useState<number>(), // createSettingsData.waterLevelLimit
 		[hoursRange, setHoursRange] = useState<number>(),
 		[initCoords, setInitCoords] = useState(true),
 		[location, setLocation] = useState<string>(),
@@ -25,6 +28,10 @@ export default function InitForm(props: any) {
 		[latitude, setLatitude] = useState<number>(),
 		[longitude, setLongitude] = useState<number>(),
 		[mapClicked, setMapClicked] = useState(false)
+
+	useEffect(() => {
+		data?.id === null && setFormActiveState(true)
+	}, [])
 
 	interface IGetCoordsProps {
 		label: string
@@ -107,9 +114,8 @@ export default function InitForm(props: any) {
 				},
 			})
 			.then((res) => {
-				setMoistureLimit(res.data.moistureLimit)
+				setMoistLimit(res.data.moistLimit)
 				setWaterLevelLimit(res.data.waterLevelLimit)
-				setWaterAmountLimit(res.data.waterAmountLimit)
 				setLimitValues(true)
 			})
 			.catch((error) => {
@@ -165,105 +171,115 @@ export default function InitForm(props: any) {
 	}, [mapClicked])
 
 	return (
-		<div className="init-form">
-			<Card className="card p-0-i">
-				<CardContent className="p-0-i">
-					<div className="flex-row">
-						<div className="flex-col pl-8 pt-8 pr-3">
-							<div className="flex-row flex-center p-1 mb-2">
-								<span className="title-1">PlantHub - Inicializace</span>
-							</div>
-							<div className="flex-row mb-2">
-								<div className="flex-col p-1 pt-5px mt-2">
-									<div className="flex-row">
-										<span className="title-2">Automaticky</span>
+		<>
+			{formActiveState && (
+				<div className="init-form">
+					<Card className="card p-0-i">
+						<CardContent className="p-0-i">
+							<div className="flex-row">
+								<div className="flex-col pl-8 pt-8 pr-3">
+									<div className="flex-row flex-center p-1 mb-2">
+										<span className="title-1">PlantHub - Inicializace</span>
 									</div>
-									<div className="flex-row mt-2">
-										<span className="title-2">Plánovaně</span>
-									</div>
-								</div>
-								<div className="flex-col p-1 pt-5px mt-2 ml-2">
-									<div className="flex-row">
-										<div onClick={() => updateToggleState('automaticIrrigation')}>
-											<ToggleButton item="limitsTrigger" toggleState={automaticIrrigationState} />
+									<div className="flex-row mb-2">
+										<div className="flex-col p-1 pt-5px mt-2">
+											<div className="flex-row">
+												<span className="title-2">Automaticky</span>
+											</div>
+											<div className="flex-row mt-2">
+												<span className="title-2">Plánovaně</span>
+											</div>
+										</div>
+										<div className="flex-col p-1 pt-5px mt-2 ml-2">
+											<div className="flex-row">
+												<div onClick={() => updateToggleState('automaticIrrigation')}>
+													<ToggleButton item="limitsTrigger" toggleState={automaticIrrigationState} />
+												</div>
+											</div>
+											<div className="flex-row mt-2">
+												<div onClick={() => updateToggleState('scheduledIrrigation')}>
+													<ToggleButton item="scheduledTrigger" toggleState={scheduledIrrigationState} />
+												</div>
+											</div>
 										</div>
 									</div>
-									<div className="flex-row mt-2">
-										<div onClick={() => updateToggleState('scheduledIrrigation')}>
-											<ToggleButton item="scheduledTrigger" toggleState={scheduledIrrigationState} />
-										</div>
+									<div className="flex-row p-1 pt-5px mt-2" onBlur={(data: any) => setMoistLimit(data.target.value)}>
+										<TextInputField
+											item="moistLimit"
+											name="Limit vlhkosti půdy (%)"
+											defaultValue={moistLimit}
+											active={automaticIrrigationState}
+										/>
+									</div>
+									<div
+										className="flex-row p-1 pt-5px mt-2"
+										onBlur={(data: any) => setWaterAmountLimit(data.target.value)}
+									>
+										<TextInputField
+											item="waterAmountLimit"
+											name="Limit objemu nádrže (l)"
+											defaultValue={waterAmountLimit}
+											active={automaticIrrigationState}
+										/>
+									</div>
+									<div
+										className="flex-row p-1 pt-5px mt-2"
+										onBlur={(data: any) => setWaterLevelLimit(data.target.value)}
+									>
+										<TextInputField
+											item="waterLevelLimit"
+											name="Limit hladiny vody (cm)"
+											defaultValue={waterLevelLimit}
+											active={automaticIrrigationState}
+										/>
+									</div>
+									<div className="flex-row p-1 pt-5px mt-2" onBlur={(data: any) => setHoursRange(data.target.value)}>
+										<TextInputField
+											item="hourRange"
+											name="Rozsah hodin (h)"
+											defaultValue={hoursRange}
+											active={scheduledIrrigationState}
+										/>
+									</div>
+									<div
+										className="flex-row p-1 pt-5px mt-2"
+										onBlur={(data: any) => fetchCoordsFromLocation(data.target.value)}
+									>
+										<TextInputField item="location" name="Lokace" defaultValue={location} active="true" />
+									</div>
+									<div className="flex-row p-1 pt-5px mt-2">
+										<SaveButton
+											onClick={() =>
+												createSettingsData({
+													variables: {
+														limitsTrigger: automaticIrrigationState,
+														waterLevelLimit: waterLevelLimit,
+														waterAmountLimit: waterAmountLimit,
+														moistLimit: moistLimit,
+														scheduledTrigger: scheduledIrrigationState,
+														hoursRange: hoursRange,
+														chartType: 0,
+														theme: 0,
+														language: 0,
+														location: location,
+														lat: latitude,
+														lon: longitude,
+													},
+												})
+											}
+											active={saveButtonState}
+										/>
 									</div>
 								</div>
+								<div className="flex-col pl-5" onClick={() => setMapClicked(true)}>
+									<Map lat={latitude || 0} lon={longitude || 0} />
+								</div>
 							</div>
-							<div className="flex-row p-1 pt-5px mt-2" onBlur={(data: any) => setMoistureLimit(data.target.value)}>
-								<TextInputField
-									item="moistureLimit"
-									name="Limit vlhkosti půdy (%)"
-									defaultValue={moistureLimit}
-									active={automaticIrrigationState}
-								/>
-							</div>
-							<div className="flex-row p-1 pt-5px mt-2" onBlur={(data: any) => setWaterAmountLimit(data.target.value)}>
-								<TextInputField
-									item="waterAmountLimit"
-									name="Limit objemu nádrže (l)"
-									defaultValue={waterAmountLimit}
-									active={automaticIrrigationState}
-								/>
-							</div>
-							<div className="flex-row p-1 pt-5px mt-2" onBlur={(data: any) => setWaterLevelLimit(data.target.value)}>
-								<TextInputField
-									item="waterLevelLimit"
-									name="Limit hladiny vody (cm)"
-									defaultValue={waterLevelLimit}
-									active={automaticIrrigationState}
-								/>
-							</div>
-							<div className="flex-row p-1 pt-5px mt-2" onBlur={(data: any) => setHoursRange(data.target.value)}>
-								<TextInputField
-									item="hourRange"
-									name="Rozsah hodin (h)"
-									defaultValue={hoursRange}
-									active={scheduledIrrigationState}
-								/>
-							</div>
-							<div
-								className="flex-row p-1 pt-5px mt-2"
-								onBlur={(data: any) => fetchCoordsFromLocation(data.target.value)}
-							>
-								<TextInputField item="location" name="Lokace" defaultValue={location} active="true" />
-							</div>
-							<div className="flex-row p-1 pt-5px mt-2">
-								<SaveButton
-									onClick={() =>
-										createSettingsData({
-											variables: {
-												limitsTrigger: automaticIrrigationState,
-												waterLevelLimit: waterLevelLimit,
-												waterAmountLimit: waterAmountLimit,
-												moistureLimit: moistureLimit,
-												scheduledTrigger: scheduledIrrigationState,
-												hoursRange: hoursRange,
-												chartType: 0,
-												theme: 0,
-												language: 0,
-												location: location,
-												lat: latitude,
-												lon: longitude,
-											},
-										})
-									}
-									active={saveButtonState}
-								/>
-							</div>
-						</div>
-						<div className="flex-col pl-5" onClick={() => setMapClicked(true)}>
-							<Map lat={latitude || 0} lon={longitude || 0} />
-						</div>
-					</div>
-				</CardContent>
-			</Card>
-			{initCoords && <GetCoords {...props} />}
-		</div>
+						</CardContent>
+					</Card>
+					{initCoords && <GetCoords {...props} />}
+				</div>
+			)}
+		</>
 	)
 }

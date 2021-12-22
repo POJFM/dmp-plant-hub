@@ -7,8 +7,7 @@ import Finished from './states/Finished'
 import Warning from './states/Warning'
 
 export default function Notification(props: any) {
-	const [type, setType] = useState<string>(), // TEST => 'irrigation'
-		[title, setTitle] = useState<string>(), // TEST => 'Zavlažování'
+	const [title, setTitle] = useState<string>(), // TEST => 'Zavlažování'
 		[notificationClass, setNotificationClass] = useState('hidden'),
 		[notificationStateClass, setNotificationStateClass] = useState<string>(), // TEST => 'var(--irrigationBlue)'
 		[state, setState] = useState<string>(), // TEST => 'inProgress'
@@ -26,7 +25,6 @@ export default function Notification(props: any) {
 			})
 			.then((res) => {
 				if (res.data.state !== 'inactive') {
-					setType(res.data.type)
 					setTitle(res.data.title)
 					setState(res.data.state)
 					setAction(res.data.action)
@@ -90,7 +88,7 @@ export default function Notification(props: any) {
 						<div className="flex-col p-2 w-3/12">
 							<div className="flex-row h-8">
 								<span>
-									{state === 'inProgress' && <Loading type={type} />}
+									{state === 'inProgress' && <Loading />}
 									{state === 'finished' && <Finished />}
 									{state === 'physicalHelpRequired' && <Warning />}
 								</span>

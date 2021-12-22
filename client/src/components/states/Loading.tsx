@@ -11,8 +11,6 @@ export default function Loading(type: any) {
 	const [loading, setLoading] = useState(true),
 		[color, setColor] = useState<string>('var(--irrigationBlue)')
 
-	if (type === 'irrigation' || type === 'tank') setColor('var(--irrigationBlue)')
-
 	return (
 		<div className="sweet-loading">
 			<PacmanLoader color={color} loading={loading} css={override} size="15" />

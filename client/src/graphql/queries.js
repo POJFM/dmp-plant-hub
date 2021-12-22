@@ -21,6 +21,14 @@ export const settings = gql`
 	}
 `
 
+export const settingsCheck = gql`
+	query settingsCheck {
+		settings {
+			id
+		}
+	}
+`
+
 export const dashboard = gql`
 	query dashboard {
 		dashboard {

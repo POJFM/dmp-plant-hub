@@ -1,6 +1,3 @@
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-// import { createStore } from 'redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Sidebar from './components/Sidebar'
 import Dashboard from './components/Dashboard'
@@ -12,17 +9,6 @@ import Notification from './components/Notification'
 import './styles/main.css'
 
 export default function App() {
-	const [visited, setVisited] = useState(false)
-
-	useEffect(() => {
-		if (localStorage['alreadyVisited']) setVisited(true)
-		else {
-			//this is the first time
-			localStorage['alreadyVisited'] = true
-			setVisited(false)
-		}
-	}, [])
-
 	return (
 		<div className="flex-row app">
 			<Router>
@@ -39,8 +25,7 @@ export default function App() {
 						<Notification />
 					</div>
 				</div>
-				{/* <InitForm /> */}
-				{!visited && <InitForm />}
+				<InitForm />
 			</Router>
 		</div>
 	)
