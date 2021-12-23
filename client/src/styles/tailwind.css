@@ -390,10 +390,60 @@
 	width: 24rem;
 	filter: drop-shadow(0 0 5px var(--inactiveGrey));
 	transition: var(--transition);
-	animation: TranslateDown 0.75s linear forwards;
+	-webkit-animation: TranslateDownNotification 0.75s linear forwards;
+	animation: TranslateDownNotification 0.75s linear forwards;
+}
+
+.pump-water-drops {
+	transform: translateY(-75px);
+}
+
+@keyframes TranslateDownNotification {
+  from {transform: translateY(-8rem);}
+  to {transform: translateY(0);}
+}
+
+.rotate-clockwise {
+	transform-origin: center;
+	transform-box: fill-box;
+	-webkit-animation: RotateClockwise 5s linear infinite;
+	animation: RotateClockwise 5s linear infinite;
+}
+
+.translate-down1 {
+	-webkit-animation: TranslateDown 3s linear infinite;
+	animation: TranslateDown 3s linear infinite;
+}
+
+.translate-down2 {
+	-webkit-animation: TranslateDown 4s linear infinite;
+	animation: TranslateDown 4s linear infinite;
+}
+
+.translate-down3 {
+	-webkit-animation: TranslateDown 2s linear infinite;
+	animation: TranslateDown 2s linear infinite;
+}
+
+.translate-down4 {
+	-webkit-animation: TranslateDown 1.5s linear infinite;
+	animation: TranslateDown 1.5s linear infinite;
+}
+
+@keyframes RotateClockwise {
+	from {
+		transform: rotateZ(0deg);
+	}
+	to {
+		transform: rotateZ(360deg);
+	}
 }
 
 @keyframes TranslateDown {
-  from {transform: translateY(-8rem);}
-  to {transform: translateY(0);}
+	from {
+		transform: translateY(-75px);
+	}
+	to {
+		transform: translateY(0);
+	}
 }

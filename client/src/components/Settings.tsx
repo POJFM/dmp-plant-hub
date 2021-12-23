@@ -78,8 +78,6 @@ export default function Settings() {
 	}, [getCoordsState])
 
 	const updateToggleState = (type: string) => {
-		setButtonsState(true)
-
 		if (type === 'automaticIrrigation') {
 			if (automaticIrrigationState === false) {
 				setAutomaticIrrigationState(true)
@@ -109,6 +107,7 @@ export default function Settings() {
 		}
 
 		if (type === 'chartType') {
+			setButtonsState(true)
 			if (chartTypeState === 0) {
 				setChartTypeState(1)
 			} else {
@@ -117,6 +116,7 @@ export default function Settings() {
 		}
 
 		if (type === 'language') {
+			setButtonsState(true)
 			if (languageState === 0) {
 				setLanguageState(1)
 			} else {
@@ -125,6 +125,7 @@ export default function Settings() {
 		}
 
 		if (type === 'theme') {
+			setButtonsState(true)
 			if (themeState === 0) {
 				setThemeState(1)
 			} else {
