@@ -430,12 +430,86 @@
 	animation: TranslateDown 1.5s linear infinite;
 }
 
+.christmas-snowflake {
+	transform: translateY(-10vh);
+	z-index: 1000;
+}
+
+.christmas-translate-down1 {
+	-webkit-animation: ChristmasTranslateDown 15s linear 15s infinite;
+	animation: ChristmasTranslateDown 15s linear 55s infinite;
+}
+
+.christmas-translate-down2 {
+	-webkit-animation: ChristmasTranslateDown 15s linear 10s infinite;
+	animation: ChristmasTranslateDown 15s linear 10s infinite;
+}
+
+.christmas-translate-down3 {
+	-webkit-animation: ChristmasTranslateDown 15s linear 3s infinite;
+	animation: ChristmasTranslateDown 15s linear 3s infinite;
+}
+
+.christmas-translate-down4 {
+	-webkit-animation: ChristmasTranslateDown 15s linear 20s infinite;
+	animation: ChristmasTranslateDown 15s linear 20s infinite;
+}
+
+.christmas-translate-down5 {
+	-webkit-animation: ChristmasTranslateDown 15s linear 25s infinite;
+	animation: ChristmasTranslateDown 15s linear 25s infinite;
+}
+
+.christmas-translate-down6 {
+	-webkit-animation: ChristmasTranslateDown 15s linear 5s infinite;
+	animation: ChristmasTranslateDown 15s linear 5s infinite;
+}
+
+.christmas-translate-down7 {
+	-webkit-animation: ChristmasTranslateDown 15s linear 17s infinite;
+	animation: ChristmasTranslateDown 15s linear 17s infinite;
+}
+
+.christmas-translate-down8 {
+	-webkit-animation: ChristmasTranslateDown 15s linear 9s infinite;
+	animation: ChristmasTranslateDown 15s linear 9s infinite;
+}
+
+.christmas-translate-down9 {
+	-webkit-animation: ChristmasTranslateDown 15s linear infinite;
+	animation: ChristmasTranslateDown 15s linear infinite;
+}
+
+.christmas-translate-down10 {
+	-webkit-animation: ChristmasTranslateDown 15s linear 23s infinite;
+	animation: ChristmasTranslateDown 15s linear 23s infinite;
+}
+
+.christmas-translate-down11 {
+	-webkit-animation: ChristmasTranslateDown 15s linear 13s infinite;
+	animation: ChristmasTranslateDown 15s linear 13s infinite;
+}
+
+.christmas-translate-down12 {
+	-webkit-animation: ChristmasTranslateDown 15s linear 27s infinite;
+	animation: ChristmasTranslateDown 15s linear 27s infinite;
+}
+
 @keyframes RotateClockwise {
 	from {
 		transform: rotateZ(0deg);
 	}
 	to {
 		transform: rotateZ(360deg);
+	}
+}
+
+@keyframes ChristmasTranslateDown {
+	from {
+		transform: translateY(-10vh) rotateZ(0deg);
+	}
+	to {
+		transform: translateY(110vh) rotateZ(360deg);
 	}
 }
 

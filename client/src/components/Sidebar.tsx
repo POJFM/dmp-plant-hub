@@ -6,19 +6,25 @@ import SettingsIcon from '@material-ui/icons/Settings'
 import ControlIcon from '@material-ui/icons/ControlCamera'
 
 export default function Sidebar(props: any) {
-	const [linkHover, setlinkHover] = useState('off')
-	const [activeLink, setActiveLink] = useState('blank')
+	const [linkHover, setlinkHover] = useState('off'),
+		[activeLink, setActiveLink] = useState('blank'),
+		[christmas, setChristmas] = useState(false)
+
 	useEffect(() => {
 		setActiveLink(`${window.location.pathname}`)
+		var today = new Date()
+		var dd = String(today.getDate()).padStart(2, '0')
+		var mm = String(today.getMonth() + 1).padStart(2, '0')
+		mm === '12' && dd === '24' && setChristmas(true)
 	}, [])
 
 	return (
 		<div className="sidebar">
 			<div className="flex-col">
 				<div className="flex-row">
-					{/* <div className={`col sidebar-row`}></div> */}
 					<div className="sidebar-row sidebar-row-top">
-						<img src="/assets/logo/logo-icon.png" className="w-16 max-h-full" />
+						{!christmas && <img src="/assets/logo/logo-icon.png" className="w-16 max-h-full" />}
+						{christmas && <img src="/assets/logo/logo-christmas.png" className="w-16 max-h-full" />}
 						<span className="sidebar-row sidebar-title">PlantHub</span>
 					</div>
 				</div>
