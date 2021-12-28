@@ -1,17 +1,4 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-//import PlantHubIcon from 'img/planthub.png'
-import DashboardIcon from '@material-ui/icons/Dashboard'
-import SettingsIcon from '@material-ui/icons/Settings'
-import ControlIcon from '@material-ui/icons/ControlCamera'
-
-export default function Christmas(props: any) {
-	const [linkHover, setlinkHover] = useState('off')
-	const [activeLink, setActiveLink] = useState('blank')
-	useEffect(() => {
-		setActiveLink(`${window.location.pathname}`)
-	}, [])
-
+export default function Christmas() {
 	return (
 		<div className="flex-row -m-6 w-full christmas">
 			<div className="flex-col w-1/12 flex-center">
