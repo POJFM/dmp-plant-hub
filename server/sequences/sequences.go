@@ -10,7 +10,7 @@ import (
 
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/utils"
 	"github.com/TwiN/go-color"
-	"github.com/stianeikeland/go-rpio"
+	"github.com/stianeikeland/go-rpio/v4"
 )
 
 type InitMeasured struct {
