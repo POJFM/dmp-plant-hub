@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 //import PlantHubIcon from 'img/planthub.png'
 import DashboardIcon from '@material-ui/icons/Dashboard'
-import SettingsIcon from '@material-ui/icons/Settings'
 import ControlIcon from '@material-ui/icons/ControlCamera'
+import SettingsIcon from '@material-ui/icons/Settings'
+import RefreshIcon from '@material-ui/icons/Refresh'
 
 export default function Sidebar(props: any) {
 	const [linkHover, setlinkHover] = useState('off'),
@@ -85,6 +86,22 @@ export default function Sidebar(props: any) {
 						</div>
 					</div>
 				</Link>
+				<span>
+					<div
+						className={`flex-row sidebar-row ${linkHover === 'refresh' && 'sidebar-row-hover'}`}
+						onMouseEnter={() => setlinkHover('refresh')}
+						onMouseLeave={() => setlinkHover('off')}
+						onClick={() => console.log('refresh')}
+
+					>
+						<div className={`flex-row sidebar-row-tf`}>
+							<div className="text-2xl flex items-center">
+								<RefreshIcon />
+							</div>
+							<span className={`sidebar-row-tf ml-1 title-2`}>Restart HW</span>
+						</div>
+					</div>
+				</span>
 			</div>
 		</div>
 	)

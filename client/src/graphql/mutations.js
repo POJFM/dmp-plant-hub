@@ -10,6 +10,7 @@ export const updateSettings = gql`
 		$waterLevelLimit: Number
 		$scheduledTrigger: Number!
 		$hoursRange: Number
+		$irrigationDuration: Number
 		$chartType: Number!
 		$theme: Number!
 		$language: Number!
@@ -23,8 +24,9 @@ export const updateSettings = gql`
 			waterAmountLimit: $waterAmountLimit
 			waterLevelLimit: $waterLevelLimit
 			hoursRange: $hoursRange
+			irrigationDuration: $irrigationDuration
 			chartType: $chartType
-			theme: $theme 
+			theme: $theme
 			language: $language
 			location: $location
 			lat: $lat
@@ -36,6 +38,7 @@ export const updateSettings = gql`
 			waterLevelLimit
 			scheduledTrigger
 			hoursRange
+			irrigationDuration
 			chartType
 			theme
 			language

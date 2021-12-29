@@ -21,13 +21,14 @@ import ReactScrollWheelHandler from 'react-scroll-wheel-handler'
 import { getMonths } from 'src/utils'
 
 export default function Dashboard() {
-	const [currentTemp, setCurrentTemp] = useState(0),
+	const [liveMeasure, setLiveMeasure] = useState(false),
+		[currentTemp, setCurrentTemp] = useState(0),
 		[currentMoist, setCurrentMoist] = useState(0),
 		[currentHum, setCurrentHum] = useState(0),
-		[temp, setTemp] = useState<any>(),
-		[moist, setMoist] = useState<any>(),
-		[hum, setHum] = useState<any>(),
-		[irrigationCount, setIrrigationCount] = useState<number>(),
+		[temp, setTemp] = useState<any>([]),
+		[moist, setMoist] = useState<any>([]),
+		[hum, setHum] = useState<any>([]),
+		[irrigationCount, setIrrigationCount] = useState<any>([]),
 		[months, setMonths] = useState<any>(),
 		[weather, setWeather] = useState<any>()
 
@@ -38,25 +39,26 @@ export default function Dashboard() {
 
 	useEffect(() => {
 		document.title = 'Plant Hub | Dashboard'
-		
+
 		const currentMonth = new Date().getMonth()
 		console.log(currentMonth)
 		setMonths(getMonths())
 		console.log(months)
 
-		for (let i = currentMonth; i < 12; i++) {
-			let month: number
-			// data.IrrigationHistory.map((item: any) => {
-			// 	item.timestamp === 'regex na jeden měsíc a číslo z loopu podle current month' && month++
-			// })
-			//irrigationCount.push(month)
-			console.log(i)
-			i > 10 && (i = 0)
-			i === currentMonth - 1 && (i = 12)
-		}
+		// Extract irrigation count for each month
+		// for (let i = currentMonth; i < 12; i++) {
+		// 	let month: number
+		// 	data.IrrigationHistory.map((item: any) => {
+		// 		item.timestamp === 'regex na jeden měsíc a číslo z loopu podle current month' && month++
+		// 	})
+		// 	setIrrigationCount((monthCount: any) => [...monthCount, month])
+		// 	console.log(i)
+		// 	i > 10 && (i = 0)
+		// 	i === currentMonth - 1 && (i = 12)
+		// }
+		// console.log(irrigationCount)
 	}, [])
 
-	//https://graphql.org/blog/rest-api-graphql-wrapper/
 	const fetchWeatherForecast = () => {
 		axios
 			.request({
@@ -69,7 +71,7 @@ export default function Dashboard() {
 				},
 			})
 			.then((res) => {
-				setWeather(res.data.hourly.slice(0, 15)) //
+				setWeather(res.data.hourly.slice(0, 15))
 			})
 			.catch((error) => {
 				console.error(error)
@@ -79,13 +81,11 @@ export default function Dashboard() {
 	// Fetch on render then every 30mins
 	setTimeout(() => fetchWeatherForecast(), weather ? 300_000 : 1)
 
-	console.log(
-		`https://api.openweathermap.org/data/2.5/onecall?lat=${49.68333}&lon=${18.35}&exclude=daily,minutely,alerts&units=metric&appid=${
-			process.env.REACT_APP_FORECAST_API_KEY
-		}`
-	)
-
 	const liveMeasurements = () => {
+		// setTemp((tempItem: any) => [...tempItem, 'fajne je to'])
+		// setTemp((tempItem: any) => tempItem.slice(0, 24))
+		//console.log(temp)
+
 		axios
 			.request({
 				method: 'GET',
@@ -95,19 +95,24 @@ export default function Dashboard() {
 				},
 			})
 			.then((res) => {
+				console.log(res)
 				setCurrentTemp(res.data.temp)
 				setCurrentHum(res.data.hum)
 				setCurrentMoist(res.data.moist)
-				temp.push(res.data.temp)
-				hum.push(res.data.hum)
-				moist.push(res.data.moist)
+				temp.push(12).slice(0, 25)
+				hum.push(res.data.hum).slice(0, 25)
+				moist.push(res.data.moist).slice(0, 25)
+				console.log(temp)
+				console.log(hum)
+				console.log(moist)
+				setLiveMeasure(true)
 			})
 			.catch((error) => {
 				console.error(error)
 			})
 	}
 
-	setTimeout(() => liveMeasurements(), 1000)
+	setTimeout(() => liveMeasurements(), 5000)
 
 	const useHorizontalScroll = () => {
 		const elRef = useRef()
@@ -189,19 +194,19 @@ export default function Dashboard() {
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/temperature.svg" />
 										</span>
-										<span className="flex-col">{`${currentTemp}°C`}</span>
+										<span className="flex-col flex-center ml-2">{`${currentTemp}°C`}</span>
 									</div>
 									<div className="flex-row pt-5px" title="Vlhkost vzduchu">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/humidity.svg" />
 										</span>
-										<span className="flex-col">{`${currentHum}%`}</span>
+										<span className="flex-col flex-center ml-2">{`${currentHum}%`}</span>
 									</div>
 									<div className="flex-row pt-5px" title="Vlhkost půdy">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/moisture.svg" />
 										</span>
-										<span className="flex-col">{`${currentMoist}%`}</span>
+										<span className="flex-col flex-center ml-2">{`${currentMoist}%`}</span>
 									</div>
 								</div>
 								<div className="flex-col ml-5">
@@ -209,19 +214,19 @@ export default function Dashboard() {
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterLevel.svg" />
 										</span>
-										<span className="flex-col">{/* {`${data.irrigationHistory.waterLevel}cm`} */}0cm</span>
+										<span className="flex-col flex-center ml-2">{/* {`${data.irrigationHistory.waterLevel}cm`} */}0cm</span>
 									</div>
 									<div className="flex-row pt-5px" title="Objem vody v nádrži">
 										<span className="flex-col w-12 max-h-full">
-											<img src="/assets/icons/dashboard/waterOverdrawn.svg" />
+											<img src="/assets/icons/dashboard/waterAmount.svg" />
 										</span>
-										<span className="flex-col">{/* {`${data.irrigationHistory.waterAmount}l`} */}5l</span>
+										<span className="flex-col flex-center ml-2">{/* {`${data.irrigationHistory.waterAmount}l`} */}5l</span>
 									</div>
 									<div className="flex-row pt-5px" title="Celkový vyčerpaný objem vody">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterOverdrawn.svg" />
 										</span>
-										<span className="flex-col">{/* {`${data.irrigationHistory.waterAmount}l`} */}56l</span>
+										<span className="flex-col flex-center ml-2">{/* {`${data.irrigationHistory.waterAmount}l`} */}56l</span>
 									</div>
 								</div>
 							</div>
@@ -229,10 +234,10 @@ export default function Dashboard() {
 						<div className="flex-col w-8/12">
 							<div className="flex-row h-44 -mt-2">
 								<LiveMeasurementsChart
-									chartType={settings.chartType}
+									chartType={settings.chartType} /* data.settings.chartType */
 									temp={temp}
 									hum={hum}
-									moist={moist} /* data.settings.chartType */
+									moist={moist}
 								/>
 							</div>
 						</div>

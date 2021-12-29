@@ -20,14 +20,16 @@ export default function Settings() {
 		[automaticIrrigationState, setAutomaticIrrigationState] = useState(true), // settingsData.limitsTrigger
 		[automaticIrrigationStateClass, setAutomaticIrrigationStateClass] = useState<string>(), // settingsData.limitsTrigger ? '#000000' : 'var(--inactiveGrey)'
 		[scheduledIrrigationState, setScheduledIrrigationState] = useState(false), // settingsData.scheduledTrigger
-		[scheduledIrrigationStateClass, setScheduledIrrigationStateClass] = useState<string>(), // settingsData.scheduledTrigger ? '#000000' : 'var(--inactiveGrey)'
+		[irrigationDuration, setIrrigationDuration] = useState(0), // settingsData.irrigationDuration
+		[irrigationDurationStateClass, setIrrigationDurationStateClass] = useState('#000000'),
+		[scheduledIrrigationStateClass, setScheduledIrrigationStateClass] = useState<any>(), // settingsData.scheduledTrigger ? '#000000' : 'var(--inactiveGrey)'
 		[moistureLimit, setMoistureLimit] = useState<number>(50), // settingsData.moistureLimit
 		[waterAmountLimit, setWaterAmountLimit] = useState<number>(3), // settingsData.waterAmountLimit
 		[waterLevelLimit, setWaterLevelLimit] = useState<number>(6), // settingsData.waterLevelLimit
 		[hoursRange, setHoursRange] = useState<number>(10), // settingsData.hoursRange
-		[chartTypeState, setChartTypeState] = useState(1), // settingsData.chartType
-		[languageState, setLanguageState] = useState(1), // settingsData.language
-		[themeState, setThemeState] = useState(1), // settingsData.theme
+		[chartTypeState, setChartTypeState] = useState(0), // settingsData.chartType
+		[languageState, setLanguageState] = useState(0), // settingsData.language
+		[themeState, setThemeState] = useState(0), // settingsData.theme
 		[getCoordsState, setGetCoordsState] = useState(false),
 		[getCoords, setGetCoords] = useState<string>(),
 		[location, setLocation] = useState<string>('Frýdek-Místek'), // settingsData.location
@@ -62,6 +64,7 @@ export default function Settings() {
 
 	const updateInputData = (type: string, data: any) => {
 		setButtonsState(true)
+		type === 'irrigationDuration' && setIrrigationDuration(data?.target?.value)
 		type === 'moistureLimit' && setMoistureLimit(data?.target?.value)
 		type === 'waterAmountLimit' && setWaterAmountLimit(data?.target?.value)
 		type === 'waterLevelLimit' && setWaterLevelLimit(data?.target?.value)
@@ -82,12 +85,14 @@ export default function Settings() {
 			if (automaticIrrigationState === false) {
 				setAutomaticIrrigationState(true)
 				setButtonsState(true)
+				setIrrigationDurationStateClass('#000000')
 				setAutomaticIrrigationStateClass('#000000')
 			} else {
 				setAutomaticIrrigationState(false)
 				setAutomaticIrrigationStateClass('var(--inactiveGrey)')
 				if (scheduledIrrigationState === false) {
 					setButtonsState(false)
+					setIrrigationDurationStateClass('var(--inactiveGrey)')
 				}
 			}
 		}
@@ -96,12 +101,14 @@ export default function Settings() {
 			if (scheduledIrrigationState === false) {
 				setScheduledIrrigationState(true)
 				setButtonsState(true)
+				setIrrigationDurationStateClass('#000000')
 				setScheduledIrrigationStateClass('#000000')
 			} else {
 				setScheduledIrrigationState(false)
 				setScheduledIrrigationStateClass('var(--inactiveGrey)')
 				if (automaticIrrigationState === false) {
 					setButtonsState(false)
+					setIrrigationDurationStateClass('var(--inactiveGrey)')
 				}
 			}
 		}
@@ -132,6 +139,8 @@ export default function Settings() {
 				setThemeState(0)
 			}
 		}
+
+		//buttonsState ? setIrrigationDurationStateClass('var(--inactiveGrey)') : setIrrigationDurationStateClass('#000000')
 	}
 
 	const handleCancelButton = () => {
@@ -141,6 +150,8 @@ export default function Settings() {
 		setAutomaticIrrigationStateClass(settingsData.limitsTrigger ? '#000000' : 'var(--inactiveGrey)')
 		setScheduledIrrigationState(settingsData.scheduledTrigger)
 		setScheduledIrrigationStateClass(settingsData.scheduledTrigger ? '#000000' : 'var(--inactiveGrey)')
+		setIrrigationDuration(settingsData.irrigationDuration)
+		setIrrigationDurationStateClass(buttonsState ? '#000000' : 'var(--inactiveGrey)')
 		setMoistureLimit(settingsData.moistureLimit)
 		setWaterAmountLimit(settingsData.waterAmountLimit)
 		setWaterLevelLimit(settingsData.waterLevelLimit)
@@ -189,6 +200,9 @@ export default function Settings() {
 							<div className="flex-row">
 								<div className="flex-col">
 									<div className="flex-row pt-2">
+										<span style={{ color: irrigationDurationStateClass }}>Doba zavlažování (s): </span>
+									</div>
+									<div className="flex-row pt-2">
 										<span style={{ color: automaticIrrigationStateClass }}>Limit vlhkosti půdy (%): </span>
 									</div>
 									<div className="flex-row pt-2">
@@ -202,6 +216,17 @@ export default function Settings() {
 									</div>
 								</div>
 								<div className="flex-col ml-3">
+									<div
+										className="flex-row pt-1"
+										onBlur={(data: any) => updateInputData('irrigationDuration', data.target.value)}
+									>
+										<EditableField
+											key="irrigationDuration"
+											defaultValue={irrigationDuration}
+											active={irrigationDurationStateClass === '#000000'}
+											width="10"
+										/>
+									</div>
 									<div
 										className="flex-row pt-1"
 										onBlur={(data: any) => updateInputData('moistureLimit', data.target.value)}
@@ -276,7 +301,7 @@ export default function Settings() {
 											<ToggleButton
 												key="chartType"
 												toggleState={chartTypeState}
-												values={[{ label: 'Spojnicový' }, { label: 'Sloupcový' }]}
+												values={[{ label: 'lineGraph' }, { label: 'barGraph' }]}
 											/>
 										</div>
 									</div>
@@ -285,7 +310,7 @@ export default function Settings() {
 											<ToggleButton
 												key="language"
 												toggleState={languageState}
-												values={[{ label: 'Česky' }, { label: 'Anglicky' }]}
+												values={[{ label: 'flagCZ' }, { label: 'flagGB' }]}
 											/>
 										</div>
 									</div>
@@ -294,7 +319,7 @@ export default function Settings() {
 											<ToggleButton
 												key="theme"
 												toggleState={themeState}
-												values={[{ label: 'Světlý' }, { label: 'Tmavý' }]}
+												values={[{ label: 'lightTheme' }, { label: 'darkTheme' }]}
 											/>
 										</div>
 									</div>

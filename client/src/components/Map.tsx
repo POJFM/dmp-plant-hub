@@ -29,7 +29,7 @@ export default function Map({ lat, lon }: coords) {
 		<GoogleMap
 			mapContainerStyle={{
 				width: '300px',
-				height: '600px',
+				height: '650px',
 			}}
 			center={{ lat: lat, lng: lon }}
 			onLoad={onLoad}

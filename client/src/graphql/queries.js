@@ -11,6 +11,7 @@ export const settings = gql`
 			moistLimit
 			scheduledTrigger
 			hoursRange
+			irrigationDuration
 			chartType
 			theme
 			language

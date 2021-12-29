@@ -16,6 +16,7 @@ export default function InitForm(props: any) {
 		[formActiveState, setFormActiveState] = useState(false),
 		[saveButtonState, setSaveButtonState] = useState(true),
 		[automaticIrrigationState, setAutomaticIrrigationState] = useState(true),
+		[irrigationDuration, setIrrigationDuration] = useState<number>(),
 		[scheduledIrrigationState, setScheduledIrrigationState] = useState(false),
 		[limitValues, setLimitValues] = useState<any>(),
 		[moistLimit, setMoistLimit] = useState<number>(), // createSettingsData.moistLimit
@@ -28,6 +29,8 @@ export default function InitForm(props: any) {
 		[latitude, setLatitude] = useState<number>(),
 		[longitude, setLongitude] = useState<number>(),
 		[mapClicked, setMapClicked] = useState(false)
+
+//
 
 	useEffect(() => {
 		data?.id === null && setFormActiveState(true)
@@ -104,18 +107,25 @@ export default function InitForm(props: any) {
 			})
 	}
 
-	/* 	const initMeasurements = () => {
+	const initMeasurements = () => {
+		console.log('fetch init measurements')
+
 		axios
 			.request({
 				method: 'GET',
+				//url: 'http://4.2.0.225:5000/init/measured',
 				url: `${process.env.REACT_APP_GO_API_URL}/init/measured`,
 				headers: {
 					'Content-Type': 'application/json',
+					//'Access-Control-Allow-Origin': '*',
 				},
 			})
 			.then((res) => {
+				console.log(res)
 				setMoistLimit(res.data.moistLimit)
 				setWaterLevelLimit(res.data.waterLevelLimit)
+				console.log(moistLimit)
+				console.log(waterLevelLimit)
 				setLimitValues(true)
 			})
 			.catch((error) => {
@@ -123,7 +133,7 @@ export default function InitForm(props: any) {
 			})
 	}
 
-	setTimeout(() => initMeasurements(), limitValues ? 100_000_000 : 3000) */
+	setTimeout(() => initMeasurements(), limitValues ? 100_000_000 : 3000)
 
 	const updateToggleState = (type: string) => {
 		if (type === 'automaticIrrigation') {
@@ -177,7 +187,7 @@ export default function InitForm(props: any) {
 					<Card className="card p-0-i">
 						<CardContent className="p-0-i">
 							<div className="flex-row">
-								<div className="flex-col pl-8 pt-8 pr-3">
+								<div className="flex-col pl-8 pt-8 pr-3 pb-8">
 									<div className="flex-row flex-center p-1 mb-2">
 										<span className="title-1">PlantHub - Inicializace</span>
 									</div>
@@ -202,6 +212,14 @@ export default function InitForm(props: any) {
 												</div>
 											</div>
 										</div>
+									</div>
+									<div className="flex-row p-1 pt-5px mt-2" onBlur={(data: any) => setIrrigationDuration(data.target.value)}>
+										<TextInputField
+											item="irrigationDuration"
+											name="Doba zavlažování (s)"
+											defaultValue={irrigationDuration}
+											active={saveButtonState}
+										/>
 									</div>
 									<div className="flex-row p-1 pt-5px mt-2" onBlur={(data: any) => setMoistLimit(data.target.value)}>
 										<TextInputField
@@ -257,6 +275,7 @@ export default function InitForm(props: any) {
 														waterAmountLimit: waterAmountLimit,
 														moistLimit: moistLimit,
 														scheduledTrigger: scheduledIrrigationState,
+														irrigationDuration: irrigationDuration,
 														hoursRange: hoursRange,
 														chartType: 0,
 														theme: 0,

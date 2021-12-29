@@ -1,41 +1,45 @@
-import { useState, useEffect } from 'react'
-
-// if values are not set then toggle switch acts as an ON / OFF switch
 export default function ToggleButton({ item, toggleState, values }: any) {
-	const [green, setGreen] = useState<string>()
-	const [grey, setGrey] = useState<string>()
+	// if values are not set then toggle switch acts as an ON / OFF switch
 	let toggleStateClass, toggleIcon0Class, toggleIcon1Class
 
-	// get colors from css variables
-	useEffect(() => {
-		setGreen(getComputedStyle(document.body).getPropertyValue('--lightGreen'))
-		setGrey(getComputedStyle(document.body).getPropertyValue('--inactiveGrey'))
-	}, [])
+	toggleState
+		? (toggleStateClass = 'input-field-input-toggle-slider-active')
+		: (toggleStateClass = 'input-field-input-toggle-slider-inactive')
 
-	if (!values) {
-		toggleState && (toggleStateClass = 'input-field-input-toggle-slider-active')
-		!toggleState && (toggleStateClass = 'input-field-input-toggle-slider-inactive')
-	} else {
+	if (values) {
 		if (toggleState) {
 			toggleStateClass = 'input-field-input-toggle-slider-values-1'
-			toggleIcon0Class = 'bg-inactiveGrey'
-			toggleIcon1Class = 'bg-lightGreen'
+			toggleIcon0Class = 'inactive'
+			toggleIcon1Class = 'active'
 		} else {
 			toggleStateClass = 'input-field-input-toggle-slider-values-0'
-			toggleIcon1Class = 'bg-inactiveGrey'
-			toggleIcon0Class = 'bg-lightGreen'
+			toggleIcon0Class = 'active'
+			toggleIcon1Class = 'inactive'
 		}
 	}
 
 	return (
 		<div className="flex-row">
-			{/* až bude změnit na svg a dát tam color variable */}
-			{values && <img src={`/assets/icons/toggleSwitch/${values[0].label}.svg`} className="flex-col mr-2" />}
+			{values && (
+				<img
+					src={`/assets/icons/toggleSwitch/${
+						toggleIcon0Class === 'active' ? values[0].label : values[0].label + 'Inactive'
+					}.svg`}
+					className="flex-col flex-center mr-2 w-9 transition duration-500 ease-in-out"
+				/>
+			)}
 			<div className="flex-col input-field-toggle-checkbox-wrapper">
 				<input type="checkbox" id={item} name={item} className="input-field-input-toggle" />
 				<span className={`input-field-input-toggle-slider ${toggleStateClass}`}></span>
 			</div>
-			{values && <img src={`/assets/icons/toggleSwitch/${values[1].label}.svg`} className="flex-col ml-2" />}
+			{values && (
+				<img
+					src={`/assets/icons/toggleSwitch/${
+						toggleIcon1Class === 'active' ? values[1].label : values[1].label + 'Inactive'
+					}.svg`}
+					className="flex-col flex-center ml-2 w-9 transition duration-500 ease-in-out"
+				/>
+			)}
 		</div>
 	)
 }
