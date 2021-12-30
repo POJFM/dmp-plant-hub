@@ -1,40 +1,40 @@
 type Measurement {
-    moisture: Float!
-    temperature: Float!
-    humidity: Float!
-    waterLevel: Float!
-    waterOverdrawn: Float!
-}
-
-enum Enum {
-    0
-    1
+    hum: Float!
+    temp: Float!
+    moist: Float!
+    with_irrigation: Boolean!
 }
 
 type Settings {
-    limitsTrigger: Boolean!
-    waterLevelLimit: Float!
-    waterAmountLimit: Float!
-    moistureLimit: Float!
-    scheduledTrigger: Boolean!
-    hourRange: Float!
-    chartType: Int!
-    theme: Int!
+    limits_trigger: Boolean!
+    water_level_limit: Float!
+    water_amount_limit: Float!
+    moist_limit: Float!
+    scheduled_trigger: Boolean!
+    hour_range: Int!
+    location: String!
+    irrigation_duration: Boolean!
+    chart_type: Boolean!
+    language: Boolean!
+    theme: Boolean!
+    lat: Float!
+    lon: Float!
 }
 
 # TODO: vymyslet query pomoci timestamp range somehow
+
 type Query {
-    measurement(id: ID!): Measurement!
-    measurements: [Measurement!]
+    getMeasurement(id: ID!): Measurement!
+    getMeasurements: [Measurement!]
+    getSettings: [Settings!]
 }
 
 # vymrdat in favor of Measurement type ???
 input NewMeasurement {
-    moisture: Float!
-    temperature: Float!
-    humidity: Float!
-    waterLevel: Float!
-    waterOverdrawn: Float!
+    hum: Float!
+    temp: Float!
+    moist: Float!
+    with_irrigation: Boolean!
 }
 
 type Mutation {
