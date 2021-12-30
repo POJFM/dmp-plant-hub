@@ -7,6 +7,7 @@ import (
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
+	"github.com/uptrace/bun/extra/bundebug"
 	"log"
 )
 
@@ -24,6 +25,11 @@ func Connect() *DB {
 
 	db := bun.NewDB(conn, pgdialect.New())
 
+	db.AddQueryHook(bundebug.NewQueryHook(
+		bundebug.WithVerbose(true),
+		bundebug.FromEnv("BUNDEBUG"),
+	))
+
 	if err := db.Ping(); err != nil {
 		log.Fatal(err)
 	}
@@ -38,12 +44,27 @@ func (db *DB) SaveMeasurement(input *model.NewMeasurement, ctx context.Context) 
 		log.Fatal(err)
 	}
 	return &model.Measurement{
-		Moisture:       input.Moisture,
-		Temperature:    input.Temperature,
-		Humidity:       input.Humidity,
-		WaterLevel:     input.WaterLevel,
-		WaterOverdrawn: input.WaterOverdrawn,
+		Hum:            input.Hum,
+		Temp:           input.Temp,
+		Moist:          input.Moist,
+		WithIrrigation: input.WithIrrigation,
 	}
 }
 
-// func (db *DB) UpdateSettings(input *model.Settings, ctx context.Context) *model.Settings {}
+func (db *DB) GetMeasurements(ctx context.Context) []*model.Measurement {
+	measurements := make([]*model.Measurement, 0)
+	err := db.DB.NewSelect().Model(&measurements).Scan(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return measurements
+}
+
+func (db *DB) GetSettings(ctx context.Context) []*model.Settings {
+	settings := make([]*model.Settings, 0)
+	err := db.DB.NewSelect().Model(&settings).Scan(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return settings
+}
