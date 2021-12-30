@@ -13,7 +13,7 @@ import { settingsCheck } from './../graphql/queries'
 export default function InitForm(props: any) {
 	const [createSettingsData] = useMutation(updateSettings),
 		{ data } = useQuery(settingsCheck),
-		[formActiveState, setFormActiveState] = useState(false),
+		[formActiveState, setFormActiveState] = useState(true),
 		[saveButtonState, setSaveButtonState] = useState(true),
 		[automaticIrrigationState, setAutomaticIrrigationState] = useState(true),
 		[irrigationDuration, setIrrigationDuration] = useState<number>(),
@@ -29,8 +29,6 @@ export default function InitForm(props: any) {
 		[latitude, setLatitude] = useState<number>(),
 		[longitude, setLongitude] = useState<number>(),
 		[mapClicked, setMapClicked] = useState(false)
-
-//
 
 	useEffect(() => {
 		data?.id === null && setFormActiveState(true)
@@ -152,6 +150,7 @@ export default function InitForm(props: any) {
 			if (scheduledIrrigationState === false) {
 				setScheduledIrrigationState(true)
 				setSaveButtonState(true)
+				irrigationDuration == 0 ? setSaveButtonState(false) : setSaveButtonState(true)
 			} else {
 				setScheduledIrrigationState(false)
 				if (automaticIrrigationState === false) {
@@ -213,12 +212,18 @@ export default function InitForm(props: any) {
 											</div>
 										</div>
 									</div>
-									<div className="flex-row p-1 pt-5px mt-2" onBlur={(data: any) => setIrrigationDuration(data.target.value)}>
+									<div
+										className="flex-row p-1 pt-5px mt-2"
+										onBlur={(data: any) => setIrrigationDuration(data.target.value)}
+										onChange={(data: any) =>
+											data.target.value == 0 ? setSaveButtonState(false) : setSaveButtonState(true)
+										}
+									>
 										<TextInputField
 											item="irrigationDuration"
 											name="Doba zavlažování (s)"
 											defaultValue={irrigationDuration}
-											active={saveButtonState}
+											active={true}
 										/>
 									</div>
 									<div className="flex-row p-1 pt-5px mt-2" onBlur={(data: any) => setMoistLimit(data.target.value)}>

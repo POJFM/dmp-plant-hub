@@ -24,6 +24,7 @@ export default function Control(props) {
 		axios
 			.post(`${process.env.REACT_APP_GO_API_URL}/live/control`, {
 				pumpState: pumpState,
+				restart: false
 			})
 			.then((res) => {
 				console.log(res)
@@ -33,7 +34,7 @@ export default function Control(props) {
 			})
 	}
 
-	setTimeout(() => activatePump(), pumpState ? 1_000_000 : 500)
+	setTimeout(() => activatePump(), pumpState ? 1_000_000 : 1000)
 
 	const handleClickNHoldStart = () => {
 		setPumpState(true)

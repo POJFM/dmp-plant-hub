@@ -103,6 +103,9 @@ export default function Settings() {
 				setButtonsState(true)
 				setIrrigationDurationStateClass('#000000')
 				setScheduledIrrigationStateClass('#000000')
+				if (irrigationDuration == 0) {
+					setButtonsState(false)
+				}
 			} else {
 				setScheduledIrrigationState(false)
 				setScheduledIrrigationStateClass('var(--inactiveGrey)')
@@ -219,6 +222,7 @@ export default function Settings() {
 									<div
 										className="flex-row pt-1"
 										onBlur={(data: any) => updateInputData('irrigationDuration', data.target.value)}
+										onChange={(data: any) => data.target.value == 0 && setButtonsState(false)}
 									>
 										<EditableField
 											key="irrigationDuration"
@@ -285,13 +289,13 @@ export default function Settings() {
 									<div className="flex-row pt-2">
 										<span>Typ grafu: </span>
 									</div>
-									<div className="flex-row pt-2">
+									<div className="flex-row pt-3">
 										<span>Jazyk: </span>
 									</div>
-									<div className="flex-row pt-2">
+									<div className="flex-row pt-3">
 										<span>Motiv: </span>
 									</div>
-									<div className="flex-row pt-2">
+									<div className="flex-row pt-3">
 										<span>Lokace: </span>
 									</div>
 								</div>

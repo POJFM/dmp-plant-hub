@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import axios from 'axios'
 import { Link } from 'react-router-dom'
 //import PlantHubIcon from 'img/planthub.png'
 import DashboardIcon from '@material-ui/icons/Dashboard'
@@ -9,7 +10,8 @@ import RefreshIcon from '@material-ui/icons/Refresh'
 export default function Sidebar(props: any) {
 	const [linkHover, setlinkHover] = useState('off'),
 		[activeLink, setActiveLink] = useState('blank'),
-		[christmas, setChristmas] = useState(false)
+		[christmas, setChristmas] = useState(false),
+		[restart, setRestart] = useState(false)
 
 	useEffect(() => {
 		setActiveLink(`${window.location.pathname}`)
@@ -18,6 +20,22 @@ export default function Sidebar(props: any) {
 		var mm = String(today.getMonth() + 1).padStart(2, '0')
 		mm === '12' && dd === '24' && setChristmas(true)
 	}, [])
+
+	const handleRestart = () => {
+		axios
+			.post(`${process.env.REACT_APP_GO_API_URL}/live/control`, {
+				pumpState: false,
+				restart: restart
+			})
+			.then((res) => {
+				console.log(res)
+			})
+			.catch((error) => {
+				console.error(error)
+			})
+	}
+
+	setTimeout(() => handleRestart(), restart ? 1_000_000 : 1000)
 
 	return (
 		<div className="sidebar">
@@ -91,8 +109,7 @@ export default function Sidebar(props: any) {
 						className={`flex-row sidebar-row ${linkHover === 'refresh' && 'sidebar-row-hover'}`}
 						onMouseEnter={() => setlinkHover('refresh')}
 						onMouseLeave={() => setlinkHover('off')}
-						onClick={() => console.log('refresh')}
-
+						onClick={() => setRestart(true)}
 					>
 						<div className={`flex-row sidebar-row-tf`}>
 							<div className="text-2xl flex items-center">
