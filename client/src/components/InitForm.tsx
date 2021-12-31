@@ -13,7 +13,7 @@ import { settingsCheck } from './../graphql/queries'
 export default function InitForm(props: any) {
 	const [createSettingsData] = useMutation(updateSettings),
 		{ data } = useQuery(settingsCheck),
-		[formActiveState, setFormActiveState] = useState(true),
+		[formActiveState, setFormActiveState] = useState(false),
 		[saveButtonState, setSaveButtonState] = useState(true),
 		[automaticIrrigationState, setAutomaticIrrigationState] = useState(true),
 		[irrigationDuration, setIrrigationDuration] = useState<number>(),

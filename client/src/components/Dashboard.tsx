@@ -32,10 +32,15 @@ export default function Dashboard() {
 		[months, setMonths] = useState<any>(),
 		[weather, setWeather] = useState<any>()
 
-	const { loading, error, data } = useQuery(dashboard)
-	// TEST
-	const settings = { chartType: 0 }
-	// END TEST
+		const { loading, error, data } = useQuery(dashboard)
+
+		let irrigationHistoryData: any = []
+		// TEST
+		const settings = { chartType: 0 }
+		// END TEST
+
+		// uncomment when api is accesible
+		//data.measurements.filter((filteredData: any) => filteredData.withIrrigation === true && irrigationHistoryData.push(filteredData))
 
 	useEffect(() => {
 		document.title = 'Plant Hub | Dashboard'
@@ -45,7 +50,10 @@ export default function Dashboard() {
 		setMonths(getMonths())
 		console.log(months)
 
-		// Extract irrigation count for each month
+		const ar = [1, 5, 1, 25, 1, 8, 21, 8, 10, 20, 8, 10, 20, 10, 20, 8, 10, 20, 10, 20, 8, 10, 20, 30, 15]
+		console.log(ar)
+
+		// // Extract irrigation count for each month
 		// for (let i = currentMonth; i < 12; i++) {
 		// 	let month: number
 		// 	data.IrrigationHistory.map((item: any) => {
@@ -57,7 +65,35 @@ export default function Dashboard() {
 		// 	i === currentMonth - 1 && (i = 12)
 		// }
 		// console.log(irrigationCount)
+		generateLiveChartData(currentTemp, currentHum, currentMoist)
 	}, [])
+
+	// if this logic will work in AXIOS get function then this function won't be neccesarry
+	const generateLiveChartData = async (buildTemp: any, buildHum: any, buildMoist: any) => {
+		let arrayPassTemp: any = [],
+			arrayPassHum: any = [],
+			arrayPassMoist: any = []
+
+		// setTemp((tempItem: any) => [...tempItem, i])
+		// i > 25 && temp.filter((tempItemFilter: any) => setTemp((tempItem: any) => [...tempItem, tempItemFilter.indexOf < 25]))
+		// temp.length > 5 && console.log('kokot')
+
+		arrayPassTemp?.push(buildTemp)
+		arrayPassHum?.push(buildHum)
+		arrayPassMoist?.push(buildMoist)
+
+		arrayPassTemp.length > 25 && (arrayPassTemp = arrayPassTemp?.slice(1, 25))
+		arrayPassHum.length > 25 && (arrayPassHum = arrayPassHum?.slice(1, 25))
+		arrayPassMoist.length > 25 && (arrayPassMoist = arrayPassMoist?.slice(1, 25))
+
+		setTemp(arrayPassTemp)
+		setHum(arrayPassHum)
+		setMoist(arrayPassMoist)
+
+		setTimeout(() => {
+			generateLiveChartData(currentTemp, currentHum, currentMoist)
+		}, 1000)
+	}
 
 	const fetchWeatherForecast = () => {
 		axios
@@ -82,10 +118,6 @@ export default function Dashboard() {
 	setTimeout(() => fetchWeatherForecast(), weather ? 300_000 : 1)
 
 	const liveMeasurements = () => {
-		// setTemp((tempItem: any) => [...tempItem, 'fajne je to'])
-		// setTemp((tempItem: any) => tempItem.slice(0, 24))
-		//console.log(temp)
-
 		axios
 			.request({
 				method: 'GET',
@@ -96,12 +128,31 @@ export default function Dashboard() {
 			})
 			.then((res) => {
 				console.log(res)
+
+				let arrayPassTemp: any = [],
+					arrayPassHum: any = [],
+					arrayPassMoist: any = []
+
 				setCurrentTemp(res.data.temp)
 				setCurrentHum(res.data.hum)
 				setCurrentMoist(res.data.moist)
-				temp.push(12).slice(0, 25)
-				hum.push(res.data.hum).slice(0, 25)
-				moist.push(res.data.moist).slice(0, 25)
+
+				// setTemp((tempItem: any) => [...tempItem, i])
+				// i > 25 && temp.filter((tempItemFilter: any) => setTemp((tempItem: any) => [...tempItem, tempItemFilter.indexOf < 25]))
+				// temp.length > 5 && console.log('kokot')
+
+				arrayPassTemp?.push(res.data.temp)
+				arrayPassHum?.push(res.data.hum)
+				arrayPassMoist?.push(res.data.moist)
+
+				arrayPassTemp.length > 25 && (arrayPassTemp = arrayPassTemp?.slice(1, 25))
+				arrayPassHum.length > 25 && (arrayPassHum = arrayPassHum?.slice(1, 25))
+				arrayPassMoist.length > 25 && (arrayPassMoist = arrayPassMoist?.slice(1, 25))
+
+				setTemp(arrayPassTemp)
+				setHum(arrayPassHum)
+				setMoist(arrayPassMoist)
+
 				console.log(temp)
 				console.log(hum)
 				console.log(moist)
@@ -214,19 +265,25 @@ export default function Dashboard() {
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterLevel.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{/* {`${data.irrigationHistory.waterLevel}cm`} */}0cm</span>
+										<span className="flex-col flex-center ml-2">
+											{/* {`${data.irrigationHistory.waterLevel}cm`} */}0cm
+										</span>
 									</div>
 									<div className="flex-row pt-5px" title="Objem vody v nádrži">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterAmount.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{/* {`${data.irrigationHistory.waterAmount}l`} */}5l</span>
+										<span className="flex-col flex-center ml-2">
+											{/* {`${data.irrigationHistory.waterAmount}l`} */}5l
+										</span>
 									</div>
 									<div className="flex-row pt-5px" title="Celkový vyčerpaný objem vody">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterOverdrawn.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{/* {`${data.irrigationHistory.waterAmount}l`} */}56l</span>
+										<span className="flex-col flex-center ml-2">
+											{/* {`${data.irrigationHistory.waterOverdrawn}l`} */}56l
+										</span>
 									</div>
 								</div>
 							</div>
@@ -234,7 +291,7 @@ export default function Dashboard() {
 						<div className="flex-col w-8/12">
 							<div className="flex-row h-44 -mt-2">
 								<LiveMeasurementsChart
-									chartType={settings.chartType} /* data.settings.chartType */
+									chartType={settings.chartType /* data.settings.chartType */}
 									temp={temp}
 									hum={hum}
 									moist={moist}
@@ -307,10 +364,10 @@ export default function Dashboard() {
 									</div>
 									<div className="flex-row 2xl:h-96 lg:h-52">
 										<IrrigationChart
-											chartType={settings.chartType}
-											moist={moist}
-											hum={hum}
-											temp={temp}
+											chartType={settings.chartType /* data.settings.chartType */}
+											moist={moist /* data.settings.chartType */}
+											hum={hum /* irrigationHistoryData.hum */}
+											temp={temp /* irrigationHistoryData.temp */}
 											irrigationCount={irrigationCount}
 										/>
 									</div>
@@ -327,7 +384,7 @@ export default function Dashboard() {
 							</div>
 							<div className="flex-row 2xl:h-64 lg:h-48">
 								<WaterConsumptionChart
-									chartType={settings.chartType}
+									chartType={settings.chartType /* data.settings.chartType */}
 									waterOverdrawn={5 /* data.irrigationHistory.waterOverdrawn */}
 									irrigationCount={irrigationCount}
 								/>
@@ -336,7 +393,12 @@ export default function Dashboard() {
 								<span>Historie měření</span>
 							</div>
 							<div className="flex-row 2xl:h-80 lg:h-52">
-								<MeasurementsHistoryChart chartType={settings.chartType} moist={moist} hum={hum} temp={temp} />
+								<MeasurementsHistoryChart
+									chartType={settings.chartType /* data.settings.chartType */}
+									moist={moist /* data.measurements.moist */}
+									hum={hum /* data.measurements.hum */}
+									temp={temp /* data.measurements.temp */}
+								/>
 							</div>
 						</CardContent>
 					</Card>

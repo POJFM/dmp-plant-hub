@@ -29,6 +29,7 @@ export default function Sidebar(props: any) {
 			})
 			.then((res) => {
 				console.log(res)
+				setTimeout(() => setRestart(false), 1000)
 			})
 			.catch((error) => {
 				console.error(error)

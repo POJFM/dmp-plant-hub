@@ -4,14 +4,14 @@ import gql from 'graphql-tag'
 // language enum CZ/EN
 export const updateSettings = gql`
 	mutation updateSettings(
-		$limitsTrigger: Number!
-		$moistLimit: Number
-		$waterAmountLimit: Number
-		$waterLevelLimit: Number
-		$scheduledTrigger: Number!
-		$hoursRange: Number
-		$irrigationDuration: Number
-		$chartType: Number!
+		$limits_trigger: Number!
+		$moist_limit: Number
+		$water_amount_limit: Number
+		$water_level_limit: Number
+		$scheduled_trigger: Number!
+		$hours_range: Number
+		$irrigation_duration: Number
+		$chart_type: Number!
 		$theme: Number!
 		$language: Number!
 		$location: String!
@@ -19,27 +19,27 @@ export const updateSettings = gql`
 		$lon: Number!
 	) {
 		updateSettings(
-			limitsTrigger: $limitsTrigger
-			moistLimit: $moistLimit
-			waterAmountLimit: $waterAmountLimit
-			waterLevelLimit: $waterLevelLimit
-			hoursRange: $hoursRange
-			irrigationDuration: $irrigationDuration
-			chartType: $chartType
+			limits_trigger: $limits_trigger
+			moist_limit: $moist_limit
+			water_amount_limit: $water_amount_limit
+			water_level_limit: $water_level_limit
+			hours_range: $hours_range
+			irrigation_duration: $irrigation_duration
+			chart_type: $chart_type
 			theme: $theme
 			language: $language
 			location: $location
 			lat: $lat
 			lon: $lon
 		) {
-			limitsTrigger
-			moistLimit
-			waterAmountLimit
-			waterLevelLimit
-			scheduledTrigger
-			hoursRange
-			irrigationDuration
-			chartType
+			limits_trigger
+			water_level_limit
+			water_amount_limit
+			moist_limit
+			scheduled_trigger
+			hours_range
+			irrigation_duration
+			chart_type
 			theme
 			language
 			location

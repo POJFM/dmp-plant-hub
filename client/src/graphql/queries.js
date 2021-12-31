@@ -5,14 +5,14 @@ import gql from 'graphql-tag'
 export const settings = gql`
 	query settings {
 		settings {
-			limitsTrigger
-			waterLevelLimit
-			waterAmountLimit
-			moistLimit
-			scheduledTrigger
-			hoursRange
-			irrigationDuration
-			chartType
+			limits_trigger
+			water_level_limit
+			water_amount_limit
+			moist_limit
+			scheduled_trigger
+			hours_range
+			irrigation_duration
+			chart_type
 			theme
 			language
 			location
@@ -34,25 +34,23 @@ export const dashboard = gql`
 	query dashboard {
 		dashboard {
 			id
-			irrigationHistory {
+			measurements {
 				id
 				timestamp
 				hum
 				temp
 				moist
-				waterLevel
-				waterAmount
-				waterOverdrawn
+				with_irrigation
 			}
-			plantState {
+			irrigation_history {
 				id
 				timestamp
-				hum
-				temp
-				moist
+				water_level
+				water_amount
+				water_overdrawn
 			}
 			settings {
-				chartType
+				chart_type
 				lat
 				lon
 			}
