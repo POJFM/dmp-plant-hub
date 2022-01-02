@@ -1,19 +1,10 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
-	"github.com/stianeikeland/go-rpio/v4"
-	"log"
-	"net/http"
-	"os"
-	"os/signal"
+	"gobot.io/x/gobot/drivers/spi"
+	"gobot.io/x/gobot/platforms/raspi"
 )
 
 const defaultPort = "5000"
@@ -30,7 +21,11 @@ var liveMeasurements sensors.Measurements
 
 func main() {
 
-	var sens = sensors.Pins()
+	a := raspi.NewAdaptor()
+	adc := spi.NewMCP3008Driver(a)
+	fmt.Println(adc.Read(0))
+
+	/*var sens = sensors.Pins()
 	//sequences.InitializationSequence()
 	//sequences.MeasurementSequence(kokot.PUMP, kokot.LED)
 
@@ -70,13 +65,6 @@ func main() {
 		json.NewEncoder(w).Encode(initMeasurements)
 	})
 
-	/*go func() {
-		for {
-			measurement := <-c
-			fmt.Println(measurement)
-		}
-	}()*/
-
 	//var foo = kokot.ReadWaterLevel()
 
 	var db = database.Connect()
@@ -87,5 +75,5 @@ func main() {
 	http.Handle("/query", srv)
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Fatal(http.ListenAndServe(":"+port, nil))*/
 }
