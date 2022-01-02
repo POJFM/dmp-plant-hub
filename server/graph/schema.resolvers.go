@@ -5,18 +5,20 @@ package graph
 
 import (
 	"context"
-	"fmt"
-
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/model"
 )
 
 func (r *mutationResolver) CreateMeasurement(ctx context.Context, input *model.NewMeasurement) (*model.Measurement, error) {
-	return r.DB.SaveMeasurement(input, ctx), nil
+	return r.DB.CreateMeasurement(ctx, input), nil
+}
+
+func (r *mutationResolver) CreateSetting(ctx context.Context, input *model.NewSetting) (*model.Settings, error) {
+	return r.DB.CreateSetting(ctx, input), nil
 }
 
 func (r *queryResolver) GetMeasurement(ctx context.Context, id string) (*model.Measurement, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.DB.GetMeasurement(ctx), nil
 }
 
 func (r *queryResolver) GetMeasurements(ctx context.Context) ([]*model.Measurement, error) {

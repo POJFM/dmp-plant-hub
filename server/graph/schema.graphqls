@@ -37,6 +37,23 @@ input NewMeasurement {
     with_irrigation: Boolean!
 }
 
+input NewSetting {
+    limits_trigger: Boolean!
+    water_level_limit: Float!
+    water_amount_limit: Float!
+    moist_limit: Float!
+    scheduled_trigger: Boolean!
+    hour_range: Int!
+    location: String!
+    irrigation_duration: Boolean!
+    chart_type: Boolean!
+    language: Boolean!
+    theme: Boolean!
+    lat: Float!
+    lon: Float!
+}
+
 type Mutation {
     createMeasurement(input: NewMeasurement): Measurement!
+    createSetting(input: NewSetting): Settings!
 }

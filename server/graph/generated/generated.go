@@ -52,6 +52,7 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		CreateMeasurement func(childComplexity int, input *model.NewMeasurement) int
+		CreateSetting     func(childComplexity int, input *model.NewSetting) int
 	}
 
 	Query struct {
@@ -79,6 +80,7 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreateMeasurement(ctx context.Context, input *model.NewMeasurement) (*model.Measurement, error)
+	CreateSetting(ctx context.Context, input *model.NewSetting) (*model.Settings, error)
 }
 type QueryResolver interface {
 	GetMeasurement(ctx context.Context, id string) (*model.Measurement, error)
@@ -140,6 +142,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateMeasurement(childComplexity, args["input"].(*model.NewMeasurement)), true
+
+	case "Mutation.createSetting":
+		if e.complexity.Mutation.CreateSetting == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createSetting_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateSetting(childComplexity, args["input"].(*model.NewSetting)), true
 
 	case "Query.getMeasurement":
 		if e.complexity.Query.GetMeasurement == nil {
@@ -361,8 +375,25 @@ input NewMeasurement {
     with_irrigation: Boolean!
 }
 
+input NewSetting {
+    limits_trigger: Boolean!
+    water_level_limit: Float!
+    water_amount_limit: Float!
+    moist_limit: Float!
+    scheduled_trigger: Boolean!
+    hour_range: Int!
+    location: String!
+    irrigation_duration: Boolean!
+    chart_type: Boolean!
+    language: Boolean!
+    theme: Boolean!
+    lat: Float!
+    lon: Float!
+}
+
 type Mutation {
     createMeasurement(input: NewMeasurement): Measurement!
+    createSetting(input: NewSetting): Settings!
 }`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
@@ -378,6 +409,21 @@ func (ec *executionContext) field_Mutation_createMeasurement_args(ctx context.Co
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalONewMeasurement2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐNewMeasurement(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createSetting_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.NewSetting
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalONewSetting2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐNewSetting(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -634,6 +680,48 @@ func (ec *executionContext) _Mutation_createMeasurement(ctx context.Context, fie
 	res := resTmp.(*model.Measurement)
 	fc.Result = res
 	return ec.marshalNMeasurement2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐMeasurement(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_createSetting(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createSetting_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateSetting(rctx, args["input"].(*model.NewSetting))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Settings)
+	fc.Result = res
+	return ec.marshalNSettings2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSettings(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getMeasurement(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2437,6 +2525,125 @@ func (ec *executionContext) unmarshalInputNewMeasurement(ctx context.Context, ob
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputNewSetting(ctx context.Context, obj interface{}) (model.NewSetting, error) {
+	var it model.NewSetting
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "limits_trigger":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("limits_trigger"))
+			it.LimitsTrigger, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "water_level_limit":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("water_level_limit"))
+			it.WaterLevelLimit, err = ec.unmarshalNFloat2float64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "water_amount_limit":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("water_amount_limit"))
+			it.WaterAmountLimit, err = ec.unmarshalNFloat2float64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "moist_limit":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("moist_limit"))
+			it.MoistLimit, err = ec.unmarshalNFloat2float64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "scheduled_trigger":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduled_trigger"))
+			it.ScheduledTrigger, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "hour_range":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hour_range"))
+			it.HourRange, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "location":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("location"))
+			it.Location, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "irrigation_duration":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("irrigation_duration"))
+			it.IrrigationDuration, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "chart_type":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("chart_type"))
+			it.ChartType, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "language":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
+			it.Language, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "theme":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("theme"))
+			it.Theme, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "lat":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lat"))
+			it.Lat, err = ec.unmarshalNFloat2float64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "lon":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lon"))
+			it.Lon, err = ec.unmarshalNFloat2float64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -2504,6 +2711,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = graphql.MarshalString("Mutation")
 		case "createMeasurement":
 			out.Values[i] = ec._Mutation_createMeasurement(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createSetting":
+			out.Values[i] = ec._Mutation_createSetting(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -2995,6 +3207,10 @@ func (ec *executionContext) marshalNMeasurement2ᚖgithubᚗcomᚋSPSOAFMᚑIT18
 	return ec._Measurement(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNSettings2githubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSettings(ctx context.Context, sel ast.SelectionSet, v model.Settings) graphql.Marshaler {
+	return ec._Settings(ctx, sel, &v)
+}
+
 func (ec *executionContext) marshalNSettings2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSettings(ctx context.Context, sel ast.SelectionSet, v *model.Settings) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -3353,6 +3569,14 @@ func (ec *executionContext) unmarshalONewMeasurement2ᚖgithubᚗcomᚋSPSOAFM�
 		return nil, nil
 	}
 	res, err := ec.unmarshalInputNewMeasurement(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalONewSetting2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐNewSetting(ctx context.Context, v interface{}) (*model.NewSetting, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputNewSetting(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 

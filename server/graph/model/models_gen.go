@@ -16,6 +16,22 @@ type NewMeasurement struct {
 	WithIrrigation bool    `json:"with_irrigation"`
 }
 
+type NewSetting struct {
+	LimitsTrigger      bool    `json:"limits_trigger"`
+	WaterLevelLimit    float64 `json:"water_level_limit"`
+	WaterAmountLimit   float64 `json:"water_amount_limit"`
+	MoistLimit         float64 `json:"moist_limit"`
+	ScheduledTrigger   bool    `json:"scheduled_trigger"`
+	HourRange          int     `json:"hour_range"`
+	Location           string  `json:"location"`
+	IrrigationDuration bool    `json:"irrigation_duration"`
+	ChartType          bool    `json:"chart_type"`
+	Language           bool    `json:"language"`
+	Theme              bool    `json:"theme"`
+	Lat                float64 `json:"lat"`
+	Lon                float64 `json:"lon"`
+}
+
 type Settings struct {
 	LimitsTrigger      bool    `json:"limits_trigger"`
 	WaterLevelLimit    float64 `json:"water_level_limit"`

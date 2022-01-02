@@ -37,7 +37,7 @@ func Connect() *DB {
 	return &DB{db}
 }
 
-func (db *DB) SaveMeasurement(input *model.NewMeasurement, ctx context.Context) *model.Measurement {
+func (db *DB) CreateMeasurement(ctx context.Context, input *model.NewMeasurement) *model.Measurement {
 	//_, err := db.NewInsert().Model(&input).TableExpr("measurements").Exec()
 	_, err := db.DB.NewInsert().Model(input).ModelTableExpr("measurements").Exec(ctx)
 	if err != nil {
@@ -49,6 +49,41 @@ func (db *DB) SaveMeasurement(input *model.NewMeasurement, ctx context.Context) 
 		Moist:          input.Moist,
 		WithIrrigation: input.WithIrrigation,
 	}
+}
+
+func (db *DB) CreateSetting(ctx context.Context, input *model.NewSetting) *model.Settings {
+	//_, err := db.NewInsert().Model(&input).TableExpr("measurements").Exec()
+	_, err := db.DB.NewInsert().Model(input).ModelTableExpr("settings").Exec(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return &model.Settings{
+		LimitsTrigger:      input.LimitsTrigger,
+		WaterLevelLimit:    input.WaterLevelLimit,
+		WaterAmountLimit:   input.WaterAmountLimit,
+		MoistLimit:         input.MoistLimit,
+		ScheduledTrigger:   input.ScheduledTrigger,
+		HourRange:          input.HourRange,
+		Location:           input.Location,
+		IrrigationDuration: input.IrrigationDuration,
+		ChartType:          input.ChartType,
+		Language:           input.Language,
+		Theme:              input.Theme,
+		Lat:                input.Lat,
+		Lon:                input.Lon,
+	}
+}
+
+// GetMeasurement
+// TODO: get singular measurement by ID
+func (db *DB) GetMeasurement(ctx context.Context) *model.Measurement {
+	/*measurements := make([]*model.Measurement, 0)
+	err := db.DB.NewSelect().Model(&measurements).Scan(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}*/
+	var m *model.Measurement
+	return m
 }
 
 func (db *DB) GetMeasurements(ctx context.Context) []*model.Measurement {
