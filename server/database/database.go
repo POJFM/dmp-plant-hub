@@ -51,8 +51,7 @@ func (db *DB) CreateMeasurement(ctx context.Context, input *model.NewMeasurement
 	}
 }
 
-func (db *DB) CreateSetting(ctx context.Context, input *model.NewSetting) *model.Settings {
-	//_, err := db.NewInsert().Model(&input).TableExpr("measurements").Exec()
+func (db *DB) CreateSettings(ctx context.Context, input *model.NewSettings) *model.Settings {
 	_, err := db.DB.NewInsert().Model(input).ModelTableExpr("settings").Exec(ctx)
 	if err != nil {
 		log.Fatal(err)
@@ -74,32 +73,52 @@ func (db *DB) CreateSetting(ctx context.Context, input *model.NewSetting) *model
 	}
 }
 
-// GetMeasurement
-// TODO: get singular measurement by ID
-func (db *DB) GetMeasurement(ctx context.Context) *model.Measurement {
-	/*measurements := make([]*model.Measurement, 0)
-	err := db.DB.NewSelect().Model(&measurements).Scan(ctx)
+func (db *DB) UpdateSettings(ctx context.Context, input *model.NewSettings) *model.Settings {
+	values := db.DB.NewValues(input)
+	_, err := db.DB.NewUpdate().With("_data", values).Model(&input).TableExpr("_data").Bulk().Where("settings.id = 1").Exec(ctx)
 	if err != nil {
 		log.Fatal(err)
-	}*/
-	var m *model.Measurement
-	return m
+	}
+	return &model.Settings{
+		LimitsTrigger:      input.LimitsTrigger,
+		WaterLevelLimit:    input.WaterLevelLimit,
+		WaterAmountLimit:   input.WaterAmountLimit,
+		MoistLimit:         input.MoistLimit,
+		ScheduledTrigger:   input.ScheduledTrigger,
+		HourRange:          input.HourRange,
+		Location:           input.Location,
+		IrrigationDuration: input.IrrigationDuration,
+		ChartType:          input.ChartType,
+		Language:           input.Language,
+		Theme:              input.Theme,
+		Lat:                input.Lat,
+		Lon:                input.Lon,
+	}
 }
 
-func (db *DB) GetMeasurements(ctx context.Context) []*model.Measurement {
-	measurements := make([]*model.Measurement, 0)
-	err := db.DB.NewSelect().Model(&measurements).Scan(ctx)
+func (db *DB) GetMeasurements(ctx context.Context) []*model.MeasurementQuery {
+	measurements := make([]*model.MeasurementQuery, 0)
+	err := db.DB.NewSelect().Model(&measurements).ModelTableExpr("measurements as measurement_query").Scan(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return measurements
 }
 
-func (db *DB) GetSettings(ctx context.Context) []*model.Settings {
-	settings := make([]*model.Settings, 0)
-	err := db.DB.NewSelect().Model(&settings).Scan(ctx)
+func (db *DB) GetSettings(ctx context.Context) []*model.SettingsQuery {
+	settings := make([]*model.SettingsQuery, 0)
+	err := db.DB.NewSelect().Model(&settings).ModelTableExpr("settings as settings_query").Scan(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return settings
+}
+
+func (db *DB) GetIrrigation(ctx context.Context) []*model.IrrigationQuery {
+	irrigationHistory := make([]*model.IrrigationQuery, 0)
+	err := db.DB.NewSelect().Model(&irrigationHistory).ModelTableExpr("irrigation_history").Scan(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return irrigationHistory
 }
