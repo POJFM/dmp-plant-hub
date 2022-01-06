@@ -10,8 +10,7 @@ import RefreshIcon from '@material-ui/icons/Refresh'
 export default function Sidebar(props: any) {
 	const [linkHover, setlinkHover] = useState('off'),
 		[activeLink, setActiveLink] = useState('blank'),
-		[christmas, setChristmas] = useState(false),
-		[restart, setRestart] = useState(false)
+		[christmas, setChristmas] = useState(false)
 
 	useEffect(() => {
 		setActiveLink(`${window.location.pathname}`)
@@ -21,22 +20,28 @@ export default function Sidebar(props: any) {
 		mm === '12' && dd === '24' && setChristmas(true)
 	}, [])
 
+	//  `${process.env.REACT_APP_GO_API_URL}/live/control`
 	const handleRestart = () => {
 		axios
-			.post(`${process.env.REACT_APP_GO_API_URL}/live/control`, {
-				pumpState: false,
-				restart: restart
-			})
+			.post(
+				'http://localhost:5000/live/control',
+				{
+					pumpState: false,
+					restart: true,
+				},
+				{
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+				}
+			)
 			.then((res) => {
 				console.log(res)
-				setTimeout(() => setRestart(false), 1000)
 			})
 			.catch((error) => {
 				console.error(error)
 			})
 	}
-
-	setTimeout(() => handleRestart(), restart ? 1_000_000 : 1000)
 
 	return (
 		<div className="sidebar">
@@ -110,7 +115,10 @@ export default function Sidebar(props: any) {
 						className={`flex-row sidebar-row ${linkHover === 'refresh' && 'sidebar-row-hover'}`}
 						onMouseEnter={() => setlinkHover('refresh')}
 						onMouseLeave={() => setlinkHover('off')}
-						onClick={() => setRestart(true)}
+						onClick={() => {
+							handleRestart()
+							console.log('restart')
+						}}
 					>
 						<div className={`flex-row sidebar-row-tf`}>
 							<div className="text-2xl flex items-center">

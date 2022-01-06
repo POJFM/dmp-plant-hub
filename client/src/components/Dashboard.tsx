@@ -34,13 +34,14 @@ export default function Dashboard() {
 
 		const { loading, error, data } = useQuery(dashboard)
 
-		let irrigationHistoryData: any = []
+		let irrigationHistoryData: any = [], measurementsData: any = []
 		// TEST
 		const settings = { chartType: 0 }
 		// END TEST
 
 		// uncomment when api is accesible
 		//data.measurements.filter((filteredData: any) => filteredData.withIrrigation === true && irrigationHistoryData.push(filteredData))
+		//data.measurements.filter((filteredData: any) => filteredData.withIrrigation === false && measurementsData.push(filteredData))
 
 	useEffect(() => {
 		document.title = 'Plant Hub | Dashboard'

@@ -33,7 +33,6 @@ export const settingsCheck = gql`
 export const dashboard = gql`
 	query dashboard {
 		dashboard {
-			id
 			measurements {
 				id
 				timestamp

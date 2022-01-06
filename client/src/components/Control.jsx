@@ -20,30 +20,33 @@ export default function Control(props) {
 		!pumpState && setTimeout(() => setTimerState(false), 600)
 	}, [])
 
-	const activatePump = () => {
-		axios
-			.post(`${process.env.REACT_APP_GO_API_URL}/live/control`, {
-				pumpState: pumpState,
-				restart: false
-			})
-			.then((res) => {
-				console.log(res)
-			})
-			.catch((error) => {
-				console.error(error)
-			})
-	}
-
-	setTimeout(() => activatePump(), pumpState ? 1_000_000 : 1000)
-
 	const handleClickNHoldStart = () => {
 		setPumpState(true)
 		setTimerState(false)
 	}
 
 	const handleClickNHold = () => {
-		setPumpState(true)
 		setTimerState(true)
+
+		axios
+			.post(
+				'http://localhost:5000/live/control',
+				{
+					pumpState: true,
+					restart: false,
+				},
+				{
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+				}
+			)
+			.then((res) => {
+				console.log(res)
+			})
+			.catch((error) => {
+				console.error(error)
+			})
 
 		setPumpActiveClass('rotate-clockwise')
 		setWaterDropsActiveClass1('translate-down1')
@@ -56,6 +59,26 @@ export default function Control(props) {
 		setPumpState(false)
 		setTimerState(false)
 
+		axios
+		.post(
+			'http://localhost:5000/live/control',
+			{
+				pumpState: false,
+				restart: false,
+			},
+			{
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+			}
+		)
+		.then((res) => {
+			console.log(res)
+		})
+		.catch((error) => {
+			console.error(error)
+		})
+		
 		setPumpActiveClass('')
 		setWaterDropsActiveClass1('pump-water-drops')
 		setWaterDropsActiveClass2('pump-water-drops')
