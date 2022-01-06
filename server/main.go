@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
@@ -10,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 const defaultPort = "5000"
@@ -21,6 +23,12 @@ func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
+	}
+
+	s := sensors.Init()
+	for {
+		fmt.Println(s.ReadWaterLevel())
+		time.Sleep(1 * time.Second)
 	}
 
 	/*
