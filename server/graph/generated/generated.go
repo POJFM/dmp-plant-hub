@@ -42,7 +42,7 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
-	IrrigationQuery struct {
+	Irrigation struct {
 		ID             func(childComplexity int) int
 		Timestamp      func(childComplexity int) int
 		WaterAmount    func(childComplexity int) int
@@ -51,13 +51,6 @@ type ComplexityRoot struct {
 	}
 
 	Measurement struct {
-		Hum            func(childComplexity int) int
-		Moist          func(childComplexity int) int
-		Temp           func(childComplexity int) int
-		WithIrrigation func(childComplexity int) int
-	}
-
-	MeasurementQuery struct {
 		Hum            func(childComplexity int) int
 		ID             func(childComplexity int) int
 		Moist          func(childComplexity int) int
@@ -78,9 +71,10 @@ type ComplexityRoot struct {
 		GetSettings     func(childComplexity int) int
 	}
 
-	Settings struct {
+	Setting struct {
 		ChartType          func(childComplexity int) int
 		HourRange          func(childComplexity int) int
+		ID                 func(childComplexity int) int
 		IrrigationDuration func(childComplexity int) int
 		Language           func(childComplexity int) int
 		Lat                func(childComplexity int) int
@@ -93,32 +87,17 @@ type ComplexityRoot struct {
 		WaterAmountLimit   func(childComplexity int) int
 		WaterLevelLimit    func(childComplexity int) int
 	}
-
-	SettingsQuery struct {
-		ChartType          func(childComplexity int) int
-		HourRange          func(childComplexity int) int
-		ID                 func(childComplexity int) int
-		IrrigationDuration func(childComplexity int) int
-		Language           func(childComplexity int) int
-		LimitsTrigger      func(childComplexity int) int
-		Location           func(childComplexity int) int
-		MoistLimit         func(childComplexity int) int
-		ScheduledTrigger   func(childComplexity int) int
-		Theme              func(childComplexity int) int
-		WaterAmountLimit   func(childComplexity int) int
-		WaterLevelLimit    func(childComplexity int) int
-	}
 }
 
 type MutationResolver interface {
 	CreateMeasurement(ctx context.Context, input *model.NewMeasurement) (*model.Measurement, error)
-	CreateSettings(ctx context.Context, input *model.NewSettings) (*model.Settings, error)
-	UpdateSettings(ctx context.Context, input *model.NewSettings) (*model.Settings, error)
+	CreateSettings(ctx context.Context, input *model.NewSettings) (*model.Setting, error)
+	UpdateSettings(ctx context.Context, input *model.NewSettings) (*model.Setting, error)
 }
 type QueryResolver interface {
-	GetMeasurements(ctx context.Context) ([]*model.MeasurementQuery, error)
-	GetSettings(ctx context.Context) ([]*model.SettingsQuery, error)
-	GetIrrigation(ctx context.Context) ([]*model.IrrigationQuery, error)
+	GetMeasurements(ctx context.Context) ([]*model.Measurement, error)
+	GetSettings(ctx context.Context) ([]*model.Setting, error)
+	GetIrrigation(ctx context.Context) ([]*model.Irrigation, error)
 }
 
 type executableSchema struct {
@@ -136,40 +115,40 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
-	case "IrrigationQuery.id":
-		if e.complexity.IrrigationQuery.ID == nil {
+	case "Irrigation.id":
+		if e.complexity.Irrigation.ID == nil {
 			break
 		}
 
-		return e.complexity.IrrigationQuery.ID(childComplexity), true
+		return e.complexity.Irrigation.ID(childComplexity), true
 
-	case "IrrigationQuery.timestamp":
-		if e.complexity.IrrigationQuery.Timestamp == nil {
+	case "Irrigation.timestamp":
+		if e.complexity.Irrigation.Timestamp == nil {
 			break
 		}
 
-		return e.complexity.IrrigationQuery.Timestamp(childComplexity), true
+		return e.complexity.Irrigation.Timestamp(childComplexity), true
 
-	case "IrrigationQuery.water_amount":
-		if e.complexity.IrrigationQuery.WaterAmount == nil {
+	case "Irrigation.water_amount":
+		if e.complexity.Irrigation.WaterAmount == nil {
 			break
 		}
 
-		return e.complexity.IrrigationQuery.WaterAmount(childComplexity), true
+		return e.complexity.Irrigation.WaterAmount(childComplexity), true
 
-	case "IrrigationQuery.water_level":
-		if e.complexity.IrrigationQuery.WaterLevel == nil {
+	case "Irrigation.water_level":
+		if e.complexity.Irrigation.WaterLevel == nil {
 			break
 		}
 
-		return e.complexity.IrrigationQuery.WaterLevel(childComplexity), true
+		return e.complexity.Irrigation.WaterLevel(childComplexity), true
 
-	case "IrrigationQuery.water_overdrawn":
-		if e.complexity.IrrigationQuery.WaterOverdrawn == nil {
+	case "Irrigation.water_overdrawn":
+		if e.complexity.Irrigation.WaterOverdrawn == nil {
 			break
 		}
 
-		return e.complexity.IrrigationQuery.WaterOverdrawn(childComplexity), true
+		return e.complexity.Irrigation.WaterOverdrawn(childComplexity), true
 
 	case "Measurement.hum":
 		if e.complexity.Measurement.Hum == nil {
@@ -177,6 +156,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Measurement.Hum(childComplexity), true
+
+	case "Measurement.id":
+		if e.complexity.Measurement.ID == nil {
+			break
+		}
+
+		return e.complexity.Measurement.ID(childComplexity), true
 
 	case "Measurement.moist":
 		if e.complexity.Measurement.Moist == nil {
@@ -192,54 +178,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Measurement.Temp(childComplexity), true
 
+	case "Measurement.timestamp":
+		if e.complexity.Measurement.Timestamp == nil {
+			break
+		}
+
+		return e.complexity.Measurement.Timestamp(childComplexity), true
+
 	case "Measurement.with_irrigation":
 		if e.complexity.Measurement.WithIrrigation == nil {
 			break
 		}
 
 		return e.complexity.Measurement.WithIrrigation(childComplexity), true
-
-	case "MeasurementQuery.hum":
-		if e.complexity.MeasurementQuery.Hum == nil {
-			break
-		}
-
-		return e.complexity.MeasurementQuery.Hum(childComplexity), true
-
-	case "MeasurementQuery.id":
-		if e.complexity.MeasurementQuery.ID == nil {
-			break
-		}
-
-		return e.complexity.MeasurementQuery.ID(childComplexity), true
-
-	case "MeasurementQuery.moist":
-		if e.complexity.MeasurementQuery.Moist == nil {
-			break
-		}
-
-		return e.complexity.MeasurementQuery.Moist(childComplexity), true
-
-	case "MeasurementQuery.temp":
-		if e.complexity.MeasurementQuery.Temp == nil {
-			break
-		}
-
-		return e.complexity.MeasurementQuery.Temp(childComplexity), true
-
-	case "MeasurementQuery.timestamp":
-		if e.complexity.MeasurementQuery.Timestamp == nil {
-			break
-		}
-
-		return e.complexity.MeasurementQuery.Timestamp(childComplexity), true
-
-	case "MeasurementQuery.with_irrigation":
-		if e.complexity.MeasurementQuery.WithIrrigation == nil {
-			break
-		}
-
-		return e.complexity.MeasurementQuery.WithIrrigation(childComplexity), true
 
 	case "Mutation.createMeasurement":
 		if e.complexity.Mutation.CreateMeasurement == nil {
@@ -298,180 +249,103 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.GetSettings(childComplexity), true
 
-	case "Settings.chart_type":
-		if e.complexity.Settings.ChartType == nil {
+	case "Setting.chart_type":
+		if e.complexity.Setting.ChartType == nil {
 			break
 		}
 
-		return e.complexity.Settings.ChartType(childComplexity), true
+		return e.complexity.Setting.ChartType(childComplexity), true
 
-	case "Settings.hour_range":
-		if e.complexity.Settings.HourRange == nil {
+	case "Setting.hour_range":
+		if e.complexity.Setting.HourRange == nil {
 			break
 		}
 
-		return e.complexity.Settings.HourRange(childComplexity), true
+		return e.complexity.Setting.HourRange(childComplexity), true
 
-	case "Settings.irrigation_duration":
-		if e.complexity.Settings.IrrigationDuration == nil {
+	case "Setting.id":
+		if e.complexity.Setting.ID == nil {
 			break
 		}
 
-		return e.complexity.Settings.IrrigationDuration(childComplexity), true
+		return e.complexity.Setting.ID(childComplexity), true
 
-	case "Settings.language":
-		if e.complexity.Settings.Language == nil {
+	case "Setting.irrigation_duration":
+		if e.complexity.Setting.IrrigationDuration == nil {
 			break
 		}
 
-		return e.complexity.Settings.Language(childComplexity), true
+		return e.complexity.Setting.IrrigationDuration(childComplexity), true
 
-	case "Settings.lat":
-		if e.complexity.Settings.Lat == nil {
+	case "Setting.language":
+		if e.complexity.Setting.Language == nil {
 			break
 		}
 
-		return e.complexity.Settings.Lat(childComplexity), true
+		return e.complexity.Setting.Language(childComplexity), true
 
-	case "Settings.limits_trigger":
-		if e.complexity.Settings.LimitsTrigger == nil {
+	case "Setting.lat":
+		if e.complexity.Setting.Lat == nil {
 			break
 		}
 
-		return e.complexity.Settings.LimitsTrigger(childComplexity), true
+		return e.complexity.Setting.Lat(childComplexity), true
 
-	case "Settings.location":
-		if e.complexity.Settings.Location == nil {
+	case "Setting.limits_trigger":
+		if e.complexity.Setting.LimitsTrigger == nil {
 			break
 		}
 
-		return e.complexity.Settings.Location(childComplexity), true
+		return e.complexity.Setting.LimitsTrigger(childComplexity), true
 
-	case "Settings.lon":
-		if e.complexity.Settings.Lon == nil {
+	case "Setting.location":
+		if e.complexity.Setting.Location == nil {
 			break
 		}
 
-		return e.complexity.Settings.Lon(childComplexity), true
+		return e.complexity.Setting.Location(childComplexity), true
 
-	case "Settings.moist_limit":
-		if e.complexity.Settings.MoistLimit == nil {
+	case "Setting.lon":
+		if e.complexity.Setting.Lon == nil {
 			break
 		}
 
-		return e.complexity.Settings.MoistLimit(childComplexity), true
+		return e.complexity.Setting.Lon(childComplexity), true
 
-	case "Settings.scheduled_trigger":
-		if e.complexity.Settings.ScheduledTrigger == nil {
+	case "Setting.moist_limit":
+		if e.complexity.Setting.MoistLimit == nil {
 			break
 		}
 
-		return e.complexity.Settings.ScheduledTrigger(childComplexity), true
+		return e.complexity.Setting.MoistLimit(childComplexity), true
 
-	case "Settings.theme":
-		if e.complexity.Settings.Theme == nil {
+	case "Setting.scheduled_trigger":
+		if e.complexity.Setting.ScheduledTrigger == nil {
 			break
 		}
 
-		return e.complexity.Settings.Theme(childComplexity), true
+		return e.complexity.Setting.ScheduledTrigger(childComplexity), true
 
-	case "Settings.water_amount_limit":
-		if e.complexity.Settings.WaterAmountLimit == nil {
+	case "Setting.theme":
+		if e.complexity.Setting.Theme == nil {
 			break
 		}
 
-		return e.complexity.Settings.WaterAmountLimit(childComplexity), true
+		return e.complexity.Setting.Theme(childComplexity), true
 
-	case "Settings.water_level_limit":
-		if e.complexity.Settings.WaterLevelLimit == nil {
+	case "Setting.water_amount_limit":
+		if e.complexity.Setting.WaterAmountLimit == nil {
 			break
 		}
 
-		return e.complexity.Settings.WaterLevelLimit(childComplexity), true
+		return e.complexity.Setting.WaterAmountLimit(childComplexity), true
 
-	case "SettingsQuery.chart_type":
-		if e.complexity.SettingsQuery.ChartType == nil {
+	case "Setting.water_level_limit":
+		if e.complexity.Setting.WaterLevelLimit == nil {
 			break
 		}
 
-		return e.complexity.SettingsQuery.ChartType(childComplexity), true
-
-	case "SettingsQuery.hour_range":
-		if e.complexity.SettingsQuery.HourRange == nil {
-			break
-		}
-
-		return e.complexity.SettingsQuery.HourRange(childComplexity), true
-
-	case "SettingsQuery.id":
-		if e.complexity.SettingsQuery.ID == nil {
-			break
-		}
-
-		return e.complexity.SettingsQuery.ID(childComplexity), true
-
-	case "SettingsQuery.irrigation_duration":
-		if e.complexity.SettingsQuery.IrrigationDuration == nil {
-			break
-		}
-
-		return e.complexity.SettingsQuery.IrrigationDuration(childComplexity), true
-
-	case "SettingsQuery.language":
-		if e.complexity.SettingsQuery.Language == nil {
-			break
-		}
-
-		return e.complexity.SettingsQuery.Language(childComplexity), true
-
-	case "SettingsQuery.limits_trigger":
-		if e.complexity.SettingsQuery.LimitsTrigger == nil {
-			break
-		}
-
-		return e.complexity.SettingsQuery.LimitsTrigger(childComplexity), true
-
-	case "SettingsQuery.location":
-		if e.complexity.SettingsQuery.Location == nil {
-			break
-		}
-
-		return e.complexity.SettingsQuery.Location(childComplexity), true
-
-	case "SettingsQuery.moist_limit":
-		if e.complexity.SettingsQuery.MoistLimit == nil {
-			break
-		}
-
-		return e.complexity.SettingsQuery.MoistLimit(childComplexity), true
-
-	case "SettingsQuery.scheduled_trigger":
-		if e.complexity.SettingsQuery.ScheduledTrigger == nil {
-			break
-		}
-
-		return e.complexity.SettingsQuery.ScheduledTrigger(childComplexity), true
-
-	case "SettingsQuery.theme":
-		if e.complexity.SettingsQuery.Theme == nil {
-			break
-		}
-
-		return e.complexity.SettingsQuery.Theme(childComplexity), true
-
-	case "SettingsQuery.water_amount_limit":
-		if e.complexity.SettingsQuery.WaterAmountLimit == nil {
-			break
-		}
-
-		return e.complexity.SettingsQuery.WaterAmountLimit(childComplexity), true
-
-	case "SettingsQuery.water_level_limit":
-		if e.complexity.SettingsQuery.WaterLevelLimit == nil {
-			break
-		}
-
-		return e.complexity.SettingsQuery.WaterLevelLimit(childComplexity), true
+		return e.complexity.Setting.WaterLevelLimit(childComplexity), true
 
 	}
 	return 0, false
@@ -538,14 +412,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 
 var sources = []*ast.Source{
 	{Name: "graph/schema.graphqls", Input: `type Measurement {
-    hum: Float!
-    temp: Float!
-    moist: Float!
-    with_irrigation: Boolean!
-}
-
-type MeasurementQuery {
-    id: Int
+    id: Float
     timestamp: Timestamp
     hum: Float
     temp: Float
@@ -553,23 +420,7 @@ type MeasurementQuery {
     with_irrigation: Boolean
 }
 
-type Settings {
-    limits_trigger: Boolean!
-    water_level_limit: Float!
-    water_amount_limit: Float!
-    moist_limit: Float!
-    scheduled_trigger: Boolean!
-    hour_range: Int!
-    location: String!
-    irrigation_duration: Boolean!
-    chart_type: Boolean!
-    language: Boolean!
-    theme: Boolean!
-    lat: Float!
-    lon: Float!
-}
-
-type SettingsQuery {
+type Setting {
     id: Int
     limits_trigger: Boolean
     water_level_limit: Float
@@ -582,9 +433,11 @@ type SettingsQuery {
     chart_type: Boolean
     language: Boolean
     theme: Boolean
+    lat: Float
+    lon: Float
 }
 
-type IrrigationQuery {
+type Irrigation {
     id: Int
     timestamp: Timestamp
     water_level: Float
@@ -595,39 +448,39 @@ type IrrigationQuery {
 # TODO: vymyslet query pomoci timestamp range somehow
 
 type Query {
-    getMeasurements: [MeasurementQuery!]
-    getSettings: [SettingsQuery!]
-    getIrrigation: [IrrigationQuery!]
+    getMeasurements: [Measurement!]
+    getSettings: [Setting!]
+    getIrrigation: [Irrigation!]
 }
 
 # vymrdat in favor of Measurement type ???
 input NewMeasurement {
-    hum: Float!
-    temp: Float!
-    moist: Float!
-    with_irrigation: Boolean!
+    hum: Float
+    temp: Float
+    moist: Float
+    with_irrigation: Boolean
 }
 
 input NewSettings {
-    limits_trigger: Boolean!
-    water_level_limit: Float!
-    water_amount_limit: Float!
-    moist_limit: Float!
-    scheduled_trigger: Boolean!
-    hour_range: Int!
-    location: String!
-    irrigation_duration: Boolean!
-    chart_type: Boolean!
-    language: Boolean!
-    theme: Boolean!
-    lat: Float!
-    lon: Float!
+    limits_trigger: Boolean
+    water_level_limit: Float
+    water_amount_limit: Float
+    moist_limit: Float
+    scheduled_trigger: Boolean
+    hour_range: Int
+    location: String
+    irrigation_duration: Boolean
+    chart_type: Boolean
+    language: Boolean
+    theme: Boolean
+    lat: Float
+    lon: Float
 }
 
 type Mutation {
     createMeasurement(input: NewMeasurement): Measurement!
-    createSettings(input: NewSettings): Settings!
-    updateSettings(input: NewSettings): Settings!
+    createSettings(input: NewSettings): Setting!
+    updateSettings(input: NewSettings): Setting!
 }
 
 scalar Timestamp`, BuiltIn: false},
@@ -736,7 +589,7 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _IrrigationQuery_id(ctx context.Context, field graphql.CollectedField, obj *model.IrrigationQuery) (ret graphql.Marshaler) {
+func (ec *executionContext) _Irrigation_id(ctx context.Context, field graphql.CollectedField, obj *model.Irrigation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -744,7 +597,7 @@ func (ec *executionContext) _IrrigationQuery_id(ctx context.Context, field graph
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "IrrigationQuery",
+		Object:     "Irrigation",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -768,7 +621,7 @@ func (ec *executionContext) _IrrigationQuery_id(ctx context.Context, field graph
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _IrrigationQuery_timestamp(ctx context.Context, field graphql.CollectedField, obj *model.IrrigationQuery) (ret graphql.Marshaler) {
+func (ec *executionContext) _Irrigation_timestamp(ctx context.Context, field graphql.CollectedField, obj *model.Irrigation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -776,7 +629,7 @@ func (ec *executionContext) _IrrigationQuery_timestamp(ctx context.Context, fiel
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "IrrigationQuery",
+		Object:     "Irrigation",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -800,7 +653,7 @@ func (ec *executionContext) _IrrigationQuery_timestamp(ctx context.Context, fiel
 	return ec.marshalOTimestamp2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _IrrigationQuery_water_level(ctx context.Context, field graphql.CollectedField, obj *model.IrrigationQuery) (ret graphql.Marshaler) {
+func (ec *executionContext) _Irrigation_water_level(ctx context.Context, field graphql.CollectedField, obj *model.Irrigation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -808,7 +661,7 @@ func (ec *executionContext) _IrrigationQuery_water_level(ctx context.Context, fi
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "IrrigationQuery",
+		Object:     "Irrigation",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -832,7 +685,7 @@ func (ec *executionContext) _IrrigationQuery_water_level(ctx context.Context, fi
 	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _IrrigationQuery_water_amount(ctx context.Context, field graphql.CollectedField, obj *model.IrrigationQuery) (ret graphql.Marshaler) {
+func (ec *executionContext) _Irrigation_water_amount(ctx context.Context, field graphql.CollectedField, obj *model.Irrigation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -840,7 +693,7 @@ func (ec *executionContext) _IrrigationQuery_water_amount(ctx context.Context, f
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "IrrigationQuery",
+		Object:     "Irrigation",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -864,7 +717,7 @@ func (ec *executionContext) _IrrigationQuery_water_amount(ctx context.Context, f
 	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _IrrigationQuery_water_overdrawn(ctx context.Context, field graphql.CollectedField, obj *model.IrrigationQuery) (ret graphql.Marshaler) {
+func (ec *executionContext) _Irrigation_water_overdrawn(ctx context.Context, field graphql.CollectedField, obj *model.Irrigation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -872,7 +725,7 @@ func (ec *executionContext) _IrrigationQuery_water_overdrawn(ctx context.Context
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "IrrigationQuery",
+		Object:     "Irrigation",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -894,6 +747,70 @@ func (ec *executionContext) _IrrigationQuery_water_overdrawn(ctx context.Context
 	res := resTmp.(*float64)
 	fc.Result = res
 	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Measurement_id(ctx context.Context, field graphql.CollectedField, obj *model.Measurement) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Measurement",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*float64)
+	fc.Result = res
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Measurement_timestamp(ctx context.Context, field graphql.CollectedField, obj *model.Measurement) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Measurement",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Timestamp, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOTimestamp2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Measurement_hum(ctx context.Context, field graphql.CollectedField, obj *model.Measurement) (ret graphql.Marshaler) {
@@ -921,14 +838,11 @@ func (ec *executionContext) _Measurement_hum(ctx context.Context, field graphql.
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(*float64)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Measurement_temp(ctx context.Context, field graphql.CollectedField, obj *model.Measurement) (ret graphql.Marshaler) {
@@ -956,14 +870,11 @@ func (ec *executionContext) _Measurement_temp(ctx context.Context, field graphql
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(*float64)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Measurement_moist(ctx context.Context, field graphql.CollectedField, obj *model.Measurement) (ret graphql.Marshaler) {
@@ -991,14 +902,11 @@ func (ec *executionContext) _Measurement_moist(ctx context.Context, field graphq
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.(*float64)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Measurement_with_irrigation(ctx context.Context, field graphql.CollectedField, obj *model.Measurement) (ret graphql.Marshaler) {
@@ -1010,201 +918,6 @@ func (ec *executionContext) _Measurement_with_irrigation(ctx context.Context, fi
 	}()
 	fc := &graphql.FieldContext{
 		Object:     "Measurement",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.WithIrrigation, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _MeasurementQuery_id(ctx context.Context, field graphql.CollectedField, obj *model.MeasurementQuery) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "MeasurementQuery",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*int)
-	fc.Result = res
-	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _MeasurementQuery_timestamp(ctx context.Context, field graphql.CollectedField, obj *model.MeasurementQuery) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "MeasurementQuery",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Timestamp, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOTimestamp2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _MeasurementQuery_hum(ctx context.Context, field graphql.CollectedField, obj *model.MeasurementQuery) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "MeasurementQuery",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Hum, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*float64)
-	fc.Result = res
-	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _MeasurementQuery_temp(ctx context.Context, field graphql.CollectedField, obj *model.MeasurementQuery) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "MeasurementQuery",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Temp, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*float64)
-	fc.Result = res
-	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _MeasurementQuery_moist(ctx context.Context, field graphql.CollectedField, obj *model.MeasurementQuery) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "MeasurementQuery",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Moist, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*float64)
-	fc.Result = res
-	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _MeasurementQuery_with_irrigation(ctx context.Context, field graphql.CollectedField, obj *model.MeasurementQuery) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "MeasurementQuery",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -1307,9 +1020,9 @@ func (ec *executionContext) _Mutation_createSettings(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.Settings)
+	res := resTmp.(*model.Setting)
 	fc.Result = res
-	return ec.marshalNSettings2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSettings(ctx, field.Selections, res)
+	return ec.marshalNSetting2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSetting(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updateSettings(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1349,9 +1062,9 @@ func (ec *executionContext) _Mutation_updateSettings(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.Settings)
+	res := resTmp.(*model.Setting)
 	fc.Result = res
-	return ec.marshalNSettings2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSettings(ctx, field.Selections, res)
+	return ec.marshalNSetting2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSetting(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getMeasurements(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1381,9 +1094,9 @@ func (ec *executionContext) _Query_getMeasurements(ctx context.Context, field gr
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.MeasurementQuery)
+	res := resTmp.([]*model.Measurement)
 	fc.Result = res
-	return ec.marshalOMeasurementQuery2ᚕᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐMeasurementQueryᚄ(ctx, field.Selections, res)
+	return ec.marshalOMeasurement2ᚕᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐMeasurementᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getSettings(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1413,9 +1126,9 @@ func (ec *executionContext) _Query_getSettings(ctx context.Context, field graphq
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.SettingsQuery)
+	res := resTmp.([]*model.Setting)
 	fc.Result = res
-	return ec.marshalOSettingsQuery2ᚕᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSettingsQueryᚄ(ctx, field.Selections, res)
+	return ec.marshalOSetting2ᚕᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSettingᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getIrrigation(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1445,9 +1158,9 @@ func (ec *executionContext) _Query_getIrrigation(ctx context.Context, field grap
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.IrrigationQuery)
+	res := resTmp.([]*model.Irrigation)
 	fc.Result = res
-	return ec.marshalOIrrigationQuery2ᚕᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigationQueryᚄ(ctx, field.Selections, res)
+	return ec.marshalOIrrigation2ᚕᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigationᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1521,7 +1234,7 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Settings_limits_trigger(ctx context.Context, field graphql.CollectedField, obj *model.Settings) (ret graphql.Marshaler) {
+func (ec *executionContext) _Setting_id(ctx context.Context, field graphql.CollectedField, obj *model.Setting) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1529,462 +1242,7 @@ func (ec *executionContext) _Settings_limits_trigger(ctx context.Context, field 
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Settings",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.LimitsTrigger, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Settings_water_level_limit(ctx context.Context, field graphql.CollectedField, obj *model.Settings) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Settings",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.WaterLevelLimit, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(float64)
-	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Settings_water_amount_limit(ctx context.Context, field graphql.CollectedField, obj *model.Settings) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Settings",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.WaterAmountLimit, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(float64)
-	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Settings_moist_limit(ctx context.Context, field graphql.CollectedField, obj *model.Settings) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Settings",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.MoistLimit, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(float64)
-	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Settings_scheduled_trigger(ctx context.Context, field graphql.CollectedField, obj *model.Settings) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Settings",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ScheduledTrigger, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Settings_hour_range(ctx context.Context, field graphql.CollectedField, obj *model.Settings) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Settings",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.HourRange, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Settings_location(ctx context.Context, field graphql.CollectedField, obj *model.Settings) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Settings",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Location, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Settings_irrigation_duration(ctx context.Context, field graphql.CollectedField, obj *model.Settings) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Settings",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.IrrigationDuration, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Settings_chart_type(ctx context.Context, field graphql.CollectedField, obj *model.Settings) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Settings",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ChartType, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Settings_language(ctx context.Context, field graphql.CollectedField, obj *model.Settings) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Settings",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Language, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Settings_theme(ctx context.Context, field graphql.CollectedField, obj *model.Settings) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Settings",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Theme, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Settings_lat(ctx context.Context, field graphql.CollectedField, obj *model.Settings) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Settings",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Lat, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(float64)
-	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Settings_lon(ctx context.Context, field graphql.CollectedField, obj *model.Settings) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Settings",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Lon, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(float64)
-	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SettingsQuery_id(ctx context.Context, field graphql.CollectedField, obj *model.SettingsQuery) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SettingsQuery",
+		Object:     "Setting",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2008,7 +1266,7 @@ func (ec *executionContext) _SettingsQuery_id(ctx context.Context, field graphql
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SettingsQuery_limits_trigger(ctx context.Context, field graphql.CollectedField, obj *model.SettingsQuery) (ret graphql.Marshaler) {
+func (ec *executionContext) _Setting_limits_trigger(ctx context.Context, field graphql.CollectedField, obj *model.Setting) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2016,7 +1274,7 @@ func (ec *executionContext) _SettingsQuery_limits_trigger(ctx context.Context, f
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "SettingsQuery",
+		Object:     "Setting",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2040,7 +1298,7 @@ func (ec *executionContext) _SettingsQuery_limits_trigger(ctx context.Context, f
 	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SettingsQuery_water_level_limit(ctx context.Context, field graphql.CollectedField, obj *model.SettingsQuery) (ret graphql.Marshaler) {
+func (ec *executionContext) _Setting_water_level_limit(ctx context.Context, field graphql.CollectedField, obj *model.Setting) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2048,7 +1306,7 @@ func (ec *executionContext) _SettingsQuery_water_level_limit(ctx context.Context
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "SettingsQuery",
+		Object:     "Setting",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2072,7 +1330,7 @@ func (ec *executionContext) _SettingsQuery_water_level_limit(ctx context.Context
 	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SettingsQuery_water_amount_limit(ctx context.Context, field graphql.CollectedField, obj *model.SettingsQuery) (ret graphql.Marshaler) {
+func (ec *executionContext) _Setting_water_amount_limit(ctx context.Context, field graphql.CollectedField, obj *model.Setting) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2080,7 +1338,7 @@ func (ec *executionContext) _SettingsQuery_water_amount_limit(ctx context.Contex
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "SettingsQuery",
+		Object:     "Setting",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2104,7 +1362,7 @@ func (ec *executionContext) _SettingsQuery_water_amount_limit(ctx context.Contex
 	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SettingsQuery_moist_limit(ctx context.Context, field graphql.CollectedField, obj *model.SettingsQuery) (ret graphql.Marshaler) {
+func (ec *executionContext) _Setting_moist_limit(ctx context.Context, field graphql.CollectedField, obj *model.Setting) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2112,7 +1370,7 @@ func (ec *executionContext) _SettingsQuery_moist_limit(ctx context.Context, fiel
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "SettingsQuery",
+		Object:     "Setting",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2136,7 +1394,7 @@ func (ec *executionContext) _SettingsQuery_moist_limit(ctx context.Context, fiel
 	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SettingsQuery_scheduled_trigger(ctx context.Context, field graphql.CollectedField, obj *model.SettingsQuery) (ret graphql.Marshaler) {
+func (ec *executionContext) _Setting_scheduled_trigger(ctx context.Context, field graphql.CollectedField, obj *model.Setting) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2144,7 +1402,7 @@ func (ec *executionContext) _SettingsQuery_scheduled_trigger(ctx context.Context
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "SettingsQuery",
+		Object:     "Setting",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2168,7 +1426,7 @@ func (ec *executionContext) _SettingsQuery_scheduled_trigger(ctx context.Context
 	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SettingsQuery_hour_range(ctx context.Context, field graphql.CollectedField, obj *model.SettingsQuery) (ret graphql.Marshaler) {
+func (ec *executionContext) _Setting_hour_range(ctx context.Context, field graphql.CollectedField, obj *model.Setting) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2176,7 +1434,7 @@ func (ec *executionContext) _SettingsQuery_hour_range(ctx context.Context, field
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "SettingsQuery",
+		Object:     "Setting",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2200,7 +1458,7 @@ func (ec *executionContext) _SettingsQuery_hour_range(ctx context.Context, field
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SettingsQuery_location(ctx context.Context, field graphql.CollectedField, obj *model.SettingsQuery) (ret graphql.Marshaler) {
+func (ec *executionContext) _Setting_location(ctx context.Context, field graphql.CollectedField, obj *model.Setting) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2208,7 +1466,7 @@ func (ec *executionContext) _SettingsQuery_location(ctx context.Context, field g
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "SettingsQuery",
+		Object:     "Setting",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2232,7 +1490,7 @@ func (ec *executionContext) _SettingsQuery_location(ctx context.Context, field g
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SettingsQuery_irrigation_duration(ctx context.Context, field graphql.CollectedField, obj *model.SettingsQuery) (ret graphql.Marshaler) {
+func (ec *executionContext) _Setting_irrigation_duration(ctx context.Context, field graphql.CollectedField, obj *model.Setting) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2240,7 +1498,7 @@ func (ec *executionContext) _SettingsQuery_irrigation_duration(ctx context.Conte
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "SettingsQuery",
+		Object:     "Setting",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2264,7 +1522,7 @@ func (ec *executionContext) _SettingsQuery_irrigation_duration(ctx context.Conte
 	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SettingsQuery_chart_type(ctx context.Context, field graphql.CollectedField, obj *model.SettingsQuery) (ret graphql.Marshaler) {
+func (ec *executionContext) _Setting_chart_type(ctx context.Context, field graphql.CollectedField, obj *model.Setting) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2272,7 +1530,7 @@ func (ec *executionContext) _SettingsQuery_chart_type(ctx context.Context, field
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "SettingsQuery",
+		Object:     "Setting",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2296,7 +1554,7 @@ func (ec *executionContext) _SettingsQuery_chart_type(ctx context.Context, field
 	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SettingsQuery_language(ctx context.Context, field graphql.CollectedField, obj *model.SettingsQuery) (ret graphql.Marshaler) {
+func (ec *executionContext) _Setting_language(ctx context.Context, field graphql.CollectedField, obj *model.Setting) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2304,7 +1562,7 @@ func (ec *executionContext) _SettingsQuery_language(ctx context.Context, field g
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "SettingsQuery",
+		Object:     "Setting",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2328,7 +1586,7 @@ func (ec *executionContext) _SettingsQuery_language(ctx context.Context, field g
 	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SettingsQuery_theme(ctx context.Context, field graphql.CollectedField, obj *model.SettingsQuery) (ret graphql.Marshaler) {
+func (ec *executionContext) _Setting_theme(ctx context.Context, field graphql.CollectedField, obj *model.Setting) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2336,7 +1594,7 @@ func (ec *executionContext) _SettingsQuery_theme(ctx context.Context, field grap
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "SettingsQuery",
+		Object:     "Setting",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -2358,6 +1616,70 @@ func (ec *executionContext) _SettingsQuery_theme(ctx context.Context, field grap
 	res := resTmp.(*bool)
 	fc.Result = res
 	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Setting_lat(ctx context.Context, field graphql.CollectedField, obj *model.Setting) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Setting",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Lat, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*float64)
+	fc.Result = res
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Setting_lon(ctx context.Context, field graphql.CollectedField, obj *model.Setting) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Setting",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Lon, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*float64)
+	fc.Result = res
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -3495,7 +2817,7 @@ func (ec *executionContext) unmarshalInputNewMeasurement(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hum"))
-			it.Hum, err = ec.unmarshalNFloat2float64(ctx, v)
+			it.Hum, err = ec.unmarshalOFloat2ᚖfloat64(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3503,7 +2825,7 @@ func (ec *executionContext) unmarshalInputNewMeasurement(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("temp"))
-			it.Temp, err = ec.unmarshalNFloat2float64(ctx, v)
+			it.Temp, err = ec.unmarshalOFloat2ᚖfloat64(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3511,7 +2833,7 @@ func (ec *executionContext) unmarshalInputNewMeasurement(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("moist"))
-			it.Moist, err = ec.unmarshalNFloat2float64(ctx, v)
+			it.Moist, err = ec.unmarshalOFloat2ᚖfloat64(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3519,7 +2841,7 @@ func (ec *executionContext) unmarshalInputNewMeasurement(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("with_irrigation"))
-			it.WithIrrigation, err = ec.unmarshalNBoolean2bool(ctx, v)
+			it.WithIrrigation, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3542,7 +2864,7 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("limits_trigger"))
-			it.LimitsTrigger, err = ec.unmarshalNBoolean2bool(ctx, v)
+			it.LimitsTrigger, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3550,7 +2872,7 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("water_level_limit"))
-			it.WaterLevelLimit, err = ec.unmarshalNFloat2float64(ctx, v)
+			it.WaterLevelLimit, err = ec.unmarshalOFloat2ᚖfloat64(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3558,7 +2880,7 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("water_amount_limit"))
-			it.WaterAmountLimit, err = ec.unmarshalNFloat2float64(ctx, v)
+			it.WaterAmountLimit, err = ec.unmarshalOFloat2ᚖfloat64(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3566,7 +2888,7 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("moist_limit"))
-			it.MoistLimit, err = ec.unmarshalNFloat2float64(ctx, v)
+			it.MoistLimit, err = ec.unmarshalOFloat2ᚖfloat64(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3574,7 +2896,7 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduled_trigger"))
-			it.ScheduledTrigger, err = ec.unmarshalNBoolean2bool(ctx, v)
+			it.ScheduledTrigger, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3582,7 +2904,7 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hour_range"))
-			it.HourRange, err = ec.unmarshalNInt2int(ctx, v)
+			it.HourRange, err = ec.unmarshalOInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3590,7 +2912,7 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("location"))
-			it.Location, err = ec.unmarshalNString2string(ctx, v)
+			it.Location, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3598,7 +2920,7 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("irrigation_duration"))
-			it.IrrigationDuration, err = ec.unmarshalNBoolean2bool(ctx, v)
+			it.IrrigationDuration, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3606,7 +2928,7 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("chart_type"))
-			it.ChartType, err = ec.unmarshalNBoolean2bool(ctx, v)
+			it.ChartType, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3614,7 +2936,7 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-			it.Language, err = ec.unmarshalNBoolean2bool(ctx, v)
+			it.Language, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3622,7 +2944,7 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("theme"))
-			it.Theme, err = ec.unmarshalNBoolean2bool(ctx, v)
+			it.Theme, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3630,7 +2952,7 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lat"))
-			it.Lat, err = ec.unmarshalNFloat2float64(ctx, v)
+			it.Lat, err = ec.unmarshalOFloat2ᚖfloat64(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3638,7 +2960,7 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lon"))
-			it.Lon, err = ec.unmarshalNFloat2float64(ctx, v)
+			it.Lon, err = ec.unmarshalOFloat2ᚖfloat64(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3656,27 +2978,27 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 
 // region    **************************** object.gotpl ****************************
 
-var irrigationQueryImplementors = []string{"IrrigationQuery"}
+var irrigationImplementors = []string{"Irrigation"}
 
-func (ec *executionContext) _IrrigationQuery(ctx context.Context, sel ast.SelectionSet, obj *model.IrrigationQuery) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, irrigationQueryImplementors)
+func (ec *executionContext) _Irrigation(ctx context.Context, sel ast.SelectionSet, obj *model.Irrigation) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, irrigationImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("IrrigationQuery")
+			out.Values[i] = graphql.MarshalString("Irrigation")
 		case "id":
-			out.Values[i] = ec._IrrigationQuery_id(ctx, field, obj)
+			out.Values[i] = ec._Irrigation_id(ctx, field, obj)
 		case "timestamp":
-			out.Values[i] = ec._IrrigationQuery_timestamp(ctx, field, obj)
+			out.Values[i] = ec._Irrigation_timestamp(ctx, field, obj)
 		case "water_level":
-			out.Values[i] = ec._IrrigationQuery_water_level(ctx, field, obj)
+			out.Values[i] = ec._Irrigation_water_level(ctx, field, obj)
 		case "water_amount":
-			out.Values[i] = ec._IrrigationQuery_water_amount(ctx, field, obj)
+			out.Values[i] = ec._Irrigation_water_amount(ctx, field, obj)
 		case "water_overdrawn":
-			out.Values[i] = ec._IrrigationQuery_water_overdrawn(ctx, field, obj)
+			out.Values[i] = ec._Irrigation_water_overdrawn(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3699,60 +3021,18 @@ func (ec *executionContext) _Measurement(ctx context.Context, sel ast.SelectionS
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Measurement")
+		case "id":
+			out.Values[i] = ec._Measurement_id(ctx, field, obj)
+		case "timestamp":
+			out.Values[i] = ec._Measurement_timestamp(ctx, field, obj)
 		case "hum":
 			out.Values[i] = ec._Measurement_hum(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "temp":
 			out.Values[i] = ec._Measurement_temp(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "moist":
 			out.Values[i] = ec._Measurement_moist(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "with_irrigation":
 			out.Values[i] = ec._Measurement_with_irrigation(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var measurementQueryImplementors = []string{"MeasurementQuery"}
-
-func (ec *executionContext) _MeasurementQuery(ctx context.Context, sel ast.SelectionSet, obj *model.MeasurementQuery) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, measurementQueryImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("MeasurementQuery")
-		case "id":
-			out.Values[i] = ec._MeasurementQuery_id(ctx, field, obj)
-		case "timestamp":
-			out.Values[i] = ec._MeasurementQuery_timestamp(ctx, field, obj)
-		case "hum":
-			out.Values[i] = ec._MeasurementQuery_hum(ctx, field, obj)
-		case "temp":
-			out.Values[i] = ec._MeasurementQuery_temp(ctx, field, obj)
-		case "moist":
-			out.Values[i] = ec._MeasurementQuery_moist(ctx, field, obj)
-		case "with_irrigation":
-			out.Values[i] = ec._MeasurementQuery_with_irrigation(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3868,128 +3148,45 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	return out
 }
 
-var settingsImplementors = []string{"Settings"}
+var settingImplementors = []string{"Setting"}
 
-func (ec *executionContext) _Settings(ctx context.Context, sel ast.SelectionSet, obj *model.Settings) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, settingsImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Settings")
-		case "limits_trigger":
-			out.Values[i] = ec._Settings_limits_trigger(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "water_level_limit":
-			out.Values[i] = ec._Settings_water_level_limit(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "water_amount_limit":
-			out.Values[i] = ec._Settings_water_amount_limit(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "moist_limit":
-			out.Values[i] = ec._Settings_moist_limit(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "scheduled_trigger":
-			out.Values[i] = ec._Settings_scheduled_trigger(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "hour_range":
-			out.Values[i] = ec._Settings_hour_range(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "location":
-			out.Values[i] = ec._Settings_location(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "irrigation_duration":
-			out.Values[i] = ec._Settings_irrigation_duration(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "chart_type":
-			out.Values[i] = ec._Settings_chart_type(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "language":
-			out.Values[i] = ec._Settings_language(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "theme":
-			out.Values[i] = ec._Settings_theme(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "lat":
-			out.Values[i] = ec._Settings_lat(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "lon":
-			out.Values[i] = ec._Settings_lon(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var settingsQueryImplementors = []string{"SettingsQuery"}
-
-func (ec *executionContext) _SettingsQuery(ctx context.Context, sel ast.SelectionSet, obj *model.SettingsQuery) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, settingsQueryImplementors)
+func (ec *executionContext) _Setting(ctx context.Context, sel ast.SelectionSet, obj *model.Setting) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, settingImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("SettingsQuery")
+			out.Values[i] = graphql.MarshalString("Setting")
 		case "id":
-			out.Values[i] = ec._SettingsQuery_id(ctx, field, obj)
+			out.Values[i] = ec._Setting_id(ctx, field, obj)
 		case "limits_trigger":
-			out.Values[i] = ec._SettingsQuery_limits_trigger(ctx, field, obj)
+			out.Values[i] = ec._Setting_limits_trigger(ctx, field, obj)
 		case "water_level_limit":
-			out.Values[i] = ec._SettingsQuery_water_level_limit(ctx, field, obj)
+			out.Values[i] = ec._Setting_water_level_limit(ctx, field, obj)
 		case "water_amount_limit":
-			out.Values[i] = ec._SettingsQuery_water_amount_limit(ctx, field, obj)
+			out.Values[i] = ec._Setting_water_amount_limit(ctx, field, obj)
 		case "moist_limit":
-			out.Values[i] = ec._SettingsQuery_moist_limit(ctx, field, obj)
+			out.Values[i] = ec._Setting_moist_limit(ctx, field, obj)
 		case "scheduled_trigger":
-			out.Values[i] = ec._SettingsQuery_scheduled_trigger(ctx, field, obj)
+			out.Values[i] = ec._Setting_scheduled_trigger(ctx, field, obj)
 		case "hour_range":
-			out.Values[i] = ec._SettingsQuery_hour_range(ctx, field, obj)
+			out.Values[i] = ec._Setting_hour_range(ctx, field, obj)
 		case "location":
-			out.Values[i] = ec._SettingsQuery_location(ctx, field, obj)
+			out.Values[i] = ec._Setting_location(ctx, field, obj)
 		case "irrigation_duration":
-			out.Values[i] = ec._SettingsQuery_irrigation_duration(ctx, field, obj)
+			out.Values[i] = ec._Setting_irrigation_duration(ctx, field, obj)
 		case "chart_type":
-			out.Values[i] = ec._SettingsQuery_chart_type(ctx, field, obj)
+			out.Values[i] = ec._Setting_chart_type(ctx, field, obj)
 		case "language":
-			out.Values[i] = ec._SettingsQuery_language(ctx, field, obj)
+			out.Values[i] = ec._Setting_language(ctx, field, obj)
 		case "theme":
-			out.Values[i] = ec._SettingsQuery_theme(ctx, field, obj)
+			out.Values[i] = ec._Setting_theme(ctx, field, obj)
+		case "lat":
+			out.Values[i] = ec._Setting_lat(ctx, field, obj)
+		case "lon":
+			out.Values[i] = ec._Setting_lon(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4266,44 +3463,14 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) unmarshalNFloat2float64(ctx context.Context, v interface{}) (float64, error) {
-	res, err := graphql.UnmarshalFloat(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNFloat2float64(ctx context.Context, sel ast.SelectionSet, v float64) graphql.Marshaler {
-	res := graphql.MarshalFloat(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-	}
-	return res
-}
-
-func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
-	res, err := graphql.UnmarshalInt(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
-	res := graphql.MarshalInt(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-	}
-	return res
-}
-
-func (ec *executionContext) marshalNIrrigationQuery2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigationQuery(ctx context.Context, sel ast.SelectionSet, v *model.IrrigationQuery) graphql.Marshaler {
+func (ec *executionContext) marshalNIrrigation2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigation(ctx context.Context, sel ast.SelectionSet, v *model.Irrigation) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._IrrigationQuery(ctx, sel, v)
+	return ec._Irrigation(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNMeasurement2githubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐMeasurement(ctx context.Context, sel ast.SelectionSet, v model.Measurement) graphql.Marshaler {
@@ -4320,38 +3487,18 @@ func (ec *executionContext) marshalNMeasurement2ᚖgithubᚗcomᚋSPSOAFMᚑIT18
 	return ec._Measurement(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNMeasurementQuery2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐMeasurementQuery(ctx context.Context, sel ast.SelectionSet, v *model.MeasurementQuery) graphql.Marshaler {
+func (ec *executionContext) marshalNSetting2githubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSetting(ctx context.Context, sel ast.SelectionSet, v model.Setting) graphql.Marshaler {
+	return ec._Setting(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSetting2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSetting(ctx context.Context, sel ast.SelectionSet, v *model.Setting) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._MeasurementQuery(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNSettings2githubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSettings(ctx context.Context, sel ast.SelectionSet, v model.Settings) graphql.Marshaler {
-	return ec._Settings(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNSettings2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSettings(ctx context.Context, sel ast.SelectionSet, v *model.Settings) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._Settings(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNSettingsQuery2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSettingsQuery(ctx context.Context, sel ast.SelectionSet, v *model.SettingsQuery) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._SettingsQuery(ctx, sel, v)
+	return ec._Setting(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
@@ -4680,7 +3827,7 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	return graphql.MarshalInt(*v)
 }
 
-func (ec *executionContext) marshalOIrrigationQuery2ᚕᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigationQueryᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.IrrigationQuery) graphql.Marshaler {
+func (ec *executionContext) marshalOIrrigation2ᚕᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigationᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Irrigation) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -4707,7 +3854,7 @@ func (ec *executionContext) marshalOIrrigationQuery2ᚕᚖgithubᚗcomᚋSPSOAFM
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNIrrigationQuery2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigationQuery(ctx, sel, v[i])
+			ret[i] = ec.marshalNIrrigation2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigation(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4727,7 +3874,7 @@ func (ec *executionContext) marshalOIrrigationQuery2ᚕᚖgithubᚗcomᚋSPSOAFM
 	return ret
 }
 
-func (ec *executionContext) marshalOMeasurementQuery2ᚕᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐMeasurementQueryᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.MeasurementQuery) graphql.Marshaler {
+func (ec *executionContext) marshalOMeasurement2ᚕᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐMeasurementᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Measurement) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -4754,7 +3901,7 @@ func (ec *executionContext) marshalOMeasurementQuery2ᚕᚖgithubᚗcomᚋSPSOAF
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNMeasurementQuery2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐMeasurementQuery(ctx, sel, v[i])
+			ret[i] = ec.marshalNMeasurement2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐMeasurement(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4790,7 +3937,7 @@ func (ec *executionContext) unmarshalONewSettings2ᚖgithubᚗcomᚋSPSOAFMᚑIT
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOSettingsQuery2ᚕᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSettingsQueryᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.SettingsQuery) graphql.Marshaler {
+func (ec *executionContext) marshalOSetting2ᚕᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSettingᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Setting) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -4817,7 +3964,7 @@ func (ec *executionContext) marshalOSettingsQuery2ᚕᚖgithubᚗcomᚋSPSOAFM�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNSettingsQuery2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSettingsQuery(ctx, sel, v[i])
+			ret[i] = ec.marshalNSetting2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSetting(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)

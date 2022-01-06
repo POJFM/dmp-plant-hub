@@ -14,23 +14,23 @@ func (r *mutationResolver) CreateMeasurement(ctx context.Context, input *model.N
 	return r.DB.CreateMeasurement(ctx, input), nil
 }
 
-func (r *mutationResolver) CreateSettings(ctx context.Context, input *model.NewSettings) (*model.Settings, error) {
+func (r *mutationResolver) CreateSettings(ctx context.Context, input *model.NewSettings) (*model.Setting, error) {
 	return r.DB.CreateSettings(ctx, input), nil
 }
 
-func (r *mutationResolver) UpdateSettings(ctx context.Context, input *model.NewSettings) (*model.Settings, error) {
+func (r *mutationResolver) UpdateSettings(ctx context.Context, input *model.NewSettings) (*model.Setting, error) {
 	return r.DB.UpdateSettings(ctx, input), nil
 }
 
-func (r *queryResolver) GetMeasurements(ctx context.Context) ([]*model.MeasurementQuery, error) {
+func (r *queryResolver) GetMeasurements(ctx context.Context) ([]*model.Measurement, error) {
 	return r.DB.GetMeasurements(ctx), nil
 }
 
-func (r *queryResolver) GetSettings(ctx context.Context) ([]*model.SettingsQuery, error) {
+func (r *queryResolver) GetSettings(ctx context.Context) ([]*model.Setting, error) {
 	return r.DB.GetSettings(ctx), nil
 }
 
-func (r *queryResolver) GetIrrigation(ctx context.Context) ([]*model.IrrigationQuery, error) {
+func (r *queryResolver) GetIrrigation(ctx context.Context) ([]*model.Irrigation, error) {
 	return r.DB.GetIrrigation(ctx), nil
 }
 

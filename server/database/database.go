@@ -51,12 +51,12 @@ func (db *DB) CreateMeasurement(ctx context.Context, input *model.NewMeasurement
 	}
 }
 
-func (db *DB) CreateSettings(ctx context.Context, input *model.NewSettings) *model.Settings {
+func (db *DB) CreateSettings(ctx context.Context, input *model.NewSettings) *model.Setting {
 	_, err := db.DB.NewInsert().Model(input).ModelTableExpr("settings").Exec(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return &model.Settings{
+	return &model.Setting{
 		LimitsTrigger:      input.LimitsTrigger,
 		WaterLevelLimit:    input.WaterLevelLimit,
 		WaterAmountLimit:   input.WaterAmountLimit,
@@ -73,13 +73,14 @@ func (db *DB) CreateSettings(ctx context.Context, input *model.NewSettings) *mod
 	}
 }
 
-func (db *DB) UpdateSettings(ctx context.Context, input *model.NewSettings) *model.Settings {
+// TODO: DIS IS FOKEN RETARDED, WE NEED TO FIX THIS CRAP FUCK SHIT
+func (db *DB) UpdateSettings(ctx context.Context, input *model.NewSettings) *model.Setting {
 	values := db.DB.NewValues(input)
-	_, err := db.DB.NewUpdate().With("_data", values).Model(&input).TableExpr("_data").Bulk().Where("settings.id = 1").Exec(ctx)
+	_, err := db.DB.NewUpdate().With("_data", values).Model(input).TableExpr("_data").Bulk().Where("settings.id = 1").Exec(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return &model.Settings{
+	return &model.Setting{
 		LimitsTrigger:      input.LimitsTrigger,
 		WaterLevelLimit:    input.WaterLevelLimit,
 		WaterAmountLimit:   input.WaterAmountLimit,
@@ -96,27 +97,27 @@ func (db *DB) UpdateSettings(ctx context.Context, input *model.NewSettings) *mod
 	}
 }
 
-func (db *DB) GetMeasurements(ctx context.Context) []*model.MeasurementQuery {
-	measurements := make([]*model.MeasurementQuery, 0)
-	err := db.DB.NewSelect().Model(&measurements).ModelTableExpr("measurements as measurement_query").Scan(ctx)
+func (db *DB) GetMeasurements(ctx context.Context) []*model.Measurement {
+	measurements := make([]*model.Measurement, 0)
+	err := db.DB.NewSelect().Model(&measurements).Scan(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return measurements
 }
 
-func (db *DB) GetSettings(ctx context.Context) []*model.SettingsQuery {
-	settings := make([]*model.SettingsQuery, 0)
-	err := db.DB.NewSelect().Model(&settings).ModelTableExpr("settings as settings_query").Scan(ctx)
+func (db *DB) GetSettings(ctx context.Context) []*model.Setting {
+	settings := make([]*model.Setting, 0)
+	err := db.DB.NewSelect().Model(&settings).Scan(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return settings
 }
 
-func (db *DB) GetIrrigation(ctx context.Context) []*model.IrrigationQuery {
-	irrigationHistory := make([]*model.IrrigationQuery, 0)
-	err := db.DB.NewSelect().Model(&irrigationHistory).ModelTableExpr("irrigation_history").Scan(ctx)
+func (db *DB) GetIrrigation(ctx context.Context) []*model.Irrigation {
+	irrigationHistory := make([]*model.Irrigation, 0)
+	err := db.DB.NewSelect().Model(&irrigationHistory).Scan(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
