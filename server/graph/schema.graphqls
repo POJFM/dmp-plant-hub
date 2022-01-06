@@ -1,12 +1,5 @@
 type Measurement {
-    hum: Float!
-    temp: Float!
-    moist: Float!
-    with_irrigation: Boolean!
-}
-
-type MeasurementQuery {
-    id: Int
+    id: Float
     timestamp: Timestamp
     hum: Float
     temp: Float
@@ -14,23 +7,7 @@ type MeasurementQuery {
     with_irrigation: Boolean
 }
 
-type Settings {
-    limits_trigger: Boolean!
-    water_level_limit: Float!
-    water_amount_limit: Float!
-    moist_limit: Float!
-    scheduled_trigger: Boolean!
-    hour_range: Int!
-    location: String!
-    irrigation_duration: Boolean!
-    chart_type: Boolean!
-    language: Boolean!
-    theme: Boolean!
-    lat: Float!
-    lon: Float!
-}
-
-type SettingsQuery {
+type Setting {
     id: Int
     limits_trigger: Boolean
     water_level_limit: Float
@@ -43,9 +20,11 @@ type SettingsQuery {
     chart_type: Boolean
     language: Boolean
     theme: Boolean
+    lat: Float
+    lon: Float
 }
 
-type IrrigationQuery {
+type Irrigation {
     id: Int
     timestamp: Timestamp
     water_level: Float
@@ -56,39 +35,39 @@ type IrrigationQuery {
 # TODO: vymyslet query pomoci timestamp range somehow
 
 type Query {
-    getMeasurements: [MeasurementQuery!]
-    getSettings: [SettingsQuery!]
-    getIrrigation: [IrrigationQuery!]
+    getMeasurements: [Measurement!]
+    getSettings: [Setting!]
+    getIrrigation: [Irrigation!]
 }
 
 # vymrdat in favor of Measurement type ???
 input NewMeasurement {
-    hum: Float!
-    temp: Float!
-    moist: Float!
-    with_irrigation: Boolean!
+    hum: Float
+    temp: Float
+    moist: Float
+    with_irrigation: Boolean
 }
 
 input NewSettings {
-    limits_trigger: Boolean!
-    water_level_limit: Float!
-    water_amount_limit: Float!
-    moist_limit: Float!
-    scheduled_trigger: Boolean!
-    hour_range: Int!
-    location: String!
-    irrigation_duration: Boolean!
-    chart_type: Boolean!
-    language: Boolean!
-    theme: Boolean!
-    lat: Float!
-    lon: Float!
+    limits_trigger: Boolean
+    water_level_limit: Float
+    water_amount_limit: Float
+    moist_limit: Float
+    scheduled_trigger: Boolean
+    hour_range: Int
+    location: String
+    irrigation_duration: Boolean
+    chart_type: Boolean
+    language: Boolean
+    theme: Boolean
+    lat: Float
+    lon: Float
 }
 
 type Mutation {
     createMeasurement(input: NewMeasurement): Measurement!
-    createSettings(input: NewSettings): Settings!
-    updateSettings(input: NewSettings): Settings!
+    createSettings(input: NewSettings): Setting!
+    updateSettings(input: NewSettings): Setting!
 }
 
 scalar Timestamp
