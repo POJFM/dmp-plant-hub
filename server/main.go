@@ -3,20 +3,20 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
-	"github.com/stianeikeland/go-rpio/v4"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
-)
 
-const defaultPort = "5000"
+	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
+	"github.com/stianeikeland/go-rpio/v4"
+)
 
 type kokotak struct {
 	*sensors.PinOut
@@ -29,15 +29,16 @@ type measurements struct {
 var liveMeasurements sensors.Measurements
 
 func main() {
+	// //@CHECK FOR DATA IN DB
+	// if (data in settings table) {
+	// 	MeasurementsSequence(pin_PUMP, pin_LED)
+	// } else {
+	// 	InitializationSequence()
+	// }
 
 	var sens = sensors.Pins()
 	//sequences.InitializationSequence()
 	//sequences.MeasurementSequence(kokot.PUMP, kokot.LED)
-
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = defaultPort
-	}
 
 	fmt.Println(sens.ReadMoisture())
 
@@ -61,12 +62,14 @@ func main() {
 	initMeasurements := liveMeasurements
 
 	http.HandleFunc("/live/measure", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
+
 		json.NewEncoder(w).Encode(liveMeasurements)
 	})
 
 	http.HandleFunc("/init/measure", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
+
 		json.NewEncoder(w).Encode(initMeasurements)
 	})
 
@@ -86,6 +89,6 @@ func main() {
 	http.Handle("/graphql", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)
 
-	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Printf("connect to http://localhost:%s/ for GraphQL playground", env.Process("GO_API_PORT"))
+	log.Fatal(http.ListenAndServe(":"+env.Process("GO_API_PORT"), nil))
 }

@@ -112,6 +112,7 @@ export default function InitForm(props: any) {
 			.request({
 				method: 'GET',
 				//url: 'http://4.2.0.225:5000/init/measured',
+				//url: 'http://localhost:5000/init/measured',
 				url: `${process.env.REACT_APP_GO_API_URL}/init/measured`,
 				headers: {
 					'Content-Type': 'application/json',

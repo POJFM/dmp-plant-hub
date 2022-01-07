@@ -24,6 +24,7 @@ export default function Sidebar(props: any) {
 	const handleRestart = () => {
 		axios
 			.post(
+				//'http://4.2.0.225:5000/live/control',
 				'http://localhost:5000/live/control',
 				{
 					pumpState: false,

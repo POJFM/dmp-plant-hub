@@ -116,7 +116,7 @@ export default function Dashboard() {
 	}
 
 	// Fetch on render then every 30mins
-	setTimeout(() => fetchWeatherForecast(), weather ? 300_000 : 1)
+	//setTimeout(() => fetchWeatherForecast(), weather ? 300_000 : 1)
 
 	const liveMeasurements = () => {
 		axios

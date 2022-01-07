@@ -45,19 +45,22 @@ var liveNotifyData = LiveNotify{Title: "", State: "inactive", Action: ""}
 
 func buildInitMeasured(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("init measured")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
+
 	json.NewEncoder(w).Encode(initMeasuredData)
 }
 
 func buildLiveMeasure(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("live measured data")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
+
 	json.NewEncoder(w).Encode(liveMeasureData)
 }
 
 func buildLiveNotify(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("live notify")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
+
 	json.NewEncoder(w).Encode(liveNotifyData)
 }
 

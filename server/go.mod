@@ -4,8 +4,11 @@ go 1.17
 
 require (
 	github.com/99designs/gqlgen v0.14.0
+	github.com/SPSOAFM-IT18/dmp-plant-hub/test v0.0.0-20220106153753-a330ccd6d9ec
 	github.com/d2r2/go-shell v0.0.0-20211022052110-f591c27e3e2e
 	github.com/davecgh/go-spew v1.1.1
+	github.com/gorilla/mux v1.8.0
+	github.com/stianeikeland/go-rpio v4.2.0+incompatible
 	github.com/stianeikeland/go-rpio/v4 v4.6.0
 	github.com/uptrace/bun v1.0.20
 	github.com/uptrace/bun/dialect/pgdialect v1.0.17
@@ -21,6 +24,7 @@ require (
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hashicorp/golang-lru v0.5.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/matryer/moq v0.0.0-20200106131100-75d0ddfc0007 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
