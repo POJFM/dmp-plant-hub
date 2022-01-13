@@ -32,16 +32,17 @@ export default function Dashboard() {
 		[months, setMonths] = useState<any>(),
 		[weather, setWeather] = useState<any>()
 
-		const { loading, error, data } = useQuery(dashboard)
+	const { loading, error, data } = useQuery(dashboard)
 
-		let irrigationHistoryData: any = [], measurementsData: any = []
-		// TEST
-		const settings = { chartType: 0 }
-		// END TEST
+	let irrigationHistoryData: any = [],
+		measurementsData: any = []
+	// TEST
+	const settings = { chartType: 0 }
+	// END TEST
 
-		// uncomment when api is accesible
-		//data.measurements.filter((filteredData: any) => filteredData.withIrrigation === true && irrigationHistoryData.push(filteredData))
-		//data.measurements.filter((filteredData: any) => filteredData.withIrrigation === false && measurementsData.push(filteredData))
+	// uncomment when api is accesible
+	//data.getMeasurements.filter((filteredData: any) => filteredData.with_irrigation === true && irrigationHistoryData.push(filteredData))
+	//data.getMeasurements.filter((filteredData: any) => filteredData.with_irrigation === false && measurementsData.push(filteredData))
 
 	useEffect(() => {
 		document.title = 'Plant Hub | Dashboard'
@@ -57,7 +58,7 @@ export default function Dashboard() {
 		// // Extract irrigation count for each month
 		// for (let i = currentMonth; i < 12; i++) {
 		// 	let month: number
-		// 	data.IrrigationHistory.map((item: any) => {
+		// 	data.getIrrigation.map((item: any) => {
 		// 		item.timestamp === 'regex na jeden měsíc a číslo z loopu podle current month' && month++
 		// 	})
 		// 	setIrrigationCount((monthCount: any) => [...monthCount, month])
@@ -266,25 +267,19 @@ export default function Dashboard() {
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterLevel.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">
-											{/* {`${data.irrigationHistory.waterLevel}cm`} */}0cm
-										</span>
+										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0]?.water_level} cm`}</span>
 									</div>
 									<div className="flex-row pt-5px" title="Objem vody v nádrži">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterAmount.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">
-											{/* {`${data.irrigationHistory.waterAmount}l`} */}5l
-										</span>
+										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0]?.water_amount} l`}</span>
 									</div>
 									<div className="flex-row pt-5px" title="Celkový vyčerpaný objem vody">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterOverdrawn.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">
-											{/* {`${data.irrigationHistory.waterOverdrawn}l`} */}56l
-										</span>
+										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0]?.water_overdrawn} l`}</span>
 									</div>
 								</div>
 							</div>
@@ -292,7 +287,7 @@ export default function Dashboard() {
 						<div className="flex-col w-8/12">
 							<div className="flex-row h-44 -mt-2">
 								<LiveMeasurementsChart
-									chartType={settings.chartType /* data.settings.chartType */}
+									chartType={data?.getSettings[0]?.chart_type || settings.chartType}
 									temp={temp}
 									hum={hum}
 									moist={moist}
@@ -365,8 +360,8 @@ export default function Dashboard() {
 									</div>
 									<div className="flex-row 2xl:h-96 lg:h-52">
 										<IrrigationChart
-											chartType={settings.chartType /* data.settings.chartType */}
-											moist={moist /* data.settings.chartType */}
+											chartType={settings.chartType /* data.getSettings.chartType */}
+											moist={moist /* data.getSettings.chartType */}
 											hum={hum /* irrigationHistoryData.hum */}
 											temp={temp /* irrigationHistoryData.temp */}
 											irrigationCount={irrigationCount}
@@ -385,8 +380,8 @@ export default function Dashboard() {
 							</div>
 							<div className="flex-row 2xl:h-64 lg:h-48">
 								<WaterConsumptionChart
-									chartType={settings.chartType /* data.settings.chartType */}
-									waterOverdrawn={5 /* data.irrigationHistory.waterOverdrawn */}
+									chartType={settings.chartType /* data.getSettings.chartType */}
+									waterOverdrawn={5 /* data.getIrrigation.waterOverdrawn */}
 									irrigationCount={irrigationCount}
 								/>
 							</div>
@@ -395,10 +390,10 @@ export default function Dashboard() {
 							</div>
 							<div className="flex-row 2xl:h-80 lg:h-52">
 								<MeasurementsHistoryChart
-									chartType={settings.chartType /* data.settings.chartType */}
-									moist={moist /* data.measurements.moist */}
-									hum={hum /* data.measurements.hum */}
-									temp={temp /* data.measurements.temp */}
+									chartType={settings.chartType /* data.getSettings.chartType */}
+									moist={moist /* data.getMeasurements.moist */}
+									hum={hum /* data.getMeasurements.hum */}
+									temp={temp /* data.getMeasurements.temp */}
 								/>
 							</div>
 						</CardContent>

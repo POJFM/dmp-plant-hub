@@ -1,7 +1,7 @@
 import { useEffect, useState, Component } from 'react'
 import axios from 'axios'
 import { useMutation, useQuery } from '@apollo/client'
-import { updateSettings } from '../graphql/mutations'
+import { createSettings } from '../graphql/mutations'
 import Map from './Map'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
@@ -11,18 +11,18 @@ import SaveButton from './buttons/SaveButton'
 import { settingsCheck } from './../graphql/queries'
 
 export default function InitForm(props: any) {
-	const [createSettingsData] = useMutation(updateSettings),
-		{ data } = useQuery(settingsCheck),
+	const [createSettingsData, { data: createData, error, loading }] = useMutation(createSettings),
+		{ data: isSettings } = useQuery(settingsCheck),
 		[formActiveState, setFormActiveState] = useState(false),
 		[saveButtonState, setSaveButtonState] = useState(true),
 		[automaticIrrigationState, setAutomaticIrrigationState] = useState(true),
 		[irrigationDuration, setIrrigationDuration] = useState<number>(),
 		[scheduledIrrigationState, setScheduledIrrigationState] = useState(false),
 		[limitValues, setLimitValues] = useState<any>(),
-		[moistLimit, setMoistLimit] = useState<number>(), // createSettingsData.moistLimit
-		[waterAmountLimit, setWaterAmountLimit] = useState<number>(), // empty
-		[waterLevelLimit, setWaterLevelLimit] = useState<number>(), // createSettingsData.waterLevelLimit
-		[hoursRange, setHoursRange] = useState<number>(),
+		[moistLimit, setMoistLimit] = useState<number>(),
+		[waterAmountLimit, setWaterAmountLimit] = useState<number>(),
+		[waterLevelLimit, setWaterLevelLimit] = useState<number>(),
+		[hourRange, setHourRange] = useState<number>(),
 		[initCoords, setInitCoords] = useState(true),
 		[location, setLocation] = useState<string>(),
 		[coords, setCoords] = useState(false),
@@ -30,8 +30,11 @@ export default function InitForm(props: any) {
 		[longitude, setLongitude] = useState<number>(),
 		[mapClicked, setMapClicked] = useState(false)
 
+	console.log(createData)
+	console.log(error)
+
 	useEffect(() => {
-		data?.id === null && setFormActiveState(true)
+		!isSettings && setFormActiveState(true)
 	}, [])
 
 	interface IGetCoordsProps {
@@ -91,7 +94,6 @@ export default function InitForm(props: any) {
 				},
 			})
 			.then((res) => {
-				// "cz"
 				res.data.results.map((result: any) => {
 					if (result.components.country_code === 'cz') {
 						setLatitude(result?.geometry.lat)
@@ -257,11 +259,11 @@ export default function InitForm(props: any) {
 											active={automaticIrrigationState}
 										/>
 									</div>
-									<div className="flex-row p-1 pt-5px mt-2" onBlur={(data: any) => setHoursRange(data.target.value)}>
+									<div className="flex-row p-1 pt-5px mt-2" onBlur={(data: any) => setHourRange(data.target.value)}>
 										<TextInputField
 											item="hourRange"
 											name="Rozsah hodin (h)"
-											defaultValue={hoursRange}
+											defaultValue={hourRange}
 											active={scheduledIrrigationState}
 										/>
 									</div>
@@ -272,28 +274,30 @@ export default function InitForm(props: any) {
 										<TextInputField item="location" name="Lokace" defaultValue={location} active="true" />
 									</div>
 									<div className="flex-row p-1 pt-5px mt-2">
-										<SaveButton
-											onClick={() =>
+										<div
+											onClick={() => {
 												createSettingsData({
 													variables: {
-														limitsTrigger: automaticIrrigationState,
-														waterLevelLimit: waterLevelLimit,
-														waterAmountLimit: waterAmountLimit,
-														moistLimit: moistLimit,
-														scheduledTrigger: scheduledIrrigationState,
-														irrigationDuration: irrigationDuration,
-														hoursRange: hoursRange,
-														chartType: 0,
-														theme: 0,
-														language: 0,
+														limits_trigger: automaticIrrigationState,
+														water_level_limit: waterLevelLimit,
+														water_amount_limit: waterAmountLimit,
+														moist_limit: moistLimit,
+														scheduled_trigger: scheduledIrrigationState,
+														irrigation_duration: false, //irrigationDuration
+														hour_range: hourRange,
+														chart_type: true,
+														theme: true,
+														language: true,
 														location: location,
 														lat: latitude,
 														lon: longitude,
 													},
 												})
-											}
-											active={saveButtonState}
-										/>
+												setFormActiveState(false)
+											}}
+										>
+											<SaveButton active={saveButtonState} />
+										</div>
 									</div>
 								</div>
 								<div className="flex-col pl-5" onClick={() => setMapClicked(true)}>

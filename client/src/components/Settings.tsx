@@ -9,32 +9,41 @@ import SaveButton from './buttons/SaveButton'
 import CancelButton from './buttons/CancelButton'
 import { useQuery, useMutation } from '@apollo/client'
 import { settings } from '../graphql/queries'
-import { updateSettings } from '../graphql/mutations'
+import { createSettings } from '../graphql/mutations'
 //import { fetchCoordsFromLocation } from 'src/utils'
 
 export default function Settings() {
 	const { loading: settingsLoading, error: settingsError, data: settingsData } = useQuery(settings)
-	const [updateSettingsData, { data, loading, error }] = useMutation(updateSettings)
+	const [updateSettingsData, { data, loading, error }] = useMutation(createSettings)
 
 	const [buttonsState, setButtonsState] = useState(false), // false
-		[automaticIrrigationState, setAutomaticIrrigationState] = useState(true), // settingsData.limitsTrigger
-		[automaticIrrigationStateClass, setAutomaticIrrigationStateClass] = useState<string>(), // settingsData.limitsTrigger ? '#000000' : 'var(--inactiveGrey)'
-		[scheduledIrrigationState, setScheduledIrrigationState] = useState(false), // settingsData.scheduledTrigger
-		[irrigationDuration, setIrrigationDuration] = useState(0), // settingsData.irrigationDuration
+		[automaticIrrigationState, setAutomaticIrrigationState] = useState(
+			settingsData?.getSettings[0]?.limits_trigger || true
+		),
+		[automaticIrrigationStateClass, setAutomaticIrrigationStateClass] = useState<string>(
+			settingsData?.getSettings[0]?.limits_trigger ? '#000000' : 'var(--inactiveGrey)'
+		),
+		[scheduledIrrigationState, setScheduledIrrigationState] = useState(settingsData?.getSettings[0]?.scheduled_trigger),
+		[irrigationDuration, setIrrigationDuration] = useState(settingsData?.getSettings[0]?.irrigation_duration),
 		[irrigationDurationStateClass, setIrrigationDurationStateClass] = useState('#000000'),
-		[scheduledIrrigationStateClass, setScheduledIrrigationStateClass] = useState<any>(), // settingsData.scheduledTrigger ? '#000000' : 'var(--inactiveGrey)'
-		[moistureLimit, setMoistureLimit] = useState<number>(50), // settingsData.moistureLimit
-		[waterAmountLimit, setWaterAmountLimit] = useState<number>(3), // settingsData.waterAmountLimit
-		[waterLevelLimit, setWaterLevelLimit] = useState<number>(6), // settingsData.waterLevelLimit
-		[hoursRange, setHoursRange] = useState<number>(10), // settingsData.hoursRange
-		[chartTypeState, setChartTypeState] = useState(0), // settingsData.chartType
-		[languageState, setLanguageState] = useState(0), // settingsData.language
-		[themeState, setThemeState] = useState(0), // settingsData.theme
+		[scheduledIrrigationStateClass, setScheduledIrrigationStateClass] = useState<string>(
+			settingsData?.getSettings[0]?.scheduled_trigger ? '#000000' : 'var(--inactiveGrey)'
+		),
+		[moistureLimit, setMoistureLimit] = useState(settingsData?.getSettings[0]?.moisture_limit),
+		[waterAmountLimit, setWaterAmountLimit] = useState(settingsData?.getSettings[0]?.water_amount_limit),
+		[waterLevelLimit, setWaterLevelLimit] = useState(settingsData?.getSettings[0]?.water_level_limit),
+		[hourRange, setHourRange] = useState(settingsData?.getSettings[0]?.hour_range),
+		[chartTypeState, setChartTypeState] = useState(settingsData?.getSettings[0]?.chart_type),
+		[languageState, setLanguageState] = useState(settingsData?.getSettings[0]?.language),
+		[themeState, setThemeState] = useState(settingsData?.getSettings[0]?.theme),
 		[getCoordsState, setGetCoordsState] = useState(false),
 		[getCoords, setGetCoords] = useState<string>(),
-		[location, setLocation] = useState<string>('Frýdek-Místek'), // settingsData.location
-		[latitude, setLatitude] = useState<number>(), // settingsData.lat
-		[longitude, setLongitude] = useState<number>() // settingsData.lon
+		[location, setLocation] = useState(settingsData?.getSettings[0]?.location),
+		[latitude, setLatitude] = useState(settingsData?.getSettings[0]?.lat),
+		[longitude, setLongitude] = useState(settingsData?.getSettings[0]?.lon)
+
+	console.log(settingsData)
+	console.log(settingsError)
 
 	useEffect(() => {
 		document.title = 'Plant Hub | Settings'
@@ -68,7 +77,7 @@ export default function Settings() {
 		type === 'moistureLimit' && setMoistureLimit(data?.target?.value)
 		type === 'waterAmountLimit' && setWaterAmountLimit(data?.target?.value)
 		type === 'waterLevelLimit' && setWaterLevelLimit(data?.target?.value)
-		type === 'hourRange' && setHoursRange(data?.target?.value)
+		type === 'hourRange' && setHourRange(data?.target?.value)
 		if (type === 'location') {
 			setGetCoords(data?.target?.value)
 			setGetCoordsState(true)
@@ -158,7 +167,7 @@ export default function Settings() {
 		setMoistureLimit(settingsData.moistureLimit)
 		setWaterAmountLimit(settingsData.waterAmountLimit)
 		setWaterLevelLimit(settingsData.waterLevelLimit)
-		setHoursRange(settingsData.hoursRange)
+		setHourRange(settingsData.hourRange)
 		setChartTypeState(settingsData.chartType)
 		setLanguageState(settingsData.language)
 		setThemeState(settingsData.theme)
@@ -270,7 +279,7 @@ export default function Settings() {
 									>
 										<EditableField
 											key="hourRange"
-											defaultValue={hoursRange}
+											defaultValue={hourRange}
 											active={scheduledIrrigationState}
 											width="10"
 										/>
@@ -356,7 +365,7 @@ export default function Settings() {
 											waterAmountLimit: waterAmountLimit,
 											moistureLimit: moistureLimit,
 											scheduledTrigger: scheduledIrrigationState,
-											hoursRange: hoursRange,
+											hourRange: hourRange,
 											chartType: chartTypeState,
 											theme: themeState,
 											language: languageState,

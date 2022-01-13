@@ -1,5 +1,4 @@
 import { Line, Bar } from 'react-chartjs-2'
-import { ChartType } from './../schemas/settings'
 import { getMonths } from 'src/utils'
 
 const months = getMonths()
@@ -70,7 +69,7 @@ export function LiveMeasurementsChart({ chartType, temp, hum, moist }: any) {
 		},
 	}
 
-	if (chartType === ChartType.LINE)
+	if (!chartType)
 		return <Line options={liveMeasurementsChartData.options} data={liveMeasurementsChartData.data} />
 	else return <Bar options={liveMeasurementsChartData.options} data={liveMeasurementsChartData.data} />
 }
@@ -117,7 +116,7 @@ export const WaterConsumptionChart = ({ chartType, waterOverdrawn, irrigationCou
 		},
 	}
 
-	if (chartType === ChartType.LINE)
+	if (!chartType)
 		return <Line options={waterConsumptionChartData.options} data={waterConsumptionChartData.data} />
 	else return <Bar options={waterConsumptionChartData.options} data={waterConsumptionChartData.data} />
 }
@@ -195,7 +194,7 @@ export function IrrigationChart({ chartType, moist, hum, temp, irrigationCount }
 		},
 	}
 
-	if (chartType === ChartType.LINE)
+	if (!chartType)
 		return <Line options={irrigationChartData.options} data={irrigationChartData.data} />
 	else return <Bar options={irrigationChartData.options} data={irrigationChartData.data} />
 }
@@ -261,7 +260,7 @@ export function MeasurementsHistoryChart({ chartType, moist, hum, temp }: any) {
 		},
 	}
 
-	if (chartType === ChartType.LINE)
+	if (!chartType)
 		return <Line options={measurementsHistoryChartData.options} data={measurementsHistoryChartData.data} />
 	else return <Bar options={measurementsHistoryChartData.options} data={measurementsHistoryChartData.data} />
 }

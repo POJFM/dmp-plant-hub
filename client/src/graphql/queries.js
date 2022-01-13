@@ -1,16 +1,14 @@
 import gql from 'graphql-tag'
 
-// SINGLE TYPE
-// language enum CZ/EN
 export const settings = gql`
 	query settings {
-		settings {
+		getSettings {
 			limits_trigger
 			water_level_limit
 			water_amount_limit
 			moist_limit
 			scheduled_trigger
-			hours_range
+			hour_range
 			irrigation_duration
 			chart_type
 			theme
@@ -32,27 +30,25 @@ export const settingsCheck = gql`
 
 export const dashboard = gql`
 	query dashboard {
-		dashboard {
-			measurements {
-				id
-				timestamp
-				hum
-				temp
-				moist
-				with_irrigation
-			}
-			irrigation_history {
-				id
-				timestamp
-				water_level
-				water_amount
-				water_overdrawn
-			}
-			settings {
-				chart_type
-				lat
-				lon
-			}
+		getMeasurements {
+			id
+			timestamp
+			hum
+			temp
+			moist
+			with_irrigation
+		}
+		getIrrigation {
+			id
+			timestamp
+			water_level
+			water_amount
+			water_overdrawn
+		}
+		getSettings {
+			chart_type
+			lat
+			lon
 		}
 	}
 `
