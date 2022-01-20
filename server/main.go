@@ -28,13 +28,18 @@ type measurements struct {
 
 var liveMeasurements sensors.Measurements
 
+const pin_PUMP = 18
+const pin_LED = 27
+
 func main() {
 	// //@CHECK FOR DATA IN DB
 	// if (data in settings table) {
-	// 	MeasurementsSequence(pin_PUMP, pin_LED)
+	// 	IrrigationSequence(pin_PUMP, pin_LED)
 	// } else {
 	// 	InitializationSequence()
 	// }
+
+	go MeasurementSequence(pin_PUMP, pin_LED)
 
 	var sens = sensors.Pins()
 	//sequences.InitializationSequence()
