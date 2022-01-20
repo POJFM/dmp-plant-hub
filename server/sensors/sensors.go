@@ -69,22 +69,29 @@ func (s *Sensors) Measure() Measurements {
 	}
 }
 
-func (s *Sensors) ReadDHT() (temp float64, hum float64) {
-	temp, hum, err := s.dht.TempHumidity()
+/*func (s *Sensors) ReadDHT() (temp, hum float32) {
+	/*	temp, hum, err := s.dht.TempHumidity()
+		if err != nil {
+			log.Fatalf("failed to read from DHT11, error: %v", err)
+		}
+		log.Printf("t = %.0f, h = %.0f%%", temp, hum)
+	temperature, humidity, retried, err :=
+		dht.ReadDHTxxWithRetry(dht.DHT11, 23, false, 10)
 	if err != nil {
-		log.Fatalf("failed to read from DHT11, error: %v", err)
+		log.Fatal(err)
 	}
-	return temp, hum
-}
+	// Print temperature and humidity
+	fmt.Printf("Temperature = %v*C, Humidity = %v%% (retried %d times)\n",
+		temperature, humidity, retried)
+	return temperature, humidity
+}*/
 
-/*
 func (s *Sensors) ReadMoisture() (moisture []byte) {
-	rpio.SpiBegin(rpio.Spi2)
+	rpio.SpiBegin(rpio.Spi0)
 	bytes := rpio.SpiReceive(10)
-	rpio.SpiEnd(rpio.Spi2)
+	rpio.SpiEnd(rpio.Spi0)
 	return bytes
 }
-*/
 
 func (s *Sensors) ReadWaterLevel() (waterLevel float64) {
 	waterLevel, err := s.sonic.Dist()

@@ -30,7 +30,7 @@ func (r *queryResolver) GetSettings(ctx context.Context) ([]*model.Setting, erro
 	return r.DB.GetSettings(ctx), nil
 }
 
-func (r *queryResolver) GetIrrigation(ctx context.Context) ([]*model.Irrigation, error) {
+func (r *queryResolver) GetIrrigation(ctx context.Context) ([]*model.IrrigationHistory, error) {
 	return r.DB.GetIrrigation(ctx), nil
 }
 

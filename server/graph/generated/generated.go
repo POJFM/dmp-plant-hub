@@ -42,7 +42,7 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
-	Irrigation struct {
+	IrrigationHistory struct {
 		ID             func(childComplexity int) int
 		Timestamp      func(childComplexity int) int
 		WaterAmount    func(childComplexity int) int
@@ -97,7 +97,7 @@ type MutationResolver interface {
 type QueryResolver interface {
 	GetMeasurements(ctx context.Context) ([]*model.Measurement, error)
 	GetSettings(ctx context.Context) ([]*model.Setting, error)
-	GetIrrigation(ctx context.Context) ([]*model.Irrigation, error)
+	GetIrrigation(ctx context.Context) ([]*model.IrrigationHistory, error)
 }
 
 type executableSchema struct {
@@ -115,40 +115,40 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
-	case "Irrigation.id":
-		if e.complexity.Irrigation.ID == nil {
+	case "IrrigationHistory.id":
+		if e.complexity.IrrigationHistory.ID == nil {
 			break
 		}
 
-		return e.complexity.Irrigation.ID(childComplexity), true
+		return e.complexity.IrrigationHistory.ID(childComplexity), true
 
-	case "Irrigation.timestamp":
-		if e.complexity.Irrigation.Timestamp == nil {
+	case "IrrigationHistory.timestamp":
+		if e.complexity.IrrigationHistory.Timestamp == nil {
 			break
 		}
 
-		return e.complexity.Irrigation.Timestamp(childComplexity), true
+		return e.complexity.IrrigationHistory.Timestamp(childComplexity), true
 
-	case "Irrigation.water_amount":
-		if e.complexity.Irrigation.WaterAmount == nil {
+	case "IrrigationHistory.water_amount":
+		if e.complexity.IrrigationHistory.WaterAmount == nil {
 			break
 		}
 
-		return e.complexity.Irrigation.WaterAmount(childComplexity), true
+		return e.complexity.IrrigationHistory.WaterAmount(childComplexity), true
 
-	case "Irrigation.water_level":
-		if e.complexity.Irrigation.WaterLevel == nil {
+	case "IrrigationHistory.water_level":
+		if e.complexity.IrrigationHistory.WaterLevel == nil {
 			break
 		}
 
-		return e.complexity.Irrigation.WaterLevel(childComplexity), true
+		return e.complexity.IrrigationHistory.WaterLevel(childComplexity), true
 
-	case "Irrigation.water_overdrawn":
-		if e.complexity.Irrigation.WaterOverdrawn == nil {
+	case "IrrigationHistory.water_overdrawn":
+		if e.complexity.IrrigationHistory.WaterOverdrawn == nil {
 			break
 		}
 
-		return e.complexity.Irrigation.WaterOverdrawn(childComplexity), true
+		return e.complexity.IrrigationHistory.WaterOverdrawn(childComplexity), true
 
 	case "Measurement.hum":
 		if e.complexity.Measurement.Hum == nil {
@@ -412,7 +412,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 
 var sources = []*ast.Source{
 	{Name: "graph/schema.graphqls", Input: `type Measurement {
-    id: Float
+    id: Int
     timestamp: Timestamp
     hum: Float
     temp: Float
@@ -437,7 +437,7 @@ type Setting {
     lon: Float
 }
 
-type Irrigation {
+type IrrigationHistory {
     id: Int
     timestamp: Timestamp
     water_level: Float
@@ -450,7 +450,7 @@ type Irrigation {
 type Query {
     getMeasurements: [Measurement!]
     getSettings: [Setting!]
-    getIrrigation: [Irrigation!]
+    getIrrigation: [IrrigationHistory!]
 }
 
 # vymrdat in favor of Measurement type ???
@@ -589,7 +589,7 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _Irrigation_id(ctx context.Context, field graphql.CollectedField, obj *model.Irrigation) (ret graphql.Marshaler) {
+func (ec *executionContext) _IrrigationHistory_id(ctx context.Context, field graphql.CollectedField, obj *model.IrrigationHistory) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -597,7 +597,7 @@ func (ec *executionContext) _Irrigation_id(ctx context.Context, field graphql.Co
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Irrigation",
+		Object:     "IrrigationHistory",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -621,7 +621,7 @@ func (ec *executionContext) _Irrigation_id(ctx context.Context, field graphql.Co
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Irrigation_timestamp(ctx context.Context, field graphql.CollectedField, obj *model.Irrigation) (ret graphql.Marshaler) {
+func (ec *executionContext) _IrrigationHistory_timestamp(ctx context.Context, field graphql.CollectedField, obj *model.IrrigationHistory) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -629,7 +629,7 @@ func (ec *executionContext) _Irrigation_timestamp(ctx context.Context, field gra
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Irrigation",
+		Object:     "IrrigationHistory",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -653,7 +653,7 @@ func (ec *executionContext) _Irrigation_timestamp(ctx context.Context, field gra
 	return ec.marshalOTimestamp2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Irrigation_water_level(ctx context.Context, field graphql.CollectedField, obj *model.Irrigation) (ret graphql.Marshaler) {
+func (ec *executionContext) _IrrigationHistory_water_level(ctx context.Context, field graphql.CollectedField, obj *model.IrrigationHistory) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -661,7 +661,7 @@ func (ec *executionContext) _Irrigation_water_level(ctx context.Context, field g
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Irrigation",
+		Object:     "IrrigationHistory",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -685,7 +685,7 @@ func (ec *executionContext) _Irrigation_water_level(ctx context.Context, field g
 	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Irrigation_water_amount(ctx context.Context, field graphql.CollectedField, obj *model.Irrigation) (ret graphql.Marshaler) {
+func (ec *executionContext) _IrrigationHistory_water_amount(ctx context.Context, field graphql.CollectedField, obj *model.IrrigationHistory) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -693,7 +693,7 @@ func (ec *executionContext) _Irrigation_water_amount(ctx context.Context, field 
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Irrigation",
+		Object:     "IrrigationHistory",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -717,7 +717,7 @@ func (ec *executionContext) _Irrigation_water_amount(ctx context.Context, field 
 	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Irrigation_water_overdrawn(ctx context.Context, field graphql.CollectedField, obj *model.Irrigation) (ret graphql.Marshaler) {
+func (ec *executionContext) _IrrigationHistory_water_overdrawn(ctx context.Context, field graphql.CollectedField, obj *model.IrrigationHistory) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -725,7 +725,7 @@ func (ec *executionContext) _Irrigation_water_overdrawn(ctx context.Context, fie
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Irrigation",
+		Object:     "IrrigationHistory",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -776,9 +776,9 @@ func (ec *executionContext) _Measurement_id(ctx context.Context, field graphql.C
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*float64)
+	res := resTmp.(*int)
 	fc.Result = res
-	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Measurement_timestamp(ctx context.Context, field graphql.CollectedField, obj *model.Measurement) (ret graphql.Marshaler) {
@@ -1158,9 +1158,9 @@ func (ec *executionContext) _Query_getIrrigation(ctx context.Context, field grap
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Irrigation)
+	res := resTmp.([]*model.IrrigationHistory)
 	fc.Result = res
-	return ec.marshalOIrrigation2ᚕᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigationᚄ(ctx, field.Selections, res)
+	return ec.marshalOIrrigationHistory2ᚕᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigationHistoryᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2978,27 +2978,27 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 
 // region    **************************** object.gotpl ****************************
 
-var irrigationImplementors = []string{"Irrigation"}
+var irrigationHistoryImplementors = []string{"IrrigationHistory"}
 
-func (ec *executionContext) _Irrigation(ctx context.Context, sel ast.SelectionSet, obj *model.Irrigation) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, irrigationImplementors)
+func (ec *executionContext) _IrrigationHistory(ctx context.Context, sel ast.SelectionSet, obj *model.IrrigationHistory) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, irrigationHistoryImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("Irrigation")
+			out.Values[i] = graphql.MarshalString("IrrigationHistory")
 		case "id":
-			out.Values[i] = ec._Irrigation_id(ctx, field, obj)
+			out.Values[i] = ec._IrrigationHistory_id(ctx, field, obj)
 		case "timestamp":
-			out.Values[i] = ec._Irrigation_timestamp(ctx, field, obj)
+			out.Values[i] = ec._IrrigationHistory_timestamp(ctx, field, obj)
 		case "water_level":
-			out.Values[i] = ec._Irrigation_water_level(ctx, field, obj)
+			out.Values[i] = ec._IrrigationHistory_water_level(ctx, field, obj)
 		case "water_amount":
-			out.Values[i] = ec._Irrigation_water_amount(ctx, field, obj)
+			out.Values[i] = ec._IrrigationHistory_water_amount(ctx, field, obj)
 		case "water_overdrawn":
-			out.Values[i] = ec._Irrigation_water_overdrawn(ctx, field, obj)
+			out.Values[i] = ec._IrrigationHistory_water_overdrawn(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3463,14 +3463,14 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) marshalNIrrigation2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigation(ctx context.Context, sel ast.SelectionSet, v *model.Irrigation) graphql.Marshaler {
+func (ec *executionContext) marshalNIrrigationHistory2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigationHistory(ctx context.Context, sel ast.SelectionSet, v *model.IrrigationHistory) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._Irrigation(ctx, sel, v)
+	return ec._IrrigationHistory(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNMeasurement2githubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐMeasurement(ctx context.Context, sel ast.SelectionSet, v model.Measurement) graphql.Marshaler {
@@ -3827,7 +3827,7 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	return graphql.MarshalInt(*v)
 }
 
-func (ec *executionContext) marshalOIrrigation2ᚕᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigationᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Irrigation) graphql.Marshaler {
+func (ec *executionContext) marshalOIrrigationHistory2ᚕᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigationHistoryᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.IrrigationHistory) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -3854,7 +3854,7 @@ func (ec *executionContext) marshalOIrrigation2ᚕᚖgithubᚗcomᚋSPSOAFMᚑIT
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNIrrigation2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigation(ctx, sel, v[i])
+			ret[i] = ec.marshalNIrrigationHistory2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigationHistory(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)

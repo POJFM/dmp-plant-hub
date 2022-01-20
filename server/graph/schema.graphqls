@@ -1,5 +1,5 @@
 type Measurement {
-    id: Float
+    id: Int
     timestamp: Timestamp
     hum: Float
     temp: Float
@@ -24,7 +24,7 @@ type Setting {
     lon: Float
 }
 
-type Irrigation {
+type IrrigationHistory {
     id: Int
     timestamp: Timestamp
     water_level: Float
@@ -37,7 +37,7 @@ type Irrigation {
 type Query {
     getMeasurements: [Measurement!]
     getSettings: [Setting!]
-    getIrrigation: [Irrigation!]
+    getIrrigation: [IrrigationHistory!]
 }
 
 # vymrdat in favor of Measurement type ???

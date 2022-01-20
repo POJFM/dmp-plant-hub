@@ -2,7 +2,7 @@
 
 package model
 
-type Irrigation struct {
+type IrrigationHistory struct {
 	ID             *int     `json:"id"`
 	Timestamp      *string  `json:"timestamp"`
 	WaterLevel     *float64 `json:"water_level"`
@@ -11,7 +11,7 @@ type Irrigation struct {
 }
 
 type Measurement struct {
-	ID             *float64 `json:"id"`
+	ID             *int     `json:"id"`
 	Timestamp      *string  `json:"timestamp"`
 	Hum            *float64 `json:"hum"`
 	Temp           *float64 `json:"temp"`

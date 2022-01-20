@@ -4,8 +4,10 @@ go 1.17
 
 require (
 	github.com/99designs/gqlgen v0.14.0
-	github.com/d2r2/go-shell v0.0.0-20211022052110-f591c27e3e2e
-	github.com/davecgh/go-spew v1.1.1
+	github.com/go-chi/chi v1.5.4
+	github.com/gorilla/websocket v1.4.2
+	github.com/rs/cors v1.8.2
+	github.com/shanghuiyang/rpi-devices v0.0.0-20220105153519-840d783a18c3
 	github.com/stianeikeland/go-rpio/v4 v4.6.0
 	github.com/uptrace/bun v1.0.20
 	github.com/uptrace/bun/dialect/pgdialect v1.0.17
@@ -18,7 +20,6 @@ require (
 	github.com/agnivade/levenshtein v1.1.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/fatih/color v1.13.0 // indirect
-	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/hashicorp/golang-lru v0.5.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/matryer/moq v0.0.0-20200106131100-75d0ddfc0007 // indirect
@@ -29,7 +30,6 @@ require (
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/russross/blackfriday/v2 v2.0.1 // indirect
-	github.com/shanghuiyang/rpi-devices v0.0.0-20220105153519-840d783a18c3 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/tarm/serial v0.0.0-20180830185346-98f6abe2eb07 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect

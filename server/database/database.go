@@ -115,9 +115,9 @@ func (db *DB) GetSettings(ctx context.Context) []*model.Setting {
 	return settings
 }
 
-func (db *DB) GetIrrigation(ctx context.Context) []*model.Irrigation {
-	irrigationHistory := make([]*model.Irrigation, 0)
-	err := db.DB.NewSelect().Model(&irrigationHistory).Scan(ctx)
+func (db *DB) GetIrrigation(ctx context.Context) []*model.IrrigationHistory {
+	irrigationHistory := make([]*model.IrrigationHistory, 0)
+	err := db.DB.NewSelect().Model(&irrigationHistory).ModelTableExpr("irrigation_history").Scan(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
