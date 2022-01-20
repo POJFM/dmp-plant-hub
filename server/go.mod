@@ -6,6 +6,7 @@ require (
 	github.com/99designs/gqlgen v0.14.0
 	github.com/go-chi/chi v1.5.4
 	github.com/gorilla/websocket v1.4.2
+	github.com/joho/godotenv v1.4.0
 	github.com/rs/cors v1.8.2
 	github.com/shanghuiyang/rpi-devices v0.0.0-20220105153519-840d783a18c3
 	github.com/stianeikeland/go-rpio/v4 v4.6.0
@@ -22,7 +23,6 @@ require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/matryer/moq v0.0.0-20200106131100-75d0ddfc0007 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect

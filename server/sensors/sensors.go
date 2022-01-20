@@ -12,7 +12,7 @@ import (
 const TRIG = 2
 const ECHO = 3
 const DHT = 23
-const PUMP = 18
+const PUMP = rpio.Pin(18)
 const LED = 27
 
 type PinOut struct {
