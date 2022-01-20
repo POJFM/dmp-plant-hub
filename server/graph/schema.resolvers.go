@@ -5,26 +5,33 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/model"
 )
 
 func (r *mutationResolver) CreateMeasurement(ctx context.Context, input *model.NewMeasurement) (*model.Measurement, error) {
-	return r.DB.SaveMeasurement(input, ctx), nil
+	return r.DB.CreateMeasurement(ctx, input), nil
 }
 
-func (r *queryResolver) GetMeasurement(ctx context.Context, id string) (*model.Measurement, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *mutationResolver) CreateSettings(ctx context.Context, input *model.NewSettings) (*model.Setting, error) {
+	return r.DB.CreateSettings(ctx, input), nil
+}
+
+func (r *mutationResolver) UpdateSettings(ctx context.Context, input *model.NewSettings) (*model.Setting, error) {
+	return r.DB.UpdateSettings(ctx, input), nil
 }
 
 func (r *queryResolver) GetMeasurements(ctx context.Context) ([]*model.Measurement, error) {
 	return r.DB.GetMeasurements(ctx), nil
 }
 
-func (r *queryResolver) GetSettings(ctx context.Context) ([]*model.Settings, error) {
+func (r *queryResolver) GetSettings(ctx context.Context) ([]*model.Setting, error) {
 	return r.DB.GetSettings(ctx), nil
+}
+
+func (r *queryResolver) GetIrrigation(ctx context.Context) ([]*model.IrrigationHistory, error) {
+	return r.DB.GetIrrigation(ctx), nil
 }
 
 // Mutation returns generated.MutationResolver implementation.

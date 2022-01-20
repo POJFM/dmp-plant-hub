@@ -1,12 +1,19 @@
 package sensors
 
 import (
-	"fmt"
 	"log"
 	"time"
 
+	"github.com/shanghuiyang/rpi-devices/dev"
 	"github.com/stianeikeland/go-rpio/v4"
 )
+
+// Pins
+const TRIG = 2
+const ECHO = 3
+const DHT = 23
+const PUMP = rpio.Pin(18)
+const LED = 27
 
 type PinOut struct {
 	TRIG  rpio.Pin
@@ -17,6 +24,11 @@ type PinOut struct {
 	LED   rpio.Pin
 }
 
+type Sensors struct {
+	sonic *dev.HCSR04
+	dht   *dev.DHT11
+}
+
 type Measurements struct {
 	Hum            float32 `json:"hum"`
 	Temp           float32 `json:"temp"`
@@ -24,41 +36,31 @@ type Measurements struct {
 	WithIrrigation float32 `json:"with_irrigation"`
 }
 
-func Pins() *PinOut {
-	err := rpio.Open()
-	if err != nil {
-		panic(fmt.Sprint("unable to open gpio", err.Error()))
-	}
+func Init() *Sensors {
 
-	p := PinOut{
+	/*p := PinOut{
 		TRIG:  rpio.Pin(2),
 		ECHO:  rpio.Pin(3),
 		MOIST: rpio.Pin(22),
 		DHT:   rpio.Pin(23),
 		PUMP:  rpio.Pin(18),
 		LED:   rpio.Pin(27),
+	}*/
+
+	// TODO: close connections on exit/interrupt
+	return &Sensors{
+		sonic: dev.NewHCSR04(TRIG, ECHO),
+		dht:   dev.NewDHT11(),
 	}
-
-	// IO
-	p.TRIG.Output()
-	p.ECHO.Input()
-	//p.MOIST.Input()
-	p.DHT.Input()
-	p.PUMP.Output()
-	p.LED.Output()
-
-	p.TRIG.Low()
-
-	return &p
 }
 
-func (p *PinOut) MeasureAsync(c chan<- Measurements) {
+func (s *Sensors) MeasureAsync(c chan<- Measurements) {
 	for range time.Tick(time.Second * 1) {
-		c <- p.Measure()
+		c <- s.Measure()
 	}
 }
 
-func (p *PinOut) Measure() Measurements {
+func (s *Sensors) Measure() Measurements {
 	return Measurements{
 		Hum:            0,
 		Temp:           0,
@@ -67,37 +69,34 @@ func (p *PinOut) Measure() Measurements {
 	}
 }
 
-/*func ReadDHT() (temp float32, hum float32, retried int) {
-	temp, hum, retried, err := dht.ReadDHTxxWithRetry(dht.DHT11, 23, false, 10)
+/*func (s *Sensors) ReadDHT() (temp, hum float32) {
+	/*	temp, hum, err := s.dht.TempHumidity()
+		if err != nil {
+			log.Fatalf("failed to read from DHT11, error: %v", err)
+		}
+		log.Printf("t = %.0f, h = %.0f%%", temp, hum)
+	temperature, humidity, retried, err :=
+		dht.ReadDHTxxWithRetry(dht.DHT11, 23, false, 10)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return temp, hum, retried
+	// Print temperature and humidity
+	fmt.Printf("Temperature = %v*C, Humidity = %v%% (retried %d times)\n",
+		temperature, humidity, retried)
+	return temperature, humidity
 }*/
 
-func (p *PinOut) ReadMoisture() (moisture []byte) {
-	rpio.SpiBegin(rpio.Spi2)
+func (s *Sensors) ReadMoisture() (moisture []byte) {
+	rpio.SpiBegin(rpio.Spi0)
 	bytes := rpio.SpiReceive(10)
-	rpio.SpiEnd(rpio.Spi2)
+	rpio.SpiEnd(rpio.Spi0)
 	return bytes
 }
 
-func (p *PinOut) ReadWaterLevel() (waterLevel float32) {
-	startTime := time.Now().UnixNano()
-	stopTime := time.Now().UnixNano()
-	p.TRIG.High()
-	time.Sleep(10 * time.Microsecond)
-	p.TRIG.Low()
-	startTime = time.Now().UnixNano()
-	//log.Println("startTime is ", startTime)
-	for p.ECHO.Read() == 0 {
-		log.Println("echo is ", p.ECHO.Read())
+func (s *Sensors) ReadWaterLevel() (waterLevel float64) {
+	waterLevel, err := s.sonic.Dist()
+	if err != nil {
+		log.Fatalf("failed to read waterLevel, error: %v", err)
 	}
-	//log.Println("echo is 1")
-	stopTime = time.Now().UnixNano()
-	//log.Println("stopTime is ", stopTime)
-	duration := time.Duration(stopTime - startTime).Seconds()
-	//log.Println("duration: ", duration)
-	//return (float32(time.Duration(stopTime - startTime) * time.Microsecond) * 34300) / 2
-	return float32(duration) * 34300 / 2
+	return waterLevel
 }
