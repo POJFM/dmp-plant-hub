@@ -1,42 +1,73 @@
 type Measurement {
-    hum: Float!
-    temp: Float!
-    moist: Float!
-    with_irrigation: Boolean!
+    id: Int
+    timestamp: Timestamp
+    hum: Float
+    temp: Float
+    moist: Float
+    with_irrigation: Boolean
 }
 
-type Settings {
-    limits_trigger: Boolean!
-    water_level_limit: Float!
-    water_amount_limit: Float!
-    moist_limit: Float!
-    scheduled_trigger: Boolean!
-    hour_range: Int!
-    location: String!
-    irrigation_duration: Boolean!
-    chart_type: Boolean!
-    language: Boolean!
-    theme: Boolean!
-    lat: Float!
-    lon: Float!
+type Setting {
+    id: Int
+    limits_trigger: Boolean
+    water_level_limit: Float
+    water_amount_limit: Float
+    moist_limit: Float
+    scheduled_trigger: Boolean
+    hour_range: Int
+    location: String
+    irrigation_duration: Boolean
+    chart_type: Boolean
+    language: Boolean
+    theme: Boolean
+    lat: Float
+    lon: Float
+}
+
+type IrrigationHistory {
+    id: Int
+    timestamp: Timestamp
+    water_level: Float
+    water_amount: Float
+    water_overdrawn: Float
 }
 
 # TODO: vymyslet query pomoci timestamp range somehow
 
 type Query {
-    getMeasurement(id: ID!): Measurement!
     getMeasurements: [Measurement!]
-    getSettings: [Settings!]
+    getSettings: [Setting!]
+    getIrrigation: [IrrigationHistory!]
 }
 
 # vymrdat in favor of Measurement type ???
 input NewMeasurement {
-    hum: Float!
-    temp: Float!
-    moist: Float!
-    with_irrigation: Boolean!
+    hum: Float
+    temp: Float
+    moist: Float
+    with_irrigation: Boolean
+}
+
+input NewSettings {
+    limits_trigger: Boolean
+    water_level_limit: Float
+    water_amount_limit: Float
+    moist_limit: Float
+    scheduled_trigger: Boolean
+    hour_range: Int
+    location: String
+    irrigation_duration: Boolean
+    chart_type: Boolean
+    language: Boolean
+    theme: Boolean
+    lat: Float
+    lon: Float
 }
 
 type Mutation {
     createMeasurement(input: NewMeasurement): Measurement!
+    createSettings(input: NewSettings): Setting!
+    updateSettings(input: NewSettings): Setting!
 }
+
+scalar Timestamp
