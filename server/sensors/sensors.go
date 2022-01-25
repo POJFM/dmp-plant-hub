@@ -13,7 +13,7 @@ const TRIG = 2
 const ECHO = 3
 const DHT = 23
 const PUMP = rpio.Pin(18)
-const LED = 27
+const LED = rpio.Pin(27)
 
 type PinOut struct {
 	TRIG  rpio.Pin

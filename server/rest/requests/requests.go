@@ -8,7 +8,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/env"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/model"
 )
 
@@ -24,7 +24,7 @@ func PostInitMeasured(rawData model.InitMeasured) {
 		log.Fatal(err)
 	}
 
-	resp, err := http.Post(env.ProcessEnv("GO_API_URL")+"/init/measured", "application/json",
+	resp, err := http.Post(env.Process("GO_API_URL")+"/init/measured", "application/json",
 		bytes.NewBuffer(json_data))
 
 	if err != nil {
@@ -51,7 +51,7 @@ func PostLiveMeasure(rawData model.LiveMeasure) {
 		log.Fatal(err)
 	}
 
-	resp, err := http.Post(env.ProcessEnv("GO_API_URL")+"/live/measure", "application/json",
+	resp, err := http.Post(env.Process("GO_API_URL")+"/live/measure", "application/json",
 		bytes.NewBuffer(json_data))
 
 	if err != nil {
@@ -78,7 +78,7 @@ func PostLiveNotify(rawData model.LiveNotify) {
 		log.Fatal(err)
 	}
 
-	resp, err := http.Post(env.ProcessEnv("GO_API_URL")+"/live/notify", "application/json",
+	resp, err := http.Post(env.Process("GO_API_URL")+"/live/notify", "application/json",
 		bytes.NewBuffer(json_data))
 
 	if err != nil {
@@ -93,7 +93,7 @@ func PostLiveNotify(rawData model.LiveNotify) {
 }
 
 func GetLiveControl() []byte {
-	resp, err := http.Get(env.ProcessEnv("GO_API_URL") + "/live/control")
+	resp, err := http.Get(env.Process("GO_API_URL") + "/live/control")
 
 	if err != nil {
 		log.Fatal(err)
@@ -123,7 +123,7 @@ func PostLiveControl(rawData model.LiveControl) {
 		log.Fatal(err)
 	}
 
-	resp, err := http.Post(env.ProcessEnv("GO_API_URL")+"/live/control", "application/json",
+	resp, err := http.Post(env.Process("GO_API_URL")+"/live/control", "application/json",
 		bytes.NewBuffer(json_data))
 
 	if err != nil {

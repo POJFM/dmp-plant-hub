@@ -66,14 +66,24 @@ func doDHT11() {
 func main() {
 	doDHT11()
 
+	moisture := make(chan float32)
+	temperature := make(chan float32)
+	humidity := make(chan float32)
+
+	go sequences.MeasurementSequence(sensors.PUMP, sensors.LED, moisture, temperature, humidity)
+
+	cMoisture := <-moisture
+	cTemperature := <-temperature
+	cHumidity := <-humidity
+
+	sequences.SaveOnFourHoursPeriod(cMoisture, cTemperature, cHumidity)
+
 	// //@CHECK FOR DATA IN DB
 	// if (data in settings table) {
-	// 	sequences.IrrigationSequence(pin_PUMP, pin_LED)
+	// 	sequences.IrrigationSequence(pin_PUMP, pin_LED, cMoisture, cTemperature, cHumidity)
 	// } else {
-	// 	sequences.InitializationSequence()
+	// 	sequences.InitializationSequence(cMoisture, cTemperature, cHumidity)
 	// }
-
-	go sequences.MeasurementSequence(pin_PUMP, pin_LED)
 
 	//var sens = sensors.Pins()
 	//sequences.InitializationSequence()
@@ -197,5 +207,5 @@ func main() {
 	http.Handle("/query", srv)*/
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", env.Process("GO_API_PORT"))
-	log.Fatal(http.ListenAndServe(":"+env.Process("GO_API_PORT"), nil))
+	log.Fatal(http.ListenAndServe(":"+env.Process("GO_API_PORT"), router))
 }

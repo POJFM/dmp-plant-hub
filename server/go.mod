@@ -5,7 +5,9 @@ go 1.17
 require (
 	github.com/99designs/gqlgen v0.14.0
 	github.com/go-chi/chi v1.5.4
+	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/websocket v1.4.2
+	github.com/jasonlvhit/gocron v0.0.1
 	github.com/joho/godotenv v1.4.0
 	github.com/rs/cors v1.8.2
 	github.com/shanghuiyang/rpi-devices v0.0.0-20220105153519-840d783a18c3
