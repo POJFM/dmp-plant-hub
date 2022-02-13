@@ -34,7 +34,7 @@ func SaveOnFourHoursPeriod(moisture, temperature, humidity float32) {
 		time.Sleep(1 * time.Minute)
 	}
 	// needs to access values from measurements sequence
-	gocron.Every(4).Hours().Do( /* save data to db */ )
+	gocron.Every(4).Hours().Do( /* save data to db */)
 	<-gocron.Start()
 }
 
@@ -121,6 +121,10 @@ func InitializationSequence(moisture float32) {
 		waterLevelAvg = append(waterLevelAvg, waterLevelMeasure())
 		count++
 		time.Sleep(1000 * time.Millisecond)
+	}
+
+	go func() {
+
 	}
 
 	moistureLevel := utils.ArithmeticMean(moistureAvg)

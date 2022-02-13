@@ -1,7 +1,10 @@
 package sensors
 
 import (
+	"fmt"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors/drivers"
 	"log"
+	"os"
 	"time"
 
 	"github.com/shanghuiyang/rpi-devices/dev"
@@ -27,6 +30,7 @@ type PinOut struct {
 type Sensors struct {
 	sonic *dev.HCSR04
 	dht   *dev.DHT11
+	mcp   *drivers.MCP3008
 }
 
 type Measurements struct {
@@ -51,6 +55,7 @@ func Init() *Sensors {
 	return &Sensors{
 		sonic: dev.NewHCSR04(TRIG, ECHO),
 		dht:   dev.NewDHT11(),
+		//mcp:   (drivers.NewMCP3008(0, 0, 3.3), err),
 	}
 }
 
@@ -67,6 +72,32 @@ func (s *Sensors) Measure() Measurements {
 		Moist:          0,
 		WithIrrigation: 0,
 	}
+}
+
+func StartPump() {
+	if err := rpio.Open(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	defer func() {
+		err := rpio.Close()
+		if err != nil {
+			fmt.Println(err)
+		}
+	}()
+
+	kokot := rpio.Pin(18)
+	kokot.Output()
+	kokot.High()
+
+	pin := rpio.Pin(27)
+	pin.Output()
+	pin.High()
+}
+
+func (s *Sensors) StopPump() {
+	PUMP.Low()
 }
 
 /*func (s *Sensors) ReadDHT() (temp, hum float32) {
@@ -86,11 +117,23 @@ func (s *Sensors) Measure() Measurements {
 	return temperature, humidity
 }*/
 
-func (s *Sensors) ReadMoisture() (moisture []byte) {
-	rpio.SpiBegin(rpio.Spi0)
-	bytes := rpio.SpiReceive(10)
-	rpio.SpiEnd(rpio.Spi0)
-	return bytes
+func (s *Sensors) ReadMoisture() (moisture float64) {
+	mcp, err := drivers.NewMCP3008(0, 0, 3.3)
+	if err != nil {
+		log.Fatalf("mcp3008 failed: %s", err)
+	}
+	moisture = mcp.ReadAdc()
+	return moisture
+}
+
+func (s *Sensors) ReadMoisture0() (moisture float64) {
+	mcp, err := drivers.NewMCP30008(0, 0, mcp.Mode0, 500000)
+
+	if err != nil {
+		log.Fatalf("mcp3008 failed: %s", err)
+	}
+
+	return mcp.Measure(0)
 }
 
 func (s *Sensors) ReadWaterLevel() (waterLevel float64) {

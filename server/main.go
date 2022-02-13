@@ -2,11 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"net/http"
-	"strconv"
-	"time"
-
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -14,12 +9,16 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors/dht/drivers"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/sequences"
+	drivers2 "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors/drivers"
 	"github.com/go-chi/chi"
 	"github.com/gorilla/websocket"
 	"github.com/rs/cors"
+	"log"
+	"net/http"
+	"strconv"
+	"time"
+
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
 )
 
 var liveMeasurements sensors.Measurements
@@ -29,9 +28,9 @@ const pin_LED = 27
 
 func doDHT11() {
 
-	drivers.OpenRPi()
+	drivers2.OpenRPi()
 	// 1、init
-	dht11, err := drivers.NewDHT11(23)
+	dht11, err := drivers2.NewDHT11(23)
 	if err != nil {
 		fmt.Println("----------------------------------")
 		fmt.Println(err)
@@ -64,9 +63,15 @@ func doDHT11() {
 }
 
 func main() {
-	doDHT11()
+	sensei := sensors.Init()
+	go func() {
+		for {
+			fmt.Println(sensei.ReadMoisture())
+			time.Sleep(time.Second * 1)
+		}
+	}()
 
-	moisture := make(chan float32)
+	/*moisture := make(chan float32)
 	temperature := make(chan float32)
 	humidity := make(chan float32)
 
@@ -76,14 +81,35 @@ func main() {
 	cTemperature := <-temperature
 	cHumidity := <-humidity
 
-	sequences.SaveOnFourHoursPeriod(cMoisture, cTemperature, cHumidity)
+	sequences.SaveOnFourHoursPeriod(cMoisture, cTemperature, cHumidity)*/
 
 	// //@CHECK FOR DATA IN DB
 	// if (data in settings table) {
 	// 	sequences.IrrigationSequence(pin_PUMP, pin_LED, cMoisture, cTemperature, cHumidity)
 	// } else {
 	// 	sequences.InitializationSequence(cMoisture, cTemperature, cHumidity)
+	/*	initializationFinished := true
+		for initializationFinished {
+			// BLINK LED
+			// if (data in settings table) {
+			initializationFinished = false
+			// 	sequences.IrrigationSequence(pin_PUMP, pin_LED, cMoisture, cTemperature, cHumidity)
+			// }
+		}*/
 	// }
+
+	/*
+		c := make(chan os.Signal)
+		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+		go func() {
+			<-c
+			err := rpio.Close()
+			if err != nil {
+				log.Fatalf("failed to clean ")
+			}
+			os.Exit(1)
+		}()
+	*/
 
 	var db = database.Connect()
 
@@ -112,8 +138,6 @@ func main() {
 
 	router.Handle("/graphql", playground.Handler("GraphQL playground", "/query"))
 	router.Handle("/query", srv)
-	/*http.Handle("/graphql", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)*/
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", env.Process("GO_API_PORT"))
 	log.Fatal(http.ListenAndServe(":"+env.Process("GO_API_PORT"), router))

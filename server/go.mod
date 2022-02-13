@@ -29,7 +29,7 @@ require (
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mdp/monochromeoled v0.0.0-20171027213216-a0c6b5c996cf // indirect
-	github.com/mitchellh/mapstructure v0.0.0-20180203102830-a4e142e9c047 // indirect
+	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/russross/blackfriday/v2 v2.0.1 // indirect
