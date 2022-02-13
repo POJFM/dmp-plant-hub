@@ -2,10 +2,12 @@ package sensors
 
 import (
 	"fmt"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors/drivers"
 	"log"
 	"os"
 	"time"
+
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors/dht/drivers"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors/drivers"
 
 	"github.com/shanghuiyang/rpi-devices/dev"
 	"github.com/stianeikeland/go-rpio/v4"

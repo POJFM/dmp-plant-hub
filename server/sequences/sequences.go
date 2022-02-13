@@ -5,10 +5,10 @@ import (
 	"time"
 
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/model"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/requests"
+	req "github.com/SPSOAFM-IT18/dmp-plant-hub/rest/requests"
+	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/utils"
 	"github.com/jasonlvhit/gocron"
-	"github.com/stianeikeland/go-rpio/v4"
 )
 
 // TEST
@@ -44,35 +44,36 @@ func SaveOnFourHoursPeriod(cMoist, cTemp, cHum chan float32) {
 	<-gocron.Start()
 }
 
-func CheckingSequence(PUMP, LED rpio.Pin, cMoist chan float32) {
+func CheckingSequence(cMoist chan float32) {
 	// get from DB
 	// values only for test
 
 	const waterLevelLimit = 75
 
 	if <-cMoist < waterLevelLimit {
-		requests.PostLiveNotify(model.LiveNotify{Title: "Doplňte nádrž", State: "physicalHelpRequired", Action: "Nádrž je prázdná"})
+		req.PostLiveNotify(model.LiveNotify{Title: "Doplňte nádrž", State: "physicalHelpRequired", Action: "Nádrž je prázdná"})
 
 		fmt.Println("Water tank limit level reached...🚫🤖🚫")
 
 		for <-cMoist < waterLevelLimit {
-			LED.High()
+			sens.LED.High()
 			time.Sleep(1000 * time.Millisecond)
-			LED.Low()
+			sens.LED.Low()
 			time.Sleep(1000 * time.Millisecond)
 		}
 	} else {
-		LED.Low()
+		sens.LED.Low()
 
+		waterLevel := fmt.Sprintf("V nádrži zbývá %fl vody", waterLevelMeasure())
 		// Dodělat na water amount v litrech
-		requests.PostLiveNotify(model.LiveNotify{Title: "Kontrola Nádrže", State: "finished", Action: "V nádrži zbýva %vl vody"}, waterLevelMeasure())
+		req.PostLiveNotify(model.LiveNotify{Title: "Kontrola Nádrže", State: "finished", Action: waterLevel})
 	}
 }
 
-func IrrigationSequence(PUMP, LED rpio.Pin, state bool, cMoist chan float32) {
+func IrrigationSequence(cMoist chan float32) {
 	fmt.Println("Starting irrigation...🌿🤖🚿")
 
-	requests.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "inProgress", Action: "Probíhá zavlažování"})
+	req.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "inProgress", Action: "Probíhá zavlažování"})
 
 	// get from DB
 	// values only for test
@@ -81,7 +82,7 @@ func IrrigationSequence(PUMP, LED rpio.Pin, state bool, cMoist chan float32) {
 	// Definovaný průtok čerpadla
 	var pumpFlow float32 = 1.75 // litr/min
 
-	for state {
+	gocron.Every(1).Seconds().Do(func() {
 		if <-cMoist < moistureLimit {
 
 			// time passed from running pump will be represented as liters
@@ -90,24 +91,25 @@ func IrrigationSequence(PUMP, LED rpio.Pin, state bool, cMoist chan float32) {
 			// TimeToOverdraw is calculated by divideing amount by flow
 			for waterLevelMeasure() < moistureLimit || flowMeasure < waterAmountLimit/pumpFlow {
 				//var t1 float32 = time.time()
-				PUMP.High()
+				sens.PUMP.High()
 				flowMeasure = float32(time.Since(t0).Seconds())
 			}
 
-			requests.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "finished", Action: "Zavlažování dokončeno"})
+			req.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "finished", Action: "Zavlažování dokončeno"})
 
 			time.Sleep(3000 * time.Millisecond)
 
-			requests.PostLiveNotify(model.LiveNotify{Title: "Kontrola Nádrže", State: "inProgress", Action: "Probíhá kontrola nádrže"})
+			req.PostLiveNotify(model.LiveNotify{Title: "Kontrola Nádrže", State: "inProgress", Action: "Probíhá kontrola nádrže"})
 
 			// after pump stops run Checking sequence
-			//CheckingSequence(PUMP, LED, cMoist)
+			//CheckingSequence(cMoist)
 		} else {
-			PUMP.Low()
+			sens.PUMP.Low()
 
-			requests.PostLiveNotify(model.LiveNotify{Title: "", State: "inactive", Action: ""})
+			req.PostLiveNotify(model.LiveNotify{Title: "", State: "inactive", Action: ""})
 		}
-	}
+	})
+	<-gocron.Start()
 }
 
 func InitializationSequence(cMoist chan float32) {
@@ -131,10 +133,10 @@ func InitializationSequence(cMoist chan float32) {
 	moistureLevel := utils.ArithmeticMean(moistureAvg)
 	waterLevel := utils.ArithmeticMean(waterLevelAvg)
 
-	requests.PostInitMeasured(model.InitMeasured{MoistLimit: moistureLevel, WaterLevelLimit: waterLevel})
+	req.PostInitMeasured(model.InitMeasured{MoistLimit: moistureLevel, WaterLevelLimit: waterLevel})
 }
 
-func MeasurementSequence(PUMP, LED rpio.Pin, cMoist, cTemp, cHum chan float32) {
+func MeasurementSequence(cMoist, cTemp, cHum chan float32) {
 	gocron.Every(1).Seconds().Do(func() {
 		moisture := moistureMeasure()
 		// dodělat aby DHT measure vracel temp a hum v array nebo objectu
@@ -143,7 +145,7 @@ func MeasurementSequence(PUMP, LED rpio.Pin, cMoist, cTemp, cHum chan float32) {
 		temperature := float32(20) // DHTMeasureValues[0]
 		humidity := float32(5)     // DHTMeasureValues[1]
 
-		requests.PostLiveMeasure(model.LiveMeasure{Moist: moisture, Hum: humidity, Temp: temperature})
+		req.PostLiveMeasure(model.LiveMeasure{Moist: moisture, Hum: humidity, Temp: temperature})
 
 		fmt.Println("\nTemperature: %v˚C", temperature)
 		fmt.Println("\nHumidity: %v%", humidity)

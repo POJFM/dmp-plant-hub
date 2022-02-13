@@ -1,85 +1,78 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
-	"strconv"
-	"time"
+
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
-	"github.com/99designs/gqlgen/graphql/playground"
+	plg "github.com/99designs/gqlgen/graphql/playground"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors/dht/drivers"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/sequences"
+	seq "github.com/SPSOAFM-IT18/dmp-plant-hub/sequences"
 	"github.com/go-chi/chi"
-	"github.com/gorilla/websocket"
+	webs "github.com/gorilla/websocket"
 	"github.com/rs/cors"
 )
 
-var liveMeasurements sensors.Measurements
-
-const pin_PUMP = 18
-const pin_LED = 27
-
-func doDHT11() {
-
-	drivers.OpenRPi()
-	// 1、init
-	dht11, err := drivers.NewDHT11(23)
-	if err != nil {
-		fmt.Println("----------------------------------")
-		fmt.Println(err)
-		return
-	}
-
-	// 2、read
-	for i := 0; i < 10; i++ {
-		time.Sleep(time.Second * 2)
-		rh, tmp, err := dht11.ReadData()
-		if err != nil {
-			fmt.Println("----------------------------------")
-			fmt.Println(err)
-			continue
-		}
-
-		fmt.Println("----------------------------------")
-		fmt.Println("RH:", rh)
-
-		tmpStr := strconv.FormatFloat(tmp, 'f', 1, 64)
-		fmt.Println("TMP:", tmpStr)
-
-	}
-
-	// 3、close
-	err = dht11.Close()
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
 func main() {
-	doDHT11()
-
 	cMoist := make(chan float32)
 	cTemp := make(chan float32)
 	cHum := make(chan float32)
 
-	go sequences.MeasurementSequence(sensors.PUMP, sensors.LED, cMoist, cTemp, cHum)
+	go seq.MeasurementSequence(cMoist, cTemp, cHum)
 
-	sequences.SaveOnFourHoursPeriod(cMoist, cTemp, cHum)
+	go seq.SaveOnFourHoursPeriod(cMoist, cTemp, cHum)
 
 	// //@CHECK FOR DATA IN DB
-	// if (data in settings table) {
-	// 	sequences.IrrigationSequence(pin_PUMP, pin_LED, cMoisture, cTemperature, cHumidity)
+	// if DATA_IN_DB {
+	// 	go seq.IrrigationSequence(cMoist)
 	// } else {
-	// 	sequences.InitializationSequence(cMoisture, cTemperature, cHumidity)
+	// 	go seq.InitializationSequence(cMoist)
+	// 	initializationFinished := true
+	// 	for initializationFinished {
+	// 		stopLED := make(chan bool)
+	// 		go func() {
+	// 			for {
+	// 				select {
+	// 				case <-stopLED:
+	// 					return
+	// 				default:
+	// 					for i := 0; i < 2; i++ {
+	// 						sens.LED.High()
+	// 						time.Sleep(500 * time.Millisecond)
+	// 						sens.LED.Low()
+	// 						time.Sleep(500 * time.Millisecond)
+	// 					}
+	// 					time.Sleep(1500 * time.Millisecond)
+	// 				}
+	// 			}
+	// 		}()
+	// 		if DATA_IN_DB {
+	// 			initializationFinished = false
+	// 			stopLED <- true
+	// 			go seq.IrrigationSequence(cMoist)
+	// 		}
+	// 		time.Sleep(1000 * time.Millisecond)
+	// 	}
 	// }
+
+	/*
+		c := make(chan os.Signal)
+		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+		go func() {
+			<-c
+			err := rpio.Close()
+			if err != nil {
+				log.Fatalf("failed to clean ")
+			}
+			os.Exit(1)
+		}()
+	*/
 
 	var db = database.Connect()
 
@@ -96,7 +89,7 @@ func main() {
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{DB: db}}))
 
 	srv.AddTransport(&transport.Websocket{
-		Upgrader: websocket.Upgrader{
+		Upgrader: webs.Upgrader{
 			CheckOrigin: func(r *http.Request) bool {
 				// Check against your desired domains here
 				return r.Host == "http://4.2.0.126:3000"
@@ -106,7 +99,7 @@ func main() {
 		},
 	})
 
-	router.Handle("/graphql", playground.Handler("GraphQL playground", "/query"))
+	router.Handle("/graphql", plg.Handler("GraphQL playground", "/query"))
 	router.Handle("/query", srv)
 	/*http.Handle("/graphql", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)*/
