@@ -8,7 +8,3 @@ func ArithmeticMean(list []float32) float32 {
 	}
 	return total / float32(len(list))
 }
-
-func TimeToOverdraw(manualWaterOverdrawn float32, pumpFlow float32) float32 {
-	return manualWaterOverdrawn / pumpFlow
-}
