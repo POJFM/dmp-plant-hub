@@ -66,17 +66,13 @@ func doDHT11() {
 func main() {
 	doDHT11()
 
-	moisture := make(chan float32)
-	temperature := make(chan float32)
-	humidity := make(chan float32)
+	cMoist := make(chan float32)
+	cTemp := make(chan float32)
+	cHum := make(chan float32)
 
-	go sequences.MeasurementSequence(sensors.PUMP, sensors.LED, moisture, temperature, humidity)
+	go sequences.MeasurementSequence(sensors.PUMP, sensors.LED, cMoist, cTemp, cHum)
 
-	cMoisture := <-moisture
-	cTemperature := <-temperature
-	cHumidity := <-humidity
-
-	sequences.SaveOnFourHoursPeriod(cMoisture, cTemperature, cHumidity)
+	sequences.SaveOnFourHoursPeriod(cMoist, cTemp, cHum)
 
 	// //@CHECK FOR DATA IN DB
 	// if (data in settings table) {

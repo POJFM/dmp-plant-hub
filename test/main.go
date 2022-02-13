@@ -10,6 +10,7 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/model"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/requests"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/router"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/sequences"
 	"github.com/jasonlvhit/gocron"
 )
 
@@ -52,8 +53,12 @@ func kokot() {
 }
 
 func main() {
-	// až bude internet
-	//go get github.com/joho/godotenv
+	temp := make(chan float32)
+
+	go sequences.MeasurementSequence(temp)
+
+	sequences.SaveOnFourHoursPeriod(temp)
+
 	r := router.Router()
 
 	// port := fmt.Sprint(":" + env.Process("GO_API_PORT"))
