@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/adc"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/env"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/model"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/requests"
@@ -60,6 +61,8 @@ func main() {
 	sequences.SaveOnFourHoursPeriod(temp)
 
 	r := router.Router()
+
+	adc.Adc()
 
 	// port := fmt.Sprint(":" + env.Process("GO_API_PORT"))
 	// fmt.Print(port)
