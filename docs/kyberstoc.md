@@ -1,6 +1,6 @@
 ---
 author: Filip Sikora, Jakub Vantuch
-fontfamily: bera
+fontfamily: serif
 date: 17-02-2022
 lang: cs
 geometry: [a4paper, bindingoffset=0mm, inner=25mm, outer=25mm, top=25mm, bottom=25mm]
@@ -93,8 +93,8 @@ Protože samotný signální pin neposkytuje dostatečné napětí pro chod čer
 V testovací verzi našeho obvodu jsme postavili na breadboardu, který jsme používali dokud jsme neměli plně otestovanou funkcionalitu hardwaru. V druhé fázi jsme náš obvod předělali do schématu PCB a nechali jej vytisknout.
 
 <div style="text-align: center">
-  <img src="./circuit-schema.png">
-  <img src="./pcb.png">
+  <img src="circuit-schema.png">
+  <img src="pcb.png">
 </div>
 
 ## Main program
@@ -104,7 +104,7 @@ V testovací verzi našeho obvodu jsme postavili na breadboardu, který jsme pou
 Náš hlavní program pro zavlažování a komunikaci s databází a webovým rozhraním jsme začali psát ve vysokoúrovňovém programovacím jazyce python. Od toho jsme ale nakonec upustili kvůli vysokým technickým nárokům, což nám zpomalovalo průběh programu, proto jsme přešli na programovací jazyk GO.
 
 <div style="text-align: center">
-  <img src="./go.png">
+  <img src="go.png">
 </div>
 
 ### Fáze programu
@@ -142,19 +142,19 @@ Náš systém ukládá zvlášť periodicky naměřená data a data naměřená 
 Webovovou aplikaci jsme napsali v javascriptovém frameworku React.js a css frameworku Tailwind. Ve webovém rozhraní je možné zobrazit si statisky jak živě naměřených dat, tak dat uložených v databázi. Z OpenWeather API fetchujeme data o předpovědi počasí.
 
 <div style="text-align: center">
-  <img src="./web-ui.png">
+  <img src="web-ui.png">
 </div>
 
 Interaktivné ovládání celého systému lze provést v již zmiňované webové aplikaci. Dovoluje uživateli kdykoliv spustit čerpadlo na zalévání rostliny.
 
 <div style="text-align: center">
-  <img src="./web-ui-pump.png">
+  <img src="web-ui-pump.png">
 </div>
 
 V nastavení se dá změnit nastavení aplikace i limitů pro zavlažování. Data se po uložení uloží do databáze.
 
 <div style="text-align: center">
-  <img src="./web-ui-settings.png">
+  <img src="web-ui-settings.png">
 </div>
 
 ## Databáze
