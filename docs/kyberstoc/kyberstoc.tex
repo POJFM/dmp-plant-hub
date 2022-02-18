@@ -27,7 +27,7 @@
 
 \section*{Úvod}
 
-PlantHub je automatický zavlažovací systém s webovým uživatelským rozhraním. Jádrem našeho systému je mikropočítač RPi s procesorovou architekturu ARM. Vybrali jsme si ho kvůli kombinace malé velikosti a procesorového výkonu, musí totiž zvládnout řídit všechny senzory, ukládat data do databáze a zároveň na něm běží i samotná webová aplikace. Systém PlantHub dále získává informace o teplotě, vlhkosti a tlaku vzduchu a promítá je ve svém webovém rozhraní. Ve stejné chvíli naměřená data ukládá do databáze v periodě 4 hodin. Jelikož voda časem z nádrže dojde systém PlantHub snímá stav hladiny vody v nádrži a včas upozorní, že je třeba doplnit vodu.
+PlantHub je automatický zavlažovací systém s webovým uživatelským rozhraním. Jádrem našeho systému je mikropočítač RPi s procesorovou architekturu ARM. Vybrali jsme si ho, protože kombinuje malou velikost a vyšší výpočetní sílu než třeba arduino. Musí totiž zvládnout řídit všechny senzory, ukládat data do databáze a zároveň na něm běží i samotná webová aplikace. Systém PlantHub dále získává informace o teplotě, vlhkosti a tlaku vzduchu a promítá je ve svém webovém rozhraní. Ve stejné chvíli naměřená data ukládá do databáze v periodě 4 hodin. Jelikož voda časem z nádrže dojde systém PlantHub snímá stav hladiny vody v nádrži a včas upozorní, že je třeba doplnit vodu.
 
 \section*{Hardware}
 
@@ -37,7 +37,7 @@ Potřebujeme vyvinout vhodné pouzdro pro naše Raspberry, abychom ochránili ci
 
 Senzor DHT11 se skládá z jednotky pro měření teploty, jednotky proměření vlhkosti a převodníku.
 
-Teplotu měří senzor thermistorem. Thermistor je keramický polovodič, který zmenšuje svou rezistivitu, když se okolní teplota zvýší.
+Teplotu měří senzor termistorem. Thermistor je keramický polovodič, který zmenšuje svou rezistivitu, když se okolní teplota zvýší.
 
 Vlhkost měří senzor na základě rezistivity substrátu umístěného mezi dvěma elektrodami. Tento substrát zachytává vlhkost a vytváří tak vodivé prostředí
 
@@ -65,7 +65,7 @@ Protože samotný signální pin neposkytuje dostatečné napětí pro chod čer
 
 \section*{Obvod}
 
-V testovací verzi našeho obvodu jsme postavili na nepájivém kontaktním poli, které jsme používali dokud jsme neměli plně otestovanou funkcionalitu hardwaru. V druhé fázi jsme náš obvod předělali do schématu PCB a nechali jej vytisknout.
+V testovací verzi našeho obvodu jsme postavili na nepájivém kontaktním poli, které jsme používali dokud jsme neměli plně otestovanou funkcionalitu hardwaru. V druhé fázi jsme náš obvod přepracovali do schématu PCB a nechali jej vytisknout.
 
 \begin{figure}[h]
 	\centering
