@@ -65,7 +65,7 @@ Protože samotný signální pin neposkytuje dostatečné napětí pro chod čer
 
 \section*{Obvod}
 
-V testovací verzi našeho obvodu jsme postavili na breadboardu, který jsme používali dokud jsme neměli plně otestovanou funkcionalitu hardwaru. V druhé fázi jsme náš obvod předělali do schématu PCB a nechali jej vytisknout.
+V testovací verzi našeho obvodu jsme postavili na nepájivém kontaktním poli, které jsme používali dokud jsme neměli plně otestovanou funkcionalitu hardwaru. V druhé fázi jsme náš obvod předělali do schématu PCB a nechali jej vytisknout.
 
 \begin{figure}[h]
 	\centering
@@ -103,7 +103,7 @@ Nastavit se dá také množství vody, které bude přečerpáno při jednom spu
 
 \subsubsection*{Měření}
 
-Senzor vlhkosti půdy a DHT11 průběžně posílají naměřená data do Rpi, kde se ukládají do databáze. Jestliže naměřené hodnoty překročí limitní hodnoty Rpi pošle signál pro otevření tranzistoru což spustí čerpadlo
+Senzor vlhkosti půdy a DHT11 průběžně posílají naměřená data do Rpi, kde se ukládají do databáze. Jestliže naměřené hodnoty překročí limitní hodnoty, Rpi pošle signál pro otevření tranzistoru což spustí čerpadlo
 
 \subsubsection*{Zavlažování}
 
@@ -160,6 +160,11 @@ Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě 
 \section*{Seznam zkratek a pojmů}
 
 \section*{Na čem ještě pracujeme}
+
+- RPi case z 3D tisku
+- Celková funkcionalita hlavního programu a jeho sekvencí
+- Realizace nádrže pro vodu
+
 
 \clearpage
 

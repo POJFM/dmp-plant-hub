@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1645228200 "/home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.tex" "/home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.pdf" "kyberstoc" 1645228201
+["pdflatex"] 1645228357 "/home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.tex" "/home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.pdf" "kyberstoc" 1645228358
   "./img//go.png" 1645225498 59084 c5aed051a367fb933430caca7b5c77d4 ""
   "./img//pcb.png" 1645225906 122864 acc87e80e7fc44090a15446e7c2804ba ""
   "./img//planthub.png" 1645226063 257953 cec2c286502573ed49a20dd3d369bcae ""
@@ -7,8 +7,8 @@
   "./img//web-ui-settings.png" 1645140562 61573 6197e0edb6bb31c6eeb03f3242c7f48a ""
   "./img//web-ui.png" 1645140562 441579 cbbaa5013bd1cff81eda86f1a1a879ac ""
   "/etc/texmf/web2c/texmf.cnf" 1645133862 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.aux" 1645228201 1110 b5f9fb7f0721bb14369dad3d8bd4770b ""
-  "/home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.tex" 1645228200 9038 e0ee5e4e8e056b60314e08aab1f88a22 ""
+  "/home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.aux" 1645228358 1110 b5f9fb7f0721bb14369dad3d8bd4770b ""
+  "/home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.tex" 1645228357 9171 e7542b5e30f51af8aeef9ab0323048d2 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/clearsans/clr_zxbkm4.enc" 1571259062 3006 bee092328c2beafee1f162d4e38aad34 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/intel/clearsans/ClearSans-Bold-tlf-t1--base.tfm" 1571259062 1648 f73d3504b2122392cdf463050bda28d4 ""
@@ -79,11 +79,11 @@
   "img//web-ui-pump.png" 1645140562 97542 cd7a82e722bc3964c41104453454c40d ""
   "img//web-ui-settings.png" 1645140562 61573 6197e0edb6bb31c6eeb03f3242c7f48a ""
   "img//web-ui.png" 1645140562 441579 cbbaa5013bd1cff81eda86f1a1a879ac ""
-  "kyberstoc.aux" 1645228201 1110 b5f9fb7f0721bb14369dad3d8bd4770b "pdflatex"
-  "kyberstoc.tex" 1645228200 9038 e0ee5e4e8e056b60314e08aab1f88a22 ""
+  "kyberstoc.aux" 1645228358 1110 b5f9fb7f0721bb14369dad3d8bd4770b "pdflatex"
+  "kyberstoc.tex" 1645228357 9171 e7542b5e30f51af8aeef9ab0323048d2 ""
   (generated)
+  "kyberstoc.log"
   "kyberstoc.pdf"
+  "/home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.pdf"
   "/home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.log"
   "kyberstoc.aux"
-  "/home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.pdf"
-  "kyberstoc.log"
