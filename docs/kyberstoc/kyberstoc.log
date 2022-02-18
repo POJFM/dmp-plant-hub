@@ -307,22 +307,31 @@ Package pdftex.def Info: ./img//web-ui-settings.png  used on input line 146.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[4 </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui.png> </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui-pump.png>] [5 </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui-settings.png>] [6
+[4 </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui.png> </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui-pump.png>]
+LaTeX Font Info:    Trying to load font information for TS1+ClearSans-TLF on input line 165.
+ (/usr/share/texlive/texmf-dist/tex/latex/clearsans/TS1ClearSans-TLF.fd
+File: TS1ClearSans-TLF.fd 2019/10/16 (autoinst) Font definitions for TS1/ClearSans-TLF.
+)
+LaTeX Font Info:    Font shape `TS1/ClearSans-TLF/m/n' in size <10.95> not available
+(Font)              Font shape `TS1/ClearSans-TLF/regular/n' tried instead on input line 165.
+LaTeX Font Info:    Font shape `TS1/ClearSans-TLF/regular/n' will be
+(Font)              scaled to size 10.95pt on input line 165.
+ [5 </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui-settings.png>] [6
 
 ] (/home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.aux) ) 
 Here is how much of TeX's memory you used:
- 5305 strings out of 479304
- 84455 string characters out of 5869779
+ 5352 strings out of 479304
+ 85676 string characters out of 5869779
  391406 words of memory out of 5000000
- 22428 multiletter control sequences out of 15000+600000
- 451246 words of font info for 52 fonts, out of 8000000 for 9000
+ 22469 multiletter control sequences out of 15000+600000
+ 451915 words of font info for 54 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  69i,7n,117p,817b,529s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/clearsans/clr_zxbkm4.enc}</usr/share/texlive/texmf-dist/fonts/type1/intel/clearsans/ClearSans-Bold.pfb></usr/share/texlive/texmf-dist/fonts/type1/intel/clearsans/ClearSans-Regular.pfb>
-Output written on /home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.pdf (7 pages, 1095590 bytes).
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/clearsans/clr_nrghxx.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/clearsans/clr_zxbkm4.enc}</usr/share/texlive/texmf-dist/fonts/type1/intel/clearsans/ClearSans-Bold.pfb></usr/share/texlive/texmf-dist/fonts/type1/intel/clearsans/ClearSans-Regular.pfb>
+Output written on /home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.pdf (7 pages, 1095771 bytes).
 PDF statistics:
- 48 PDF objects out of 1000 (max. 8388607)
- 26 compressed objects within 1 object stream
+ 51 PDF objects out of 1000 (max. 8388607)
+ 29 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  31 words of extra memory for PDF output out of 10000 (max. 10000000)
 
