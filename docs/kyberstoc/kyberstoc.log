@@ -305,14 +305,14 @@ Package pdftex.def Info: ./img//web-ui-settings.png  used on input line 146.
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [4 <./img//web-ui.png> <./img//web-ui-pump.png>]
-LaTeX Font Info:    Trying to load font information for TS1+ClearSans-TLF on input line 165.
+LaTeX Font Info:    Trying to load font information for TS1+ClearSans-TLF on input line 166.
  (/usr/share/texmf-dist/tex/latex/clearsans/TS1ClearSans-TLF.fd
 File: TS1ClearSans-TLF.fd 2019/10/16 (autoinst) Font definitions for TS1/ClearSans-TLF.
 )
 LaTeX Font Info:    Font shape `TS1/ClearSans-TLF/m/n' in size <10.95> not available
-(Font)              Font shape `TS1/ClearSans-TLF/regular/n' tried instead on input line 165.
+(Font)              Font shape `TS1/ClearSans-TLF/regular/n' tried instead on input line 166.
 LaTeX Font Info:    Font shape `TS1/ClearSans-TLF/regular/n' will be
-(Font)              scaled to size 10.95pt on input line 165.
+(Font)              scaled to size 10.95pt on input line 166.
  [5 <./img//web-ui-settings.png>] [6
 
 ] (./kyberstoc.aux) ) 
@@ -325,7 +325,7 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  69i,8n,117p,806b,544s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/clearsans/clr_nrghxx.enc}{/usr/share/texmf-dist/fonts/enc/dvips/clearsans/clr_zxbkm4.enc}</usr/share/texmf-dist/fonts/type1/intel/clearsans/ClearSans-Bold.pfb></usr/share/texmf-dist/fonts/type1/intel/clearsans/ClearSans-Regular.pfb>
-Output written on kyberstoc.pdf (7 pages, 1098352 bytes).
+Output written on kyberstoc.pdf (7 pages, 1099263 bytes).
 PDF statistics:
  54 PDF objects out of 1000 (max. 8388607)
  29 compressed objects within 1 object stream
