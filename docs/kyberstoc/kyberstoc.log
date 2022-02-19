@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian) (preloaded format=pdflatex 2022.2.17)  19 FEB 2022 00:57
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian) (preloaded format=pdflatex 2022.2.17)  19 FEB 2022 02:09
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -151,6 +151,8 @@ Package: suffix 2006/07/15 1.5a Variant command support
 Package: xstring 2019/02/06 v1.83 String manipulations (CT)
 )
 \AC@clearlist=\toks20
+) (/usr/share/texlive/texmf-dist/tex/latex/setspace/setspace.sty
+Package: setspace 2011/12/19 v6.7a set line spacing
 ) (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2020-01-29 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count198
@@ -158,20 +160,20 @@ File: l3backend-pdftex.def 2020-01-29 L3 backend support: PDF output (pdfTeX)
 ) (/home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.aux)
 \openout1 = `kyberstoc.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
 \c@mv@tabular=\count199
 \c@mv@boldtabular=\count266
 
@@ -230,108 +232,131 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Font shape `T1/ClearSans-TLF/m/n' in size <17.28> not available
-(Font)              Font shape `T1/ClearSans-TLF/regular/n' tried instead on input line 25.
-LaTeX Font Info:    Font shape `T1/ClearSans-TLF/regular/n' will be
-(Font)              scaled to size 17.28pt on input line 25.
-LaTeX Font Info:    Font shape `T1/ClearSans-TLF/m/n' in size <12> not available
-(Font)              Font shape `T1/ClearSans-TLF/regular/n' tried instead on input line 25.
-LaTeX Font Info:    Font shape `T1/ClearSans-TLF/regular/n' will be
-(Font)              scaled to size 12.0pt on input line 25.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 25.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 25.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 25.
- [1
+<./img//header.png, id=1, 518.26958pt x 100.70958pt>
+File: ./img//header.png Graphic file (type png)
+<use ./img//header.png>
+Package pdftex.def Info: ./img//header.png  used on input line 35.
+(pdftex.def)             Requested size: 455.24411pt x 88.46487pt.
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Font shape `T1/ClearSans-TLF/m/n' in size <14.4> not available
-(Font)              Font shape `T1/ClearSans-TLF/regular/n' tried instead on input line 28.
+Underfull \hbox (badness 10000) in paragraph at lines 35--37
+
+ []
+
+LaTeX Font Info:    Font shape `T1/ClearSans-TLF/m/n' in size <24.88> not available
+(Font)              Font shape `T1/ClearSans-TLF/regular/n' tried instead on input line 38.
 LaTeX Font Info:    Font shape `T1/ClearSans-TLF/regular/n' will be
-(Font)              scaled to size 14.4pt on input line 28.
+(Font)              scaled to size 24.88pt on input line 38.
+LaTeX Font Info:    Font shape `T1/ClearSans-TLF/b/n' in size <24.88> not available
+(Font)              Font shape `T1/ClearSans-TLF/bold/n' tried instead on input line 38.
+LaTeX Font Info:    Font shape `T1/ClearSans-TLF/bold/n' will be
+(Font)              scaled to size 24.88pt on input line 38.
+LaTeX Font Info:    Font shape `T1/ClearSans-TLF/m/n' in size <17.28> not available
+(Font)              Font shape `T1/ClearSans-TLF/regular/n' tried instead on input line 40.
+LaTeX Font Info:    Font shape `T1/ClearSans-TLF/regular/n' will be
+(Font)              scaled to size 17.28pt on input line 40.
+LaTeX Font Info:    Font shape `T1/ClearSans-TLF/m/n' in size <14.4> not available
+(Font)              Font shape `T1/ClearSans-TLF/regular/n' tried instead on input line 42.
+LaTeX Font Info:    Font shape `T1/ClearSans-TLF/regular/n' will be
+(Font)              scaled to size 14.4pt on input line 42.
+LaTeX Font Info:    Font shape `T1/ClearSans-TLF/b/n' in size <10.95> not available
+(Font)              Font shape `T1/ClearSans-TLF/bold/n' tried instead on input line 46.
+LaTeX Font Info:    Font shape `T1/ClearSans-TLF/bold/n' will be
+(Font)              scaled to size 10.95pt on input line 46.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <10.95> on input line 47.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 47.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 47.
+[1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//header.png>]
 LaTeX Font Info:    Font shape `T1/ClearSans-TLF/b/n' in size <14.4> not available
-(Font)              Font shape `T1/ClearSans-TLF/bold/n' tried instead on input line 28.
+(Font)              Font shape `T1/ClearSans-TLF/bold/n' tried instead on input line 65.
 LaTeX Font Info:    Font shape `T1/ClearSans-TLF/bold/n' will be
-(Font)              scaled to size 14.4pt on input line 28.
-LaTeX Font Info:    Font shape `T1/ClearSans-TLF/b/n' in size <12> not available
-(Font)              Font shape `T1/ClearSans-TLF/bold/n' tried instead on input line 36.
-LaTeX Font Info:    Font shape `T1/ClearSans-TLF/bold/n' will be
-(Font)              scaled to size 12.0pt on input line 36.
+(Font)              scaled to size 14.4pt on input line 65.
  [1]
-<./img//pcb.png, id=11, 487.8225pt x 594.22pt>
+<./img//pcb.png, id=14, 487.8225pt x 594.22pt>
 File: ./img//pcb.png Graphic file (type png)
 <use ./img//pcb.png>
-Package pdftex.def Info: ./img//pcb.png  used on input line 73.
+Package pdftex.def Info: ./img//pcb.png  used on input line 110.
 (pdftex.def)             Requested size: 182.09486pt x 221.80737pt.
 LaTeX Font Info:    Font shape `T1/ClearSans-TLF/m/n' in size <10> not available
-(Font)              Font shape `T1/ClearSans-TLF/regular/n' tried instead on input line 74.
+(Font)              Font shape `T1/ClearSans-TLF/regular/n' tried instead on input line 111.
 LaTeX Font Info:    Font shape `T1/ClearSans-TLF/regular/n' will be
-(Font)              scaled to size 10.0pt on input line 74.
-<./img//planthub.png, id=13, 352.31625pt x 475.7775pt>
+(Font)              scaled to size 10.0pt on input line 111.
+<./img//planthub.png, id=15, 352.31625pt x 475.7775pt>
 File: ./img//planthub.png Graphic file (type png)
 <use ./img//planthub.png>
-Package pdftex.def Info: ./img//planthub.png  used on input line 77.
+Package pdftex.def Info: ./img//planthub.png  used on input line 114.
 (pdftex.def)             Requested size: 182.09486pt x 245.90294pt.
-<./img//go.png, id=14, 618.31pt x 592.2125pt>
+LaTeX Font Info:    Font shape `T1/ClearSans-TLF/m/n' in size <12> not available
+(Font)              Font shape `T1/ClearSans-TLF/regular/n' tried instead on input line 121.
+LaTeX Font Info:    Font shape `T1/ClearSans-TLF/regular/n' will be
+(Font)              scaled to size 12.0pt on input line 121.
+LaTeX Font Info:    Font shape `T1/ClearSans-TLF/b/n' in size <12> not available
+(Font)              Font shape `T1/ClearSans-TLF/bold/n' tried instead on input line 121.
+LaTeX Font Info:    Font shape `T1/ClearSans-TLF/bold/n' will be
+(Font)              scaled to size 12.0pt on input line 121.
+<./img//go.png, id=16, 618.31pt x 592.2125pt>
 File: ./img//go.png Graphic file (type png)
 <use ./img//go.png>
-Package pdftex.def Info: ./img//go.png  used on input line 90.
+Package pdftex.def Info: ./img//go.png  used on input line 127.
 (pdftex.def)             Requested size: 227.62204pt x 218.01274pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-LaTeX Font Info:    Font shape `T1/ClearSans-TLF/b/n' in size <10.95> not available
-(Font)              Font shape `T1/ClearSans-TLF/bold/n' tried instead on input line 96.
-LaTeX Font Info:    Font shape `T1/ClearSans-TLF/bold/n' will be
-(Font)              scaled to size 10.95pt on input line 96.
 [2 </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//pcb.png> </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//planthub.png>] [3 </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//go.png>]
-<./img//web-ui.png, id=24, 1284.8pt x 625.33624pt>
+<./img//web-ui.png, id=26, 1284.8pt x 625.33624pt>
 File: ./img//web-ui.png Graphic file (type png)
 <use ./img//web-ui.png>
-Package pdftex.def Info: ./img//web-ui.png  used on input line 130.
+Package pdftex.def Info: ./img//web-ui.png  used on input line 167.
 (pdftex.def)             Requested size: 455.24411pt x 221.5713pt.
-<./img//web-ui-pump.png, id=25, 1284.8pt x 576.1525pt>
+<./img//web-ui-pump.png, id=27, 1284.8pt x 576.1525pt>
 File: ./img//web-ui-pump.png Graphic file (type png)
 <use ./img//web-ui-pump.png>
-Package pdftex.def Info: ./img//web-ui-pump.png  used on input line 138.
+Package pdftex.def Info: ./img//web-ui-pump.png  used on input line 173.
 (pdftex.def)             Requested size: 455.24411pt x 204.14435pt.
-<./img//web-ui-settings.png, id=26, 1907.125pt x 924.45375pt>
-File: ./img//web-ui-settings.png Graphic file (type png)
-<use ./img//web-ui-settings.png>
-Package pdftex.def Info: ./img//web-ui-settings.png  used on input line 146.
-(pdftex.def)             Requested size: 455.24411pt x 220.67442pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[4 </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui.png> </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui-pump.png>]
-LaTeX Font Info:    Trying to load font information for TS1+ClearSans-TLF on input line 165.
+<./img//web-ui-settings.png, id=28, 1907.125pt x 924.45375pt>
+File: ./img//web-ui-settings.png Graphic file (type png)
+<use ./img//web-ui-settings.png>
+Package pdftex.def Info: ./img//web-ui-settings.png  used on input line 179.
+(pdftex.def)             Requested size: 455.24411pt x 220.67442pt.
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[4 </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui.png>] [5 </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui-pump.png> </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui-settings.png>]
+LaTeX Font Info:    Trying to load font information for TS1+ClearSans-TLF on input line 198.
  (/usr/share/texlive/texmf-dist/tex/latex/clearsans/TS1ClearSans-TLF.fd
 File: TS1ClearSans-TLF.fd 2019/10/16 (autoinst) Font definitions for TS1/ClearSans-TLF.
 )
 LaTeX Font Info:    Font shape `TS1/ClearSans-TLF/m/n' in size <10.95> not available
-(Font)              Font shape `TS1/ClearSans-TLF/regular/n' tried instead on input line 165.
+(Font)              Font shape `TS1/ClearSans-TLF/regular/n' tried instead on input line 198.
 LaTeX Font Info:    Font shape `TS1/ClearSans-TLF/regular/n' will be
-(Font)              scaled to size 10.95pt on input line 165.
- [5 </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui-settings.png>] [6
+(Font)              scaled to size 10.95pt on input line 198.
+ [6
+
+] [7
 
 ] (/home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.aux) ) 
 Here is how much of TeX's memory you used:
- 5352 strings out of 479304
- 85676 string characters out of 5869779
- 391406 words of memory out of 5000000
- 22469 multiletter control sequences out of 15000+600000
- 451915 words of font info for 54 fonts, out of 8000000 for 9000
+ 5394 strings out of 479304
+ 86521 string characters out of 5869779
+ 390856 words of memory out of 5000000
+ 22507 multiletter control sequences out of 15000+600000
+ 462378 words of font info for 56 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 69i,7n,117p,817b,529s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 69i,7n,117p,811b,529s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/clearsans/clr_nrghxx.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/clearsans/clr_zxbkm4.enc}</usr/share/texlive/texmf-dist/fonts/type1/intel/clearsans/ClearSans-Bold.pfb></usr/share/texlive/texmf-dist/fonts/type1/intel/clearsans/ClearSans-Regular.pfb>
-Output written on /home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.pdf (7 pages, 1095771 bytes).
+Output written on /home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.pdf (8 pages, 1118636 bytes).
 PDF statistics:
- 51 PDF objects out of 1000 (max. 8388607)
- 29 compressed objects within 1 object stream
+ 56 PDF objects out of 1000 (max. 8388607)
+ 31 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 31 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 36 words of extra memory for PDF output out of 10000 (max. 10000000)
 

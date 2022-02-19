@@ -9,21 +9,58 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{acronym}
+\usepackage{setspace}
+
+\newcommand{\subtitle}[1]{%
+  \posttitle{%
+    \par\end{center}
+    \begin{center}\large#1\end{center}
+    \vskip0.5em}%
+}
 
 \graphicspath{ {./img/} }
+\onehalfspacing
 
 \renewcommand\maketitlehooka{\null\mbox{}\vfill}
 \renewcommand\maketitlehookd{\vfill\null}
 
 \title{PlantHub}
+\subtitle{soutěž KYBER STOČ 2022 }
 \author{Filip Sikora, Jakub Vantuch}
-\date{18. 2. 2022}
+\date{}
 
 \begin{document}
 
-\begin{titlingpage}
-	\maketitle
-\end{titlingpage}
+\begin{titlepage}
+	\noindent\includegraphics[width=\linewidth]{header.png}
+	\vspace{4cm} \\
+	\begin{center}
+		\Huge\textbf{PlantHub}
+		\vspace*{1cm} \\
+		\LARGE Filip Sikora, Jakub Vantuch
+		\vspace*{1cm} \\
+		\Large soutěž KYBER STOČ 2022
+		\vfill
+		\normalsize
+		\begin{minipage}{0.7\linewidth}
+			Třída: \textbf{4.IT}
+		\end{minipage}%
+		\begin{minipage}{0.25\linewidth}
+			Školní rok: \textbf{2021/22}
+		\end{minipage}
+	\end{center}
+	
+\end{titlepage}
+
+%\begin{titlingpage}
+%	\maketitle
+%	\begin{minipage}{0.7\linewidth}
+%		Třída: \textbf{4.IT}
+%	\end{minipage}%
+%	\begin{minipage}{0.25\linewidth}
+%		Školní rok: \textbf{2021/22}
+%	\end{minipage}
+%\end{titlingpage}
 
 \section*{Úvod}
 
@@ -33,7 +70,7 @@ PlantHub je automatický zavlažovací systém s webovým uživatelským rozhran
 
 Potřebujeme vyvinout vhodné pouzdro pro naše Raspberry, abychom ochránili citlivé elektronické součástky. Budeme ho tisknout na 3D tiskárně. K zavlažování je potřeba vyvinout i nádrž na vodu ze kterého bude čerpat naše čerpadlo.
 
-\subsection*{DHT11}
+\subsubsection*{DHT11}
 
 Senzor DHT11 se skládá z jednotky pro měření teploty, jednotky proměření vlhkosti a převodníku.
 
@@ -41,25 +78,25 @@ Teplotu měří senzor termistorem. Thermistor je keramický polovodič, který 
 
 Vlhkost měří senzor na základě rezistivity substrátu umístěného mezi dvěma elektrodami. Tento substrát zachytává vlhkost a vytváří tak vodivé prostředí
 
-\subsection*{Senzor vlhkosti půdy}
+\subsubsection*{Senzor vlhkosti půdy}
 
-Kapacitní čidlo se skládá ze dvou vodivých desek a převodníku. Čidlo funguje na způsob kapacitoru avšak jeho kapacita je ovlivněna vlhkostí, která ovlivňuje dielektrikum mezi dvěma deskami.
+Jedná se o kapacitní senzor, ten se skládá ze dvou vodivých desek a převodníku. Čidlo funguje na způsob kapacitoru avšak jeho kapacita je ovlivněna vlhkostí, která ovlivňuje dielektrikum mezi dvěma deskami.
 
-\subsection*{MCP3008}
+\subsubsection*{MCP3008}
 
 RPi na GPIO pouze digitální vstupy, protože je ale senzor vlhkosti půdy analogový museli jsme použít ADC převodník.
 
-\subsection*{HC-SR04}
+\subsubsection*{HC-SR04}
 
 HC-SR04 vydává zvukové vibrace na vysoké frekvenci, neslyšitelné pro lidské ucho. Poté čeká, až se zvuk odrazí zpět, a vypočítá vzdálenost na základě času měřeného od vysílání zvukové vlny k zpětnému přijmutí
 
 Všechny naměřené údaje jsou v převodníku senzoru přepočítány na jednotky dané veličiny a odeslány analogovým signálem do řídící jednotky.
 
-\subsection*{Čerpadlo}
+\subsubsection*{Čerpadlo}
 
 Naše zvolené čerpadlo se skládá z DC motoru, na němž je upevněna centrifuga pro čerpání vody a vlastního pouzdra, z kterého vede otvor pro napojení odtokové hadičky.
 
-\subsection*{2N2222}
+\subsubsection*{2N2222}
 
 Protože samotný signální pin neposkytuje dostatečné napětí pro chod čerpadla ovládáme jej NPN tranzistorem.
 
@@ -95,7 +132,7 @@ Náš hlavní program pro zavlažování a komunikaci s databází a webovým ro
 
 \subsubsection*{Inicializace}
 
-Půda musí být ze začátku suchá. Senzor vlhkosti půdy zastrčíme co nejhlouběji do půdy. Rpi bude chvíli sbírat data a pak je zprůměruje do hodnoty, která bude sloužit jako limit pro spuštění čerpadla.
+Půda musí být ze začátku suchá. Senzor vlhkosti půdy zasuneme co nejhlouběji do půdy. Rpi bude chvíli sbírat data a pak je zprůměruje do hodnoty, která bude sloužit jako limit pro spuštění čerpadla.
 
 V UI jde navíc ještě manuálně nastavit hranice teploty a vlhkosti vzduchu pro spuštění čerpadla.
 
@@ -131,21 +168,19 @@ Webovovou aplikaci jsme napsali v JavaScriptovém frameworku React.js a css fram
 	\caption*{Uživatelské rozhraní}
 \end{figure}
 
-Interaktivní ovládání celého systému lze provést v již zmiňované webové aplikaci. Dovoluje uživateli kdykoliv spustit čerpadlo na zalévání rostliny.
-
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=\linewidth]{web-ui-pump.png}
-	\caption*{Uživatelské rozhraní ovládání pumpy}
+	\caption*{Interaktivní ovládání celého systému lze provést v již zmiňované webové aplikaci. Dovoluje uživateli kdykoliv spustit čerpadlo na zalévání rostliny.}
 \end{figure}
-
-V nastavení se dá změnit nastavení aplikace i limitů pro zavlažování. Data se po uložení uloží do databáze.
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=\linewidth]{web-ui-settings.png}
-	\caption*{Uživatelské nastavení}
+	\caption*{V nastavení se dá změnit nastavení aplikace i limitů pro zavlažování. Data se po uložení uloží do databáze.}
 \end{figure}
+
+\clearpage
 
 \section*{Databáze}
 
@@ -157,8 +192,6 @@ GraphQL je query, který je konkurent řešení REST API. Nabízí efektivnějš
 
 Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě hlavně mezi cloudovými vývojáři a v oblasti vývoje microservices. Dokáže se exekuční rychlostí přiblížit k nízkoúrovňovým jazykům jako je C nebo Rust, ale zároveň zůstává velmi lidsky čitelný a jednoduchý na použití. Na rozdíl od jazyků jako C a Rust má například garbage collector.
 
-\section*{Seznam zkratek a pojmů}
-
 \section*{Na čem ještě pracujeme}
 
 \begin{itemize}
@@ -168,6 +201,8 @@ Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě 
 \end{itemize}
 
 \clearpage
+
+\section*{Seznam zkratek a pojmů}
 
 \begin{acronym}
 	\acro{API}{Application programming interface}
