@@ -10,6 +10,7 @@
 \usepackage{subcaption}
 \usepackage{acronym}
 \usepackage{setspace}
+\usepackage{indentfirst}
 
 \newcommand{\subtitle}[1]{%
   \posttitle{%
@@ -19,10 +20,10 @@
 }
 
 \graphicspath{ {./img/} }
-\onehalfspacing
 
-\renewcommand\maketitlehooka{\null\mbox{}\vfill}
-\renewcommand\maketitlehookd{\vfill\null}
+\onehalfspacing
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.1em}
 
 \title{PlantHub}
 \subtitle{soutěž KYBER STOČ 2022 }
@@ -64,7 +65,7 @@
 
 \section*{Úvod}
 
-PlantHub je automatický zavlažovací systém s webovým uživatelským rozhraním. Jádrem našeho systému je mikropočítač RPi s procesorovou architekturu ARM. Vybrali jsme si jej, protože kombinuje malou velikost a vyšší výpočetní sílu než Arduino. Musí totiž zvládnout řídit všechny senzory, ukládat data do databáze a zároveň na něm běží i samotná webová aplikace. Systém PlantHub dále získává informace o teplotě, vlhkosti a tlaku vzduchu a promítá je ve svém webovém rozhraní. Ve stejné chvíli naměřená data ukládá do databáze v periodě 4 hodin. Jelikož voda časem z nádrže dojde systém PlantHub snímá stav hladiny vody v nádrži a včas upozorní, že je třeba doplnit vodu.
+\ PlantHub je automatický zavlažovací systém s webovým uživatelským rozhraním. Jádrem našeho systému je mikropočítač RPi s procesorovou architekturu ARM. Vybrali jsme si jej, protože kombinuje malou velikost a vyšší výpočetní sílu než Arduino. Musí totiž zvládnout řídit všechny senzory, ukládat data do databáze a zároveň na něm běží i samotná webová aplikace. Systém PlantHub dále získává informace o teplotě, vlhkosti a tlaku vzduchu a promítá je ve svém webovém rozhraní. Ve stejné chvíli naměřená data ukládá do databáze v periodě 4 hodin. Jelikož voda časem z nádrže dojde systém PlantHub snímá stav hladiny vody v nádrži a včas upozorní, že je třeba doplnit vodu.
 
 \section*{Hardware}
 
