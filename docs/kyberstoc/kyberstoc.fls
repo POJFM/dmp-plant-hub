@@ -405,6 +405,8 @@ INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//planthub.png
 INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//planthub.png
 INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//planthub.png
 INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//planthub.png
+INPUT /usr/share/texlive/texmf-dist/fonts/vf/intel/clearsans/ClearSans-tlf-t1.vf
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/intel/clearsans/ClearSans-tlf-t1--base.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/intel/clearsans/ClearSans-tlf-t1.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/intel/clearsans/ClearSans-Bold-tlf-t1.tfm
 INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//go.png
@@ -412,10 +414,13 @@ INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//go.png
 INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//go.png
 INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//go.png
 INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//go.png
-INPUT /usr/share/texlive/texmf-dist/fonts/vf/intel/clearsans/ClearSans-tlf-t1.vf
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/intel/clearsans/ClearSans-tlf-t1--base.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/intel/clearsans/ClearSans-Bold-tlf-t1.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/intel/clearsans/ClearSans-Bold-tlf-t1--base.tfm
+INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//ui-inicializace.jpg
+INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//ui-inicializace.jpg
+INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//ui-inicializace.jpg
+INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//ui-inicializace.jpg
+INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//ui-inicializace.jpg
 INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui.png
 INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui.png
 INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui.png
@@ -436,6 +441,11 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/clearsans/TS1ClearSans-TLF.fd
 INPUT /usr/share/texlive/texmf-dist/tex/latex/clearsans/TS1ClearSans-TLF.fd
 INPUT /usr/share/texlive/texmf-dist/tex/latex/clearsans/TS1ClearSans-TLF.fd
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/intel/clearsans/ClearSans-tlf-ts1.tfm
+INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//specs.png
+INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//specs.png
+INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//specs.png
+INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//specs.png
+INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//specs.png
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/intel/clearsans/ClearSans-tlf-ts1.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/intel/clearsans/ClearSans-tlf-ts1--base.tfm
 INPUT /home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.aux

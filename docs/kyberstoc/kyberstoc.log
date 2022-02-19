@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian) (preloaded format=pdflatex 2022.2.17)  19 FEB 2022 02:17
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian) (preloaded format=pdflatex 2022.2.17)  19 FEB 2022 14:29
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -292,69 +292,85 @@ File: ./img//planthub.png Graphic file (type png)
 <use ./img//planthub.png>
 Package pdftex.def Info: ./img//planthub.png  used on input line 115.
 (pdftex.def)             Requested size: 182.09486pt x 245.90294pt.
+ [2 </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//pcb.png> </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//planthub.png>]
 LaTeX Font Info:    Font shape `T1/ClearSans-TLF/m/n' in size <12> not available
-(Font)              Font shape `T1/ClearSans-TLF/regular/n' tried instead on input line 122.
+(Font)              Font shape `T1/ClearSans-TLF/regular/n' tried instead on input line 124.
 LaTeX Font Info:    Font shape `T1/ClearSans-TLF/regular/n' will be
-(Font)              scaled to size 12.0pt on input line 122.
+(Font)              scaled to size 12.0pt on input line 124.
 LaTeX Font Info:    Font shape `T1/ClearSans-TLF/b/n' in size <12> not available
-(Font)              Font shape `T1/ClearSans-TLF/bold/n' tried instead on input line 122.
+(Font)              Font shape `T1/ClearSans-TLF/bold/n' tried instead on input line 124.
 LaTeX Font Info:    Font shape `T1/ClearSans-TLF/bold/n' will be
-(Font)              scaled to size 12.0pt on input line 122.
-<./img//go.png, id=16, 618.31pt x 592.2125pt>
+(Font)              scaled to size 12.0pt on input line 124.
+<./img//go.png, id=21, 618.31pt x 592.2125pt>
 File: ./img//go.png Graphic file (type png)
 <use ./img//go.png>
-Package pdftex.def Info: ./img//go.png  used on input line 128.
+Package pdftex.def Info: ./img//go.png  used on input line 130.
 (pdftex.def)             Requested size: 227.62204pt x 218.01274pt.
- [2 </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//pcb.png> </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//planthub.png>] [3 </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//go.png>]
-<./img//web-ui.png, id=26, 1284.8pt x 625.33624pt>
+ [3
+
+ </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//go.png>]
+<./img//ui-inicializace.jpg, id=26, 1284.8pt x 624.3325pt>
+File: ./img//ui-inicializace.jpg Graphic file (type jpg)
+<use ./img//ui-inicializace.jpg>
+Package pdftex.def Info: ./img//ui-inicializace.jpg  used on input line 170.
+(pdftex.def)             Requested size: 409.71692pt x 199.09505pt.
+<./img//web-ui.png, id=27, 1284.8pt x 625.33624pt>
 File: ./img//web-ui.png Graphic file (type png)
 <use ./img//web-ui.png>
-Package pdftex.def Info: ./img//web-ui.png  used on input line 168.
-(pdftex.def)             Requested size: 455.24411pt x 221.5713pt.
-<./img//web-ui-pump.png, id=27, 1284.8pt x 576.1525pt>
+Package pdftex.def Info: ./img//web-ui.png  used on input line 176.
+(pdftex.def)             Requested size: 409.71692pt x 199.41513pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<./img//web-ui-pump.png, id=28, 1284.8pt x 576.1525pt>
 File: ./img//web-ui-pump.png Graphic file (type png)
 <use ./img//web-ui-pump.png>
-Package pdftex.def Info: ./img//web-ui-pump.png  used on input line 174.
-(pdftex.def)             Requested size: 455.24411pt x 204.14435pt.
-
+Package pdftex.def Info: ./img//web-ui-pump.png  used on input line 182.
+(pdftex.def)             Requested size: 409.71692pt x 183.73079pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<./img//web-ui-settings.png, id=28, 1907.125pt x 924.45375pt>
+<./img//web-ui-settings.png, id=29, 1907.125pt x 924.45375pt>
 File: ./img//web-ui-settings.png Graphic file (type png)
 <use ./img//web-ui-settings.png>
-Package pdftex.def Info: ./img//web-ui-settings.png  used on input line 180.
-(pdftex.def)             Requested size: 455.24411pt x 220.67442pt.
+Package pdftex.def Info: ./img//web-ui-settings.png  used on input line 188.
+(pdftex.def)             Requested size: 409.71692pt x 198.59851pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[4 </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui.png>] [5 </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui-pump.png> </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui-settings.png>]
-LaTeX Font Info:    Trying to load font information for TS1+ClearSans-TLF on input line 199.
+[4 </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//ui-inicializace.jpg>] [5 </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui.png> </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui-pump.png> </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//web-ui-settings.png>]
+LaTeX Font Info:    Trying to load font information for TS1+ClearSans-TLF on input line 207.
  (/usr/share/texlive/texmf-dist/tex/latex/clearsans/TS1ClearSans-TLF.fd
 File: TS1ClearSans-TLF.fd 2019/10/16 (autoinst) Font definitions for TS1/ClearSans-TLF.
 )
 LaTeX Font Info:    Font shape `TS1/ClearSans-TLF/m/n' in size <10.95> not available
-(Font)              Font shape `TS1/ClearSans-TLF/regular/n' tried instead on input line 199.
+(Font)              Font shape `TS1/ClearSans-TLF/regular/n' tried instead on input line 207.
 LaTeX Font Info:    Font shape `TS1/ClearSans-TLF/regular/n' will be
-(Font)              scaled to size 10.95pt on input line 199.
+(Font)              scaled to size 10.95pt on input line 207.
+<./img//specs.png, id=37, 697.60625pt x 507.8975pt>
+File: ./img//specs.png Graphic file (type png)
+<use ./img//specs.png>
+Package pdftex.def Info: ./img//specs.png  used on input line 214.
+(pdftex.def)             Requested size: 318.66948pt x 232.00821pt.
  [6
 
-] [7
+ </home/filip/code/dmp-plant-hub/docs/kyberstoc/./img//specs.png>] [7
 
 ] (/home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.aux) ) 
 Here is how much of TeX's memory you used:
- 5404 strings out of 479304
- 86825 string characters out of 5869779
+ 5417 strings out of 479304
+ 87105 string characters out of 5869779
  390973 words of memory out of 5000000
- 22513 multiletter control sequences out of 15000+600000
+ 22523 multiletter control sequences out of 15000+600000
  462378 words of font info for 56 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 69i,7n,117p,813b,529s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 69i,7n,117p,803b,529s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/clearsans/clr_nrghxx.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/clearsans/clr_zxbkm4.enc}</usr/share/texlive/texmf-dist/fonts/type1/intel/clearsans/ClearSans-Bold.pfb></usr/share/texlive/texmf-dist/fonts/type1/intel/clearsans/ClearSans-Regular.pfb>
-Output written on /home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.pdf (8 pages, 1118754 bytes).
+Output written on /home/filip/code/dmp-plant-hub/docs/kyberstoc/kyberstoc.pdf (8 pages, 1254404 bytes).
 PDF statistics:
- 56 PDF objects out of 1000 (max. 8388607)
+ 59 PDF objects out of 1000 (max. 8388607)
  31 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 36 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 46 words of extra memory for PDF output out of 10000 (max. 10000000)
 

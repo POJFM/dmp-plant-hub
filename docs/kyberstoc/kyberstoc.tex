@@ -65,7 +65,7 @@
 
 \section*{Úvod}
 
-\ PlantHub je automatický zavlažovací systém s webovým uživatelským rozhraním. Jádrem našeho systému je mikropočítač RPi s procesorovou architekturu ARM. Vybrali jsme si jej, protože kombinuje malou velikost a vyšší výpočetní sílu než Arduino. Musí totiž zvládnout řídit všechny senzory, ukládat data do databáze a zároveň na něm běží i samotná webová aplikace. Systém PlantHub dále získává informace o teplotě, vlhkosti a tlaku vzduchu a promítá je ve svém webovém rozhraní. Ve stejné chvíli naměřená data ukládá do databáze v periodě 4 hodin. Jelikož voda časem z nádrže dojde systém PlantHub snímá stav hladiny vody v nádrži a včas upozorní, že je třeba doplnit vodu.
+PlantHub je automatický zavlažovací systém s webovým uživatelským rozhraním. Jádrem našeho systému je mikropočítač RPi s procesorovou architekturu ARM. Vybrali jsme si jej, protože kombinuje malou velikost a vyšší výpočetní sílu než Arduino. Musí totiž zvládnout řídit všechny senzory, ukládat data do databáze a zároveň hostuje i samotnou webovou aplikaci. Systém PlantHub dále získává informace o teplotě, vlhkosti a tlaku vzduchu a promítá je ve svém webovém rozhraní. Ve stejné chvíli naměřená data ukládá do databáze v periodě 4 hodin. Jelikož voda časem z nádrže dojde systém PlantHub snímá stav hladiny vody v nádrži a včas upozorní, že je třeba doplnit vodu.
 
 \section*{Hardware}
 
@@ -73,7 +73,7 @@ Potřebujeme vyvinout vhodné pouzdro pro naše Raspberry, abychom ochránili ci
 
 \subsubsection*{DHT11}
 
-Senzor DHT11 se skládá z jednotky pro měření teploty, jednotky proměření vlhkosti a převodníku.
+Senzor DHT11 se skládá z jednotky pro měření teploty, jednotky pro měření vlhkosti a převodníku.
 
 Teplotu měří senzor termistorem. Thermistor je keramický polovodič, který zmenšuje svou rezistivitu, když se okolní teplota zvýší.
 
@@ -85,7 +85,7 @@ Jedná se o kapacitní senzor, ten se skládá ze dvou vodivých desek a převod
 
 \subsubsection*{MCP3008}
 
-RPi na GPIO pouze digitální vstupy, protože je ale senzor vlhkosti půdy analogový museli jsme použít ADC převodník.
+RPi má v rámci GPIO pouze digitální vstupy, protože je ale senzor vlhkosti půdy analogový museli jsme použít ADC převodník.
 
 \subsubsection*{HC-SR04}
 
@@ -103,7 +103,7 @@ Protože samotný signální pin neposkytuje dostatečné napětí pro chod čer
 
 \section*{Obvod}
 
-V testovací verzi našeho obvodu jsme postavili na nepájivém kontaktním poli, které jsme používali dokud jsme neměli plně otestovanou funkcionalitu hardwaru. V druhé fázi jsme náš obvod přepracovali do schématu PCB a nechali jej vytisknout.
+Testovací verzi našeho obvodu jsme postavili na nepájivém kontaktním poli, které jsme používali dokud jsme neměli plně otestovanou funkcionalitu hardwaru. V druhé fázi jsme náš obvod přepracovali do schématu PCB a nechali jej vytisknout.
 
 \begin{figure}[h]
 	\centering
@@ -117,11 +117,13 @@ V testovací verzi našeho obvodu jsme postavili na nepájivém kontaktním poli
 	\end{subfigure}
 \end{figure}
 
+\clearpage
+
 \section*{Hlavní program}
 
 \subsection*{Postup práce}
 
-Náš hlavní program pro zavlažování a komunikaci s databází a webovým rozhraním jsme začali psát ve vysokoúrovňovém programovacím jazyce python. Od toho jsme ale nakonec upustili kvůli vysokým technickým nárokům, což nám zpomalovalo průběh programu, proto jsme přešli na programovací jazyk GO.
+Náš hlavní program pro zavlažování a komunikaci s databází a webovým rozhraním jsme začali psát ve vysokoúrovňovém programovacím jazyce Python. Od toho jsme ale nakonec upustili kvůli pomalejšímu průběhu programu, proto jsme přešli na programovací jazyk GO.
 
 \begin{figure}[h]
 	\centering
@@ -135,7 +137,7 @@ Náš hlavní program pro zavlažování a komunikaci s databází a webovým ro
 
 Půda musí být ze začátku suchá. Senzor vlhkosti půdy zasuneme co nejhlouběji do půdy. Rpi bude chvíli sbírat data a pak je zprůměruje do hodnoty, která bude sloužit jako limit pro spuštění čerpadla.
 
-V UI jde navíc ještě manuálně nastavit hranice teploty a vlhkosti vzduchu pro spuštění čerpadla.
+V UI jde navíc ještě manuálně nastavit hranice vlhkosti půdy pro spuštění čerpadla.
 
 Nastavit se dá také množství vody, které bude přečerpáno při jednom spuštění a jaká je hranice pro přijatelnou výšku hladiny vody v nádrži. Pokud nejsou tyto hodnoty uvedeny čerpadlo bude vodu přečerpávat, dokud se nezmění hodnota kapacitního čidla pro měření vlhkosti půdy a HC-SR04 použije výchozí nastavení.
 
@@ -165,20 +167,26 @@ Webovovou aplikaci jsme napsali v JavaScriptovém frameworku React.js a css fram
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=\linewidth]{web-ui.png}
+	\includegraphics[width=0.9\linewidth]{ui-inicializace.jpg}
+	\caption*{Okno prvotního nastavení. Nastaví se zde limity a celkové nastavení aplikace.}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\linewidth]{web-ui.png}
 	\caption*{Uživatelské rozhraní}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=\linewidth]{web-ui-pump.png}
+	\includegraphics[width=0.9\linewidth]{web-ui-pump.png}
 	\caption*{Interaktivní ovládání celého systému lze provést v již zmiňované webové aplikaci. Dovoluje uživateli kdykoliv spustit čerpadlo na zalévání rostliny.}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=\linewidth]{web-ui-settings.png}
-	\caption*{V nastavení se dá změnit nastavení aplikace i limitů pro zavlažování. Data se po uložení uloží do databáze.}
+	\includegraphics[width=0.9\linewidth]{web-ui-settings.png}
+	\caption*{V nastavení se dá změnit nastavení aplikace i limitů pro zavlažování. Nastavení se poté uloží do databáze.}
 \end{figure}
 
 \clearpage
@@ -200,6 +208,12 @@ Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě 
   \item Celková funkcionalita hlavního programu a jeho sekvencí
   \item Realizace nádrže pro vodu
 \end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\linewidth]{specs.png}
+	\caption*{Specifikace RaspberryPi}
+\end{figure}
 
 \clearpage
 
