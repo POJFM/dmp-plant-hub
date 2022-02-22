@@ -6,7 +6,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors/dht/drivers"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors/drivers"
 
 	"github.com/shanghuiyang/rpi-devices/dev"
