@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/model"
 	"log"
 )
@@ -9,7 +10,7 @@ import (
 func (db *DB) CreateSettings(ctx context.Context, input *model.NewSettings) *model.Setting {
 	_, err := db.DB.NewInsert().Model(input).ModelTableExpr("settings").Exec(ctx)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	return &model.Setting{
 		LimitsTrigger:      input.LimitsTrigger,
@@ -32,7 +33,7 @@ func (db *DB) GetSettings(ctx context.Context) []*model.Setting {
 	settings := make([]*model.Setting, 0)
 	err := db.DB.NewSelect().Model(&settings).Scan(ctx)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	return settings
 }
@@ -42,7 +43,7 @@ func (db *DB) UpdateSettings(ctx context.Context, input *model.NewSettings) *mod
 	values := db.DB.NewValues(input)
 	_, err := db.DB.NewUpdate().With("_data", values).Model(input).TableExpr("_data").Bulk().Where("settings.id = 1").Exec(ctx)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	return &model.Setting{
 		LimitsTrigger:      input.LimitsTrigger,
@@ -70,7 +71,7 @@ func (db *DB) GetSettingByColumn(columns []string) model.Setting {
 	var settings []model.Setting
 	err := db.DB.NewSelect().Model(&settings).Column(columns...).Limit(1).Scan(context.Background())
 	if err != nil {
-		log.Fatal("bun select error: ", err)
+		log.Println(err)
 	}
 	settingsRow := settings[0]
 	return model.Setting{
@@ -89,4 +90,11 @@ func (db *DB) GetSettingByColumn(columns []string) model.Setting {
 		Lat:                settingsRow.Lat,
 		Lon:                settingsRow.Lon,
 	}
+}
+
+func (db *DB) CheckSettings() (isSettingsPresent bool) {
+	col := []string{"id"}
+	s := db.GetSettingByColumn(col)
+	fmt.Println(s)
+	return
 }

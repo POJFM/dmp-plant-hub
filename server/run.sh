@@ -7,6 +7,6 @@ export CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=7
 
 go build -o build/build_magni
 
-scp build/build_magni pi@Magni:/home/pi/server-debug-su/build_magni
+scp build/build_magni pi@Magni:/home/pi/server-debug/build_magni
 
-echo k0k0s | ssh -tt pi@Magni "cd /home/pi/server-debug-su; chmod +x build_magni; sudo ./build_magni"
+echo k0k0s | ssh -tt pi@Magni "cd /home/pi/server-debug; chmod +x build_magni; sudo ./build_magni"

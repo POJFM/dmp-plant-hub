@@ -9,7 +9,7 @@ import (
 )
 
 func Process(key string) string {
-	err := godotenv.Load(filepath.Join("./env/", ".env"))
+	err := godotenv.Load(filepath.Join("./env/", ".env"), filepath.Join(".env"))
 	if err != nil {
 		log.Fatal("Error loading .env, make shure there is one")
 	}

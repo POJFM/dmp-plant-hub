@@ -61,6 +61,8 @@ func main() {
 
 	var db = database.Connect()
 
+	db.CheckSettings()
+
 	router := chi.NewRouter()
 
 	// Add CORS middleware around every request

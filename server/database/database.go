@@ -33,7 +33,7 @@ func Connect() *DB {
 	))
 
 	if err := db.Ping(); err != nil {
-		log.Fatal(err)
+		log.Fatalf("DB CONN ERROR: %s", err)
 	}
 
 	return &DB{
@@ -45,7 +45,7 @@ func (db *DB) CreateMeasurement(ctx context.Context, input *model.NewMeasurement
 	//_, err := db.NewInsert().Model(&input).TableExpr("measurements").Exec()
 	_, err := db.DB.NewInsert().Model(input).ModelTableExpr("measurements").Exec(ctx)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	return &model.Measurement{
 		Hum:            input.Hum,
@@ -59,7 +59,7 @@ func (db *DB) GetMeasurements(ctx context.Context) []*model.Measurement {
 	measurements := make([]*model.Measurement, 0)
 	err := db.DB.NewSelect().Model(&measurements).Scan(ctx)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	return measurements
 }
@@ -68,7 +68,7 @@ func (db *DB) GetIrrigation(ctx context.Context) []*model.IrrigationHistory {
 	irrigationHistory := make([]*model.IrrigationHistory, 0)
 	err := db.DB.NewSelect().Model(&irrigationHistory).ModelTableExpr("irrigation_history").Scan(ctx)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	return irrigationHistory
 }
