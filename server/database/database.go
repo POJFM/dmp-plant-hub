@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"database/sql"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/model"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
@@ -19,9 +20,9 @@ func Connect() *DB {
 	// BUNDB
 	conn := sql.OpenDB(pgdriver.NewConnector(
 		pgdriver.WithDSN("postgres://postgres:@localhost:5420/test?sslmode=disable"),
-		pgdriver.WithUser("root"),
-		pgdriver.WithPassword("k0k0s"),
-		pgdriver.WithDatabase("planthub"),
+		pgdriver.WithUser(env.Process("DB_USER")),
+		pgdriver.WithPassword(env.Process("DB_PSWD")),
+		pgdriver.WithDatabase(env.Process("DB_NAME")),
 	))
 
 	db := bun.NewDB(conn, pgdialect.New())

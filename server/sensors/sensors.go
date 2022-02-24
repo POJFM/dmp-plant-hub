@@ -74,6 +74,8 @@ func (s *Sensors) ReadDHT() (hum, temp float64) {
 	return
 }
 
+// ReadMoisture taken from:
+// https://raspberrypi.stackexchange.com/questions/93122/spi-mcp3008-trouble-with-getting-a-reading-from-chip-all-channels-read-0-zero
 func (s *Sensors) ReadMoisture() (moisture float64) {
 	if err := rpio.SpiBegin(rpio.Spi0); err != nil {
 		log.Printf("MOISTURE: failed to start SPI: %v\n", err)
