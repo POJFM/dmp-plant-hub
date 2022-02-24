@@ -3,7 +3,7 @@ package router
 import (
 	"net/http"
 
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/middleware"
+	mid "github.com/SPSOAFM-IT18/dmp-plant-hub/test/middleware"
 
 	"github.com/gorilla/mux"
 )
@@ -11,17 +11,17 @@ import (
 func Router() *mux.Router {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/init/measured", middleware.GetInitMeasured).Methods("GET", "OPTIONS")
-	router.HandleFunc("/init/measured", middleware.PostInitMeasured).Methods("POST", "OPTIONS")
+	router.HandleFunc("/init/measured", mid.HandleGetInitMeasured).Methods("GET", "OPTIONS")
+	router.HandleFunc("/init/measured", mid.HandlePostInitMeasured).Methods("POST", "OPTIONS")
 
-	router.HandleFunc("/live/measure", middleware.GetLiveMeasure).Methods("GET", "OPTIONS")
-	router.HandleFunc("/live/measure", middleware.PostLiveMeasure).Methods("POST", "OPTIONS")
+	router.HandleFunc("/live/measure", mid.HandleGetLiveMeasure).Methods("GET", "OPTIONS")
+	router.HandleFunc("/live/measure", mid.HandlePostLiveMeasure).Methods("POST", "OPTIONS")
 
-	router.HandleFunc("/live/notify", middleware.GetLiveNotify).Methods("GET", "OPTIONS")
-	router.HandleFunc("/live/notify", middleware.PostLiveNotify).Methods("POST", "OPTIONS")
+	router.HandleFunc("/live/notify", mid.HandleGetLiveNotify).Methods("GET", "OPTIONS")
+	router.HandleFunc("/live/notify", mid.HandlePostLiveNotify).Methods("POST", "OPTIONS")
 
-	router.HandleFunc("/live/control", middleware.GetLiveControl).Methods("GET", "OPTIONS")
-	router.HandleFunc("/live/control", middleware.PostLiveControl).Methods("POST", "OPTIONS")
+	router.HandleFunc("/live/control", mid.HandleGetLiveControl).Methods("GET", "OPTIONS")
+	router.HandleFunc("/live/control", mid.HandlePostLiveControl).Methods("POST", "OPTIONS")
 
 	http.Handle("/", router)
 	return router

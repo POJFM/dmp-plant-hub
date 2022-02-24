@@ -11,16 +11,30 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
+<<<<<<< HEAD
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/router"
+	seq "github.com/SPSOAFM-IT18/dmp-plant-hub/sequences"
+=======
+>>>>>>> c49a2b91d74952875a1ce3b5a4115fafb392c266
 	"github.com/go-chi/chi"
 	webs "github.com/gorilla/websocket"
-	"github.com/rs/cors"
 )
 
 func main() {
+<<<<<<< HEAD
+	cMoist := make(chan float64)
+	cTemp := make(chan float64)
+	cHum := make(chan float64)
+	cRestart := make(chan bool)
+	cPumpState := make(chan bool)
+
+	go seq.MeasurementSequence(cMoist, cTemp, cHum, cRestart, cPumpState)
+=======
 
 	//cMoist := make(chan float32)
 	//cTemp := make(chan float32)
 	//cHum := make(chan float32)
+>>>>>>> c49a2b91d74952875a1ce3b5a4115fafb392c266
 
 	//go seq.MeasurementSequence(cMoist, cTemp, cHum)
 
@@ -28,7 +42,7 @@ func main() {
 
 	// //@CHECK FOR DATA IN DB
 	// if DATA_IN_DB {
-	// 	go seq.IrrigationSequence(cMoist)
+	// 	go seq.IrrigationSequence(cMoist, cRestart)
 	// } else {
 	// 	go seq.InitializationSequence(cMoist)
 	// 	initializationFinished := true
@@ -53,7 +67,7 @@ func main() {
 	// 		if DATA_IN_DB {
 	// 			initializationFinished = false
 	// 			stopLED <- true
-	// 			go seq.IrrigationSequence(cMoist)
+	// 			go seq.IrrigationSequence(cMoist, cRestart)
 	// 		}
 	// 		time.Sleep(1000 * time.Millisecond)
 	// 	}
@@ -61,17 +75,17 @@ func main() {
 
 	var db = database.Connect()
 
-	db.CheckSettings()
+	gqlRouter := chi.NewRouter()
 
-	router := chi.NewRouter()
+	restRouter := router.Router()
 
 	// Add CORS middleware around every request
 	// See https://github.com/rs/cors for full option listing
-	router.Use(cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://4.2.0.126:3000", "http://localhost:3000", "http://4.2.0.126", "http://4.2.0.225:5000"},
-		AllowCredentials: true,
-		Debug:            true,
-	}).Handler)
+	// router.Use(cors.New(cors.Options{
+	// 	AllowedOrigins:   []string{"http://4.2.0.126:3000", "http://localhost:3000", "http://4.2.0.126", "http://4.2.0.225:5000"},
+	// 	AllowCredentials: true,
+	// 	Debug:            true,
+	// }).Handler)
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{DB: db}}))
 
@@ -86,11 +100,13 @@ func main() {
 		},
 	})
 
-	router.Handle("/graphql", plg.Handler("GraphQL playground", "/query"))
-	router.Handle("/query", srv)
+	gqlRouter.Handle("/graphql", plg.Handler("GraphQL playground", "/query"))
+	gqlRouter.Handle("/query", srv)
 	/*http.Handle("/graphql", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)*/
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", env.Process("GO_API_PORT"))
-	log.Fatal(http.ListenAndServe(":"+env.Process("GO_API_PORT"), router))
+	go log.Fatal(http.ListenAndServe(":"+env.Process("GO_GQL_API_PORT"), gqlRouter))
+	log.Fatal(http.ListenAndServe(":"+env.Process("GO_REST_API_PORT"), restRouter))
+
 }

@@ -4,21 +4,23 @@ import (
 	"fmt"
 	"time"
 
+	mid "github.com/SPSOAFM-IT18/dmp-plant-hub/middleware"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/model"
 	req "github.com/SPSOAFM-IT18/dmp-plant-hub/rest/requests"
 	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/utils"
+
 	"github.com/jasonlvhit/gocron"
 )
 
 // TEST
-func waterLevelMeasure() float32 {
+func waterLevelMeasure() float64 {
 	return 1
 }
-func moistureMeasure() float32 {
+func moistureMeasure() float64 {
 	return 1
 }
-func DHTMeasure() float32 {
+func DHTMeasure() float64 {
 	return 1
 }
 
@@ -26,7 +28,7 @@ func DHTMeasure() float32 {
 
 // on start waits for time to be hour o'clock
 // then starts chron routine that is timed on every 4 hours
-func SaveOnFourHoursPeriod(cMoist, cTemp, cHum chan float32) {
+func SaveOnFourHoursPeriod(cMoist, cTemp, cHum chan float64) {
 	for time.Now().Format("04") != "00" {
 		// TEST
 		fmt.Println(time.Now().Format("04"))
@@ -44,7 +46,7 @@ func SaveOnFourHoursPeriod(cMoist, cTemp, cHum chan float32) {
 	<-gocron.Start()
 }
 
-func CheckingSequence(cMoist chan float32) {
+func CheckingSequence(cMoist chan float64) {
 	// get from DB
 	// values only for test
 
@@ -70,29 +72,37 @@ func CheckingSequence(cMoist chan float32) {
 	}
 }
 
-func IrrigationSequence(cMoist chan float32) {
+func IrrigationSequence(cMoist chan float64, cRestart, cPumpState chan bool) {
 	fmt.Println("Starting irrigation...🌿🤖🚿")
 
 	req.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "inProgress", Action: "Probíhá zavlažování"})
 
 	// get from DB
 	// values only for test
-	const moistureLimit = 50
-	const waterAmountLimit = 50
+	moistureLimit := 50.0
+	waterAmountLimit := 50.0
 	// Definovaný průtok čerpadla
-	var pumpFlow float32 = 1.75 // litr/min
+	var pumpFlow float64 = 1.75 // litr/min
 
 	gocron.Every(1).Seconds().Do(func() {
-		if <-cMoist < moistureLimit {
+		if <-cRestart {
+			// get from DB
+			// values only for test
+			moistureLimit = 50
+			waterAmountLimit = 50
 
+			req.PostLiveControl(model.LiveControl{Restart: false, Pumpstate: false})
+		}
+
+		if <-cMoist < moistureLimit {
 			// time passed from running pump will be represented as liters
-			var flowMeasure float32
+			var flowMeasure float64
 			t0 := time.Now()
 			// TimeToOverdraw is calculated by divideing amount by flow
 			for waterLevelMeasure() < moistureLimit || flowMeasure < waterAmountLimit/pumpFlow {
-				//var t1 float32 = time.time()
+				//var t1 float64 = time.time()
 				sens.PUMP.High()
-				flowMeasure = float32(time.Since(t0).Seconds())
+				flowMeasure = float64(time.Since(t0).Seconds())
 			}
 
 			req.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "finished", Action: "Zavlažování dokončeno"})
@@ -112,16 +122,16 @@ func IrrigationSequence(cMoist chan float32) {
 	<-gocron.Start()
 }
 
-func InitializationSequence(cMoist chan float32) {
+func InitializationSequence(cMoist chan float64) {
 	fmt.Println("Starting initialization sequence...🏁🤖🏁")
 	time.Sleep(2000 * time.Millisecond)
 
-	// var waterLevel float32
-	// var moistureLevel float32
-	var waterLevelAvg []float32
-	waterLevelAvg = make([]float32, 5)
-	var moistureAvg []float32
-	moistureAvg = make([]float32, 5)
+	// var waterLevel float64
+	// var moistureLevel float64
+	var waterLevelAvg []float64
+	waterLevelAvg = make([]float64, 5)
+	var moistureAvg []float64
+	moistureAvg = make([]float64, 5)
 
 	// calculating average value
 	for i := 0; i < 5; i++ {
@@ -136,20 +146,22 @@ func InitializationSequence(cMoist chan float32) {
 	req.PostInitMeasured(model.InitMeasured{MoistLimit: moistureLevel, WaterLevelLimit: waterLevel})
 }
 
-func MeasurementSequence(cMoist, cTemp, cHum chan float32) {
+func MeasurementSequence(cMoist, cTemp, cHum chan float64, cRestart, cPumpState chan bool) {
 	gocron.Every(1).Seconds().Do(func() {
-		moisture := moistureMeasure()
+		moisture := float64(moistureMeasure())
 		// dodělat aby DHT measure vracel temp a hum v array nebo objectu
 		//var DHTMeasureValues = DHTMeasure()
 		// potom tyhle variables odjebat a mrdnout tam přímo ty měřící funkce
-		temperature := float32(20) // DHTMeasureValues[0]
-		humidity := float32(5)     // DHTMeasureValues[1]
+		temperature := float64(20) // DHTMeasureValues[0]
+		humidity := float64(5)     // DHTMeasureValues[1]
 
 		req.PostLiveMeasure(model.LiveMeasure{Moist: moisture, Hum: humidity, Temp: temperature})
 
 		fmt.Println("\nTemperature: %v˚C", temperature)
 		fmt.Println("\nHumidity: %v%", humidity)
 		fmt.Println("\nSoil moisture: %v%", moisture)
+
+		mid.GetLiveControl(cRestart, cPumpState)
 
 		cMoist <- moisture
 		cTemp <- temperature
