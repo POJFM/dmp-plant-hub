@@ -9,7 +9,10 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/model"
 )
 
-func GetInitMeasured(w http.ResponseWriter, r *http.Request) {
+var restart bool = false
+var pumpState bool = false
+
+func HandleGetInitMeasured(w http.ResponseWriter, r *http.Request) {
 	// TEST
 	data := model.InitMeasured{MoistLimit: 53.5, WaterLevelLimit: 50}
 
@@ -30,7 +33,7 @@ func GetInitMeasured(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
-func PostInitMeasured(w http.ResponseWriter, r *http.Request) {
+func HandlePostInitMeasured(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Accept", "application/json")
@@ -42,10 +45,10 @@ func PostInitMeasured(w http.ResponseWriter, r *http.Request) {
 
 	var data model.InitMeasured
 	_ = json.NewDecoder(r.Body).Decode(&data)
-	fmt.Print("POST INIT MEASURED from Web app: ", data)
+	fmt.Print("POST INIT MEASURED: ", data)
 }
 
-func GetLiveMeasure(w http.ResponseWriter, r *http.Request) {
+func HandleGetLiveMeasure(w http.ResponseWriter, r *http.Request) {
 	// TEST
 	data := model.LiveMeasure{Moist: 50.5, Hum: 45, Temp: 20}
 
@@ -66,7 +69,7 @@ func GetLiveMeasure(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
-func PostLiveMeasure(w http.ResponseWriter, r *http.Request) {
+func HandlePostLiveMeasure(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Accept", "application/json")
@@ -78,10 +81,10 @@ func PostLiveMeasure(w http.ResponseWriter, r *http.Request) {
 
 	var data model.LiveMeasure
 	_ = json.NewDecoder(r.Body).Decode(&data)
-	fmt.Print("POST MEASURE from Web app: ", data)
+	fmt.Print("POST MEASURE: ", data)
 }
 
-func GetLiveNotify(w http.ResponseWriter, r *http.Request) {
+func HandleGetLiveNotify(w http.ResponseWriter, r *http.Request) {
 	// actually default values, just haven't figured out how to pass them
 	data := model.LiveNotify{Title: "", State: "inactive", Action: ""}
 
@@ -102,7 +105,7 @@ func GetLiveNotify(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
-func PostLiveNotify(w http.ResponseWriter, r *http.Request) {
+func HandlePostLiveNotify(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Accept", "application/json")
@@ -114,10 +117,10 @@ func PostLiveNotify(w http.ResponseWriter, r *http.Request) {
 
 	var data model.LiveNotify
 	_ = json.NewDecoder(r.Body).Decode(&data)
-	fmt.Print("POST NOTIFY from Web app: ", data)
+	fmt.Print("POST NOTIFY: ", data)
 }
 
-func GetLiveControl(w http.ResponseWriter, r *http.Request) {
+func HandleGetLiveControl(w http.ResponseWriter, r *http.Request) {
 	// actually default values, just haven't figured out how to pass them
 	data := model.LiveControl{Restart: false, PumpState: false}
 
@@ -138,7 +141,7 @@ func GetLiveControl(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
-func PostLiveControl(w http.ResponseWriter, r *http.Request) {
+func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Accept", "application/json")
@@ -149,6 +152,21 @@ func PostLiveControl(w http.ResponseWriter, r *http.Request) {
 
 	var data model.LiveControl
 	_ = json.NewDecoder(r.Body).Decode(&data)
-	fmt.Print("POST CONTROL from Web app: ", data)
-	//requests.PostLiveControl(data)
+
+	fmt.Println("POST LIVE CONTROL: ")
+	fmt.Println(data.Restart)
+	fmt.Println(data.PumpState)
+
+	if data.Restart {
+		restart = true
+	}
+
+	if data.PumpState {
+		pumpState = true
+	}
+}
+
+func GetLiveControl(cRestart, cPumpState chan bool) {
+	cRestart <- restart
+	cPumpState <- pumpState
 }

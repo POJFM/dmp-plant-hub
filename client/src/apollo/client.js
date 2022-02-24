@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 
 const client = new ApolloClient({
-	uri: 'http://4.2.0.225:5000/query',
+	uri: `${process.env.REACT_APP_GO_GQL_API_URL}/query`,
 	cache: new InMemoryCache(),
 })
 

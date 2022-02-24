@@ -6,38 +6,38 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/adc"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/env"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/model"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/requests"
+	mid "github.com/SPSOAFM-IT18/dmp-plant-hub/test/middleware"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/router"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/sequences"
-	"github.com/jasonlvhit/gocron"
+	//mid "github.com/SPSOAFM-IT18/dmp-plant-hub/test/middleware"
 )
 
-func kokoti() {
-	requests.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "inProgress", Action: "Probíhá zavlažování"})
-	requests.PostLiveControl(model.LiveControl{Restart: false, PumpState: false})
-}
+// func kokoti() {
+// 	requests.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "inProgress", Action: "Probíhá zavlažování"})
+// 	requests.PostLiveControl(model.LiveControl{Restart: false, PumpState: false})
+// }
 
-func myTask() {
-	hours := time.Now().Format("04")
+// func myTask() {
+// 	hours := time.Now().Format("04")
 
-	fmt.Println(hours)
-}
+// 	fmt.Println(hours)
+// }
 
-func executeCronJob() {
-	for time.Now().Format("04") != "39" {
-		fmt.Println(time.Now().Format("04") != "13")
-		time.Sleep(1 * time.Minute)
-	}
-	gocron.Every(4).Second().Do(myTask)
-	<-gocron.Start()
-}
+// func executeCronJob() {
+// 	for time.Now().Format("04") != "39" {
+// 		fmt.Println(time.Now().Format("04") != "13")
+// 		time.Sleep(1 * time.Minute)
+// 	}
+// 	gocron.Every(4).Second().Do(myTask)
+// 	<-gocron.Start()
+// }
 
-func kokot() {
+func kokot(cRestart, cPumpState chan bool) {
+	//requests.PostLiveControl(model.LiveControl{Restart: false, PumpState: false})
+
 	for {
 		time.Sleep(1 * time.Second)
+
 		// var kokotismus = true
 
 		// if kokotismus == true {
@@ -48,26 +48,33 @@ func kokot() {
 		// 		kokotismus = true
 		// 	})
 		// }
-		go kokoti()
+		//requests.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "inProgress", Action: "Probíhá zavlažování"})
+		//requests.GetLiveControl()
+
+		mid.GetLiveControl(cRestart, cPumpState)
+
+		fmt.Println("\n", <-cRestart)
+		fmt.Println("", <-cPumpState)
+
+		//go kokoti()
 		//go requests.PostLiveNotify(model.LiveNotify{Title: "kokot jsi", State: "active", Action: "debil"})
 	}
 }
 
 func main() {
-	temp := make(chan float32)
-
-	go sequences.MeasurementSequence(temp)
-
-	sequences.SaveOnFourHoursPeriod(temp)
+	cRestart := make(chan bool, 1)
+	cPumpState := make(chan bool, 1)
 
 	r := router.Router()
 
-	adc.Adc()
+	//go sequences.MeasurementSequence(temp)
+
+	// adc.Adc()
 
 	// port := fmt.Sprint(":" + env.Process("GO_API_PORT"))
 	// fmt.Print(port)
 	fmt.Println("Starting server on the port", env.Process("GO_API_PORT"))
-	go kokot()
-	go executeCronJob()
+	go kokot(cRestart, cPumpState)
+	//go executeCronJob()
 	log.Fatal(http.ListenAndServe(":"+env.Process("GO_API_PORT"), r))
 }

@@ -8,4 +8,6 @@ require (
 	github.com/joho/godotenv v1.4.0
 )
 
-require github.com/stianeikeland/go-rpio/v4 v4.6.0
+require github.com/rs/cors v1.8.2
+
+require github.com/go-chi/chi v1.5.4 // indirect
