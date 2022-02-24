@@ -1,32 +1,30 @@
 package main
 
 import (
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 	"log"
 	"net/http"
-
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	plg "github.com/99designs/gqlgen/graphql/playground"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
-	seq "github.com/SPSOAFM-IT18/dmp-plant-hub/sequences"
 	"github.com/go-chi/chi"
 	webs "github.com/gorilla/websocket"
 	"github.com/rs/cors"
 )
 
 func main() {
-	cMoist := make(chan float32)
-	cTemp := make(chan float32)
-	cHum := make(chan float32)
 
-	go seq.MeasurementSequence(cMoist, cTemp, cHum)
+	//cMoist := make(chan float32)
+	//cTemp := make(chan float32)
+	//cHum := make(chan float32)
 
-	go seq.SaveOnFourHoursPeriod(cMoist, cTemp, cHum)
+	//go seq.MeasurementSequence(cMoist, cTemp, cHum)
+
+	//go seq.SaveOnFourHoursPeriod(cMoist, cTemp, cHum)
 
 	// //@CHECK FOR DATA IN DB
 	// if DATA_IN_DB {
@@ -60,19 +58,6 @@ func main() {
 	// 		time.Sleep(1000 * time.Millisecond)
 	// 	}
 	// }
-
-	/*
-		c := make(chan os.Signal)
-		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-		go func() {
-			<-c
-			err := rpio.Close()
-			if err != nil {
-				log.Fatalf("failed to clean ")
-			}
-			os.Exit(1)
-		}()
-	*/
 
 	var db = database.Connect()
 

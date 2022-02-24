@@ -1,15 +1,11 @@
 package sensors
 
 import (
-	"fmt"
-	"log"
-	"os"
-	"time"
-
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors/drivers"
-
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors/dht"
 	"github.com/shanghuiyang/rpi-devices/dev"
 	"github.com/stianeikeland/go-rpio/v4"
+	"log"
+	"time"
 )
 
 // Pins
@@ -19,44 +15,28 @@ const DHT = 23
 const PUMP = rpio.Pin(18)
 const LED = rpio.Pin(27)
 
-type PinOut struct {
-	TRIG  rpio.Pin
-	ECHO  rpio.Pin
-	MOIST rpio.Pin
-	DHT   rpio.Pin
-	PUMP  rpio.Pin
-	LED   rpio.Pin
-}
-
 type Sensors struct {
 	sonic *dev.HCSR04
-	dht   *dev.DHT11
-	mcp   *drivers.MCP3008
+	dht   *dht.DHT11
 }
 
 type Measurements struct {
-	Hum            float32 `json:"hum"`
-	Temp           float32 `json:"temp"`
-	Moist          float32 `json:"moist"`
-	WithIrrigation float32 `json:"with_irrigation"`
+	Hum            float64 `json:"hum"`
+	Temp           float64 `json:"temp"`
+	Moist          float64 `json:"moist"`
+	WithIrrigation float64 `json:"with_irrigation"`
 }
 
 func Init() *Sensors {
+	if err := rpio.Open(); err != nil {
+		log.Fatalf("Failed to open GPIO: %v", err)
+	}
 
-	/*p := PinOut{
-		TRIG:  rpio.Pin(2),
-		ECHO:  rpio.Pin(3),
-		MOIST: rpio.Pin(22),
-		DHT:   rpio.Pin(23),
-		PUMP:  rpio.Pin(18),
-		LED:   rpio.Pin(27),
-	}*/
+	PUMP.Output()
 
-	// TODO: close connections on exit/interrupt
 	return &Sensors{
 		sonic: dev.NewHCSR04(TRIG, ECHO),
-		dht:   dev.NewDHT11(),
-		//mcp:   (drivers.NewMCP3008(0, 0, 3.3), err),
+		dht:   dht.NewDHT11(DHT),
 	}
 }
 
@@ -67,80 +47,63 @@ func (s *Sensors) MeasureAsync(c chan<- Measurements) {
 }
 
 func (s *Sensors) Measure() Measurements {
+	hum, temp := s.ReadDHT()
 	return Measurements{
-		Hum:            0,
-		Temp:           0,
-		Moist:          0,
+		Hum:            hum,
+		Temp:           temp,
+		Moist:          s.ReadMoisture(),
 		WithIrrigation: 0,
 	}
 }
 
-func StartPump() {
-	if err := rpio.Open(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	defer func() {
-		err := rpio.Close()
-		if err != nil {
-			fmt.Println(err)
-		}
-	}()
-
-	kokot := rpio.Pin(18)
-	kokot.Output()
-	kokot.High()
-
-	pin := rpio.Pin(27)
-	pin.Output()
-	pin.High()
+func (s *Sensors) StartPump() {
+	PUMP.High()
+	log.Printf("PUMP started")
 }
 
 func (s *Sensors) StopPump() {
 	PUMP.Low()
+	log.Printf("PUMP stopped")
 }
 
-/*func (s *Sensors) ReadDHT() (temp, hum float32) {
-	/*	temp, hum, err := s.dht.TempHumidity()
-		if err != nil {
-			log.Fatalf("failed to read from DHT11, error: %v", err)
-		}
-		log.Printf("t = %.0f, h = %.0f%%", temp, hum)
-	temperature, humidity, retried, err :=
-		dht.ReadDHTxxWithRetry(dht.DHT11, 23, false, 10)
+func (s *Sensors) ReadDHT() (hum, temp float64) {
+	temp, hum, err := s.dht.ReadData()
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("DHT11 Error: %v", err)
 	}
-	// Print temperature and humidity
-	fmt.Printf("Temperature = %v*C, Humidity = %v%% (retried %d times)\n",
-		temperature, humidity, retried)
-	return temperature, humidity
-}*/
+	return
+}
 
 func (s *Sensors) ReadMoisture() (moisture float64) {
-	mcp, err := drivers.NewMCP3008(0, 0, 3.3)
-	if err != nil {
-		log.Fatalf("mcp3008 failed: %s", err)
-	}
-	moisture = mcp.ReadAdc()
-	return moisture
-}
-
-func (s *Sensors) ReadMoisture0() (moisture float64) {
-	mcp, err := drivers.NewMCP30008(0, 0, mcp.Mode0, 500000)
-
-	if err != nil {
-		log.Fatalf("mcp3008 failed: %s", err)
+	if err := rpio.SpiBegin(rpio.Spi0); err != nil {
+		log.Printf("MOISTURE: failed to start SPI: %v\n", err)
 	}
 
-	return mcp.Measure(0)
+	rpio.SpiSpeed(1000000)
+	rpio.SpiChipSelect(0)
+
+	channel := byte(0)
+
+	data := []byte{1, (8 + channel) << 4, 0}
+
+	rpio.SpiExchange(data)
+
+	res := int(data[1]&3)<<8 + int(data[2])
+
+	moisture = float64(res)
+	// TODO: map moisture value to percentage
+	//Vdd and Vref are at 5v. Change *5 to *3.3 if you are
+	//powering the chip with 3.3v
+	//voltage := (float32(code) * 5) / 1024
+
+	rpio.SpiEnd(rpio.Spi0)
+	return
 }
 
 func (s *Sensors) ReadWaterLevel() (waterLevel float64) {
 	waterLevel, err := s.sonic.Dist()
 	if err != nil {
-		log.Fatalf("failed to read waterLevel, error: %v", err)
+		log.Printf("SONIC Error: %v", err)
 	}
-	return waterLevel
+	return
 }
