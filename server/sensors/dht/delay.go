@@ -1,4 +1,7 @@
-package util
+// taken and modified
+// https://github.com/bosima/go-pidriver/blob/7149880fa03edc7206b58d783ce8ad9882391e00/util/delay.go
+
+package dht
 
 import (
 	"syscall"
