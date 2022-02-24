@@ -157,13 +157,8 @@ func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(data.Restart)
 	fmt.Println(data.PumpState)
 
-	if data.Restart {
-		restart = true
-	}
-
-	if data.PumpState {
-		pumpState = true
-	}
+	restart = data.Restart
+	pumpState = data.PumpState
 }
 
 func GetLiveControl(cRestart, cPumpState chan bool) {
