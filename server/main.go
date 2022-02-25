@@ -12,7 +12,7 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/router"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/router"
 	seq "github.com/SPSOAFM-IT18/dmp-plant-hub/sequences"
 	"github.com/go-chi/chi"
 	webs "github.com/gorilla/websocket"
@@ -27,9 +27,7 @@ func main() {
 
 	go seq.MeasurementSequence(cMoist, cTemp, cHum, cRestart, cPumpState)
 
-	//go seq.MeasurementSequence(cMoist, cTemp, cHum)
-
-	//go seq.SaveOnFourHoursPeriod(cMoist, cTemp, cHum)
+	go seq.SaveOnFourHoursPeriod(cMoist, cTemp, cHum)
 
 	// //@CHECK FOR DATA IN DB
 	// if DATA_IN_DB {

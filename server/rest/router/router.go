@@ -3,7 +3,7 @@ package router
 import (
 	"net/http"
 
-	mid "github.com/SPSOAFM-IT18/dmp-plant-hub/server/middleware"
+	mid "github.com/SPSOAFM-IT18/dmp-plant-hub/rest/middleware"
 
 	"github.com/gorilla/mux"
 )

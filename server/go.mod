@@ -9,7 +9,6 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/jasonlvhit/gocron v0.0.1
 	github.com/joho/godotenv v1.4.0
-	github.com/rs/cors v1.8.2
 	github.com/shanghuiyang/rpi-devices v0.0.0-20220124152717-0a2aab8ce1c5
 	github.com/stianeikeland/go-rpio/v4 v4.6.0
 	github.com/uptrace/bun v1.0.20
@@ -17,7 +16,6 @@ require (
 	github.com/uptrace/bun/driver/pgdriver v1.0.17
 	github.com/uptrace/bun/extra/bundebug v1.0.20
 	github.com/vektah/gqlparser/v2 v2.2.0
-	golang.org/x/exp v0.0.0-20220218215828-6cf2b201936e
 )
 
 require (
@@ -42,6 +40,7 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
+	golang.org/x/exp v0.0.0-20220218215828-6cf2b201936e // indirect
 	golang.org/x/mod v0.6.0-dev.0.20211013180041-c96bc1413d57 // indirect
 	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
 	golang.org/x/tools v0.1.8-0.20211029000441-d6a9af8af023 // indirect
@@ -49,5 +48,4 @@ require (
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/yaml.v2 v2.2.8 // indirect
 	mellium.im/sasl v0.2.1 // indirect
-	tinygo.org/x/drivers v0.19.0 // indirect
 )

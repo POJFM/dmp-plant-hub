@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	mid "github.com/SPSOAFM-IT18/dmp-plant-hub/middleware"
+	mid "github.com/SPSOAFM-IT18/dmp-plant-hub/rest/middleware"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/model"
 	req "github.com/SPSOAFM-IT18/dmp-plant-hub/rest/requests"
 	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
@@ -26,100 +26,161 @@ func DHTMeasure() float64 {
 
 // END TEST
 
-// on start waits for time to be hour o'clock
-// then starts chron routine that is timed on every 4 hours
 func SaveOnFourHoursPeriod(cMoist, cTemp, cHum chan float64) {
-	for time.Now().Format("04") != "00" {
-		// TEST
-		fmt.Println(time.Now().Format("04"))
-		// END TEST
-		time.Sleep(1 * time.Minute)
-	}
+	utils.WaitTillWholeHour()
+
 	gocron.Every(4).Hours().Do(func() {
 		moist := <-cMoist
 		temp := <-cTemp
 		hum := <-cHum
 		// TEST
+
+		// Save to DB
+
 		fmt.Println("Cron: ", moist, temp, hum)
 		// END TEST
 	})
 	<-gocron.Start()
 }
 
-func CheckingSequence(cMoist chan float64) {
+func checkingSequence() {
 	// get from DB
 	// values only for test
-
 	const waterLevelLimit = 75
 
-	if <-cMoist < waterLevelLimit {
+	req.PostLiveNotify(model.LiveNotify{Title: "Kontrola Nádrže", State: "inProgress", Action: "Probíhá kontrola nádrže"})
+
+	time.Sleep(3000 * time.Millisecond)
+
+	if waterLevelMeasure() < waterLevelLimit {
 		req.PostLiveNotify(model.LiveNotify{Title: "Doplňte nádrž", State: "physicalHelpRequired", Action: "Nádrž je prázdná"})
 
 		fmt.Println("Water tank limit level reached...🚫🤖🚫")
 
-		for <-cMoist < waterLevelLimit {
+		for waterLevelMeasure() < waterLevelLimit {
 			sens.LED.High()
 			time.Sleep(1000 * time.Millisecond)
 			sens.LED.Low()
 			time.Sleep(1000 * time.Millisecond)
 		}
-	} else {
-		sens.LED.Low()
-
-		waterLevel := fmt.Sprintf("V nádrži zbývá %fl vody", waterLevelMeasure())
-		// Dodělat na water amount v litrech
-		req.PostLiveNotify(model.LiveNotify{Title: "Kontrola Nádrže", State: "finished", Action: waterLevel})
 	}
+
+	waterLevel := fmt.Sprintf("V nádrži zbývá %fl vody", waterLevelMeasure())
+	// Dodělat na water amount v litrech
+	req.PostLiveNotify(model.LiveNotify{Title: "Kontrola Nádrže", State: "finished", Action: waterLevel})
+
+	time.Sleep(3000 * time.Millisecond)
+
+	req.PostLiveNotify(model.LiveNotify{Title: "", State: "inactive", Action: ""})
 }
 
-func IrrigationSequence(cMoist chan float64, cRestart, cPumpState chan bool) {
-	fmt.Println("Starting irrigation...🌿🤖🚿")
+func irrigationSequenceMode(limitsTrigger, scheduledTrigger bool, cMoist chan float64, moistureLimit, waterAmountLimit, pumpFlow float64, irrigationDuration int) {
+	if <-cMoist < moistureLimit {
+		fmt.Println("Starting irrigation...🌿🤖🚿")
 
-	req.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "inProgress", Action: "Probíhá zavlažování"})
+		req.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "inProgress", Action: "Probíhá zavlažování"})
 
-	// get from DB
-	// values only for test
-	moistureLimit := 50.0
-	waterAmountLimit := 50.0
-	// Definovaný průtok čerpadla
-	var pumpFlow float64 = 1.75 // litr/min
-
-	gocron.Every(1).Seconds().Do(func() {
-		if <-cRestart {
-			// get from DB
-			// values only for test
-			moistureLimit = 50
-			waterAmountLimit = 50
-
-			req.PostLiveControl(model.LiveControl{Restart: false, Pumpstate: false})
-		}
-
-		if <-cMoist < moistureLimit {
-			// time passed from running pump will be represented as liters
-			var flowMeasure float64
-			t0 := time.Now()
-			// TimeToOverdraw is calculated by divideing amount by flow
-			for waterLevelMeasure() < moistureLimit || flowMeasure < waterAmountLimit/pumpFlow {
+		// time passed from running pump will be represented as liters
+		var flowMeasure float64
+		t0 := time.Now()
+		// TimeToOverdraw is calculated by deviding amount by flow
+		if limitsTrigger {
+			for <-cMoist < moistureLimit || flowMeasure < waterAmountLimit/pumpFlow || int(time.Since(t0).Seconds()) > irrigationDuration {
 				//var t1 float64 = time.time()
 				sens.PUMP.High()
 				flowMeasure = float64(time.Since(t0).Seconds())
 			}
+		}
 
-			req.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "finished", Action: "Zavlažování dokončeno"})
+		if scheduledTrigger {
+			for flowMeasure < waterAmountLimit/pumpFlow || int(time.Since(t0).Seconds()) > irrigationDuration {
+				//var t1 float64 = time.time()
+				sens.PUMP.High()
+				flowMeasure = float64(time.Since(t0).Seconds())
+			}
+		}
 
-			time.Sleep(3000 * time.Millisecond)
+		req.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "finished", Action: "Zavlažování dokončeno"})
 
-			req.PostLiveNotify(model.LiveNotify{Title: "Kontrola Nádrže", State: "inProgress", Action: "Probíhá kontrola nádrže"})
+		sens.PUMP.Low()
 
-			// after pump stops run Checking sequence
-			//CheckingSequence(cMoist)
-		} else {
-			sens.PUMP.Low()
+		checkingSequence()
+	}
+}
 
-			req.PostLiveNotify(model.LiveNotify{Title: "", State: "inactive", Action: ""})
+func IrrigationSequence(cMoist chan float64, cRestart, cPumpState chan bool) {
+	// podle toho jak bude fungovat restart tak tohle buď nechat nebo přejebat na konstanty
+
+	// get from DB
+	// values only for test
+	limitsTrigger := true
+	scheduledTrigger := false
+	moistureLimit := 50.0
+	waterAmountLimit := 50.0
+	irrigationDuration := 30 // in seconds
+	hourRange := 6
+
+	// Definovaný průtok čerpadla
+	var pumpFlow float64 = 1.75 // litr/min
+
+	gocron.Every(1).Seconds().Do(func() {
+		// podle toho co vymyslí pan mlok
+		if <-cRestart {
+			// get from DB
+			// values only for test
+			limitsTrigger = true
+			scheduledTrigger = true
+			moistureLimit = 40.0
+			waterAmountLimit = 41.0
+			irrigationDuration = 28 // in seconds
+			hourRange = 5
+
+			req.PostLiveControl(model.LiveControl{Restart: false, PumpState: false})
+		}
+
+		if <-cPumpState {
+			irrigationState := true
+			for irrigationState {
+				if <-cPumpState {
+					sens.PUMP.High()
+				} else {
+					sens.PUMP.Low()
+					irrigationState = false
+				}
+			}
 		}
 	})
 	<-gocron.Start()
+
+	if limitsTrigger && !scheduledTrigger {
+		gocron.Every(1).Seconds().Do(func() {
+			irrigationSequenceMode(true, false, cMoist, moistureLimit, waterAmountLimit, pumpFlow, irrigationDuration)
+		})
+		<-gocron.Start()
+	}
+
+	if scheduledTrigger && !limitsTrigger {
+		utils.WaitTillWholeHour()
+
+		gocron.Every(uint64(hourRange)).Hours().Do(func() {
+			irrigationSequenceMode(false, true, cMoist, moistureLimit, waterAmountLimit, pumpFlow, irrigationDuration)
+		})
+		<-gocron.Start()
+	}
+
+	if scheduledTrigger && limitsTrigger {
+		gocron.Every(1).Seconds().Do(func() {
+			irrigationSequenceMode(true, false, cMoist, moistureLimit, waterAmountLimit, pumpFlow, irrigationDuration)
+		})
+		<-gocron.Start()
+
+		utils.WaitTillWholeHour()
+
+		gocron.Every(uint64(hourRange)).Hours().Do(func() {
+			irrigationSequenceMode(false, true, cMoist, moistureLimit, waterAmountLimit, pumpFlow, irrigationDuration)
+		})
+		<-gocron.Start()
+	}
 }
 
 func InitializationSequence(cMoist chan float64) {
@@ -157,9 +218,9 @@ func MeasurementSequence(cMoist, cTemp, cHum chan float64, cRestart, cPumpState 
 
 		req.PostLiveMeasure(model.LiveMeasure{Moist: moisture, Hum: humidity, Temp: temperature})
 
-		fmt.Println("\nTemperature: %v˚C", temperature)
-		fmt.Println("\nHumidity: %v%", humidity)
-		fmt.Println("\nSoil moisture: %v%", moisture)
+		fmt.Printf("\nTemperature: %v˚C", temperature)
+		fmt.Printf("\nHumidity: %v", humidity)
+		fmt.Printf("\nSoil moisture: %v", moisture)
 
 		mid.GetLiveControl(cRestart, cPumpState)
 

@@ -67,6 +67,11 @@ func main() {
 
 	r := router.Router()
 
+	t0 := time.Now()
+	time.Sleep(5 * time.Second)
+
+	fmt.Println(int(time.Since(t0).Seconds()))
+
 	//go sequences.MeasurementSequence(temp)
 
 	// adc.Adc()
