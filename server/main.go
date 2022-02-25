@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 	"log"
 	"net/http"
+
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
@@ -11,17 +12,13 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
-<<<<<<< HEAD
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/router"
 	seq "github.com/SPSOAFM-IT18/dmp-plant-hub/sequences"
-=======
->>>>>>> c49a2b91d74952875a1ce3b5a4115fafb392c266
 	"github.com/go-chi/chi"
 	webs "github.com/gorilla/websocket"
 )
 
 func main() {
-<<<<<<< HEAD
 	cMoist := make(chan float64)
 	cTemp := make(chan float64)
 	cHum := make(chan float64)
@@ -29,12 +26,6 @@ func main() {
 	cPumpState := make(chan bool)
 
 	go seq.MeasurementSequence(cMoist, cTemp, cHum, cRestart, cPumpState)
-=======
-
-	//cMoist := make(chan float32)
-	//cTemp := make(chan float32)
-	//cHum := make(chan float32)
->>>>>>> c49a2b91d74952875a1ce3b5a4115fafb392c266
 
 	//go seq.MeasurementSequence(cMoist, cTemp, cHum)
 
