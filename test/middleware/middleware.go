@@ -12,7 +12,7 @@ import (
 var restart bool = false
 var pumpState bool = false
 
-func HandleGetInitMeasured(w http.ResponseWriter, r *http.Request) {
+func HandleGetInitMeasured(w http.ResponseWriter, _ *http.Request) {
 	// TEST
 	data := model.InitMeasured{MoistLimit: 53.5, WaterLevelLimit: 50}
 
@@ -48,7 +48,7 @@ func HandlePostInitMeasured(w http.ResponseWriter, r *http.Request) {
 	fmt.Print("POST INIT MEASURED: ", data)
 }
 
-func HandleGetLiveMeasure(w http.ResponseWriter, r *http.Request) {
+func HandleGetLiveMeasure(w http.ResponseWriter, _ *http.Request) {
 	// TEST
 	data := model.LiveMeasure{Moist: 50.5, Hum: 45, Temp: 20}
 
@@ -84,7 +84,7 @@ func HandlePostLiveMeasure(w http.ResponseWriter, r *http.Request) {
 	fmt.Print("POST MEASURE: ", data)
 }
 
-func HandleGetLiveNotify(w http.ResponseWriter, r *http.Request) {
+func HandleGetLiveNotify(w http.ResponseWriter, _ *http.Request) {
 	// actually default values, just haven't figured out how to pass them
 	data := model.LiveNotify{Title: "", State: "inactive", Action: ""}
 
@@ -120,7 +120,7 @@ func HandlePostLiveNotify(w http.ResponseWriter, r *http.Request) {
 	fmt.Print("POST NOTIFY: ", data)
 }
 
-func HandleGetLiveControl(w http.ResponseWriter, r *http.Request) {
+func HandleGetLiveControl(w http.ResponseWriter, _ *http.Request) {
 	// actually default values, just haven't figured out how to pass them
 	data := model.LiveControl{Restart: false, PumpState: false}
 
@@ -157,11 +157,9 @@ func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(data.Restart)
 	fmt.Println(data.PumpState)
 
-	restart = data.Restart
 	pumpState = data.PumpState
 }
 
-func GetLiveControl(cRestart, cPumpState chan bool) {
-	cRestart <- restart
+func GetLiveControl(cPumpState chan bool) {
 	cPumpState <- pumpState
 }

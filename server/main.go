@@ -22,16 +22,15 @@ func main() {
 	cMoist := make(chan float64)
 	cTemp := make(chan float64)
 	cHum := make(chan float64)
-	cRestart := make(chan bool)
 	cPumpState := make(chan bool)
 
-	go seq.MeasurementSequence(cMoist, cTemp, cHum, cRestart, cPumpState)
+	go seq.MeasurementSequence(cMoist, cTemp, cHum, cPumpState)
 
 	go seq.SaveOnFourHoursPeriod(cMoist, cTemp, cHum)
 
 	// //@CHECK FOR DATA IN DB
 	// if DATA_IN_DB {
-	// 	go seq.IrrigationSequence(cMoist, cRestart)
+	// 	go seq.IrrigationSequence(cMoist)
 	// } else {
 	// 	go seq.InitializationSequence(cMoist)
 	// 	initializationFinished := true
@@ -56,7 +55,7 @@ func main() {
 	// 		if DATA_IN_DB {
 	// 			initializationFinished = false
 	// 			stopLED <- true
-	// 			go seq.IrrigationSequence(cMoist, cRestart)
+	// 			go seq.IrrigationSequence(cMoist)
 	// 		}
 	// 		time.Sleep(1000 * time.Millisecond)
 	// 	}

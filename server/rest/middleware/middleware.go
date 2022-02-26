@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/model"
 )
 
-var restart bool = false
 var pumpState bool = false
 
 func HandleGetInitMeasured(w http.ResponseWriter, _ *http.Request) {
@@ -165,11 +165,13 @@ func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(data.Restart)
 	fmt.Println(data.PumpState)
 
-	restart = data.Restart
+	if data.Restart {
+		os.Exit(0)
+	}
+
 	pumpState = data.PumpState
 }
 
-func GetLiveControl(cRestart, cPumpState chan bool) {
-	cRestart <- restart
+func GetLiveControl(cPumpState chan bool) {
 	cPumpState <- pumpState
 }

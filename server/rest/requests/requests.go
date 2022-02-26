@@ -91,25 +91,6 @@ func PostLiveNotify(rawData model.LiveNotify) {
 	fmt.Println(res["json"])
 }
 
-// func GetLiveControl() []byte {
-// 	resp, err := http.Get(env.Process("GO_API_URL") + "/live/control")
-
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-
-// 	defer resp.Body.Close()
-
-// 	body, err := ioutil.ReadAll(resp.Body)
-
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-
-// 	fmt.Println(string(body))
-// 	return body
-// }
-
 func PostLiveControl(rawData model.LiveControl) {
 	data := model.LiveControl{
 		Restart:   rawData.Restart,

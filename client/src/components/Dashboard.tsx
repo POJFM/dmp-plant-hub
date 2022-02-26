@@ -110,6 +110,7 @@ export default function Dashboard() {
 			})
 			.then((res) => {
 				setWeather(res.data.hourly.slice(0, 15))
+				console.log(res)
 			})
 			.catch((error) => {
 				console.error(error)
@@ -117,7 +118,7 @@ export default function Dashboard() {
 	}
 
 	// Fetch on render then every 30mins
-	//setTimeout(() => fetchWeatherForecast(), weather ? 300_000 : 1)
+	setTimeout(() => fetchWeatherForecast(), weather ? 300_000 : 1)
 
 	const liveMeasurements = () => {
 		axios

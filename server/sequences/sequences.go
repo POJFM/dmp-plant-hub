@@ -108,9 +108,7 @@ func irrigationSequenceMode(limitsTrigger, scheduledTrigger bool, cMoist chan fl
 	}
 }
 
-func IrrigationSequence(cMoist chan float64, cRestart, cPumpState chan bool) {
-	// podle toho jak bude fungovat restart tak tohle buď nechat nebo přejebat na konstanty
-
+func IrrigationSequence(cMoist chan float64, cPumpState chan bool) {
 	// get from DB
 	// values only for test
 	limitsTrigger := true
@@ -124,20 +122,6 @@ func IrrigationSequence(cMoist chan float64, cRestart, cPumpState chan bool) {
 	var pumpFlow float64 = 1.75 // litr/min
 
 	gocron.Every(1).Seconds().Do(func() {
-		// podle toho co vymyslí pan mlok
-		if <-cRestart {
-			// get from DB
-			// values only for test
-			limitsTrigger = true
-			scheduledTrigger = true
-			moistureLimit = 40.0
-			waterAmountLimit = 41.0
-			irrigationDuration = 28 // in seconds
-			hourRange = 5
-
-			req.PostLiveControl(model.LiveControl{Restart: false, PumpState: false})
-		}
-
 		if <-cPumpState {
 			irrigationState := true
 			for irrigationState {
@@ -207,7 +191,7 @@ func InitializationSequence(cMoist chan float64) {
 	req.PostInitMeasured(model.InitMeasured{MoistLimit: moistureLevel, WaterLevelLimit: waterLevel})
 }
 
-func MeasurementSequence(cMoist, cTemp, cHum chan float64, cRestart, cPumpState chan bool) {
+func MeasurementSequence(cMoist, cTemp, cHum chan float64, cPumpState chan bool) {
 	gocron.Every(1).Seconds().Do(func() {
 		moisture := float64(moistureMeasure())
 		// dodělat aby DHT measure vracel temp a hum v array nebo objectu
@@ -222,7 +206,7 @@ func MeasurementSequence(cMoist, cTemp, cHum chan float64, cRestart, cPumpState 
 		fmt.Printf("\nHumidity: %v", humidity)
 		fmt.Printf("\nSoil moisture: %v", moisture)
 
-		mid.GetLiveControl(cRestart, cPumpState)
+		mid.GetLiveControl(cPumpState)
 
 		cMoist <- moisture
 		cTemp <- temperature
