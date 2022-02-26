@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/server/env"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/server/model"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/model"
 )
 
 var restart bool = false

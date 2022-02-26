@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	mid "github.com/SPSOAFM-IT18/dmp-plant-hub/middleware"
+	mid "github.com/SPSOAFM-IT18/dmp-plant-hub/rest/middleware"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/model"
 	req "github.com/SPSOAFM-IT18/dmp-plant-hub/rest/requests"
 	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
@@ -91,7 +91,7 @@ func IrrigationSequence(cMoist chan float64, cRestart, cPumpState chan bool) {
 			moistureLimit = 50
 			waterAmountLimit = 50
 
-			req.PostLiveControl(model.LiveControl{Restart: false, Pumpstate: false})
+			req.PostLiveControl(model.LiveControl{Restart: false, PumpState: false})
 		}
 
 		if <-cMoist < moistureLimit {

@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"fmt"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/model"
 	"log"
 )
@@ -92,9 +91,17 @@ func (db *DB) GetSettingByColumn(columns []string) model.Setting {
 	}
 }
 
+// CheckSettings
+// checks if settings are already present
 func (db *DB) CheckSettings() (isSettingsPresent bool) {
-	col := []string{"id"}
-	s := db.GetSettingByColumn(col)
-	fmt.Println(s)
+	var s []model.Setting
+	err := db.DB.NewSelect().Model(&s).Limit(1).Scan(context.Background())
+	if err != nil {
+		log.Println(err)
+	}
+	isSettingsPresent = true
+	if s == nil {
+		isSettingsPresent = false
+	}
 	return
 }

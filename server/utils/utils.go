@@ -7,13 +7,13 @@ import (
 	"os/signal"
 )
 
-func ArithmeticMean(list []float32) float32 {
+func ArithmeticMean(list []float64) float64 {
 	// maybe make it into list map function
-	var total float32
+	var total float64
 	for _, v := range list {
 		total += v
 	}
-	return total / float32(len(list))
+	return total / float64(len(list))
 }
 
 func CatchInterrupt() {

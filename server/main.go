@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 	"log"
 	"net/http"
@@ -11,34 +12,21 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
-<<<<<<< HEAD
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/router"
-	seq "github.com/SPSOAFM-IT18/dmp-plant-hub/sequences"
-=======
->>>>>>> c49a2b91d74952875a1ce3b5a4115fafb392c266
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/router"
 	"github.com/go-chi/chi"
 	webs "github.com/gorilla/websocket"
 )
 
 func main() {
-<<<<<<< HEAD
-	cMoist := make(chan float64)
-	cTemp := make(chan float64)
-	cHum := make(chan float64)
-	cRestart := make(chan bool)
-	cPumpState := make(chan bool)
+	// cMoist := make(chan float64)
+	// cTemp := make(chan float64)
+	// cHum := make(chan float64)
+	// cRestart := make(chan bool)
+	// cPumpState := make(chan bool)
 
-	go seq.MeasurementSequence(cMoist, cTemp, cHum, cRestart, cPumpState)
-=======
+	// go seq.MeasurementSequence(cMoist, cTemp, cHum, cRestart, cPumpState)
 
-	//cMoist := make(chan float32)
-	//cTemp := make(chan float32)
-	//cHum := make(chan float32)
->>>>>>> c49a2b91d74952875a1ce3b5a4115fafb392c266
-
-	//go seq.MeasurementSequence(cMoist, cTemp, cHum)
-
-	//go seq.SaveOnFourHoursPeriod(cMoist, cTemp, cHum)
+	// go seq.SaveOnFourHoursPeriod(cMoist, cTemp, cHum)
 
 	// //@CHECK FOR DATA IN DB
 	// if DATA_IN_DB {
@@ -74,6 +62,8 @@ func main() {
 	// }
 
 	var db = database.Connect()
+
+	fmt.Println(db.CheckSettings())
 
 	gqlRouter := chi.NewRouter()
 
