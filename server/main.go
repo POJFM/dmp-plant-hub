@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 	"log"
 	"net/http"
+
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
@@ -13,24 +13,24 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/router"
+	seq "github.com/SPSOAFM-IT18/dmp-plant-hub/sequences"
 	"github.com/go-chi/chi"
 	webs "github.com/gorilla/websocket"
 )
 
 func main() {
-	// cMoist := make(chan float64)
-	// cTemp := make(chan float64)
-	// cHum := make(chan float64)
-	// cRestart := make(chan bool)
-	// cPumpState := make(chan bool)
+	cMoist := make(chan float64)
+	cTemp := make(chan float64)
+	cHum := make(chan float64)
+	cPumpState := make(chan bool)
 
-	// go seq.MeasurementSequence(cMoist, cTemp, cHum, cRestart, cPumpState)
+	go seq.MeasurementSequence(cMoist, cTemp, cHum, cPumpState)
 
-	// go seq.SaveOnFourHoursPeriod(cMoist, cTemp, cHum)
+	go seq.SaveOnFourHoursPeriod(cMoist, cTemp, cHum)
 
 	// //@CHECK FOR DATA IN DB
 	// if DATA_IN_DB {
-	// 	go seq.IrrigationSequence(cMoist, cRestart)
+	// 	go seq.IrrigationSequence(cMoist)
 	// } else {
 	// 	go seq.InitializationSequence(cMoist)
 	// 	initializationFinished := true
@@ -55,15 +55,13 @@ func main() {
 	// 		if DATA_IN_DB {
 	// 			initializationFinished = false
 	// 			stopLED <- true
-	// 			go seq.IrrigationSequence(cMoist, cRestart)
+	// 			go seq.IrrigationSequence(cMoist)
 	// 		}
 	// 		time.Sleep(1000 * time.Millisecond)
 	// 	}
 	// }
 
 	var db = database.Connect()
-
-	fmt.Println(db.CheckSettings())
 
 	gqlRouter := chi.NewRouter()
 

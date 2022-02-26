@@ -1,10 +1,12 @@
 package utils
 
 import (
-	"github.com/stianeikeland/go-rpio/v4"
 	"log"
 	"os"
 	"os/signal"
+	"time"
+
+	"github.com/stianeikeland/go-rpio/v4"
 )
 
 func ArithmeticMean(list []float64) float64 {
@@ -26,4 +28,10 @@ func CatchInterrupt() {
 		log.Fatalln("Unable to clean GPIO")
 	}
 	os.Exit(0)
+}
+
+func WaitTillWholeHour() {
+	for time.Now().Format("04") != "00" {
+		time.Sleep(1 * time.Minute)
+	}
 }

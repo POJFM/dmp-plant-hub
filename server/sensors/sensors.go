@@ -1,11 +1,12 @@
 package sensors
 
 import (
+	"log"
+	"time"
+
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors/dht"
 	"github.com/shanghuiyang/rpi-devices/dev"
 	"github.com/stianeikeland/go-rpio/v4"
-	"log"
-	"time"
 )
 
 // Pins
@@ -96,7 +97,7 @@ func (s *Sensors) ReadMoisture() (moisture float64) {
 	// TODO: map moisture value to percentage
 	//Vdd and Vref are at 5v. Change *5 to *3.3 if you are
 	//powering the chip with 3.3v
-	//voltage := (float32(code) * 5) / 1024
+	//voltage := (float64(code) * 5) / 1024
 
 	rpio.SpiEnd(rpio.Spi0)
 	return

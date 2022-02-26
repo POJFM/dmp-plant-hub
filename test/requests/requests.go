@@ -91,31 +91,6 @@ func PostLiveNotify(rawData model.LiveNotify) {
 	fmt.Println("piča", res["json"])
 }
 
-// func GetLiveControl() interface{} {
-// 	resp, err := http.Get(env.Process("GO_API_URL") + "/live/control")
-
-// 	// if err != nil {
-// 	// 	log.Fatal(err)
-// 	// }
-
-// 	// defer resp.Body.Close()
-
-// 	// body, err := ioutil.ReadAll(resp.Body)
-
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-
-// 	var res map[string]interface{}
-
-// 	json.NewDecoder(resp.Body).Decode(&res)
-
-// 	fmt.Println("kokot", res["json"])
-
-// 	//fmt.Println(string(body))
-// 	return res["json"]
-// }
-
 func PostLiveControl(rawData model.LiveControl) {
 	data := model.LiveControl{
 		Restart:   rawData.Restart,
