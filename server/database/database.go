@@ -64,6 +64,18 @@ func (db *DB) GetMeasurements(ctx context.Context) []*model.Measurement {
 	return measurements
 }
 
+/* TODO
+func (db *DB) GetMeasurementsAverage(ctx context.Context) (measurementsAvg *sens.Measurements) {
+	measurements := make([]*model.Measurement, 0)
+	err := db.DB.NewSelect().Model(&measurements).Limit(50).Scan(context.Background())
+	if err != nil {
+		log.Println(err)
+	}
+	measurementsAvg.Moist = MeasurementsAvg()
+	return
+}
+*/
+
 func (db *DB) GetIrrigation(ctx context.Context) []*model.IrrigationHistory {
 	irrigationHistory := make([]*model.IrrigationHistory, 0)
 	err := db.DB.NewSelect().Model(&irrigationHistory).ModelTableExpr("irrigation_history").Scan(ctx)

@@ -1,6 +1,7 @@
 package main
 
 import (
+	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
 	"log"
 	"net/http"
 
@@ -24,7 +25,9 @@ func main() {
 	cHum := make(chan float64)
 	cPumpState := make(chan bool)
 
-	go seq.MeasurementSequence(cMoist, cTemp, cHum, cPumpState)
+	sensei := sens.Init()
+
+	go seq.MeasurementSequence(sensei, cMoist, cTemp, cHum, cPumpState)
 
 	go seq.SaveOnFourHoursPeriod(cMoist, cTemp, cHum)
 

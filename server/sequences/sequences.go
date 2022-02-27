@@ -2,9 +2,9 @@ package sequences
 
 import (
 	"fmt"
+	mid "github.com/SPSOAFM-IT18/dmp-plant-hub/rest/middleware"
 	"time"
 
-	mid "github.com/SPSOAFM-IT18/dmp-plant-hub/rest/middleware"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/model"
 	req "github.com/SPSOAFM-IT18/dmp-plant-hub/rest/requests"
 	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
@@ -167,7 +167,10 @@ func IrrigationSequence(cMoist chan float64, cPumpState chan bool) {
 	}
 }
 
-func InitializationSequence(cMoist chan float64) {
+// InitializationSequence TODO
+// I don't get this
+// Am I too high for this ??!!
+func InitializationSequence(sensei *sens.Sensors, cMoist chan float64) {
 	fmt.Println("Starting initialization sequence...🏁🤖🏁")
 	time.Sleep(2000 * time.Millisecond)
 
@@ -191,26 +194,22 @@ func InitializationSequence(cMoist chan float64) {
 	req.PostInitMeasured(model.InitMeasured{MoistLimit: moistureLevel, WaterLevelLimit: waterLevel})
 }
 
-func MeasurementSequence(cMoist, cTemp, cHum chan float64, cPumpState chan bool) {
+func MeasurementSequence(sensei *sens.Sensors, cMoist, cTemp, cHum chan float64, cPumpState chan bool) {
 	gocron.Every(1).Seconds().Do(func() {
-		moisture := float64(moistureMeasure())
-		// dodělat aby DHT measure vracel temp a hum v array nebo objectu
+		// dodělat aby DHT measure vracel temp a hum v array nebo objectu ! why tho?
 		//var DHTMeasureValues = DHTMeasure()
-		// potom tyhle variables odjebat a mrdnout tam přímo ty měřící funkce
-		temperature := float64(20) // DHTMeasureValues[0]
-		humidity := float64(5)     // DHTMeasureValues[1]
+		measurements := sensei.Measure()
+		req.PostLiveMeasure(model.LiveMeasure{Moist: measurements.Moist, Hum: measurements.Hum, Temp: measurements.Temp})
 
-		req.PostLiveMeasure(model.LiveMeasure{Moist: moisture, Hum: humidity, Temp: temperature})
-
-		fmt.Printf("\nTemperature: %v˚C", temperature)
-		fmt.Printf("\nHumidity: %v", humidity)
-		fmt.Printf("\nSoil moisture: %v", moisture)
+		fmt.Printf("\nTemperature: %v˚C", measurements.Temp)
+		fmt.Printf("\nHumidity: %v", measurements.Hum)
+		fmt.Printf("\nSoil moisture: %v", measurements.Moist)
 
 		mid.GetLiveControl(cPumpState)
 
-		cMoist <- moisture
-		cTemp <- temperature
-		cHum <- humidity
+		cMoist <- measurements.Moist
+		cTemp <- measurements.Temp
+		cHum <- measurements.Hum
 	},
 	)
 	<-gocron.Start()
