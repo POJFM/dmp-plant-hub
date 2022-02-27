@@ -9,8 +9,16 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/model"
 )
 
-var restart bool = false
 var pumpState bool = false
+var moist = 0.0
+var hum = 0.0
+var temp = 0.0
+
+func LoadLiveMeasure(cMoist, cHum, cTemp float64) {
+	moist = cMoist
+	hum = cHum
+	temp = cTemp
+}
 
 func HandleGetInitMeasured(w http.ResponseWriter, _ *http.Request) {
 	// TEST
@@ -49,8 +57,7 @@ func HandlePostInitMeasured(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleGetLiveMeasure(w http.ResponseWriter, _ *http.Request) {
-	// TEST
-	data := model.LiveMeasure{Moist: 50.5, Hum: 45, Temp: 20}
+	data := model.LiveMeasure{Moist: moist, Hum: hum, Temp: temp}
 
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Content-Type", "application/json")

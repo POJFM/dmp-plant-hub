@@ -2,8 +2,10 @@ package sequences
 
 import (
 	"fmt"
-	mid "github.com/SPSOAFM-IT18/dmp-plant-hub/rest/middleware"
+	"math"
 	"time"
+
+	mid "github.com/SPSOAFM-IT18/dmp-plant-hub/rest/middleware"
 
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/model"
 	req "github.com/SPSOAFM-IT18/dmp-plant-hub/rest/requests"
@@ -205,11 +207,12 @@ func MeasurementSequence(sensei *sens.Sensors, cMoist, cTemp, cHum chan float64,
 		fmt.Printf("\nHumidity: %v", measurements.Hum)
 		fmt.Printf("\nSoil moisture: %v", measurements.Moist)
 
-		mid.GetLiveControl(cPumpState)
+		cMoist <- math.Floor(measurements.Moist*100) / 100
+		cTemp <- math.Floor(measurements.Temp*100) / 100
+		cHum <- math.Floor(measurements.Hum*100) / 100
 
-		cMoist <- measurements.Moist
-		cTemp <- measurements.Temp
-		cHum <- measurements.Hum
+		mid.GetLiveControl(cPumpState)
+		mid.LoadLiveMeasure(cMoist, cHum, cTemp)
 	},
 	)
 	<-gocron.Start()

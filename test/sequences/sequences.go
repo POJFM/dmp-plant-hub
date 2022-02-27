@@ -2,8 +2,10 @@ package sequences
 
 import (
 	"fmt"
+	"math"
 	"math/rand"
 
+	mid "github.com/SPSOAFM-IT18/dmp-plant-hub/test/middleware"
 	"github.com/jasonlvhit/gocron"
 )
 
@@ -21,22 +23,23 @@ func SaveOnFourHoursPeriod(temp chan float64) {
 	// needs to access values from measurements sequence
 	gocron.Every(1).Seconds().Do(func() {
 		cTemp := <-temp
-		fmt.Println("Cron\nTemperature: %v˚C", cTemp)
+		fmt.Printf("Cron\nTemperature: %v˚C", cTemp)
 	})
 	<-gocron.Start()
 }
 
-func MeasurementSequence(cTemp chan float64) {
+func MeasurementSequence() {
 	gocron.Every(1).Seconds().Do(func() {
-		temperature := float64(rand.Float64() * 5)
+		moist := math.Floor(float64(rand.Float64()*5)*100) / 100
+		hum := math.Floor(float64(rand.Float64()*5)*100) / 100
+		temp := math.Floor(float64(rand.Float64()*5)*100) / 100
 
-		fmt.Println("Measure\nTemperature: %v˚C", temperature, cTemp)
+		fmt.Printf("\nTemperature: %v˚C", temp)
+		fmt.Printf("\nHumidity: %v", hum)
+		fmt.Printf("\nSoil moisture: %v", moist)
 
-		cTemp <- temperature
-
-		temp := <-cTemp
-
-		fmt.Println(temp)
+		mid.LoadLiveMeasure(moist, hum, temp)
+		//req.PostLiveMeasure(model.LiveMeasure{Moist: moist, Hum: hum, Temp: temp})
 	},
 	)
 	<-gocron.Start()

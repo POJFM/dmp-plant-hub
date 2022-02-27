@@ -20,7 +20,7 @@ export default function Sidebar(props: any) {
 		mm === '12' && dd === '24' && setChristmas(true)
 	}, [])
 
-	//  `${process.env.REACT_APP_GO_API_URL}/live/control`
+	//  `${process.env.REACT_APP_GO_REST_API_URL}/live/control`
 	const handleRestart = () => {
 		axios
 			.post(

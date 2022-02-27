@@ -118,13 +118,13 @@ export default function Dashboard() {
 	}
 
 	// Fetch on render then every 30mins
-	setTimeout(() => fetchWeatherForecast(), weather ? 300_000 : 1)
+	// setTimeout(() => fetchWeatherForecast(), weather ? 300_000 : 1)
 
 	const liveMeasurements = () => {
 		axios
 			.request({
 				method: 'GET',
-				url: `${process.env.REACT_APP_GO_API_URL}/live/measure`,
+				url: `${process.env.REACT_APP_GO_REST_API_URL}/live/measure`,
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -248,19 +248,19 @@ export default function Dashboard() {
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/temperature.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{`${currentTemp}°C`}</span>
+										<span className="flex-col w-18 flex-center ml-2">{`${currentTemp} °C`}</span>
 									</div>
 									<div className="flex-row pt-5px" title="Vlhkost vzduchu">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/humidity.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{`${currentHum}%`}</span>
+										<span className="flex-col w-18 flex-center ml-2">{`${currentHum} %`}</span>
 									</div>
 									<div className="flex-row pt-5px" title="Vlhkost půdy">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/moisture.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{`${currentMoist}%`}</span>
+										<span className="flex-col w-18 flex-center ml-2">{`${currentMoist} %`}</span>
 									</div>
 								</div>
 								<div className="flex-col ml-5">
