@@ -30,13 +30,19 @@ export default function InitForm(props: any) {
 		[longitude, setLongitude] = useState<number>(),
 		[mapClicked, setMapClicked] = useState(false)
 
+	let initMeasurementsInterval: any, fetchLocationFromCoordsInterval: any, fetchLocationFromCoordsFixingInterval: any
+
 	console.log(createData)
 	console.log(error)
 
-	// USE ONLY WHEN DB IS ON
-	// useEffect(() => {
-	// 	!isSettings && setFormActiveState(true)
-	// }, [])
+	useEffect(() => {
+		// USE ONLY WHEN DB IS ON
+		//!isSettings && setFormActiveState(true)
+
+		formActiveState &&
+			!initMeasurementsInterval &&
+			(initMeasurementsInterval = setInterval(() => initMeasurements(), 3000))
+	}, [])
 
 	interface IGetCoordsProps {
 		label: string
@@ -83,7 +89,7 @@ export default function InitForm(props: any) {
 			})
 	}
 
-	setTimeout(() => fetchLocationFromCoords(), coords ? 100_000_000 : 1000)
+	formActiveState && setTimeout(() => fetchLocationFromCoords(), coords ? 100_000_000 : 1000)
 
 	const fetchCoordsFromLocation = (searchLocationValue: any) => {
 		axios
@@ -134,8 +140,6 @@ export default function InitForm(props: any) {
 				console.error(error)
 			})
 	}
-
-	setTimeout(() => initMeasurements(), limitValues ? 100_000_000 : 3000)
 
 	const updateToggleState = (type: string) => {
 		if (type === 'automaticIrrigation') {
