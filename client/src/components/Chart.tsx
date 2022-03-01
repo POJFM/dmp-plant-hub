@@ -28,7 +28,6 @@ export function LiveMeasurementsChart({ chartType, temp, hum, moist }: any) {
 					backgroundColor: 'rgb(172, 130, 49)',
 					borderColor: 'rgb(137, 98, 21)',
 					data: moist,
-					//data: [1, 5, 1, 25, 1, 8, 21, 8, 10, 20, 8, 10, 20, 10, 20, 8, 10, 20, 10, 20, 8, 10, 20, 30, 15],
 					stack: 'Stack 0',
 					yAxisID: 'vp',
 				},
@@ -37,7 +36,6 @@ export function LiveMeasurementsChart({ chartType, temp, hum, moist }: any) {
 					backgroundColor: 'rgb(120, 206, 255)',
 					borderColor: 'rgb(30, 141, 203)',
 					data: hum,
-					//data: [3, 5, 10, 5, 8, 6, 19, 8, 10, 20, 8, 10, 20, 10, 20, 8, 10, 20, 10, 20, 8, 10, 20, 30, 20],
 					stack: 'Stack 1',
 					yAxisID: 'vv',
 				},
@@ -46,7 +44,6 @@ export function LiveMeasurementsChart({ chartType, temp, hum, moist }: any) {
 					backgroundColor: 'rgb(255, 99, 132)',
 					borderColor: 'rgb(255, 0, 0)',
 					data: temp,
-					//data: [5, 8, 10, 20, 5, 35, 20, 8, 10, 20, 8, 10, 20, 10, 20, 8, 10, 20, 10, 20, 8, 10, 20, 30, 18],
 					stack: 'Stack 2',
 					yAxisID: 'tv',
 				},
@@ -121,7 +118,6 @@ export const WaterConsumptionChart = ({ chartType, waterOverdrawn, irrigationCou
 	else return <Bar options={waterConsumptionChartData.options} data={waterConsumptionChartData.data} />
 }
 
-// average values to month data
 export function IrrigationChart({ chartType, moist, hum, temp, irrigationCount }: any) {
 	const irrigationChartData = {
 		data: {
