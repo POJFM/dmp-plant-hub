@@ -1,7 +1,10 @@
 package sequences
 
 import (
+	"context"
 	"fmt"
+	db "github.com/SPSOAFM-IT18/dmp-plant-hub/database"
+	graphmodel "github.com/SPSOAFM-IT18/dmp-plant-hub/graph/model"
 	"math"
 	"time"
 
@@ -15,32 +18,23 @@ import (
 	"github.com/jasonlvhit/gocron"
 )
 
-// TEST
-func waterLevelMeasure() float64 {
-	return 1
-}
-func moistureMeasure() float64 {
-	return 1
-}
-func DHTMeasure() float64 {
-	return 1
-}
-
-// END TEST
-
-func SaveOnFourHoursPeriod(cMoist, cTemp, cHum chan float64) {
+func SaveOnFourHoursPeriod(db *db.DB, cMoist, cTemp, cHum chan float64) {
 	utils.WaitTillWholeHour()
 
 	gocron.Every(4).Hours().Do(func() {
-		moist := <-cMoist
+		hum := <-cMoist
 		temp := <-cTemp
-		hum := <-cHum
-		// TEST
-
+		moist := <-cMoist
+		irr := false
+		measurement := &graphmodel.NewMeasurement{
+			Hum:            &hum,
+			Temp:           &temp,
+			Moist:          &moist,
+			WithIrrigation: &irr,
+		}
+		ctx := context.Background()
 		// Save to DB
-
-		fmt.Println("Cron: ", moist, temp, hum)
-		// END TEST
+		db.CreateMeasurement(ctx, measurement)
 	})
 	<-gocron.Start()
 }

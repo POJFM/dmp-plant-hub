@@ -27,9 +27,11 @@ func main() {
 
 	sensei := sens.Init()
 
+	db := database.Connect()
+
 	go seq.MeasurementSequence(sensei, cMoist, cTemp, cHum, cPumpState)
 
-	go seq.SaveOnFourHoursPeriod(cMoist, cTemp, cHum)
+	go seq.SaveOnFourHoursPeriod(db, cMoist, cTemp, cHum)
 
 	// //@CHECK FOR DATA IN DB
 	// if DATA_IN_DB {
@@ -63,8 +65,6 @@ func main() {
 	// 		time.Sleep(1000 * time.Millisecond)
 	// 	}
 	// }
-
-	var db = database.Connect()
 
 	gqlRouter := chi.NewRouter()
 
