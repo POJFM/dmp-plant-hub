@@ -3,13 +3,15 @@ package sequences
 import (
 	"context"
 	"fmt"
-	db "github.com/SPSOAFM-IT18/dmp-plant-hub/database"
-	graphmodel "github.com/SPSOAFM-IT18/dmp-plant-hub/graph/model"
 	"math"
 	"time"
 
+	db "github.com/SPSOAFM-IT18/dmp-plant-hub/database"
+	graphmodel "github.com/SPSOAFM-IT18/dmp-plant-hub/graph/model"
+
 	mid "github.com/SPSOAFM-IT18/dmp-plant-hub/rest/middleware"
 
+	db "github.com/SPSOAFM-IT18/dmp-plant-hub/database"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/model"
 	req "github.com/SPSOAFM-IT18/dmp-plant-hub/rest/requests"
 	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
@@ -37,6 +39,40 @@ func SaveOnFourHoursPeriod(db *db.DB, cMoist, cTemp, cHum chan float64) {
 		db.CreateMeasurement(ctx, measurement)
 	})
 	<-gocron.Start()
+}
+
+func Controller(db *db.DB, sensei *sens.Sensors, cMoist chan float64, cPumpState chan bool) {
+	if db.CheckSettings() {
+		go irrigationSequence(cMoist, cPumpState)
+	} else {
+		go initializationSequence(sensei, cMoist)
+		initializationFinished := true
+		for initializationFinished {
+			stopLED := make(chan bool)
+			go func() {
+				for {
+					select {
+					case <-stopLED:
+						return
+					default:
+						for i := 0; i < 2; i++ {
+							sens.LED.High()
+							time.Sleep(500 * time.Millisecond)
+							sens.LED.Low()
+							time.Sleep(500 * time.Millisecond)
+						}
+						time.Sleep(1500 * time.Millisecond)
+					}
+				}
+			}()
+			if db.CheckSettings() {
+				initializationFinished = false
+				stopLED <- true
+				go irrigationSequence(cMoist, cPumpState)
+			}
+			time.Sleep(1000 * time.Millisecond)
+		}
+	}
 }
 
 func checkingSequence() {
@@ -82,7 +118,6 @@ func irrigationSequenceMode(limitsTrigger, scheduledTrigger bool, cMoist chan fl
 		// TimeToOverdraw is calculated by deviding amount by flow
 		if limitsTrigger {
 			for <-cMoist < moistureLimit || flowMeasure < waterAmountLimit/pumpFlow || int(time.Since(t0).Seconds()) > irrigationDuration {
-				//var t1 float64 = time.time()
 				sens.PUMP.High()
 				flowMeasure = float64(time.Since(t0).Seconds())
 			}
@@ -90,7 +125,6 @@ func irrigationSequenceMode(limitsTrigger, scheduledTrigger bool, cMoist chan fl
 
 		if scheduledTrigger {
 			for flowMeasure < waterAmountLimit/pumpFlow || int(time.Since(t0).Seconds()) > irrigationDuration {
-				//var t1 float64 = time.time()
 				sens.PUMP.High()
 				flowMeasure = float64(time.Since(t0).Seconds())
 			}
@@ -104,7 +138,7 @@ func irrigationSequenceMode(limitsTrigger, scheduledTrigger bool, cMoist chan fl
 	}
 }
 
-func IrrigationSequence(cMoist chan float64, cPumpState chan bool) {
+func irrigationSequence(cMoist chan float64, cPumpState chan bool) {
 	// get from DB
 	// values only for test
 	limitsTrigger := true
@@ -163,15 +197,10 @@ func IrrigationSequence(cMoist chan float64, cPumpState chan bool) {
 	}
 }
 
-// InitializationSequence TODO
-// I don't get this
-// Am I too high for this ??!!
-func InitializationSequence(sensei *sens.Sensors, cMoist chan float64) {
+func initializationSequence(sensei *sens.Sensors, cMoist chan float64) {
 	fmt.Println("Starting initialization sequence...🏁🤖🏁")
 	time.Sleep(2000 * time.Millisecond)
 
-	// var waterLevel float64
-	// var moistureLevel float64
 	var waterLevelAvg []float64
 	waterLevelAvg = make([]float64, 5)
 	var moistureAvg []float64
@@ -192,8 +221,6 @@ func InitializationSequence(sensei *sens.Sensors, cMoist chan float64) {
 
 func MeasurementSequence(sensei *sens.Sensors, cMoist, cTemp, cHum chan float64, cPumpState chan bool) {
 	gocron.Every(1).Seconds().Do(func() {
-		// dodělat aby DHT measure vracel temp a hum v array nebo objectu ! why tho?
-		//var DHTMeasureValues = DHTMeasure()
 		measurements := sensei.Measure()
 		req.PostLiveMeasure(model.LiveMeasure{Moist: measurements.Moist, Hum: measurements.Hum, Temp: measurements.Temp})
 

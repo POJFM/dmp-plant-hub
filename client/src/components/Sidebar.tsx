@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-//import PlantHubIcon from 'img/planthub.png'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import ControlIcon from '@material-ui/icons/ControlCamera'
 import SettingsIcon from '@material-ui/icons/Settings'
@@ -20,11 +19,9 @@ export default function Sidebar(props: any) {
 		mm === '12' && dd === '24' && setChristmas(true)
 	}, [])
 
-	//  `${process.env.REACT_APP_GO_REST_API_URL}/live/control`
 	const handleRestart = () => {
 		axios
 			.post(
-				//'http://4.2.0.225:5000/live/control',
 				`${process.env.REACT_APP_GO_REST_API_URL}/live/control`,
 				{
 					pumpState: false,

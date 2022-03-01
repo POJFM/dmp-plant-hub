@@ -30,13 +30,19 @@ export default function InitForm(props: any) {
 		[longitude, setLongitude] = useState<number>(),
 		[mapClicked, setMapClicked] = useState(false)
 
+	let initMeasurementsInterval: any, fetchLocationFromCoordsInterval: any, fetchLocationFromCoordsFixingInterval: any
+
 	console.log(createData)
 	console.log(error)
 
-	// USE ONLY WHEN DB IS ON
-	// useEffect(() => {
-	// 	!isSettings && setFormActiveState(true)
-	// }, [])
+	useEffect(() => {
+		// USE ONLY WHEN DB IS ON
+		//!isSettings && setFormActiveState(true)
+
+		formActiveState &&
+			!initMeasurementsInterval &&
+			(initMeasurementsInterval = setInterval(() => initMeasurements(), 3000))
+	}, [])
 
 	interface IGetCoordsProps {
 		label: string
@@ -83,7 +89,7 @@ export default function InitForm(props: any) {
 			})
 	}
 
-	setTimeout(() => fetchLocationFromCoords(), coords ? 100_000_000 : 1000)
+	formActiveState && setTimeout(() => fetchLocationFromCoords(), coords ? 100_000_000 : 1000)
 
 	const fetchCoordsFromLocation = (searchLocationValue: any) => {
 		axios
@@ -114,12 +120,9 @@ export default function InitForm(props: any) {
 		axios
 			.request({
 				method: 'GET',
-				//url: 'http://4.2.0.225:5000/init/measured',
-				//url: 'http://localhost:5000/init/measured',
 				url: `${process.env.REACT_APP_GO_REST_API_URL}/init/measured`,
 				headers: {
 					'Content-Type': 'application/json',
-					//'Access-Control-Allow-Origin': '*',
 				},
 			})
 			.then((res) => {
@@ -134,8 +137,6 @@ export default function InitForm(props: any) {
 				console.error(error)
 			})
 	}
-
-	setTimeout(() => initMeasurements(), limitValues ? 100_000_000 : 3000)
 
 	const updateToggleState = (type: string) => {
 		if (type === 'automaticIrrigation') {

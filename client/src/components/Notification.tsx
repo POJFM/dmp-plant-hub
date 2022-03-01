@@ -14,6 +14,12 @@ export default function Notification(props: any) {
 		[action, setAction] = useState<any>(), // TEST => 'Probíhá zavlažování'
 		[notify, setNotify] = useState(false)
 
+	let getNotificationsInterval: any
+
+	useEffect(() => {
+		!getNotificationsInterval && (getNotificationsInterval = setInterval(() => getNotifications(), 2000))
+	}, [])
+
 	const getNotifications = () => {
 		axios
 			.request({
@@ -35,8 +41,6 @@ export default function Notification(props: any) {
 				console.error(error)
 			})
 	}
-
-	setTimeout(() => getNotifications(), notify ? 500 : 2000)
 
 	// useEffect(() => {
 	// 	setNotificationClass('notification')

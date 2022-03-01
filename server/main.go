@@ -1,9 +1,10 @@
 package main
 
 import (
-	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
 	"log"
 	"net/http"
+
+	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
 
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 
@@ -27,47 +28,13 @@ func main() {
 
 	sensei := sens.Init()
 
-	db := database.Connect()
+	var db = database.Connect()
 
 	go seq.MeasurementSequence(sensei, cMoist, cTemp, cHum, cPumpState)
-
-	go seq.SaveOnFourHoursPeriod(db, cMoist, cTemp, cHum)
-
-	// //@CHECK FOR DATA IN DB
-	// if DATA_IN_DB {
-	// 	go seq.IrrigationSequence(cMoist)
-	// } else {
-	// 	go seq.InitializationSequence(cMoist)
-	// 	initializationFinished := true
-	// 	for initializationFinished {
-	// 		stopLED := make(chan bool)
-	// 		go func() {
-	// 			for {
-	// 				select {
-	// 				case <-stopLED:
-	// 					return
-	// 				default:
-	// 					for i := 0; i < 2; i++ {
-	// 						sens.LED.High()
-	// 						time.Sleep(500 * time.Millisecond)
-	// 						sens.LED.Low()
-	// 						time.Sleep(500 * time.Millisecond)
-	// 					}
-	// 					time.Sleep(1500 * time.Millisecond)
-	// 				}
-	// 			}
-	// 		}()
-	// 		if DATA_IN_DB {
-	// 			initializationFinished = false
-	// 			stopLED <- true
-	// 			go seq.IrrigationSequence(cMoist)
-	// 		}
-	// 		time.Sleep(1000 * time.Millisecond)
-	// 	}
-	// }
+	go seq.SaveOnFourHoursPeriod(cMoist, cTemp, cHum)
+	go seq.Controller(db, sensei, cMoist, cPumpState)
 
 	gqlRouter := chi.NewRouter()
-
 	restRouter := router.Router()
 
 	// Add CORS middleware around every request
