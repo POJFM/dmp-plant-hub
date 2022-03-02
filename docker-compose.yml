@@ -10,5 +10,5 @@ services:
       - dbdata:/var/lib/postgresql/data
     env_file:
       - "docker.env"
-  volumes:
-    dbdata:
+volumes:
+  dbdata:
