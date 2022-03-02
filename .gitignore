@@ -2,6 +2,7 @@
 *.pdf
 build/
 .idea/
+*.env
 
 # LaTeX stuff
 *.fdb_latexmk
