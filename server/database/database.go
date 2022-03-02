@@ -18,6 +18,7 @@ type DB struct {
 
 func Connect() *DB {
 	// BUNDB
+
 	conn := sql.OpenDB(pgdriver.NewConnector(
 		pgdriver.WithDSN("postgres://postgres:@localhost:5420/test?sslmode=disable"),
 		pgdriver.WithUser(env.Process("DB_USER")),
