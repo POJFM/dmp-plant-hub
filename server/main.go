@@ -63,7 +63,7 @@ func main() {
 	/*http.Handle("/graphql", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)*/
 
-	log.Printf("connect to http://localhost:%s/ for GraphQL playground", env.Process("GO_API_PORT"))
+	log.Printf("connect to http://localhost:%s/ for GraphQL playground", env.Process("GO_GQL_API_PORT"))
 	go log.Fatal(http.ListenAndServe(":"+env.Process("GO_GQL_API_PORT"), gqlRouter))
 	log.Fatal(http.ListenAndServe(":"+env.Process("GO_REST_API_PORT"), restRouter))
 
