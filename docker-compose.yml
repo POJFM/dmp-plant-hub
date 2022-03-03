@@ -10,5 +10,10 @@ services:
       - dbdata:/var/lib/postgresql/data
     env_file:
       - "docker.env"
+    networks:
+      - dbnet
 volumes:
   dbdata:
+networks:
+  dbnet:
+    driver: host
