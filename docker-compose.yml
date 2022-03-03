@@ -5,11 +5,12 @@ services:
     image: "postgres:latest"
     container_name: planthub-db
     ports:
-      - "5420:5433"
+      - "5420:5432"
     volumes:
       - dbdata:/var/lib/postgresql/data
+      - ./scripts/postgres:/docker-entrypoint-initdb.d/
     env_file:
       - "docker.env"
-    network_mode: host
+    restart: always
 volumes:
   dbdata:

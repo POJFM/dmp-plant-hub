@@ -1,24 +1,26 @@
 package sensors
 
 import (
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors/hcsr"
 	"log"
 	"time"
 
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors/dht"
-	"github.com/shanghuiyang/rpi-devices/dev"
 	"github.com/stianeikeland/go-rpio/v4"
 )
 
 // Pins
-const TRIG = 2
-const ECHO = 3
-const DHT = 23
-const PUMP = rpio.Pin(18)
-const LED = rpio.Pin(27)
+const (
+	TRIG = 2
+	ECHO = 3
+	DHT  = 23
+	PUMP = rpio.Pin(18)
+	LED  = rpio.Pin(27)
+)
 
 type Sensors struct {
-	sonic *dev.HCSR04
-	dht   *dht.DHT11
+	hc  *hcsr.HCSR04
+	dht *dht.DHT11
 }
 
 type Measurements struct {
@@ -36,8 +38,8 @@ func Init() *Sensors {
 	PUMP.Output()
 
 	return &Sensors{
-		sonic: dev.NewHCSR04(TRIG, ECHO),
-		dht:   dht.NewDHT11(DHT),
+		hc:  hcsr.NewHCSR04(TRIG, ECHO),
+		dht: dht.NewDHT11(DHT),
 	}
 }
 
@@ -95,16 +97,16 @@ func (s *Sensors) ReadMoisture() (moisture float64) {
 
 	moisture = float64(res)
 	// TODO: map moisture value to percentage
-	//Vdd and Vref are at 5v. Change *5 to *3.3 if you are
-	//powering the chip with 3.3v
-	//voltage := (float64(code) * 5) / 1024
+	// Vdd and Vref are at 5v. Change *5 to *3.3 if you are
+	// powering the chip with 3.3v
+	// voltage := (float64(code) * 5) / 1024
 
 	rpio.SpiEnd(rpio.Spi0)
 	return
 }
 
 func (s *Sensors) ReadWaterLevel() (waterLevel float64) {
-	waterLevel, err := s.sonic.Dist()
+	waterLevel, err := s.hc.Dist()
 	if err != nil {
 		log.Printf("SONIC Error: %v", err)
 	}
