@@ -217,6 +217,11 @@ definuje tu nejmenší hodnotu změny, který převodník dokáže rozlišit, t�
 hodnotě se říká LSB (least significant bit). ADC poté pomocí SAR
 definuje adresu v binárním podání srozumitelným pro digitální vstup.
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=8cm]{sar_adc.png}
+	\caption{SAR}
+\end{figure}
 \subsection{HC-SR04}
 
 HC-SR04 vydává zvukové vibrace na vysoké frekvenci, neslyšitelné pro lidské
@@ -225,14 +230,6 @@ měřeného od vysílání zvukové vlny k zpětnému přijmutí
 
 Všechny naměřené údaje jsou v převodníku senzoru přepočítány na jednotky dané
 veličiny a odeslány analogovým signálem do řídící jednotky.
-
-\begin{figure}[h]
-	\centering
-	\begin{subfigure}[b]{0.4\linewidth}
-		\includegraphics[width=\linewidth]{sar_adc.png}
-		\caption{SAR}
-	\end{subfigure}
-\end{figure}
 
 \subsection{Čerpadlo}
 
@@ -479,14 +476,15 @@ jazyků jako C a Rust má například garbage collector.
 \section{Seznam obrázků}
 
 \begin{acronym}
-	\acro{Obrázek 1. (a)}{Diagram PCB}
-	\acro{Obrázek 1. (b)}{PlantHub PCB se senzory}
-	\acro{Obrázek 2.}{Vývojový diagram projektu}
-	\acro{Obrázek 3.}{Okno prvotního nastavení WUI}
-	\acro{Obrázek 4.}{Dashboard WUI}
-	\acro{Obrázek 5.}{Manuální ovládání z WUI}
-	\acro{Obrázek 6.}{Nastavení PlantHubu a WUI}
-	\acro{Obrázek 7.}{Specifikace RaspberryPi}
+	\acro{Obrázek 1. (a)}{SAR}
+	\acro{Obrázek 2. (a)}{Diagram PCB}
+	\acro{Obrázek 2. (b)}{PlantHub PCB se senzory}
+	\acro{Obrázek 3.}{Vývojový diagram projektu}
+	\acro{Obrázek 4.}{Okno prvotního nastavení WUI}
+	\acro{Obrázek 5.}{Dashboard WUI}
+	\acro{Obrázek 6.}{Manuální ovládání z WUI}
+	\acro{Obrázek 7.}{Nastavení PlantHubu a WUI}
+	\acro{Obrázek 8.}{Specifikace RaspberryPi}
 \end{acronym}
 
 \clearpage
