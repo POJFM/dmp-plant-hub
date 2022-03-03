@@ -212,7 +212,12 @@ která ovlivňuje dielektrikum mezi dvěma deskami.
 \subsection{MCP3008}
 
 RPi má v rámci GPIO pouze digitální vstupy, protože je ale senzor vlhkosti půdy
-analogový museli jsme použít ADC převodník.
+analogový museli jsme použít ADC převodník. Přemapujeme tedy analogový signál
+do
+osmi různých digitálních hodnot, kterým se také říká 3bitové rozlišení, to
+definuje tu nejmenší hodnotu změny, který převodník dokáže rozlišit, této
+hodnotě se říká LSB (least significant bit). ADC poté pomocí SAR
+definuje adresu v binárním podání srozumitelným pro digitální vstup.
 
 \subsection{HC-SR04}
 
@@ -223,16 +228,26 @@ měřeného od vysílání zvukové vlny k zpětnému přijmutí
 Všechny naměřené údaje jsou v převodníku senzoru přepočítány na jednotky dané
 veličiny a odeslány analogovým signálem do řídící jednotky.
 
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[b]{0.4\linewidth}
+		\includegraphics[width=\linewidth]{sar_adc.png}
+		\caption{SAR}
+	\end{subfigure}
+\end{figure}
+
 \subsection{Čerpadlo}
 
 Naše zvolené čerpadlo se skládá z DC motoru, na němž je upevněna centrifuga pro
 čerpání vody a vlastního pouzdra, z kterého vede otvor pro napojení odtokové
-hadičky.
+hadičky. Čerpadlo je připojeno na zdroj napětí 5V a zem.
 
 \subsection{2N2222}
 
 Protože samotný signální pin neposkytuje dostatečné napětí pro chod čerpadla
-ovládáme jej NPN tranzistorem.
+ovládáme jej NPN tranzistorem. Díky našemu vyměnitelnému připojení modulů je
+možné čerpadlo vyměnit a přívodný kabel používat jako spouštěč čerpadla
+jakéhokoliv výkonu a nároků na zdroj.
 
 \clearpage
 
@@ -253,6 +268,7 @@ vytisknout.
 		\includegraphics[width=\linewidth]{planthub.png}
 		\caption{PlantHub PCB se senzory}
 	\end{subfigure}
+	\caption{}
 \end{figure}
 
 \clearpage
@@ -274,6 +290,29 @@ programovací jazyk GO.
 
 \subsection{Fáze programu}
 
+Fáze programu se spouštějí buďto v samostatné go rutině a komunikují spolu
+pomocí channelů nebo na základě podmínek kde se po splnění požadavků ukončí.
+
+\subsubsection{Měření}
+
+Senzor vlhkosti půdy a DHT11 průběžně posílají naměřená data do Rpi, kde se
+ukládají do databáze. Jestliže naměřené hodnoty překročí limitní hodnoty, Rpi
+pošle signál pro otevření tranzistoru což spustí čerpadlo.
+
+\subsubsection{Periodické ukládání dat}
+
+V samostatné rutině běží funkce pro ukládání naměřených dat v periodě 4 hodin.
+Naměřená data jsou následně statisticky zobrazena v UI.
+
+\subsubsection{Controller}
+
+Po spuštění měřící sekvence a sekvence periodického ukládání dat se spustí
+buďto incializační sekvence a nebo zavlažovací sekvence podle toho jestli jsou
+v databázi data nastavení, nastavovaná ve WUI. Pokud data nejsou tak program
+čeká na uložení dat z WUI a LED dioda bliká dvakrát po sobě dokud data nejsou
+dostupná, pokud ano spustí se zavlažovací sekvence, načtou se limitní data z
+databáze a v periodě 1 sekundy se budou číst data o vlhkosti půdy.
+
 \subsubsection{Inicializace}
 
 Půda musí být ze začátku suchá. Senzor vlhkosti půdy zasuneme co nejhlouběji do
@@ -288,12 +327,6 @@ jaká je hranice pro přijatelnou výšku hladiny vody v nádrži. Pokud nejsou 
 hodnoty uvedeny čerpadlo bude vodu přečerpávat, dokud se nezmění hodnota
 kapacitního čidla pro měření vlhkosti půdy a HC-SR04 použije výchozí nastavení.
 
-\subsubsection{Měření}
-
-Senzor vlhkosti půdy a DHT11 průběžně posílají naměřená data do Rpi, kde se
-ukládají do databáze. Jestliže naměřené hodnoty překročí limitní hodnoty, Rpi
-pošle signál pro otevření tranzistoru což spustí čerpadlo
-
 \subsubsection{Zavlažování}
 
 Čerpadlo začne čerpat vodu a zavlažovat rostlinu. Voda se čerpá tak dlouho,
@@ -307,11 +340,6 @@ data poté odešle do Rpi kde se uloží do databáze. Pokud bude naměřená ho
 nižší, než je limitní hodnota, začne blikat LED dioda a Rpi odešle upozornění o
 doplnění nádrže do UI. Jakmile bude hladina doplněna, signalizace se vypne.
 
-\subsubsection{Periodické ukládání dat}
-
-V samostatné rutině běží funkce pro ukládání naměřených dat v periodě 4 hodin.
-Naměřená data jsou následně statisticky zobrazena v UI.
-
 \subsection{Ukládání dat}
 
 Náš systém ukládá zvlášť periodicky naměřená data a data naměřená před
@@ -322,10 +350,13 @@ WUI.
 
 \section{WUI}
 
-Webovovou aplikaci jsme napsali v JavaScriptovém frameworku React.js a css
-frameworku Tailwind. Ve webovém rozhraní je možné zobrazit si statisky jak živě
+Webovovou aplikaci jsme napsali pomocí javascriptového frameworku
+React.js, CSS frameworku
+Tailwind a programovacího jazyku Typescript, který je supersetem javascriptu,
+podporujícím volitelné statické typování. Ve webovém rozhraní je možné zobrazit
+si statisky jak živě
 naměřených dat, tak dat uložených v databázi. Z OpenWeather API získáváme data
-o předpovědi počasí.
+o předpovědi počasí a do dahsboardu renderujeme předpovědi na dalších 15H.
 
 \begin{figure}[h]
 	\centering
@@ -337,7 +368,7 @@ o předpovědi počasí.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.9\linewidth]{web-ui.png}
-	\caption{Uživatelské rozhraní}
+	\caption{Dashborad WUI}
 \end{figure}
 
 \begin{figure}[h]
@@ -419,6 +450,7 @@ jazyků jako C a Rust má například garbage collector.
 	\acro{Cerpadlo}{Ponorné mini čerpadlo eses}
 	\acro{2N2222}{NPN tranzitor}
 	\acro{SPI}{Serial peripheral interface}
+	\acro{SAR}{Successive-approximation}
 \end{acronym}
 
 \clearpage
@@ -447,6 +479,17 @@ jazyků jako C a Rust má například garbage collector.
 \clearpage
 
 \section{Seznam obrázků}
+
+\begin{acronym}
+	\acro{Obrázek 1. (a)}{Diagram PCB}
+	\acro{Obrázek 1. (b)}{PlantHub PCB se senzory}
+	\acro{Obrázek 2.}{Vývojový diagram projektu}
+	\acro{Obrázek 3.}{Okno prvotního nastavení WUI}
+	\acro{Obrázek 4.}{Dashboard WUI}
+	\acro{Obrázek 5.}{Manuální ovládání z WUI}
+	\acro{Obrázek 6.}{Nastavení PlantHubu a WUI}
+	\acro{Obrázek 7.}{Specifikace RaspberryPi}
+\end{acronym}
 
 \clearpage
 
