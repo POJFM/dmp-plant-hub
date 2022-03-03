@@ -31,7 +31,7 @@ func main() {
 	var db = database.Connect()
 
 	go seq.MeasurementSequence(sensei, cMoist, cTemp, cHum, cPumpState)
-	go seq.SaveOnFourHoursPeriod(cMoist, cTemp, cHum)
+	go seq.SaveOnFourHoursPeriod(db, cMoist, cTemp, cHum)
 	go seq.Controller(db, sensei, cMoist, cPumpState)
 
 	gqlRouter := chi.NewRouter()
