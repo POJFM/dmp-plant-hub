@@ -1,17 +1,15 @@
 package env
 
 import (
+	"github.com/joho/godotenv"
 	"log"
 	"os"
-	"path/filepath"
-
-	"github.com/joho/godotenv"
 )
 
 func Process(key string) string {
-	err := godotenv.Load(filepath.Join("./env/", ".env"), filepath.Join(".env"))
+	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env, make shure there is one")
+		log.Fatal("Error loading .env, make sure there is one")
 	}
 	return os.Getenv(key)
 }

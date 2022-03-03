@@ -8,7 +8,9 @@ import (
 	"time"
 )
 
+// DelayMicroseconds
 // this make the CPU busy, but there is no other better way
+// not sure if this is good 🤔
 func DelayMicroseconds(us int64) {
 	var tv syscall.Timeval
 	_ = syscall.Gettimeofday(&tv)

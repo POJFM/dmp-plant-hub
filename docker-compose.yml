@@ -11,5 +11,6 @@ services:
       - ./scripts/postgres:/docker-entrypoint-initdb.d/
     env_file:
       - "docker.env"
+    restart: always
 volumes:
   dbdata:
