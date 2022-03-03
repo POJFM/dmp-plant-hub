@@ -13,3 +13,6 @@ build/
 *.pdfsync
 *.log
 *.fls
+*.aux
+*.toc
+__latexindent_temp.tex
