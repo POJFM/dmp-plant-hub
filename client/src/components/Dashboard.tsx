@@ -43,7 +43,7 @@ export default function Dashboard() {
 		arrayPassMoist: any = []
 
 	// TEST
-	const settings = { chartType: 0 }
+	const settings = { chartType: 1 }
 	// END TEST
 
 	// if (error !== undefined) {
