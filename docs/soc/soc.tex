@@ -11,8 +11,7 @@
 \usepackage{acronym}
 \usepackage{setspace}
 \usepackage{indentfirst}
-
-
+\usepackage{hyperref}
 
 \newcommand{\subtitle}[1]{%
 	\posttitle{%
@@ -155,7 +154,7 @@ Jednotlivé součásti a moduly stanice jsme vybrali podle finanční dostupnost
 adekvátních technických
 požadavků na přesnost měření.
 Zapojení těchto modulů do obvodu jsme prvně provedli ve webové aplikaci
-easyeda, která nabízí jednoduché prostředky pro návrh technických
+EasyEDA, která nabízí jednoduché prostředky pro návrh technických
 schémat. Tento obvod jsme poté v testovací verzi postavili na nepájivém
 poli a ve finální verzi navrhli a objednali vlastní PCB. Pro ochranu naší
 stanice jsme v open-source programu FreeCad navrhli model krytu, který jsme
@@ -251,9 +250,11 @@ jakéhokoliv výkonu a nároků na zdroj.
 \section{Obvod}
 
 Testovací verzi našeho obvodu jsme postavili na nepájivém kontaktním poli,
-které jsme používali dokud jsme neměli plně otestovanou funkcionalitu hardwaru.
-V druhé fázi jsme náš obvod přepracovali do schématu PCB a nechali jej
-vytisknout.
+které jsme používali pouze v testovací verzi. Jakmile jsme měli vše plně
+odzkoušeno a plně otestováno přešli jsme na profesionálnější řešení.
+Což tedy v druhé fázi znamenalo sestrojit a nechat vytisknout náš vlastní obvod
+přepracovaného schématu PCB a vytisknutého společnosti JLCPCB na naše vlastní
+náklady.
 
 \begin{figure}[h]
 	\centering
@@ -428,6 +429,8 @@ jazyků jako C a Rust má například garbage collector.
 
 \section{Závěr}
 
+Filip Sikora je kokor.
+
 \clearpage
 
 \section{Seznam zkratek a pojmů}
@@ -464,7 +467,7 @@ jazyků jako C a Rust má například garbage collector.
 	\acro{Figma}{Webová aplikace pro tvoření vektorové grafiky a návrhů
 		uživatelských rozhraní.}
 	\acro{FreeCad}{Open-source program pro modelování 3D objektů.}
-	\acro{EasyEda}{Webová aplikace nabízející jednoduché
+	\acro{EasyEDA}{Webová aplikace nabízející jednoduché
 		prostředky pro návrh technických
 		schémat}
 \end{acronym}
@@ -472,13 +475,36 @@ jazyků jako C a Rust má například garbage collector.
 \clearpage
 
 \section{Použité zdroje}
+\href{http://www.latex-tutorial.com}{LaTeX-Tutorial}.
+\newline
+\href{http://www.freecodecamp.org}{Free Code Camp}.
+\newline
+\href{http://www.go.dev}{Go lang}.
+\newline
+\href{http://www.reactjs.org}{React.js}.
+\newline
+\href{http://www.tailwindcss.com}{Tailwind CSS}.
+\newline
+\href{http://www.typescriptlang.org}{Typescript}.
+\newline
+\href{https://www.kali.org/tools/code-oss}{Code-OSS}.
+\newline
+\href{https://www.jetbrains.com/go/}{Goland}.
+\newline
+\href{https://git-scm.com/}{Git}.
+\newline
+\href{https://www.figma.com/}{Figma}.
+\newline
+\href{https://www.freecadweb.org/}{FreeCad}.
+\newline
+\href{https://componentsearchengine.com/library/easyeda}{EasyEDA}.
 
 \clearpage
 
 \section{Seznam obrázků}
 
 \begin{acronym}
-	\acro{Obrázek 1. (a)}{SAR}
+	\acro{Obrázek 1. }{SAR}
 	\acro{Obrázek 2. (a)}{Diagram PCB}
 	\acro{Obrázek 2. (b)}{PlantHub PCB se senzory}
 	\acro{Obrázek 3.}{Vývojový diagram projektu}
