@@ -30,9 +30,9 @@ func SaveOnFourHoursPeriod(temp chan float64) {
 
 func MeasurementSequence() {
 	gocron.Every(1).Seconds().Do(func() {
-		moist := math.Floor(float64(rand.Float64()*5*10)*100) / 100
-		hum := math.Floor(float64(rand.Float64()*5*10)*100) / 100
-		temp := math.Floor(float64(rand.Float64()*5*10)*100) / 100
+		moist := math.Floor(float64(rand.Float64()*3*10)*100) / 100
+		hum := math.Floor(float64(rand.Float64()*3*10)*100) / 100
+		temp := math.Floor(float64(rand.Float64()*3*10)*100) / 100
 
 		fmt.Printf("\nTemperature: %v˚C", temp)
 		fmt.Printf("\nHumidity: %v", hum)

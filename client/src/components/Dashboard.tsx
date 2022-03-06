@@ -43,17 +43,17 @@ export default function Dashboard() {
 		arrayPassMoist: any = []
 
 	// TEST
-	const settings = { chartType: 0 }
+	const settings = { chartType: 1 }
 	// END TEST
 
-	if (error !== undefined) {
-		data.getMeasurements.filter(
-			(filteredData: any) => filteredData.with_irrigation === true && irrigationHistoryData.push(filteredData)
-		)
-		data.getMeasurements.filter(
-			(filteredData: any) => filteredData.with_irrigation === false && measurementsData.push(filteredData)
-		)
-	}
+	// if (error !== undefined) {
+	// 	data.getMeasurements.filter(
+	// 		(filteredData: any) => filteredData.with_irrigation === true && irrigationHistoryData.push(filteredData)
+	// 	)
+	// 	data.getMeasurements.filter(
+	// 		(filteredData: any) => filteredData.with_irrigation === false && measurementsData.push(filteredData)
+	// 	)
+	// }
 
 	useEffect(() => {
 		document.title = 'Plant Hub | Dashboard'
