@@ -1,10 +1,10 @@
 package main
 
 import (
+	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
+	seq "github.com/SPSOAFM-IT18/dmp-plant-hub/sequences"
 	"log"
 	"net/http"
-
-	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
 
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 
@@ -15,7 +15,6 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/router"
-	seq "github.com/SPSOAFM-IT18/dmp-plant-hub/sequences"
 	"github.com/go-chi/chi"
 	webs "github.com/gorilla/websocket"
 )
@@ -28,11 +27,11 @@ func main() {
 
 	sensei := sens.Init()
 
-	var db = database.Connect()
-
 	go seq.MeasurementSequence(sensei, cMoist, cTemp, cHum, cPumpState)
-	go seq.SaveOnFourHoursPeriod(db, cMoist, cTemp, cHum)
-	go seq.Controller(db, sensei, cMoist, cPumpState)
+	// go seq.SaveOnFourHoursPeriod(db, cMoist, cTemp, cHum)
+	// go seq.Controller(db, sensei, cMoist, cPumpState)
+
+	var db = database.Connect()
 
 	gqlRouter := chi.NewRouter()
 	restRouter := router.Router()
@@ -60,10 +59,8 @@ func main() {
 
 	gqlRouter.Handle("/graphql", plg.Handler("GraphQL playground", "/query"))
 	gqlRouter.Handle("/query", srv)
-	/*http.Handle("/graphql", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)*/
 
-	log.Printf("connect to http://localhost:%s/ for GraphQL playground", env.Process("GO_GQL_API_PORT"))
+	//log.Printf("connect to http://localhost:%s/ for GraphQL playground", env.Process("GO_GQL_API_PORT"))
 	go log.Fatal(http.ListenAndServe(":"+env.Process("GO_GQL_API_PORT"), gqlRouter))
 	log.Fatal(http.ListenAndServe(":"+env.Process("GO_REST_API_PORT"), restRouter))
 

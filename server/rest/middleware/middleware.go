@@ -10,7 +10,7 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/model"
 )
 
-var pumpState bool = false
+var pumpState = false
 var moist = 0.0
 var hum = 0.0
 var temp = 0.0

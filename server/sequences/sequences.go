@@ -221,7 +221,6 @@ func initializationSequence(sensei *sens.Sensors, cMoist chan float64) {
 func MeasurementSequence(sensei *sens.Sensors, cMoist, cTemp, cHum chan float64, cPumpState chan bool) {
 	gocron.Every(1).Seconds().Do(func() {
 		measurements := sensei.Measure()
-		req.PostLiveMeasure(model.LiveMeasure{Moist: measurements.Moist, Hum: measurements.Hum, Temp: measurements.Temp})
 
 		fmt.Printf("\nTemperature: %v˚C", measurements.Temp)
 		fmt.Printf("\nHumidity: %v", measurements.Hum)
