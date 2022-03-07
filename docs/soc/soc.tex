@@ -1,4 +1,4 @@
-\documentclass[11pt,a4paper]{article}
+\documentclass[12pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[sfdefault]{ClearSans}
 \usepackage[T1]{fontenc}
@@ -7,11 +7,12 @@
 \usepackage{titling}
 \usepackage{graphicx}
 \usepackage{caption}
-\usepackage{subcaption}
+\usepackage[list=true]{subcaption}
 \usepackage{acronym}
 \usepackage{setspace}
 \usepackage{indentfirst}
 \usepackage{hyperref}
+\usepackage{listings}
 
 \newcommand{\subtitle}[1]{%
 	\posttitle{%
@@ -19,6 +20,16 @@
 		\begin{center}\large#1\end{center}
 		\vskip0.5em}%
 }
+
+% actual zdroje
+% https://thenewstack.io/a-closer-look-at-golang-from-an-architects-perspective/
+% https://devrajcoder.medium.com/why-go-compiles-so-fast-772435b6bd86
+% https://www.willowtreeapps.com/craft/the-pros-and-cons-of-programming-in-go
+% https://medium.com/safetycultureengineering/an-overview-of-memory-management-in-go-9a72ec7c76a8
+% https://levelup.gitconnected.com/intel-x86-vs-arm-architecture-and-all-key-differences-explained-fb54a04788dc
+%
+
+\newcommand*\wildcard[2][5cm]{\vspace*{2cm}\parbox{#1}{\centering\hrulefill\par#2\par}}
 
 \graphicspath{ {./img/} }
 
@@ -34,21 +45,21 @@
 \begin{document}
 
 \begin{titlepage}
-	\noindent\includegraphics[width=\linewidth]{header.png}
-	\vspace{4cm} \\
 	\begin{center}
+		\LARGE{STŘEDOŠKOLSKÁ ODBORNÁ ČINNOST}
+		\vspace{0.5cm} \\
+		\Large{Obor č. 10\\ Elektrotechnika elektronika a telekomunikace}
+		\vspace{7cm} \\
 		\Huge\textbf{Zavlažovací systém PlantHub}
-		\vspace{1cm} \\
-		\LARGE Filip Sikora, Jakub Vantuch
-		\vspace{1cm} \\
-		\Large soutěž SOČ 2022
 		\vfill
 		\normalsize
 		\begin{minipage}{0.7\linewidth}
-			Třída: \textbf{4.IT}
+			Filip Sikora \\
+			Jakub Vantuch \\
+			Moravskoslezský kraj
 		\end{minipage}%
 		\begin{minipage}{0.25\linewidth}
-			Školní rok: \textbf{2021/22}
+			Frýdek-Místek 2022
 		\end{minipage}
 	\end{center}
 
@@ -68,27 +79,13 @@ změně některých zákonů (autorský zákon) ve znění pozdějších předpi
 
 Ve Frýdku-Místku dne 4. 3. 2022
 
-\begin{tabular}{@{}p{2.5in}p{2.5in}@{}}
-	 & \dotfill
-\end{tabular}
-
-\section*{Prohlášení}
-
-Prohlašuji, že jsem svou práci SOČ vypracoval/a samostatně a použil/a jsem
-pouze prameny a literaturu uvedené v seznamu bibliografických záznamů.
-
-Prohlašuji, že tištěná verze a elektronická verze soutěžní práce SOČ jsou
-shodné.
-
-Nemám závažný důvod proti zpřístupňování této práce v souladu se zákonem č.
-121/2000 Sb., o právu autorském, o právech souvisejících s právem autorským a o
-změně některých zákonů (autorský zákon) ve znění pozdějších předpisů.
-
-Ve Frýdku-Místku dne 4. 3. 2022
-
-\begin{tabular}{@{}p{2.5in}p{2.5in}@{}}
-	 & \dotfill
-\end{tabular}
+\begingroup
+  \centering
+  \wildcard{Filip Sikora}
+  \hspace{1cm}
+  \wildcard{Jakub Vantuch}
+  \par
+\endgroup
 
 \clearpage
 
@@ -117,11 +114,11 @@ zavlažování; automatizace; statistika; živě; RaspberryPi; uživatelské roz
 
 \section{Úvod}
 
-Našim cílem je návrh, sestavení a naprogramování automatického zavlažovacího
+Naším cílem je návrh, sestavení a naprogramování automatického zavlažovacího
 systému s WUI a ukládáním naměřených dat do databáze
 pro pozdější statistiky. Tato stanice pravidelně snímá data ze senzorů měřících
 teplotu a vlhkost vzduchu, vlhkost půdy a stav hladiny v nádrži, z té pak
-stanice přečerpává vodu pomocí čerpadla spouštěného tranzistorem. Naměřená data
+stanice přečerpává vodu pomocí čerpadla spouš-těného tranzistorem. Naměřená data
 se posílají živě pomocí REST API prostřednictvím
 protokolu HTTP do WUI a ve stejné
 chvíli se v periodě čtyř hodin ukládají do PostgreSQL databáze běžící v docker
@@ -179,8 +176,6 @@ pro komunikaci mezi go rutinama a sekvence controlleru, která pomocí snímán�
 dat z databáze určuje jestli se jedná o první spuštění PlantHubu, a podle toho
 určí jestli se spustí incializační sekvence nebo sekvence zavlažování.
 
-\clearpage
-
 \section{Hardware}
 
 Potřebujeme vyvinout vhodné pouzdro pro naše Raspberry, abychom ochránili
@@ -191,7 +186,9 @@ zavlažování je potřeba postavit i nádrž na vodu, ze které bude naše čer
 přečerpávat vodu k zavlažování, proto jsme se rozhodli pro nádobu s co
 nejvetším objemem a postavili ji z upraveného 5L soudku.
 
-\subsection{DHT11}
+\subsection{Senzory}
+
+\subsubsection{DHT11}
 
 Senzor DHT11 se skládá z jednotky pro měření teploty, jednotky pro měření
 vlhkosti a převodníku.
@@ -202,13 +199,13 @@ zmenšuje svou rezistivitu, když se okolní teplota zvýší.
 Vlhkost měří senzor na základě rezistivity substrátu umístěného mezi dvěma
 elektrodami. Tento substrát zachytává vlhkost a vytváří tak vodivé prostředí
 
-\subsection{Senzor vlhkosti půdy}
+\subsubsection{Senzor vlhkosti půdy}
 
 Jedná se o kapacitní senzor, ten se skládá ze dvou vodivých desek a převodníku.
 Čidlo funguje na způsob kapacitoru avšak jeho kapacita je ovlivněna vlhkostí,
 která ovlivňuje dielektrikum mezi dvěma deskami.
 
-\subsection{MCP3008}
+\subsubsection{MCP3008}
 
 RPi má v rámci GPIO pouze digitální vstupy, protože je ale senzor vlhkosti půdy
 analogový museli jsme použít ADC převodník. Přemapujeme tedy analogový signál
@@ -223,7 +220,8 @@ definuje adresu v binárním podání srozumitelným pro digitální vstup.
 	\includegraphics[width=8cm]{sar_adc.png}
 	\caption{SAR}
 \end{figure}
-\subsection{HC-SR04}
+
+\subsubsection{HC-SR04}
 
 HC-SR04 vydává zvukové vibrace na vysoké frekvenci, neslyšitelné pro lidské
 ucho. Poté čeká, až se zvuk odrazí zpět, a vypočítá vzdálenost na základě času
@@ -232,13 +230,13 @@ měřeného od vysílání zvukové vlny k zpětnému přijmutí
 Všechny naměřené údaje jsou v převodníku senzoru přepočítány na jednotky dané
 veličiny a odeslány analogovým signálem do řídící jednotky.
 
-\subsection{Čerpadlo}
+\subsubsection{Čerpadlo}
 
 Naše zvolené čerpadlo se skládá z DC motoru, na němž je upevněna centrifuga pro
 čerpání vody a vlastního pouzdra, z kterého vede otvor pro napojení odtokové
 hadičky. Čerpadlo je připojeno na zdroj napětí 5V a zem.
 
-\subsection{2N2222}
+\subsubsection{2N2222}
 
 Protože samotný signální pin neposkytuje dostatečné napětí pro chod čerpadla
 ovládáme jej NPN tranzistorem. Díky našemu vyměnitelnému připojení modulů je
@@ -247,7 +245,13 @@ jakéhokoliv výkonu a nároků na zdroj.
 
 \clearpage
 
-\section{Obvod}
+\subsection{Architektura ARM}
+
+ARM je nejnovější CPU architektura. Využívají ji všechny moderní chytré telefony, zařízení s operačním systémem Android i Apple produkty. Dnes už mají ARM procesory zařízení s Windows nebo MacOS.
+
+% ARM je založen na RISC (Reduced Instruction Set Computing), tyto procesory jsou designované na 
+
+\subsection{Obvod}
 
 Testovací verzi našeho obvodu jsme postavili na nepájivém kontaktním poli,
 které jsme používali pouze v testovací verzi. Jakmile jsme měli vše plně
@@ -277,8 +281,7 @@ náklady.
 
 Náš hlavní program pro zavlažování a komunikaci s databází a WUI
 jsme začali psát ve vysokoúrovňovém programovacím jazyce Python. Od toho jsme
-ale nakonec upustili kvůli pomalejšímu průběhu programu, proto jsme přešli na
-programovací jazyk GO.
+ale nakonec upustili kvůli horší výkonu, a tak jsme program přepsali v programovacím jazyku GO.
 
 \begin{figure}[h]
 	\centering
@@ -394,12 +397,16 @@ z názvu, jedná se o SQL databázi, ty jsou vhodné pro ukládání velkého ob
 dat, jako právě data z našich senzorů. Webová aplikace používá pro přístup k
 datům z databáze GraphQL API.
 
-GraphQL je query, který je konkurent řešení REST API. Nabízí efektivnější
+GraphQL je query, který je konkurent řešení REST API. Nabízí rychlejší
 tvorbu API a také umožňuje efektivnější přístup k datům z databáze. Umožňuje
 vybrat pouze data, která momentálně aplikace používá a dovoluje vynechat data,
 která zrovna potřebné nejsou.
 
-\clearpage
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\linewidth]{db.png}
+	\caption{Schéma databáze}
+\end{figure}
 
 \section{Webový server}
 
@@ -409,27 +416,40 @@ exekuční rychlostí přiblížit k nízkoúrovňovým jazykům jako je C nebo 
 zároveň zůstává velmi lidsky čitelný a jednoduchý na použití. Na rozdíl od
 jazyků jako C a Rust má například garbage collector.
 
-\clearpage
+\subsection{Go}
 
-\section{Na čem ještě pracujeme}
+Go je open-source programovací jazyk, který byl vytvořen společností Google v roce 2009. Je to stále relativně nový programovací jazyk, který se nevyvinul z jiných jazyků jako C\# a Java. Go ignoruje teorii o programovacích jazycích. Místo toho aby se zaměřoval na akademické teorie, se zaměřuje na reálné praktiky používané pro vývoj next-gen v cloudových, distribuovaných a souběžných aplikacích.
 
-\begin{itemize}
-	\item RPi case z 3D tisku
-	\item Celková funkcionalita hlavního programu a jeho sekvencí
-	\item Realizace nádrže pro vodu
-\end{itemize}
+Jazyk Go je staticky typovaný a využívá garbage collector, jedná se o kompilovaný programovací jazyk, který své binární soubory kompiluje pro každou platformu. Dá se zařadit do skupiny C jazyků na základě jeho základního syntaxe. Go poskytuje expresivní syntax s jednoduchým typovým systémem a má vestavěné nástroje pro paralelní programování. Výkon Go je srovnatelný s jazyky C a C++, ale zároveň nabízí rychlý a jednoduchý vývoj aplikací.
+
+Stejně jako C a C++ se Go kompiluje do nativního strojového kódu, takže nepotřebujeme běhové prostředí jako CLR a JVM. To má řadu výhod, třeba při distribuci aplikace v aplikačních kontejnerech jako je Docker.
+
+\subsubsection{Paralelní programování v Go}
+
+Vývoj počítačů se značně posunul v průběhu posledního desetiletí. V minulosti aplikace běžely na počítačích pouze s jediným procesorovým jádrem. Dnes je standardní vidět čtyř-jádrové procesory v uživatelských počítačích, dokonce i naše Raspberry má dvě jádra. Stále ale používáme programovací jazyky a technologie navržené v éře, kdy byly dostupné pouze jednojádrové procesory.
+
+Většina programovacích jazyků dnes nabízí knihovny nebo frameworky pro paralelní programování, ale nemají tuto vlastnost zbudovanou přímo v jádře jazyka. V Go je paralelní programování součástí jazyka už od samotného počátku. Používá takzvané Gorutiny, které umožňují spouštět funkce souběžně. Souběžné funkce pak mezi sebou mohou komunikovat a předávat data pomocí kanálů. Dokonce i některé standardní knihovny jazyka mají zabudovanou souběžnost. Například standardní knihovna 'net/http' pro programování HTTP zpracovává přicházející požadavky souběžně pomocí Gorutin.
+
+\subsubsection{Typový systém}
+
+Pragmatický design Go neobsahuje klíčové slovo pro třídu a jeho objektová orientace je odlišná od tradičních objektově orientovaných programovacích jazyků. V Go nahrazuje funkci tradiční třídy typ struct. Dědění není v go podporováno, ale podporuje kompozici typů.
+
+Zde je příklad, který demonstruje typový systém Go spolu s rozhraním (interface), typem struct a vnořením pro typovou kompozici.
+
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.7\linewidth]{specs.png}
-	\caption{Specifikace RaspberryPi}
+	\includegraphics[width=\linewidth]{ukazka-kodu.png}
+	\caption{Ukázka typového systému}
 \end{figure}
 
 \clearpage
 
 \section{Závěr}
 
-Filip Sikora je kokor.
+Náš projekt je stále ve vývoji a mnoho z kritických funkcí projektu není ještě dokončeno. S vývojem dále pokračujeme, protože se jedná o naši maturitní práci. Myslíme si, ale že tento projekt má v budoucnu potenciál stát se úspěšným startupem, takže plánujeme pokračovat ve vývoji i po maturitě.
+
+Tato práce byla pro nás velkým přínosem, naučili jsme se mnoho nových dovedností a načerpali nové informace.
 
 \clearpage
 
@@ -472,51 +492,29 @@ Filip Sikora je kokor.
 		schémat}
 \end{acronym}
 
-\clearpage
-
 \section{Použité zdroje}
-\href{http://www.latex-tutorial.com}{LaTeX-Tutorial}.
-\newline
-\href{http://www.freecodecamp.org}{Free Code Camp}.
-\newline
-\href{http://www.go.dev}{Go lang}.
-\newline
-\href{http://www.reactjs.org}{React.js}.
-\newline
-\href{http://www.tailwindcss.com}{Tailwind CSS}.
-\newline
-\href{http://www.typescriptlang.org}{Typescript}.
-\newline
-\href{https://www.kali.org/tools/code-oss}{Code-OSS}.
-\newline
-\href{https://www.jetbrains.com/go/}{Goland}.
-\newline
-\href{https://git-scm.com/}{Git}.
-\newline
-\href{https://www.figma.com/}{Figma}.
-\newline
-\href{https://www.freecadweb.org/}{FreeCad}.
-\newline
-\href{https://componentsearchengine.com/library/easyeda}{EasyEDA}.
 
-\clearpage
+\begin{itemize}
+	\item \href{http://www.latex-tutorial.com}{LaTeX-Tutorial}.
+	\item \href{http://www.freecodecamp.org}{Free Code Camp}.
+	\item \href{http://www.go.dev}{Go lang}.
+	\item \href{http://www.reactjs.org}{React.js}.
+	\item \href{http://www.tailwindcss.com}{Tailwind CSS}.
+	\item \href{http://www.typescriptlang.org}{Typescript}.
+	\item \href{https://www.kali.org/tools/code-oss}{Code-OSS}.
+	\item \href{https://www.jetbrains.com/go/}{Goland}.
+	\item \href{https://git-scm.com/}{Git}.
+	\item \href{https://www.figma.com/}{Figma}.
+	\item \href{https://www.freecadweb.org/}{FreeCad}.
+	\item \href{https://componentsearchengine.com/library/easyeda}{EasyEDA}.
+\end{itemize}
 
-\section{Seznam obrázků}
-
-\begin{acronym}
-	\acro{Obrázek 1. }{SAR}
-	\acro{Obrázek 2. (a)}{Diagram PCB}
-	\acro{Obrázek 2. (b)}{PlantHub PCB se senzory}
-	\acro{Obrázek 3.}{Vývojový diagram projektu}
-	\acro{Obrázek 4.}{Okno prvotního nastavení WUI}
-	\acro{Obrázek 5.}{Dashboard WUI}
-	\acro{Obrázek 6.}{Manuální ovládání z WUI}
-	\acro{Obrázek 7.}{Nastavení PlantHubu a WUI}
-	\acro{Obrázek 8.}{Specifikace RaspberryPi}
-\end{acronym}
-
-\clearpage
+\listoffigures
 
 \section{Seznam příloh}
+
+\begin{itemize}
+	\item \href{https://github.com/POJFM/dmp-plant-hub}{Zdrojový kód na github.com}
+\end{itemize}
 
 \end{document}
