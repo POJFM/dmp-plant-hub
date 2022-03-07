@@ -285,7 +285,7 @@ ale nakonec upustili kvůli horší výkonu, a tak jsme program přepsali v prog
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=8cm]{go.png}
+	\includegraphics[width=0.9\linewidth]{go.png}
 	\caption{Vývojový diagram programu}
 \end{figure}
 
@@ -341,13 +341,11 @@ data poté odešle do Rpi kde se uloží do databáze. Pokud bude naměřená ho
 nižší, než je limitní hodnota, začne blikat LED dioda a Rpi odešle upozornění o
 doplnění nádrže do UI. Jakmile bude hladina doplněna, signalizace se vypne.
 
-\subsection{Ukládání dat}
+\subsubsection{Ukládání dat}
 
 Náš systém ukládá zvlášť periodicky naměřená data a data naměřená před
 zavlažováním, dále ukládá nastavení jak pro limity k zavlažování, tak pro
 WUI.
-
-\clearpage
 
 \section{WUI}
 
@@ -361,20 +359,20 @@ o předpovědi počasí a do dahsboardu renderujeme předpovědi na dalších 15
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.9\linewidth]{ui-inicializace.jpg}
+	\includegraphics[width=\linewidth]{ui-inicializace.jpg}
 	\caption{Okno prvotního nastavení. Nastaví se zde limity a celkové
 		nastavení aplikace.}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.9\linewidth]{web-ui.png}
+	\includegraphics[width=\linewidth]{web-ui.png}
 	\caption{Dashborad WUI}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.9\linewidth]{web-ui-pump.png}
+	\includegraphics[width=\linewidth]{web-ui-pump.png}
 	\caption{Interaktivní ovládání celého systému lze provést v již
 		zmiňované webové aplikaci. Dovoluje uživateli kdykoliv spustit
 		čerpadlo na
@@ -383,7 +381,7 @@ o předpovědi počasí a do dahsboardu renderujeme předpovědi na dalších 15
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.9\linewidth]{web-ui-settings.png}
+	\includegraphics[width=\linewidth]{web-ui-settings.png}
 	\caption{V nastavení se dá změnit nastavení aplikace i limitů pro
 		zavlažování. Nastavení se poté uloží do databáze.}
 \end{figure}
