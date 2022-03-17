@@ -8,7 +8,7 @@ services:
       - "5420:5432"
     volumes:
       - dbdata:/var/lib/postgresql/data
-      - ./scripts/postgres/test.sh:/docker-entrypoint-initdb.d/test.sh
+      - ./scripts/postgres/test.sh:/docker-entrypoint-initdb.d/test.sh:rwx
     env_file:
       - "docker.env"
     restart: always
