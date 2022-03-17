@@ -4,6 +4,7 @@ services:
   db:
     image: "postgres:latest"
     container_name: planthub-db
+    user: root
     ports:
       - "5420:5432"
     volumes:
