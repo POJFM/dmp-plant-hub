@@ -1,5 +1,5 @@
-create database planthub owner postgres;
-grant all privileges on database planthub to postgres;
+/*create database planthub owner postgres;
+grant all privileges on database planthub to postgres;*/
 
 create table if not exists public.settings
 (
