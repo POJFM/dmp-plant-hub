@@ -20,12 +20,22 @@ import (
 )
 
 func main() {
+	/* sensors test
+	sensei := sens.Init()
+	fmt.Println("Sensors initialized!")
+	for {
+		measurement := sensei.Measure()
+		wl := sensei.ReadWaterLevel()
+		fmt.Printf("temp: %f\nhum: %f\nmoi: %f\nwl: %f\n", measurement.Temp, measurement.Hum, measurement.Moist, wl)
+		time.Sleep(2 * time.Second)
+	}
+	*/
 	cMoist := make(chan float64)
 	cTemp := make(chan float64)
 	cHum := make(chan float64)
 	cPumpState := make(chan bool)
 
-	sensei := sens.Init()
+	var sensei = sens.Init()
 
 	go seq.MeasurementSequence(sensei, cMoist, cTemp, cHum, cPumpState)
 	// go seq.SaveOnFourHoursPeriod(db, cMoist, cTemp, cHum)
@@ -60,7 +70,7 @@ func main() {
 	gqlRouter.Handle("/graphql", plg.Handler("GraphQL playground", "/query"))
 	gqlRouter.Handle("/query", srv)
 
-	//log.Printf("connect to http://localhost:%s/ for GraphQL playground", env.Process("GO_GQL_API_PORT"))
+	// log.Printf("connect to http://localhost:%s/ for GraphQL playground", env.Process("GO_GQL_API_PORT"))
 	go log.Fatal(http.ListenAndServe(":"+env.Process("GO_GQL_API_PORT"), gqlRouter))
 	log.Fatal(http.ListenAndServe(":"+env.Process("GO_REST_API_PORT"), restRouter))
 
