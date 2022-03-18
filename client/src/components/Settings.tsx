@@ -16,6 +16,9 @@ export default function Settings() {
 	const { loading: settingsLoading, error: settingsError, data: settingsData } = useQuery(settings)
 	const [updateSettingsData, { data, loading, error }] = useMutation(createSettings)
 
+	console.log("GQL:")
+	console.log(data)
+
 	const [buttonsState, setButtonsState] = useState(false), // false
 		[automaticIrrigationState, setAutomaticIrrigationState] = useState(
 			settingsData?.getSettings[0]?.limits_trigger || true
@@ -48,6 +51,24 @@ export default function Settings() {
 	useEffect(() => {
 		document.title = 'Plant Hub | Settings'
 	}, [])
+
+	useEffect(() => {
+		setAutomaticIrrigationState(settingsData?.getSettings[0]?.limits_trigger || true)
+		setAutomaticIrrigationStateClass(settingsData?.getSettings[0]?.limits_trigger ? '#000000' : 'var(--inactiveGrey)')
+		setScheduledIrrigationState(settingsData?.getSettings[0]?.scheduled_trigger)
+		setIrrigationDuration(settingsData?.getSettings[0]?.irrigation_duration)
+		setScheduledIrrigationStateClass(settingsData?.getSettings[0]?.scheduled_trigger ? '#000000' : 'var(--inactiveGrey)')
+		setMoistureLimit(settingsData?.getSettings[0]?.moisture_limit)
+		setWaterAmountLimit(settingsData?.getSettings[0]?.water_amount_limit)
+		setWaterLevelLimit(settingsData?.getSettings[0]?.water_level_limit)
+		setHourRange(settingsData?.getSettings[0]?.hour_range)
+		setChartTypeState(settingsData?.getSettings[0]?.chart_type)
+		setLanguageState(settingsData?.getSettings[0]?.language)
+		setThemeState(settingsData?.getSettings[0]?.theme)
+		setLocation(settingsData?.getSettings[0]?.location)
+		setLatitude(settingsData?.getSettings[0]?.lat)
+		setLongitude(settingsData?.getSettings[0]?.lon)
+	}, [settingsData])
 
 	const fetchCoordsFromLocation = (searchLocationValue: any) => {
 		axios

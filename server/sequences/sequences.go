@@ -11,15 +11,13 @@ import (
 
 	mid "github.com/SPSOAFM-IT18/dmp-plant-hub/rest/middleware"
 
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/model"
-	req "github.com/SPSOAFM-IT18/dmp-plant-hub/rest/requests"
 	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/utils"
 
 	"github.com/jasonlvhit/gocron"
 )
 
-func SaveOnFourHoursPeriod(db *db.DB, cMoist, cTemp, cHum chan float64) {
+func saveOnFourHoursPeriod(db *db.DB, cMoist, cTemp, cHum chan float64) {
 	utils.WaitTillWholeHour()
 
 	gocron.Every(4).Hours().Do(func() {
@@ -34,17 +32,18 @@ func SaveOnFourHoursPeriod(db *db.DB, cMoist, cTemp, cHum chan float64) {
 			WithIrrigation: &irr,
 		}
 		ctx := context.Background()
-		// Save to DB
 		db.CreateMeasurement(ctx, measurement)
 	})
 	<-gocron.Start()
 }
 
-func Controller(db *db.DB, sensei *sens.Sensors, cMoist chan float64, cPumpState chan bool) {
+func Controller(db *db.DB, sensei *sens.Sensors, cMoist, cTemp, cHum chan float64, cPumpState chan bool) {
 	if db.CheckSettings() {
+		go measurementSequence(sensei, cMoist, cTemp, cHum, cPumpState)
+		go saveOnFourHoursPeriod(db, cMoist, cTemp, cHum)
 		go irrigationSequence(sensei, cMoist, cPumpState)
 	} else {
-		go initializationSequence(sensei, cMoist)
+		go initializationSequence(sensei)
 		initializationFinished := true
 		for initializationFinished {
 			stopLED := make(chan bool)
@@ -67,6 +66,8 @@ func Controller(db *db.DB, sensei *sens.Sensors, cMoist chan float64, cPumpState
 			if db.CheckSettings() {
 				initializationFinished = false
 				stopLED <- true
+				go measurementSequence(sensei, cMoist, cTemp, cHum, cPumpState)
+				go saveOnFourHoursPeriod(db, cMoist, cTemp, cHum)
 				go irrigationSequence(sensei, cMoist, cPumpState)
 			}
 			time.Sleep(1000 * time.Millisecond)
@@ -79,12 +80,14 @@ func checkingSequence(sensei *sens.Sensors) {
 	// values only for test
 	const waterLevelLimit = 75
 
-	req.PostLiveNotify(model.LiveNotify{Title: "Kontrola Nádrže", State: "inProgress", Action: "Probíhá kontrola nádrže"})
+	mid.LoadLiveNotify("Kontrola Nádrže", "inProgress", "Probíhá kontrola nádrže")
+	//req.PostLiveNotify(model.LiveNotify{Title: "Kontrola Nádrže", State: "inProgress", Action: "Probíhá kontrola nádrže"})
 
 	time.Sleep(3000 * time.Millisecond)
 
 	if sensei.ReadWaterLevel() < waterLevelLimit {
-		req.PostLiveNotify(model.LiveNotify{Title: "Doplňte nádrž", State: "physicalHelpRequired", Action: "Nádrž je prázdná"})
+		mid.LoadLiveNotify("Doplňte nádrž", "physicalHelpRequired", "Nádrž je prázdná")
+		//req.PostLiveNotify(model.LiveNotify{Title: "Doplňte nádrž", State: "physicalHelpRequired", Action: "Nádrž je prázdná"})
 
 		fmt.Println("Water tank limit level reached...🚫🤖🚫")
 
@@ -98,18 +101,21 @@ func checkingSequence(sensei *sens.Sensors) {
 
 	waterLevel := fmt.Sprintf("V nádrži zbývá %fl vody", sensei.ReadWaterLevel())
 	// Dodělat na water amount v litrech
-	req.PostLiveNotify(model.LiveNotify{Title: "Kontrola Nádrže", State: "finished", Action: waterLevel})
+	mid.LoadLiveNotify("Kontrola Nádrže", "finishedphysicalHelpRequired", waterLevel)
+	//req.PostLiveNotify(model.LiveNotify{Title: "Kontrola Nádrže", State: "finished", Action: waterLevel})
 
 	time.Sleep(3000 * time.Millisecond)
 
-	req.PostLiveNotify(model.LiveNotify{Title: "", State: "inactive", Action: ""})
+	mid.LoadLiveNotify("", "inactive", "")
+	//req.PostLiveNotify(model.LiveNotify{Title: "", State: "inactive", Action: ""})
 }
 
 func irrigationSequenceMode(sensei *sens.Sensors, limitsTrigger, scheduledTrigger bool, cMoist chan float64, moistureLimit, waterAmountLimit, pumpFlow float64, irrigationDuration int) {
 	if <-cMoist < moistureLimit {
 		fmt.Println("Starting irrigation...🌿🤖🚿")
 
-		req.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "inProgress", Action: "Probíhá zavlažování"})
+		mid.LoadLiveNotify("Zavlažování", "inProgress", "Probíhá zavlažování")
+		//req.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "inProgress", Action: "Probíhá zavlažování"})
 
 		// time passed from running pump will be represented as liters
 		var flowMeasure float64
@@ -129,7 +135,8 @@ func irrigationSequenceMode(sensei *sens.Sensors, limitsTrigger, scheduledTrigge
 			}
 		}
 
-		req.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "finished", Action: "Zavlažování dokončeno"})
+		mid.LoadLiveNotify("Zavlažování", "finished", "Zavlažování dokončeno")
+		//req.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "finished", Action: "Zavlažování dokončeno"})
 
 		sens.PUMP.Low()
 
@@ -196,7 +203,7 @@ func irrigationSequence(sensei *sens.Sensors, cMoist chan float64, cPumpState ch
 	}
 }
 
-func initializationSequence(sensei *sens.Sensors, cMoist chan float64) {
+func initializationSequence(sensei *sens.Sensors) {
 	fmt.Println("Starting initialization sequence...🏁🤖🏁")
 	time.Sleep(2000 * time.Millisecond)
 
@@ -207,7 +214,7 @@ func initializationSequence(sensei *sens.Sensors, cMoist chan float64) {
 
 	// calculating average value
 	for i := 0; i < 5; i++ {
-		moistureAvg = append(moistureAvg, <-cMoist)
+		moistureAvg = append(moistureAvg, sensei.ReadMoisture())
 		waterLevelAvg = append(waterLevelAvg, sensei.ReadWaterLevel())
 		time.Sleep(1000 * time.Millisecond)
 	}
@@ -215,11 +222,13 @@ func initializationSequence(sensei *sens.Sensors, cMoist chan float64) {
 	moistureLevel := utils.ArithmeticMean(moistureAvg)
 	waterLevel := utils.ArithmeticMean(waterLevelAvg)
 
-	req.PostInitMeasured(model.InitMeasured{MoistLimit: moistureLevel, WaterLevelLimit: waterLevel})
+	mid.LoadInitMeasured(moistureLevel, waterLevel)
+	//req.PostInitMeasured(model.InitMeasured{MoistLimit: moistureLevel, WaterLevelLimit: waterLevel})
 }
 
-func MeasurementSequence(sensei *sens.Sensors, cMoist, cTemp, cHum chan float64, cPumpState chan bool) {
+func measurementSequence(sensei *sens.Sensors, cMoist, cTemp, cHum chan float64, cPumpState chan bool) {
 	gocron.Every(1).Seconds().Do(func() {
+		fmt.Println("kokot")
 		measurements := sensei.Measure()
 
 		fmt.Printf("\nTemperature: %v˚C", measurements.Temp)
@@ -231,6 +240,7 @@ func MeasurementSequence(sensei *sens.Sensors, cMoist, cTemp, cHum chan float64,
 		cHum <- math.Floor(measurements.Hum*100) / 100
 
 		mid.GetLiveControl(cPumpState)
+
 		mid.LoadLiveMeasure(cMoist, cHum, cTemp)
 	},
 	)

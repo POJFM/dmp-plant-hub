@@ -108,7 +108,7 @@ export default function Dashboard() {
 		axios
 			.request({
 				method: 'GET',
-				url: `${process.env.REACT_APP_GO_REST_API_URL}/live/measure`,
+				url: `${process.env.REACT_APP_GO_API_URL}/live/measure`,
 				headers: {
 					'Content-Type': 'application/json',
 				},

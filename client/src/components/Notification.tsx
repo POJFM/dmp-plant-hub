@@ -24,7 +24,7 @@ export default function Notification(props: any) {
 		axios
 			.request({
 				method: 'GET',
-				url: `${process.env.REACT_APP_GO_REST_API_URL}/live/notify`,
+				url: `${process.env.REACT_APP_GO_API_URL}/live/notify`,
 				headers: {
 					'Content-Type': 'application/json',
 				},

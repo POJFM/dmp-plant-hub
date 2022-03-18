@@ -120,7 +120,7 @@ export default function InitForm(props: any) {
 		axios
 			.request({
 				method: 'GET',
-				url: `${process.env.REACT_APP_GO_REST_API_URL}/init/measured`,
+				url: `${process.env.REACT_APP_GO_API_URL}/init/measured`,
 				headers: {
 					'Content-Type': 'application/json',
 				},

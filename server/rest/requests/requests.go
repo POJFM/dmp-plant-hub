@@ -23,7 +23,7 @@ func PostInitMeasured(rawData model.InitMeasured) {
 		log.Print(err)
 	}
 
-	resp, err := http.Post(env.Process("GO_REST_API_URL")+"/init/measured", "application/json",
+	resp, err := http.Post(env.Process("GO_API_URL")+"/init/measured", "application/json",
 		bytes.NewBuffer(json_data))
 
 	if err != nil {
@@ -50,7 +50,7 @@ func PostLiveMeasure(rawData model.LiveMeasure) {
 		log.Print(err)
 	}
 
-	resp, err := http.Post(env.Process("GO_REST_API_URL")+"/live/measure", "application/json",
+	resp, err := http.Post(env.Process("GO_API_URL")+"/live/measure", "application/json",
 		bytes.NewBuffer(jsonData))
 
 	if err != nil {
@@ -77,7 +77,7 @@ func PostLiveNotify(rawData model.LiveNotify) {
 		log.Print(err)
 	}
 
-	resp, err := http.Post(env.Process("GO_REST_API_URL")+"/live/notify", "application/json",
+	resp, err := http.Post(env.Process("GO_API_URL")+"/live/notify", "application/json",
 		bytes.NewBuffer(json_data))
 
 	if err != nil {
@@ -103,7 +103,7 @@ func PostLiveControl(rawData model.LiveControl) {
 		log.Print(err)
 	}
 
-	resp, err := http.Post(env.Process("GO_REST_API_URL")+"/live/control", "application/json",
+	resp, err := http.Post(env.Process("GO_API_URL")+"/live/control", "application/json",
 		bytes.NewBuffer(json_data))
 
 	if err != nil {
