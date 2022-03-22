@@ -7,3 +7,5 @@ require (
 	github.com/jasonlvhit/gocron v0.0.1
 	github.com/joho/godotenv v1.4.0
 )
+
+require github.com/Jeffail/gabs v1.4.0

@@ -7,6 +7,12 @@
 
 - Machine learning is on only when you are using both the scheduled irrigation mode and limit irrigation mode by that you are entering the smart mode where our machine determines the best irrigation options by learning and forecasting the outcomes by utilizing weather forecast previously learned data about the amount of water needed and time to next irrigation thus saving you water and money
 
+<br>
+
+<img src="./img/client-smart-mode.png" style="width:350px"/>
+
+<br>
+
 ## Variables
 
 - Default scheduled irrigation based on type of flower, we need access to flowers database and their projected period of irrigation
@@ -15,13 +21,13 @@
 
 ## Process
 
-1. On first irrigation wait until the moisture limit is changed. Get the amount of water that was spend on first irrigation and set the amount of water for one irrigation based on that.
+1. On first irrigation wait until the moisture limit is reached. Get the amount of water that was spend on first irrigation and set the amount of water for one irrigation based on that.
 2. Gather irrigation data like weather forecast, it's probability and time without irrigation and wait for total of 10 irrigations.
 3. After tenth irrigation machine learning is utilized and starts modifying the water amount used for single irrigation based on the time that our machine lasted before another irrigation and weather forecast thus calculating how much water will be needed and taking into account the default scheduled irrigation period
 
 <br>
 
-<img src="./img/paper.jpeg" style="max-width:450px"/>
+<img src="./img/paper.jpeg" style="width:500px"/>
 
 <br>
 
@@ -32,6 +38,6 @@
 
 <br>
 
-<img src="./img/lin-reg.png" style="max-width:450px"/>
+<img src="./img/lin-reg.png" style="width:500px"/>
 
 <br>

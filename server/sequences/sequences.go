@@ -40,6 +40,27 @@ func SaveOnFourHoursPeriod(db *db.DB, cMoist, cTemp, cHum chan float64) {
 	<-gocron.Start()
 }
 
+func SmartMode(db *db.DB, cMoist, cTemp, cHum chan float64) {
+	utils.WaitTillWholeHour()
+
+	gocron.Every(1).Days().Do(func() {
+		hum := <-cMoist
+		temp := <-cTemp
+		moist := <-cMoist
+		irr := false
+		measurement := &graphmodel.NewMeasurement{
+			Hum:            &hum,
+			Temp:           &temp,
+			Moist:          &moist,
+			WithIrrigation: &irr,
+		}
+		ctx := context.Background()
+		// Save to DB
+		db.CreateMeasurement(ctx, measurement)
+	})
+	<-gocron.Start()
+}
+
 func Controller(db *db.DB, sensei *sens.Sensors, cMoist chan float64, cPumpState chan bool) {
 	if db.CheckSettings() {
 		go irrigationSequence(sensei, cMoist, cPumpState)

@@ -29,6 +29,11 @@ export default function Settings() {
 		[scheduledIrrigationStateClass, setScheduledIrrigationStateClass] = useState<string>(
 			settingsData?.getSettings[0]?.scheduled_trigger ? '#000000' : 'var(--inactiveGrey)'
 		),
+		[smartModeImg, setSmartModeImg] = useState(
+			settingsData?.getSettings[0]?.scheduled_trigger && settingsData?.getSettings[0]?.limits_trigger
+				? 'lightBulb'
+				: 'lightBulbInactive'
+		),
 		[moistureLimit, setMoistureLimit] = useState(settingsData?.getSettings[0]?.moisture_limit),
 		[waterAmountLimit, setWaterAmountLimit] = useState(settingsData?.getSettings[0]?.water_amount_limit),
 		[waterLevelLimit, setWaterLevelLimit] = useState(settingsData?.getSettings[0]?.water_level_limit),
@@ -96,9 +101,13 @@ export default function Settings() {
 				setButtonsState(true)
 				setIrrigationDurationStateClass('#000000')
 				setAutomaticIrrigationStateClass('#000000')
+				if (scheduledIrrigationState === true) {
+					setSmartModeImg('lightBulb')
+				}
 			} else {
 				setAutomaticIrrigationState(false)
 				setAutomaticIrrigationStateClass('var(--inactiveGrey)')
+				setSmartModeImg('lightBulbInactive')
 				if (scheduledIrrigationState === false) {
 					setButtonsState(false)
 					setIrrigationDurationStateClass('var(--inactiveGrey)')
@@ -115,9 +124,13 @@ export default function Settings() {
 				if (irrigationDuration == 0) {
 					setButtonsState(false)
 				}
+				if (automaticIrrigationState === true) {
+					setSmartModeImg('lightBulb')
+				}
 			} else {
 				setScheduledIrrigationState(false)
 				setScheduledIrrigationStateClass('var(--inactiveGrey)')
+				setSmartModeImg('lightBulbInactive')
 				if (automaticIrrigationState === false) {
 					setButtonsState(false)
 					setIrrigationDurationStateClass('var(--inactiveGrey)')
@@ -192,8 +205,11 @@ export default function Settings() {
 									<div className="flex-row">
 										<span className="title-2">Automaticky</span>
 									</div>
-									<div className="flex-row mt-2">
+									<div className="flex-row mt-4">
 										<span className="title-2">Plánovaně</span>
+									</div>
+									<div className="flex-row mt-4">
+										<span className="title-2">Smart</span>
 									</div>
 								</div>
 								<div className="flex-col p-1 pt-5px mt-2 ml-2">
@@ -202,16 +218,22 @@ export default function Settings() {
 											<ToggleButton item="limitsTrigger" toggleState={automaticIrrigationState} />
 										</div>
 									</div>
-									<div className="flex-row mt-2">
+									<div className="flex-row mt-3">
 										<div onClick={() => updateToggleState('scheduledIrrigation')}>
 											<ToggleButton item="scheduledTrigger" toggleState={scheduledIrrigationState} />
 										</div>
+									</div>
+									<div className="flex-row flex-center mt-3">
+										<img
+											src={`/assets/icons/toggleSwitch/${smartModeImg}.svg`}
+											className="flex-col flex-center mr-2 w-8 transition duration-500 ease-in-out"
+										/>
 									</div>
 								</div>
 							</div>
 							<div className="flex-row">
 								<div className="flex-col">
-									<div className="flex-row pt-2">
+									<div className="flex-row pt-3">
 										<span style={{ color: irrigationDurationStateClass }}>Doba zavlažování (s): </span>
 									</div>
 									<div className="flex-row pt-2">
