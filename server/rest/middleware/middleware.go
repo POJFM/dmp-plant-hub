@@ -23,9 +23,9 @@ var (
 	LNaction  string
 )
 
-func LoadInitMeasured(initM, initWLL float64) {
-	moist = initM
-	WLL = initWLL
+func LoadInitMeasured(initM, initWLL *float64) {
+	moist = *initM
+	WLL = *initWLL
 }
 
 func LoadLiveMeasure(cMoist, cHum, cTemp chan float64) {
