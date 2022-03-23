@@ -9,12 +9,12 @@ import SaveButton from './buttons/SaveButton'
 import CancelButton from './buttons/CancelButton'
 import { useQuery, useMutation } from '@apollo/client'
 import { settings } from '../graphql/queries'
-import { createSettings } from '../graphql/mutations'
+import { createSettingsMut } from '../graphql/mutations'
 //import { fetchCoordsFromLocation } from 'src/utils'
 
 export default function Settings() {
 	const { loading: settingsLoading, error: settingsError, data: settingsData } = useQuery(settings)
-	const [updateSettingsData, { data, loading, error }] = useMutation(createSettings)
+	const [updateSettingsData, { data, loading, error }] = useMutation(createSettingsMut)
 
 	console.log("GQL:")
 	console.log(data)
@@ -32,7 +32,7 @@ export default function Settings() {
 		[scheduledIrrigationStateClass, setScheduledIrrigationStateClass] = useState<string>(
 			settingsData?.getSettings[0]?.scheduled_trigger ? '#000000' : 'var(--inactiveGrey)'
 		),
-		[moistureLimit, setMoistureLimit] = useState(settingsData?.getSettings[0]?.moisture_limit),
+		[moistureLimit, setMoistureLimit] = useState(settingsData?.getSettings[0]?.moist_limit),
 		[waterAmountLimit, setWaterAmountLimit] = useState(settingsData?.getSettings[0]?.water_amount_limit),
 		[waterLevelLimit, setWaterLevelLimit] = useState(settingsData?.getSettings[0]?.water_level_limit),
 		[hourRange, setHourRange] = useState(settingsData?.getSettings[0]?.hour_range),
@@ -58,13 +58,15 @@ export default function Settings() {
 		setScheduledIrrigationState(settingsData?.getSettings[0]?.scheduled_trigger)
 		setIrrigationDuration(settingsData?.getSettings[0]?.irrigation_duration)
 		setScheduledIrrigationStateClass(settingsData?.getSettings[0]?.scheduled_trigger ? '#000000' : 'var(--inactiveGrey)')
-		setMoistureLimit(settingsData?.getSettings[0]?.moisture_limit)
+		setMoistureLimit(settingsData?.getSettings[0]?.moist_limit)
 		setWaterAmountLimit(settingsData?.getSettings[0]?.water_amount_limit)
 		setWaterLevelLimit(settingsData?.getSettings[0]?.water_level_limit)
 		setHourRange(settingsData?.getSettings[0]?.hour_range)
-		setChartTypeState(settingsData?.getSettings[0]?.chart_type)
-		setLanguageState(settingsData?.getSettings[0]?.language)
-		setThemeState(settingsData?.getSettings[0]?.theme)
+		
+		setChartTypeState(settingsData?.getSettings[0]?.chart_type === false ? 0 : 1)
+		setLanguageState(settingsData?.getSettings[0]?.language === false ? 0 : 1)
+		setThemeState(settingsData?.getSettings[0]?.theme === false ? 0 : 1)
+
 		setLocation(settingsData?.getSettings[0]?.location)
 		setLatitude(settingsData?.getSettings[0]?.lat)
 		setLongitude(settingsData?.getSettings[0]?.lon)
