@@ -22,7 +22,7 @@ export default function Sidebar(props: any) {
 	const handleRestart = () => {
 		axios
 			.post(
-				`${process.env.REACT_APP_GO_REST_API_URL}/live/control`,
+				`${process.env.REACT_APP_GO_API_URL}/live/control`,
 				{
 					pumpState: false,
 					restart: true,

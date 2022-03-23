@@ -30,7 +30,7 @@ export default function Control(props) {
 
 		axios
 			.post(
-				`${process.env.REACT_APP_GO_REST_API_URL}/live/control`,
+				`${process.env.REACT_APP_GO_API_URL}/live/control`,
 				{
 					pumpState: true,
 					restart: false,
@@ -61,7 +61,7 @@ export default function Control(props) {
 
 		axios
 		.post(
-			`${process.env.REACT_APP_GO_REST_API_URL}/live/control`,
+			`${process.env.REACT_APP_GO_API_URL}/live/control`,
 			{
 				pumpState: false,
 				restart: false,

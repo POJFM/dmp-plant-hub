@@ -1,18 +1,19 @@
 import { useEffect, useState, Component } from 'react'
 import axios from 'axios'
 import { useMutation, useQuery } from '@apollo/client'
-import { createSettings } from '../graphql/mutations'
+import { createSettingsMut, measurements } from '../graphql/mutations'
+import { Mutation } from '@apollo/react-components';
 import Map from './Map'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import TextInputField from './fields/TextInputField'
 import ToggleButton from './buttons/ToggleButton'
 import SaveButton from './buttons/SaveButton'
-import { settingsCheck } from './../graphql/queries'
+import { settings } from './../graphql/queries'
 
 export default function InitForm(props: any) {
-	const [createSettingsData, { data: createData, error, loading }] = useMutation(createSettings),
-		{ data: isSettings } = useQuery(settingsCheck),
+	// [createSettingsData, { data: createData, error, loading }] = useMutation(createSettings),
+	const isSettings = useQuery(settings),
 		[formActiveState, setFormActiveState] = useState(false),
 		[saveButtonState, setSaveButtonState] = useState(true),
 		[automaticIrrigationState, setAutomaticIrrigationState] = useState(true),
@@ -30,19 +31,52 @@ export default function InitForm(props: any) {
 		[longitude, setLongitude] = useState<number>(),
 		[mapClicked, setMapClicked] = useState(false)
 
+	//const [createMeasurementsData, { data: createD }] = useMutation(measurements)
+
+
 	let initMeasurementsInterval: any, fetchLocationFromCoordsInterval: any, fetchLocationFromCoordsFixingInterval: any
 
-	console.log(createData)
-	console.log(error)
+	console.log(isSettings)
 
 	useEffect(() => {
 		// USE ONLY WHEN DB IS ON
-		//!isSettings && setFormActiveState(true)
+		!isSettings && setFormActiveState(true)
 
 		formActiveState &&
 			!initMeasurementsInterval &&
 			(initMeasurementsInterval = setInterval(() => initMeasurements(), 3000))
 	}, [])
+
+	const [createSettings] = useMutation(createSettingsMut, {
+		variables: {
+			// limits_trigger: automaticIrrigationState,
+			// water_level_limit: waterLevelLimit,
+			// water_amount_limit: waterAmountLimit,
+			// moist_limit: moistLimit,
+			// scheduled_trigger: scheduledIrrigationState,
+			// irrigation_duration: false, // should be int
+			// hour_range: hourRange,
+			// chart_type: true,
+			// theme: true,
+			// language: true,
+			// location: location,
+			// lat: latitude,
+			// lon: longitude,
+			limits_trigger: true,
+			water_level_limit: 30.5,
+			water_amount_limit: 41.5,
+			moist_limit: 35.7,
+			scheduled_trigger: true,
+			hour_range: 5,
+			location: "Frýdek-Místek",
+			irrigation_duration: true,
+			chart_type: true,
+			language: true,
+			theme: true,
+			lat: 18.9,
+			lon: 49.5
+		},
+	})
 
 	interface IGetCoordsProps {
 		label: string
@@ -79,8 +113,8 @@ export default function InitForm(props: any) {
 			.then((res) => {
 				setLocation(
 					res.data.results[0].components?.town ||
-						res.data.results[0].components?.village ||
-						res.data.results[0].components?.city
+					res.data.results[0].components?.village ||
+					res.data.results[0].components?.city
 				)
 				setCoords(true)
 			})
@@ -120,7 +154,7 @@ export default function InitForm(props: any) {
 		axios
 			.request({
 				method: 'GET',
-				url: `${process.env.REACT_APP_GO_REST_API_URL}/init/measured`,
+				url: `${process.env.REACT_APP_GO_API_URL}/init/measured`,
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -278,23 +312,7 @@ export default function InitForm(props: any) {
 									<div className="flex-row p-1 pt-5px mt-2">
 										<div
 											onClick={() => {
-												createSettingsData({
-													variables: {
-														limits_trigger: automaticIrrigationState,
-														water_level_limit: waterLevelLimit,
-														water_amount_limit: waterAmountLimit,
-														moist_limit: moistLimit,
-														scheduled_trigger: scheduledIrrigationState,
-														irrigation_duration: false, //irrigationDuration
-														hour_range: hourRange,
-														chart_type: true,
-														theme: true,
-														language: true,
-														location: location,
-														lat: latitude,
-														lon: longitude,
-													},
-												})
+												createSettings()
 												setFormActiveState(false)
 											}}
 										>

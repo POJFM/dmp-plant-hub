@@ -32,7 +32,10 @@ export default function Dashboard() {
 		[months, setMonths] = useState<any>(),
 		[weather, setWeather] = useState<any>()
 
-	const { loading, error, data } = useQuery(dashboard)
+	const { loading, error, data } = useQuery(dashboard),
+		chartType = data?.getSettings[0]?.chart_type === false ? 0 : 1
+
+		console.log(data)
 
 	let irrigationHistoryData: any = [],
 		measurementsData: any = [],
@@ -42,9 +45,7 @@ export default function Dashboard() {
 		arrayPassHum: any = [],
 		arrayPassMoist: any = []
 
-	// TEST
-	const settings = { chartType: 1 }
-	// END TEST
+
 
 	// if (error !== undefined) {
 	// 	data.getMeasurements.filter(
@@ -88,9 +89,8 @@ export default function Dashboard() {
 		axios
 			.request({
 				method: 'GET',
-				url: `https://api.openweathermap.org/data/2.5/onecall?lat=${49.68333}&lon=${18.35}&exclude=daily,minutely,alerts&units=metric&appid=${
-					process.env.REACT_APP_FORECAST_API_KEY
-				}`,
+				url: `https://api.openweathermap.org/data/2.5/onecall?lat=${data?.getSettings[0]?.lat}&lon=${data?.getSettings[0]?.lon}&exclude=daily,minutely,alerts&units=metric&appid=${process.env.REACT_APP_FORECAST_API_KEY
+					}`,
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -108,7 +108,7 @@ export default function Dashboard() {
 		axios
 			.request({
 				method: 'GET',
-				url: `${process.env.REACT_APP_GO_REST_API_URL}/live/measure`,
+				url: `${process.env.REACT_APP_GO_API_URL}/live/measure`,
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -233,25 +233,22 @@ export default function Dashboard() {
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterLevel.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{`${
-											data ? data?.getIrrigation[0]?.water_level : 0
-										} cm`}</span>
+										<span className="flex-col flex-center ml-2">{`${data ? data?.getIrrigation[0]?.water_level : 0
+											} cm`}</span>
 									</div>
 									<div className="flex-row pt-5px" title="Objem vody v nádrži">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterAmount.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{`${
-											data ? data?.getIrrigation[0]?.water_amount : 0
-										} l`}</span>
+										<span className="flex-col flex-center ml-2">{`${data ? data?.getIrrigation[0]?.water_amount : 0
+											} l`}</span>
 									</div>
 									<div className="flex-row pt-5px" title="Celkový vyčerpaný objem vody">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterOverdrawn.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{`${
-											data ? data?.getIrrigation[0]?.water_overdrawn : 0
-										} l`}</span>
+										<span className="flex-col flex-center ml-2">{`${data ? data?.getIrrigation[0]?.water_overdrawn : 0
+											} l`}</span>
 									</div>
 								</div>
 							</div>
@@ -259,7 +256,7 @@ export default function Dashboard() {
 						<div className="flex-col w-8/12">
 							<div className="flex-row h-44 -mt-2">
 								<LiveMeasurementsChart
-									chartType={data?.getSettings[0]?.chart_type || settings.chartType}
+									chartType={chartType}
 									temp={temp}
 									hum={hum}
 									moist={moist}
@@ -332,8 +329,8 @@ export default function Dashboard() {
 									</div>
 									<div className="flex-row 2xl:h-96 lg:h-52">
 										<IrrigationChart
-											chartType={settings.chartType /* data.getSettings.chartType */}
-											moist={moist /* data.getSettings.moist */}
+											chartType={chartType}
+											moist={moist /* irrigationHistoryData.moist */}
 											hum={hum /* irrigationHistoryData.hum */}
 											temp={temp /* irrigationHistoryData.temp */}
 											irrigationCount={irrigationCount}
@@ -352,7 +349,7 @@ export default function Dashboard() {
 							</div>
 							<div className="flex-row 2xl:h-64 lg:h-48">
 								<WaterConsumptionChart
-									chartType={settings.chartType /* data.getSettings.chartType */}
+									chartType={chartType}
 									waterOverdrawn={5 /* data.getIrrigation.waterOverdrawn */}
 									irrigationCount={irrigationCount}
 								/>
@@ -362,7 +359,7 @@ export default function Dashboard() {
 							</div>
 							<div className="flex-row 2xl:h-80 lg:h-52">
 								<MeasurementsHistoryChart
-									chartType={settings.chartType /* data.getSettings.chartType */}
+									chartType={chartType}
 									moist={moist /* data.getMeasurements.moist */}
 									hum={hum /* data.getMeasurements.hum */}
 									temp={temp /* data.getMeasurements.temp */}

@@ -3,6 +3,8 @@ package middleware
 import (
 	"encoding/json"
 	"fmt"
+	"math"
+	"math/rand"
 	"net/http"
 	"os"
 
@@ -10,20 +12,40 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/model"
 )
 
-var pumpState = false
-var moist = 0.0
-var hum = 0.0
-var temp = 0.0
+var (
+	pumpState = false
+	moist     float64
+	hum       float64
+	temp      float64
+	WLL       float64
+	LNtitle   string
+	LNstate   = "inactive"
+	LNaction  string
+)
+
+func LoadInitMeasured(initM, initWLL *float64) {
+	moist = *initM
+	WLL = *initWLL
+}
 
 func LoadLiveMeasure(cMoist, cHum, cTemp chan float64) {
-	moist = <-cMoist
+	moist = math.Floor(float64(rand.Float64()*3*10)*100) / 100
 	hum = <-cHum
 	temp = <-cTemp
 }
 
+func LoadLiveNotify(title, state, action string) {
+	LNtitle = title
+	LNstate = state
+	LNaction = action
+}
+
+func GetLiveControl(cPumpState chan bool) {
+	cPumpState <- pumpState
+}
+
 func HandleGetInitMeasured(w http.ResponseWriter, _ *http.Request) {
-	// TEST
-	data := model.InitMeasured{MoistLimit: 53.5, WaterLevelLimit: 50}
+	data := model.InitMeasured{MoistLimit: moist, WaterLevelLimit: WLL}
 
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Content-Type", "application/json")
@@ -40,8 +62,6 @@ func HandleGetInitMeasured(w http.ResponseWriter, _ *http.Request) {
 	}
 
 	w.Write(res)
-
-	fmt.Print("GET INIT MEASURED: ", res)
 }
 
 func HandlePostInitMeasured(w http.ResponseWriter, r *http.Request) {
@@ -77,8 +97,6 @@ func HandleGetLiveMeasure(w http.ResponseWriter, _ *http.Request) {
 	}
 
 	w.Write(res)
-
-	fmt.Print("GET MEASURE: ", res)
 }
 
 func HandlePostLiveMeasure(w http.ResponseWriter, r *http.Request) {
@@ -93,12 +111,10 @@ func HandlePostLiveMeasure(w http.ResponseWriter, r *http.Request) {
 
 	var data model.LiveMeasure
 	_ = json.NewDecoder(r.Body).Decode(&data)
-	fmt.Print("POST MEASURE: ", data)
 }
 
 func HandleGetLiveNotify(w http.ResponseWriter, _ *http.Request) {
-	// actually default values, just haven't figured out how to pass them
-	data := model.LiveNotify{Title: "", State: "inactive", Action: ""}
+	data := model.LiveNotify{Title: LNtitle, State: LNstate, Action: LNaction}
 
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Content-Type", "application/json")
@@ -115,8 +131,6 @@ func HandleGetLiveNotify(w http.ResponseWriter, _ *http.Request) {
 	}
 
 	w.Write(res)
-
-	fmt.Print("GET LIVE NOTIFY: ", res)
 }
 
 func HandlePostLiveNotify(w http.ResponseWriter, r *http.Request) {
@@ -131,11 +145,9 @@ func HandlePostLiveNotify(w http.ResponseWriter, r *http.Request) {
 
 	var data model.LiveNotify
 	_ = json.NewDecoder(r.Body).Decode(&data)
-	fmt.Print("POST NOTIFY: ", data)
 }
 
 func HandleGetLiveControl(w http.ResponseWriter, _ *http.Request) {
-	// actually default values, just haven't figured out how to pass them
 	data := model.LiveControl{Restart: false, PumpState: false}
 
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
@@ -153,8 +165,6 @@ func HandleGetLiveControl(w http.ResponseWriter, _ *http.Request) {
 	}
 
 	w.Write(res)
-
-	fmt.Print("GET LIVE CONTROL: ", res)
 }
 
 func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
@@ -178,8 +188,4 @@ func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 	}
 
 	pumpState = data.PumpState
-}
-
-func GetLiveControl(cPumpState chan bool) {
-	cPumpState <- pumpState
 }
