@@ -35,8 +35,10 @@ func LoadLiveMeasure(dMoist, dHum, dTemp *d.OneToOne) {
 	pdHum := d.NewPoller(dHum)
 
 	moist = *(*float64)(pdMoist.Next())
-	hum = *(*float64)(pdTemp.Next())
-	temp = *(*float64)(pdHum.Next())
+	hum = *(*float64)(pdHum.Next())
+	temp = *(*float64)(pdTemp.Next())
+
+	fmt.Println("kokot", moist)
 }
 
 func LoadLiveNotify(title, state, action string) {

@@ -19,17 +19,19 @@ import (
 	d "code.cloudfoundry.org/go-diodes"
 )
 
-func saveOnFourHoursPeriod(db *db.DB, dMoist, dTemp, dHum *d.OneToOne) {
+var (
+	gMoist float64
+	gHum   float64
+	gTemp  float64
+)
+
+func saveOnFourHoursPeriod(db *db.DB) {
 	utils.WaitTillWholeHour()
 
 	gocron.Every(4).Hours().Do(func() {
-		pdMoist := d.NewPoller(dMoist)
-		pdTemp := d.NewPoller(dTemp)
-		pdHum := d.NewPoller(dHum)
-
-		moist := *(*float64)(pdMoist.Next())
-		hum := *(*float64)(pdTemp.Next())
-		temp := *(*float64)(pdHum.Next())
+		moist := gMoist
+		temp := gTemp
+		hum := gHum
 		irr := false
 
 		measurement := &graphmodel.NewMeasurement{
@@ -48,11 +50,10 @@ func Controller(db *db.DB, sensei *sens.Sensors, dMoist, dTemp, dHum *d.OneToOne
 	fmt.Println("Hello welome to PlantHub...🌿🤖🚿")
 	if db.CheckSettings() {
 		go measurementSequence(sensei, dMoist, dTemp, dHum)
-		go saveOnFourHoursPeriod(db, dMoist, dTemp, dHum)
-		go irrigationSequence(db, sensei, dMoist, dTemp, dHum)
+		go saveOnFourHoursPeriod(db)
+		go irrigationSequence(db, sensei)
 	} else {
 		go initializationSequence(sensei)
-		go measurementSequence(sensei, dMoist, dTemp, dHum)
 		initializationFinished := true
 		for initializationFinished {
 			// stopLED := make(chan bool)
@@ -76,8 +77,8 @@ func Controller(db *db.DB, sensei *sens.Sensors, dMoist, dTemp, dHum *d.OneToOne
 				initializationFinished = false
 				//stopLED <- true
 				go measurementSequence(sensei, dMoist, dTemp, dHum)
-				go saveOnFourHoursPeriod(db, dMoist, dTemp, dHum)
-				go irrigationSequence(db, sensei, dMoist, dTemp, dHum)
+				go saveOnFourHoursPeriod(db)
+				go irrigationSequence(db, sensei)
 			}
 			time.Sleep(1000 * time.Millisecond)
 		}
@@ -99,9 +100,9 @@ func checkingSequence(db *db.DB, sensei *sens.Sensors) {
 		fmt.Println("Water tank limit level reached...🚫🤖🚫")
 
 		for sensei.ReadWaterLevel() < *settings.WaterLevelLimit {
-			sensei.StartLED()
-			time.Sleep(1000 * time.Millisecond)
-			sensei.StopLED()
+			// sensei.StartLED()
+			// time.Sleep(1000 * time.Millisecond)
+			// sensei.StopLED()
 			time.Sleep(1000 * time.Millisecond)
 		}
 	}
@@ -117,36 +118,34 @@ func checkingSequence(db *db.DB, sensei *sens.Sensors) {
 	//req.PostLiveNotify(model.LiveNotify{Title: "", State: "inactive", Action: ""})
 }
 
-func irrigationSequenceMode(db *db.DB, sensei *sens.Sensors, dMoist, dTemp, dHum *d.OneToOne, limitsTrigger, scheduledTrigger bool, moistureLimit, waterAmountLimit, pumpFlow *float64, irrigationDuration *int) {
-	pdMoist := d.NewPoller(dMoist)
-	pdTemp := d.NewPoller(dTemp)
-	pdHum := d.NewPoller(dHum)
-
-	moist := *(*float64)(pdMoist.Next())
-	hum := *(*float64)(pdTemp.Next())
-	temp := *(*float64)(pdHum.Next())
+func irrigationSequenceMode(db *db.DB, sensei *sens.Sensors, limitsTrigger, scheduledTrigger bool, moistureLimit, waterAmountLimit, pumpFlow *float64, irrigationDuration *int) {
+	moist := gMoist
+	temp := gTemp
+	hum := gHum
 	irr := true
 
-	measurement := &graphmodel.NewMeasurement{
-		Hum:            &hum,
-		Temp:           &temp,
-		Moist:          &moist,
-		WithIrrigation: &irr,
-	}
-	ctx := context.Background()
-
-	db.CreateMeasurement(ctx, measurement)
-
 	if scheduledTrigger {
+		measurement := &graphmodel.NewMeasurement{
+			Hum:            &hum,
+			Temp:           &temp,
+			Moist:          &moist,
+			WithIrrigation: &irr,
+		}
+		ctx := context.Background()
+
+		db.CreateMeasurement(ctx, measurement)
+
 		// time passed from running pump will be represented as liters
 		var flowMeasure float64
 		t0 := time.Now()
 
 		fmt.Println("Starting irrigation...🌿🤖🚿")
+
 		mid.LoadLiveNotify("Zavlažování", "inProgress", "Probíhá zavlažování")
 
+		sensei.StartPump()
+
 		for flowMeasure < *waterAmountLimit/(*pumpFlow) || int(time.Since(t0).Seconds()) > *irrigationDuration {
-			sensei.StartPump()
 			flowMeasure = float64(time.Since(t0).Seconds())
 		}
 
@@ -159,21 +158,56 @@ func irrigationSequenceMode(db *db.DB, sensei *sens.Sensors, dMoist, dTemp, dHum
 
 	if limitsTrigger {
 		for {
+			moist := gMoist
+			temp := gTemp
+			hum := gHum
+
 			// time passed from running pump will be represented as liters
 			var flowMeasure float64
 			t0 := time.Now()
 
-			if moist < *moistureLimit {
+			// fmt.Println("kokot debil")
+
+			// fmt.Println("moist: ", moistt)
+			// fmt.Println("moistt: ", tempt)
+			// fmt.Println("moisttt: ", humt)
+			// fmt.Println("moistlimit: ", *moistureLimit)
+			// fmt.Println("irrDur: ", *irrigationDuration)
+
+			if moist > *moistureLimit {
 				fmt.Println("Starting irrigation...🌿🤖🚿")
+
+				measurement := &graphmodel.NewMeasurement{
+					Hum:            &hum,
+					Temp:           &temp,
+					Moist:          &moist,
+					WithIrrigation: &irr,
+				}
+				ctx := context.Background()
+
+				db.CreateMeasurement(ctx, measurement)
 
 				mid.LoadLiveNotify("Zavlažování", "inProgress", "Probíhá zavlažování")
 				//req.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "inProgress", Action: "Probíhá zavlažování"})
 
-				// TimeToOverdraw is calculated by deviding amount by flow
-				for moist < *moistureLimit || flowMeasure < *waterAmountLimit/(*pumpFlow) || int(time.Since(t0).Seconds()) > *irrigationDuration {
-					sensei.StartPump()
+				sensei.StartPump()
+
+				// fmt.Println("moist: ", moistt)
+				// fmt.Println("moistlimit: ", *moistureLimit)
+				// fmt.Println("irrDur: ", *irrigationDuration)
+
+				// TimeToOverdraw is calculated by dividing amount by flow
+				for i := 0; i < *irrigationDuration; i++ {
 					flowMeasure = float64(time.Since(t0).Seconds())
+					fmt.Println(i)
+					//fmt.Println(int(time.Since(t0).Seconds()))
+					if moist < *moistureLimit || flowMeasure < *waterAmountLimit/(*pumpFlow) {
+						i = *irrigationDuration
+					}
+					time.Sleep(1 * time.Second)
 				}
+
+				fmt.Println("přejeb")
 
 				//req.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "finished", Action: "Zavlažování dokončeno"})
 
@@ -186,34 +220,42 @@ func irrigationSequenceMode(db *db.DB, sensei *sens.Sensors, dMoist, dTemp, dHum
 	}
 }
 
-func irrigationSequence(db *db.DB, sensei *sens.Sensors, dMoist, dTemp, dHum *d.OneToOne) {
+func irrigationSequence(db *db.DB, sensei *sens.Sensors) {
 	fmt.Println("Starting PlantHub...🌿🤖🚿")
 
 	settings := db.GetSettingByColumn([]string{"limits_trigger", "scheduled_trigger", "moist_limit", "water_amount_limit", "irrigation_duration", "hour_range"})
 
+	fmt.Println("hook 1")
 	// Definovaný průtok čerpadla
 	var pumpFlow float64 = 1.75 // litr/min
 
 	if *settings.LimitsTrigger && !(*settings.ScheduledTrigger) {
-		irrigationSequenceMode(db, sensei, dMoist, dTemp, dHum, true, false, settings.MoistLimit, settings.WaterAmountLimit, &pumpFlow, settings.IrrigationDuration)
+		fmt.Println("hook 2")
+
+		irrigationSequenceMode(db, sensei, true, false, settings.MoistLimit, settings.WaterAmountLimit, &pumpFlow, settings.IrrigationDuration)
+		fmt.Println("hook 3")
 	}
 
 	if *settings.ScheduledTrigger && !(*settings.LimitsTrigger) {
+		fmt.Println("hook 4")
+
 		utils.WaitTillWholeHour()
 
 		gocron.Every(uint64(*settings.HourRange)).Hours().Do(func() {
-			irrigationSequenceMode(db, sensei, dMoist, dTemp, dHum, false, true, settings.MoistLimit, settings.WaterAmountLimit, &pumpFlow, settings.IrrigationDuration)
+			irrigationSequenceMode(db, sensei, false, true, settings.MoistLimit, settings.WaterAmountLimit, &pumpFlow, settings.IrrigationDuration)
 		})
 		<-gocron.Start()
 	}
 
 	if *settings.ScheduledTrigger && *settings.LimitsTrigger {
-		irrigationSequenceMode(db, sensei, dMoist, dTemp, dHum, true, false, settings.MoistLimit, settings.WaterAmountLimit, &pumpFlow, settings.IrrigationDuration)
+		fmt.Println("hook 5")
+
+		irrigationSequenceMode(db, sensei, true, false, settings.MoistLimit, settings.WaterAmountLimit, &pumpFlow, settings.IrrigationDuration)
 
 		utils.WaitTillWholeHour()
 
 		gocron.Every(uint64(*settings.HourRange)).Hours().Do(func() {
-			irrigationSequenceMode(db, sensei, dMoist, dTemp, dHum, false, true, settings.MoistLimit, settings.WaterAmountLimit, &pumpFlow, settings.IrrigationDuration)
+			irrigationSequenceMode(db, sensei, false, true, settings.MoistLimit, settings.WaterAmountLimit, &pumpFlow, settings.IrrigationDuration)
 		})
 		<-gocron.Start()
 	}
@@ -245,11 +287,16 @@ func initializationSequence(sensei *sens.Sensors) {
 func measurementSequence(sensei *sens.Sensors, dMoist, dTemp, dHum *d.OneToOne) {
 	gocron.Every(2).Seconds().Do(func() {
 		measurements := sensei.Measure()
+
 		fmt.Printf("temp: %f\nhum: %f\nmoi: %f\n", measurements.Temp, measurements.Hum, measurements.Moist)
 
 		moist := math.Floor(measurements.Moist*100) / 100
 		temp := math.Floor(measurements.Temp*100) / 100
 		hum := math.Floor(measurements.Hum*100) / 100
+
+		gMoist = moist
+		gTemp = temp
+		gHum = hum
 
 		dMoist.Set(d.GenericDataType(&moist))
 		dTemp.Set(d.GenericDataType(&temp))
