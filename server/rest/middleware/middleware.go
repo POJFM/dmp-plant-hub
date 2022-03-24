@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	d "code.cloudfoundry.org/go-diodes"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/model"
 	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
@@ -28,10 +29,14 @@ func LoadInitMeasured(initM, initWLL *float64) {
 	WLL = *initWLL
 }
 
-func LoadLiveMeasure(cMoist, cHum, cTemp chan float64) {
-	moist = <-cMoist
-	hum = <-cHum
-	temp = <-cTemp
+func LoadLiveMeasure(dMoist, dHum, dTemp *d.OneToOne) {
+	pdMoist := d.NewPoller(dMoist)
+	pdTemp := d.NewPoller(dTemp)
+	pdHum := d.NewPoller(dHum)
+
+	moist = *(*float64)(pdMoist.Next())
+	hum = *(*float64)(pdTemp.Next())
+	temp = *(*float64)(pdHum.Next())
 }
 
 func LoadLiveNotify(title, state, action string) {

@@ -7,6 +7,7 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 
+	"code.cloudfoundry.org/go-diodes"
 	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
 	seq "github.com/SPSOAFM-IT18/dmp-plant-hub/sequences"
 
@@ -14,27 +15,31 @@ import (
 )
 
 func main() {
-	cMoist := make(chan float64)
-	cTemp := make(chan float64)
-	cHum := make(chan float64)
+	dMoist := diodes.NewOneToOne(1024, diodes.AlertFunc(func(missed int) {
+		log.Printf("Dropped %d dMoist: ", missed)
+	}))
+
+	dTemp := diodes.NewOneToOne(1024, diodes.AlertFunc(func(missed int) {
+		log.Printf("Dropped %d dTemp", missed)
+	}))
+
+	dHum := diodes.NewOneToOne(1024, diodes.AlertFunc(func(missed int) {
+		log.Printf("Dropped %d dHum", missed)
+	}))
 
 	db := database.Connect()
 	sensei := sens.Init()
 	sensei.StopLED()
 	sensei.StopPump()
 
-	/* sensors test
-	sensei := sens.Init()
-	fmt.Println("Sensors initialized!")
-	for {
-		measurement := sensei.Measure()
-		wl := sensei.ReadWaterLevel()
-		fmt.Printf("temp: %f\nhum: %f\nmoi: %f\nwl: %f\n", measurement.Temp, measurement.Hum, measurement.Moist, wl)
-		time.Sleep(2 * time.Second)
-	}
-	*/
+	// for {
+	// 	measurement := sensei.Measure()
+	// 	wl := sensei.ReadWaterLevel()
+	// 	fmt.Printf("temp: %f\nhum: %f\nmoi: %f\nwl: %f\n", measurement.Temp, measurement.Hum, measurement.Moist, wl)
+	// 	time.Sleep(2 * time.Second)
+	// }
 
-	go seq.Controller(db, sensei, cMoist, cTemp, cHum)
+	go seq.Controller(db, sensei, dMoist, dTemp, dHum)
 
 	log.Fatal(http.ListenAndServe(":"+env.Process("GO_API_PORT"), r.Router(db, sensei)))
 }
