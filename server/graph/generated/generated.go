@@ -469,7 +469,7 @@ input NewSettings {
     scheduled_trigger: Boolean
     hour_range: Int
     location: String
-    irrigation_duration: Boolean
+    irrigation_duration: Int
     chart_type: Boolean
     language: Boolean
     theme: Boolean
@@ -2920,7 +2920,7 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("irrigation_duration"))
-			it.IrrigationDuration, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
+			it.IrrigationDuration, err = ec.unmarshalOInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}

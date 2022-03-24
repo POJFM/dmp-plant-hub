@@ -34,7 +34,7 @@ type NewSettings struct {
 	ScheduledTrigger   *bool    `json:"scheduled_trigger"`
 	HourRange          *int     `json:"hour_range"`
 	Location           *string  `json:"location"`
-	IrrigationDuration *bool    `json:"irrigation_duration"`
+	IrrigationDuration *int     `json:"irrigation_duration"`
 	ChartType          *bool    `json:"chart_type"`
 	Language           *bool    `json:"language"`
 	Theme              *bool    `json:"theme"`
