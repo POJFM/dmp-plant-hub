@@ -1,0 +1,5 @@
+/build
+gqlgen.yml
+run.sh
+tools.go
+.env.example
