@@ -7,6 +7,6 @@ export CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=7
 
 go build -o build/build_magni
 
-scp build/build_magni root@Magni:/root/server-debug/
+scp build/build_magni root@192.168.0.10:/root/server-debug/
 
-echo kokos | ssh -tt root@Magni "cd /root/server-debug; chmod +x build_magni; ./build_magni"
+echo kokos | ssh -tt root@192.168.0.10 "cd /root/server-debug; chmod +x build_magni; ./build_magni"

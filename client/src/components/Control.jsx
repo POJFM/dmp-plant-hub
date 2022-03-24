@@ -20,12 +20,14 @@ export default function Control(props) {
 		!pumpState && setTimeout(() => setTimerState(false), 600)
 	}, [])
 
-	const handleClickNHoldStart = () => {
+	const handleClickNStart = () => {
 		setPumpState(true)
 		setTimerState(false)
 	}
 
 	const handleClickNHold = () => {
+		setPumpState(true)
+		setTimerState(false)
 		setTimerState(true)
 
 		axios
@@ -114,7 +116,7 @@ export default function Control(props) {
 											<div className="button hover:button-hover">
 												<ClickNHold
 													time={0.1}
-													onStart={handleClickNHoldStart}
+													onStart={handleClickNStart}
 													onClickNHold={handleClickNHold}
 													onEnd={handleClickNHoldEnd}
 												>

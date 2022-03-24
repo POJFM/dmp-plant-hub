@@ -3,13 +3,12 @@ package middleware
 import (
 	"encoding/json"
 	"fmt"
-	"math"
-	"math/rand"
 	"net/http"
 	"os"
 
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/model"
+	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
 )
 
 var (
@@ -21,6 +20,7 @@ var (
 	LNtitle   string
 	LNstate   = "inactive"
 	LNaction  string
+	sensPump  *sens.Sensors
 )
 
 func LoadInitMeasured(initM, initWLL *float64) {
@@ -29,7 +29,7 @@ func LoadInitMeasured(initM, initWLL *float64) {
 }
 
 func LoadLiveMeasure(cMoist, cHum, cTemp chan float64) {
-	moist = math.Floor(float64(rand.Float64()*3*10)*100) / 100
+	moist = <-cMoist
 	hum = <-cHum
 	temp = <-cTemp
 }
@@ -42,6 +42,10 @@ func LoadLiveNotify(title, state, action string) {
 
 func GetLiveControl(cPumpState chan bool) {
 	cPumpState <- pumpState
+}
+
+func LoadPumpState(sensei *sens.Sensors) {
+	sensPump = sensei
 }
 
 func HandleGetInitMeasured(w http.ResponseWriter, _ *http.Request) {
@@ -185,6 +189,14 @@ func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 
 	if data.Restart {
 		os.Exit(0)
+	}
+
+	if data.PumpState {
+		sensPump.StartPump()
+	}
+
+	if !data.PumpState {
+		sensPump.StopPump()
 	}
 
 	pumpState = data.PumpState

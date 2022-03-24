@@ -3,13 +3,14 @@ package database
 import (
 	"context"
 	"database/sql"
+	"log"
+
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/model"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
 	"github.com/uptrace/bun/extra/bundebug"
-	"log"
 )
 
 type DB struct {
@@ -20,7 +21,7 @@ func Connect() *DB {
 	// BUNDB
 
 	conn := sql.OpenDB(pgdriver.NewConnector(
-		pgdriver.WithDSN("postgres://postgres:@localhost:5420/test?sslmode=disable"),
+		pgdriver.WithDSN("postgres://postgres:@127.0.0.1:5420/test?sslmode=disable"),
 		pgdriver.WithUser(env.Process("DB_USER")),
 		pgdriver.WithPassword(env.Process("DB_PSWD")),
 		pgdriver.WithDatabase(env.Process("DB_NAME")),

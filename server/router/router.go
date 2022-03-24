@@ -11,12 +11,13 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/graph/generated"
 	mid "github.com/SPSOAFM-IT18/dmp-plant-hub/rest/middleware"
+	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
 	"github.com/go-chi/chi"
 	webs "github.com/gorilla/websocket"
 	"github.com/rs/cors"
 )
 
-func Router(db *database.DB) *chi.Mux {
+func Router(db *database.DB, sensei *sens.Sensors) *chi.Mux {
 	r := chi.NewRouter()
 
 	//Add CORS middleware around every request
@@ -54,6 +55,8 @@ func Router(db *database.DB) *chi.Mux {
 
 	r.MethodFunc("GET", "/live/control", mid.HandleGetLiveControl)
 	r.MethodFunc("POST", "/live/control", mid.HandlePostLiveControl)
+
+	mid.LoadPumpState(sensei)
 
 	http.Handle("/", r)
 

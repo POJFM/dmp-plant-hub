@@ -7,20 +7,19 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 
-	// sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
-	// seq "github.com/SPSOAFM-IT18/dmp-plant-hub/sequences"
+	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
+	seq "github.com/SPSOAFM-IT18/dmp-plant-hub/sequences"
 
 	r "github.com/SPSOAFM-IT18/dmp-plant-hub/router"
 )
 
 func main() {
-	//cMoist := make(chan float64)
-	//cTemp := make(chan float64)
-	//cHum := make(chan float64)
-	//cPumpState := make(chan bool)
+	cMoist := make(chan float64)
+	cTemp := make(chan float64)
+	cHum := make(chan float64)
 
 	db := database.Connect()
-	//sensei := sens.Init()
+	sensei := sens.Init()
 
 	/* sensors test
 	sensei := sens.Init()
@@ -33,7 +32,7 @@ func main() {
 	}
 	*/
 
-	//go seq.Controller(db, sensei, cMoist, cTemp, cHum, cPumpState)
+	go seq.Controller(db, sensei, cMoist, cTemp, cHum)
 
-	log.Fatal(http.ListenAndServe(":"+env.Process("GO_API_PORT"), r.Router(db)))
+	log.Fatal(http.ListenAndServe(":"+env.Process("GO_API_PORT"), r.Router(db, sensei)))
 }
