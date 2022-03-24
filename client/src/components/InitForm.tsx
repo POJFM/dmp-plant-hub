@@ -45,7 +45,7 @@ export default function InitForm(props: any) {
 		formActiveState &&
 			!initMeasurementsInterval &&
 			(initMeasurementsInterval = setInterval(() => initMeasurements(), 3000))
-	}, [])
+	}, [formActiveState])
 
 	const [createSettings] = useMutation(createSettingsMut, {
 		variables: {
@@ -149,8 +149,6 @@ export default function InitForm(props: any) {
 	}
 
 	const initMeasurements = () => {
-		console.log('fetch init measurements')
-
 		axios
 			.request({
 				method: 'GET',

@@ -1,9 +1,10 @@
 package sensors
 
 import (
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors/hcsr"
 	"log"
 	"time"
+
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors/hcsr"
 
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/sensors/dht"
 	"github.com/stianeikeland/go-rpio/v4"
@@ -67,6 +68,16 @@ func (s *Sensors) StartPump() {
 func (s *Sensors) StopPump() {
 	PUMP.Low()
 	log.Printf("PUMP stopped")
+}
+
+func (s *Sensors) StartLED() {
+	LED.High()
+	log.Printf("LED started")
+}
+
+func (s *Sensors) StopLED() {
+	LED.Low()
+	log.Printf("LED stopped")
 }
 
 func (s *Sensors) ReadDHT() (hum, temp float64) {

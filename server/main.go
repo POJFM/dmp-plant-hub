@@ -20,6 +20,8 @@ func main() {
 
 	db := database.Connect()
 	sensei := sens.Init()
+	sensei.StopLED()
+	sensei.StopPump()
 
 	/* sensors test
 	sensei := sens.Init()

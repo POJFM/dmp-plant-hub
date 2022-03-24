@@ -38,6 +38,7 @@ func saveOnFourHoursPeriod(db *db.DB, cMoist, cTemp, cHum chan float64) {
 }
 
 func Controller(db *db.DB, sensei *sens.Sensors, cMoist, cTemp, cHum chan float64) {
+	fmt.Println("Hello welome to PlantHub...🌿🤖🚿")
 	if db.CheckSettings() {
 		go measurementSequence(sensei, cMoist, cTemp, cHum)
 		go saveOnFourHoursPeriod(db, cMoist, cTemp, cHum)
@@ -46,26 +47,26 @@ func Controller(db *db.DB, sensei *sens.Sensors, cMoist, cTemp, cHum chan float6
 		go initializationSequence(sensei)
 		initializationFinished := true
 		for initializationFinished {
-			stopLED := make(chan bool)
-			go func() {
-				for {
-					select {
-					case <-stopLED:
-						return
-					default:
-						for i := 0; i < 2; i++ {
-							sens.LED.High()
-							time.Sleep(500 * time.Millisecond)
-							sens.LED.Low()
-							time.Sleep(500 * time.Millisecond)
-						}
-						time.Sleep(1500 * time.Millisecond)
-					}
-				}
-			}()
+			// stopLED := make(chan bool)
+			// go func() {
+			// 	for {
+			// 		select {
+			// 		case <-stopLED:
+			// 			return
+			// 		default:
+			// 			// for i := 0; i < 2; i++ {
+			// 			// 	sensei.StartLED()
+			// 			// 	time.Sleep(500 * time.Millisecond)
+			// 			// 	sensei.StopLED()
+			// 			// 	time.Sleep(500 * time.Millisecond)
+			// 			// }
+			// 			time.Sleep(1500 * time.Millisecond)
+			// 		}
+			// 	}
+			// }()
 			if db.CheckSettings() {
 				initializationFinished = false
-				stopLED <- true
+				//stopLED <- true
 				go measurementSequence(sensei, cMoist, cTemp, cHum)
 				go saveOnFourHoursPeriod(db, cMoist, cTemp, cHum)
 				go irrigationSequence(db, sensei, cMoist, cTemp, cHum)
@@ -90,9 +91,9 @@ func checkingSequence(db *db.DB, sensei *sens.Sensors) {
 		fmt.Println("Water tank limit level reached...🚫🤖🚫")
 
 		for sensei.ReadWaterLevel() < *settings.WaterLevelLimit {
-			sens.LED.High()
+			sensei.StartLED()
 			time.Sleep(1000 * time.Millisecond)
-			sens.LED.Low()
+			sensei.StopLED()
 			time.Sleep(1000 * time.Millisecond)
 		}
 	}
@@ -132,17 +133,18 @@ func irrigationSequenceMode(db *db.DB, sensei *sens.Sensors, cMoist, cTemp, cHum
 		fmt.Println("Starting irrigation...🌿🤖🚿")
 		mid.LoadLiveNotify("Zavlažování", "inProgress", "Probíhá zavlažování")
 
+		// až to ten magor spraví tak toto
 		// for flowMeasure < *waterAmountLimit/(*pumpFlow) || int(time.Since(t0).Seconds()) > *irrigationDuration {
-		// 	sens.PUMP.High()
+		// 	sensei.StartPump()
 		// 	flowMeasure = float64(time.Since(t0).Seconds())
 		// }
 
 		for <-cMoist < (*moistureLimit) || flowMeasure < (*waterAmountLimit)/(*pumpFlow) || *irrigationDuration {
-			sens.PUMP.High()
+			sensei.StartPump()
 			flowMeasure = float64(time.Since(t0).Seconds())
 		}
 
-		sens.PUMP.Low()
+		sensei.StopPump()
 
 		mid.LoadLiveNotify("Zavlažování", "finished", "Zavlažování dokončeno")
 
@@ -163,18 +165,19 @@ func irrigationSequenceMode(db *db.DB, sensei *sens.Sensors, cMoist, cTemp, cHum
 
 				// TimeToOverdraw is calculated by deviding amount by flow
 				for <-cMoist < (*moistureLimit) || flowMeasure < (*waterAmountLimit)/(*pumpFlow) || *irrigationDuration {
-					sens.PUMP.High()
+					sensei.StartPump()
 					flowMeasure = float64(time.Since(t0).Seconds())
 				}
 
+				// až to ten magor spraví tak toto
 				// for <-cMoist < *moistureLimit || flowMeasure < *waterAmountLimit/(*pumpFlow) || int(time.Since(t0).Seconds()) > *irrigationDuration {
-				// 	sens.PUMP.High()
+				// 	sensei.StartPump()
 				// 	flowMeasure = float64(time.Since(t0).Seconds())
 				// }
 
 				//req.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "finished", Action: "Zavlažování dokončeno"})
 
-				sens.PUMP.Low()
+				sensei.StopPump()
 
 				checkingSequence(db, sensei)
 			}
@@ -184,6 +187,8 @@ func irrigationSequenceMode(db *db.DB, sensei *sens.Sensors, cMoist, cTemp, cHum
 }
 
 func irrigationSequence(db *db.DB, sensei *sens.Sensors, cMoist, cTemp, cHum chan float64) {
+	fmt.Println("Starting PlantHub...🌿🤖🚿")
+
 	settings := db.GetSettingByColumn([]string{"limits_trigger", "scheduled_trigger", "moist_limit", "water_amount_limit", "irrigation_duration", "hour_range"})
 
 	// Definovaný průtok čerpadla
