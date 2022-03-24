@@ -16,7 +16,7 @@ type Setting {
     scheduled_trigger: Boolean
     hour_range: Int
     location: String
-    irrigation_duration: Boolean
+    irrigation_duration: Int
     chart_type: Boolean
     language: Boolean
     theme: Boolean

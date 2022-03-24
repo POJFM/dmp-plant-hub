@@ -429,7 +429,7 @@ type Setting {
     scheduled_trigger: Boolean
     hour_range: Int
     location: String
-    irrigation_duration: Boolean
+    irrigation_duration: Int
     chart_type: Boolean
     language: Boolean
     theme: Boolean
@@ -1517,9 +1517,9 @@ func (ec *executionContext) _Setting_irrigation_duration(ctx context.Context, fi
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*bool)
+	res := resTmp.(*int)
 	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Setting_chart_type(ctx context.Context, field graphql.CollectedField, obj *model.Setting) (ret graphql.Marshaler) {
