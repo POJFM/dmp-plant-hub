@@ -7,7 +7,6 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 
-	"code.cloudfoundry.org/go-diodes"
 	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
 	seq "github.com/SPSOAFM-IT18/dmp-plant-hub/sequences"
 
@@ -15,18 +14,6 @@ import (
 )
 
 func main() {
-	dMoist := diodes.NewOneToOne(1024, diodes.AlertFunc(func(missed int) {
-		log.Printf("Dropped %d dMoist: ", missed)
-	}))
-
-	dTemp := diodes.NewOneToOne(1024, diodes.AlertFunc(func(missed int) {
-		log.Printf("Dropped %d dTemp", missed)
-	}))
-
-	dHum := diodes.NewOneToOne(1024, diodes.AlertFunc(func(missed int) {
-		log.Printf("Dropped %d dHum", missed)
-	}))
-
 	db := database.Connect()
 	sensei := sens.Init()
 	sensei.StopLED()
@@ -39,7 +26,7 @@ func main() {
 	// 	time.Sleep(2 * time.Second)
 	// }
 
-	go seq.Controller(db, sensei, dMoist, dTemp, dHum)
+	go seq.Controller(db, sensei)
 
 	log.Fatal(http.ListenAndServe(":"+env.Process("GO_API_PORT"), r.Router(db, sensei)))
 }

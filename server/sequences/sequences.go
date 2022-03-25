@@ -15,8 +15,6 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/utils"
 
 	"github.com/jasonlvhit/gocron"
-
-	d "code.cloudfoundry.org/go-diodes"
 )
 
 var (
@@ -46,10 +44,10 @@ func saveOnFourHoursPeriod(db *db.DB) {
 	<-gocron.Start()
 }
 
-func Controller(db *db.DB, sensei *sens.Sensors, dMoist, dTemp, dHum *d.OneToOne) {
+func Controller(db *db.DB, sensei *sens.Sensors) {
 	fmt.Println("Hello welome to PlantHub...🌿🤖🚿")
 	if db.CheckSettings() {
-		go measurementSequence(sensei, dMoist, dTemp, dHum)
+		go measurementSequence(sensei)
 		go saveOnFourHoursPeriod(db)
 		go irrigationSequence(db, sensei)
 	} else {
@@ -76,7 +74,7 @@ func Controller(db *db.DB, sensei *sens.Sensors, dMoist, dTemp, dHum *d.OneToOne
 			if db.CheckSettings() {
 				initializationFinished = false
 				//stopLED <- true
-				go measurementSequence(sensei, dMoist, dTemp, dHum)
+				go measurementSequence(sensei)
 				go saveOnFourHoursPeriod(db)
 				go irrigationSequence(db, sensei)
 			}
@@ -284,7 +282,7 @@ func initializationSequence(sensei *sens.Sensors) {
 	//req.PostInitMeasured(model.InitMeasured{MoistLimit: moistureLevel, WaterLevelLimit: waterLevel})
 }
 
-func measurementSequence(sensei *sens.Sensors, dMoist, dTemp, dHum *d.OneToOne) {
+func measurementSequence(sensei *sens.Sensors) {
 	gocron.Every(2).Seconds().Do(func() {
 		measurements := sensei.Measure()
 
@@ -298,11 +296,7 @@ func measurementSequence(sensei *sens.Sensors, dMoist, dTemp, dHum *d.OneToOne) 
 		gTemp = temp
 		gHum = hum
 
-		dMoist.Set(d.GenericDataType(&moist))
-		dTemp.Set(d.GenericDataType(&temp))
-		dHum.Set(d.GenericDataType(&hum))
-
-		mid.LoadLiveMeasure(dMoist, dHum, dTemp)
+		mid.LoadLiveMeasure(&moist, &hum, &temp)
 	},
 	)
 	<-gocron.Start()
