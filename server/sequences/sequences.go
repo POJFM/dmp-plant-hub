@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"math"
+	"strconv"
 	"time"
 
 	db "github.com/SPSOAFM-IT18/dmp-plant-hub/database"
@@ -26,10 +27,10 @@ var (
 func saveOnFourHoursPeriod(db *db.DB) {
 	utils.WaitTillWholeHour()
 
-	gocron.Every(4).Hours().Do(func() {
-		moist := gMoist
-		temp := gTemp
-		hum := gHum
+	gocron.Every(15).Seconds().Do(func() {
+		moist := 45.8
+		temp := 3.48
+		hum := 15.5
 		irr := false
 
 		measurement := &graphmodel.NewMeasurement{
@@ -295,11 +296,15 @@ func measurementSequence(sensei *sens.Sensors) {
 		measurements := sensei.Measure()
 
 		// 550 as highest limit, therefore 100%
-		moist := 100 * (math.Floor(measurements.Moist*100) / 100) / 550
+		moiststr, _ := strconv.ParseFloat(strconv.FormatFloat(100*(math.Floor(measurements.Moist*100)/100)/500, 'f', -2, 64), 64)
+		moist, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", moiststr), 64)
+
 		temp := math.Floor(measurements.Temp*100) / 100
 		hum := math.Floor(measurements.Hum*100) / 100
 
 		fmt.Printf("temp: %f\nhum: %f\nmoi: %f\n", temp, hum, moist)
+
+		fmt.Printf("moist floor: %f\n", math.Floor(measurements.Moist*100)/100)
 
 		gMoist = moist
 		gTemp = temp
