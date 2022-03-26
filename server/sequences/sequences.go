@@ -296,7 +296,7 @@ func measurementSequence(sensei *sens.Sensors) {
 		measurements := sensei.Measure()
 
 		// 550 as highest limit, therefore 100%
-		moiststr, _ := strconv.ParseFloat(strconv.FormatFloat(100*(math.Floor(measurements.Moist*100)/100)/500, 'f', -2, 64), 64)
+		moiststr, _ := strconv.ParseFloat(strconv.FormatFloat(100*(math.Floor(measurements.Moist*100)/100)/550, 'f', -2, 64), 64)
 		moist, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", moiststr), 64)
 
 		temp := math.Floor(measurements.Temp*100) / 100
@@ -304,8 +304,7 @@ func measurementSequence(sensei *sens.Sensors) {
 
 		fmt.Printf("temp: %f\nhum: %f\nmoi: %f\n", temp, hum, moist)
 
-		fmt.Printf("moist floor: %f\n", math.Floor(measurements.Moist*100)/100)
-
+		fmt.Println("kokot: ", math.Floor(measurements.Moist*100)/100)
 		gMoist = moist
 		gTemp = temp
 		gHum = hum

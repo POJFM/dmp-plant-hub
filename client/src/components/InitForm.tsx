@@ -13,7 +13,7 @@ import { settings } from './../graphql/queries'
 
 export default function InitForm(props: any) {
 	// [createSettingsData, { data: createData, error, loading }] = useMutation(createSettings),
-	const isSettings = useQuery(settings),
+	const { data: isSettings } = useQuery(settings), 
 		[formActiveState, setFormActiveState] = useState(false),
 		[saveButtonState, setSaveButtonState] = useState(true),
 		[automaticIrrigationState, setAutomaticIrrigationState] = useState(true),
@@ -31,16 +31,10 @@ export default function InitForm(props: any) {
 		[longitude, setLongitude] = useState<number>(),
 		[mapClicked, setMapClicked] = useState(false)
 
-	//const [createMeasurementsData, { data: createD }] = useMutation(measurements)
-
-
 	let initMeasurementsInterval: any, fetchLocationFromCoordsInterval: any, fetchLocationFromCoordsFixingInterval: any
-
-	console.log(isSettings)
-
+	
 	useEffect(() => {
-		// USE ONLY WHEN DB IS ON
-		!isSettings && setFormActiveState(true)
+		isSettings?.getSettings[0] && setFormActiveState(true)
 
 		formActiveState &&
 			!initMeasurementsInterval &&
@@ -49,32 +43,19 @@ export default function InitForm(props: any) {
 
 	const [createSettings] = useMutation(createSettingsMut, {
 		variables: {
-			// limits_trigger: automaticIrrigationState,
-			// water_level_limit: waterLevelLimit,
-			// water_amount_limit: waterAmountLimit,
-			// moist_limit: moistLimit,
-			// scheduled_trigger: scheduledIrrigationState,
-			// irrigation_duration: false, // should be int
-			// hour_range: hourRange,
-			// chart_type: true,
-			// theme: true,
-			// language: true,
-			// location: location,
-			// lat: latitude,
-			// lon: longitude,
-			limits_trigger: true,
-			water_level_limit: 30.5,
-			water_amount_limit: 41.5,
-			moist_limit: 35.7,
-			scheduled_trigger: true,
-			hour_range: 5,
-			location: "Frýdek-Místek",
-			irrigation_duration: true,
-			chart_type: true,
-			language: true,
+			limits_trigger: automaticIrrigationState,
+			water_level_limit: waterLevelLimit,
+			water_amount_limit: waterAmountLimit,
+			moist_limit: moistLimit,
+			scheduled_trigger: scheduledIrrigationState,
+			irrigation_duration: irrigationDuration,
+			hour_range: hourRange,
+			chart_type: false,
 			theme: true,
-			lat: 18.9,
-			lon: 49.5
+			language: true,
+			location: location,
+			lat: latitude,
+			lon: longitude,
 		},
 	})
 
