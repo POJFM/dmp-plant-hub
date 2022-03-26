@@ -44,10 +44,10 @@ create table if not exists public.irrigation_history
     ID              serial
         constraint irrigation_history_pk
             primary key,
-    timestamp       timestamp not null,
-    water_level     float     not null,
-    water_amount    float     not null,
-    water_overdrawn float     not null
+    timestamp       timestamp default now() not null,
+    water_level     float                   not null,
+    water_amount    float                   not null,
+    water_overdrawn float                   not null
 );
 
 create unique index irrigation_history_id_uindex
