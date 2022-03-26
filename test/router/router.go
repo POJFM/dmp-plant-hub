@@ -3,26 +3,59 @@ package router
 import (
 	"net/http"
 
+	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/handler/transport"
+	plg "github.com/99designs/gqlgen/graphql/playground"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/database"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/env"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/graph"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/graph/generated"
 	mid "github.com/SPSOAFM-IT18/dmp-plant-hub/test/middleware"
-
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi"
+	webs "github.com/gorilla/websocket"
+	"github.com/rs/cors"
 )
 
-func Router() *mux.Router {
-	router := mux.NewRouter()
+func Router(db *database.DB) *chi.Mux {
+	r := chi.NewRouter()
 
-	router.HandleFunc("/init/measured", mid.HandleGetInitMeasured).Methods("GET", "OPTIONS")
-	router.HandleFunc("/init/measured", mid.HandlePostInitMeasured).Methods("POST", "OPTIONS")
+	//Add CORS middleware around every request
+	//See https://github.com/rs/cors for full option listing
+	r.Use(cors.New(cors.Options{
+		AllowedOrigins:   []string{env.Process("CORS")},
+		AllowCredentials: true,
+		Debug:            true,
+	}).Handler)
 
-	router.HandleFunc("/live/measure", mid.HandleGetLiveMeasure).Methods("GET", "OPTIONS")
-	router.HandleFunc("/live/measure", mid.HandlePostLiveMeasure).Methods("POST", "OPTIONS")
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{DB: db}}))
 
-	router.HandleFunc("/live/notify", mid.HandleGetLiveNotify).Methods("GET", "OPTIONS")
-	router.HandleFunc("/live/notify", mid.HandlePostLiveNotify).Methods("POST", "OPTIONS")
+	srv.AddTransport(&transport.Websocket{
+		Upgrader: webs.Upgrader{
+			CheckOrigin: func(r *http.Request) bool {
+				// Check against your desired domains here
+				return r.Host == env.Process("CORS")
+			},
+			ReadBufferSize:  1024,
+			WriteBufferSize: 1024,
+		},
+	})
 
-	router.HandleFunc("/live/control", mid.HandleGetLiveControl).Methods("GET", "OPTIONS")
-	router.HandleFunc("/live/control", mid.HandlePostLiveControl).Methods("POST", "OPTIONS")
+	r.Handle("/graphql", plg.Handler("GraphQL playground", "/query"))
+	r.Handle("/query", srv)
 
-	http.Handle("/", router)
-	return router
+	r.MethodFunc("GET", "/init/measured", mid.HandleGetInitMeasured)
+	r.MethodFunc("POST", "/init/measured", mid.HandlePostInitMeasured)
+
+	r.MethodFunc("GET", "/live/measure", mid.HandleGetLiveMeasure)
+	r.MethodFunc("POST", "/live/measure", mid.HandlePostLiveMeasure)
+
+	r.MethodFunc("GET", "/live/notify", mid.HandleGetLiveNotify)
+	r.MethodFunc("POST", "/live/notify", mid.HandlePostLiveNotify)
+
+	r.MethodFunc("GET", "/live/control", mid.HandleGetLiveControl)
+	r.MethodFunc("POST", "/live/control", mid.HandlePostLiveControl)
+
+	http.Handle("/", r)
+
+	return r
 }
