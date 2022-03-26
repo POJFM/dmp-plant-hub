@@ -83,27 +83,33 @@ func Controller(db *db.DB, sensei *sens.Sensors) {
 	}
 }
 
-func checkingSequence(db *db.DB, sensei *sens.Sensors) {
-	settings := db.GetSettingByColumn([]string{"water_level_limit"})
+func CheckingSequence(db *db.DB, sensei *sens.Sensors) {
+	fmt.Println("Starting Checking Sequence...🌿🤖🚿")
+
+	//settings := db.GetSettingByColumn([]string{"water_level_limit"})
 
 	mid.LoadLiveNotify("Kontrola Nádrže", "inProgress", "Probíhá kontrola nádrže")
 	//req.PostLiveNotify(model.LiveNotify{Title: "Kontrola Nádrže", State: "inProgress", Action: "Probíhá kontrola nádrže"})
 
 	time.Sleep(3000 * time.Millisecond)
 
-	if sensei.ReadWaterLevel() < *settings.WaterLevelLimit {
-		mid.LoadLiveNotify("Doplňte nádrž", "physicalHelpRequired", "Nádrž je prázdná")
-		//req.PostLiveNotify(model.LiveNotify{Title: "Doplňte nádrž", State: "physicalHelpRequired", Action: "Nádrž je prázdná"})
+	// if sensei.ReadWaterLevel() < *settings.WaterLevelLimit {
+	// 	mid.LoadLiveNotify("Doplňte nádrž", "physicalHelpRequired", "Nádrž je prázdná")
+	// 	//req.PostLiveNotify(model.LiveNotify{Title: "Doplňte nádrž", State: "physicalHelpRequired", Action: "Nádrž je prázdná"})
 
-		fmt.Println("Water tank limit level reached...🚫🤖🚫")
+	// 	fmt.Println("Water tank limit level reached...🚫🤖🚫")
 
-		for sensei.ReadWaterLevel() < *settings.WaterLevelLimit {
-			// sensei.StartLED()
-			// time.Sleep(1000 * time.Millisecond)
-			// sensei.StopLED()
-			time.Sleep(1000 * time.Millisecond)
-		}
-	}
+	// 	fmt.Println("namerena nadrz: ", sensei.ReadWaterLevel())
+	// 	fmt.Println("limit nadrze: ", *settings.WaterLevelLimit)
+
+	// 	for sensei.ReadWaterLevel() < *settings.WaterLevelLimit {
+	// 		// sensei.StartLED()
+	// 		// time.Sleep(1000 * time.Millisecond)
+	// 		// sensei.StopLED()
+	// 		fmt.Println("dopln nadrz chuju")
+	// 		time.Sleep(1000 * time.Millisecond)
+	// 	}
+	// }
 
 	waterLevel := fmt.Sprintf("V nádrži zbývá %fl vody", sensei.ReadWaterLevel())
 	// Dodělat na water amount v litrech
@@ -151,7 +157,7 @@ func irrigationSequenceMode(db *db.DB, sensei *sens.Sensors, limitsTrigger, sche
 
 		mid.LoadLiveNotify("Zavlažování", "finished", "Zavlažování dokončeno")
 
-		checkingSequence(db, sensei)
+		CheckingSequence(db, sensei)
 	}
 
 	if limitsTrigger {
@@ -172,7 +178,7 @@ func irrigationSequenceMode(db *db.DB, sensei *sens.Sensors, limitsTrigger, sche
 			// fmt.Println("moistlimit: ", *moistureLimit)
 			// fmt.Println("irrDur: ", *irrigationDuration)
 
-			if moist > *moistureLimit {
+			if (moist > *moistureLimit) || mid.GetLiveControl() {
 				fmt.Println("Starting irrigation...🌿🤖🚿")
 
 				measurement := &graphmodel.NewMeasurement{
@@ -194,15 +200,17 @@ func irrigationSequenceMode(db *db.DB, sensei *sens.Sensors, limitsTrigger, sche
 				// fmt.Println("moistlimit: ", *moistureLimit)
 				// fmt.Println("irrDur: ", *irrigationDuration)
 
-				// TimeToOverdraw is calculated by dividing amount by flow
-				for i := 0; i < *irrigationDuration; i++ {
-					flowMeasure = float64(time.Since(t0).Seconds())
-					fmt.Println(i)
-					//fmt.Println(int(time.Since(t0).Seconds()))
-					if moist < *moistureLimit || flowMeasure < *waterAmountLimit/(*pumpFlow) {
-						i = *irrigationDuration
+				if moist > *moistureLimit {
+					// TimeToOverdraw is calculated by dividing amount by flow
+					for i := 0; i < *irrigationDuration; i++ {
+						flowMeasure = float64(time.Since(t0).Seconds())
+						fmt.Println(i)
+						//fmt.Println(int(time.Since(t0).Seconds()))
+						if moist < *moistureLimit || flowMeasure < *waterAmountLimit/(*pumpFlow) {
+							i = *irrigationDuration
+						}
+						time.Sleep(1 * time.Second)
 					}
-					time.Sleep(1 * time.Second)
 				}
 
 				fmt.Println("přejeb")
@@ -211,9 +219,9 @@ func irrigationSequenceMode(db *db.DB, sensei *sens.Sensors, limitsTrigger, sche
 
 				sensei.StopPump()
 
-				checkingSequence(db, sensei)
+				CheckingSequence(db, sensei)
 			}
-			time.Sleep(1 * time.Minute)
+			time.Sleep(2 * time.Second)
 		}
 	}
 }
@@ -286,11 +294,12 @@ func measurementSequence(sensei *sens.Sensors) {
 	gocron.Every(2).Seconds().Do(func() {
 		measurements := sensei.Measure()
 
-		fmt.Printf("temp: %f\nhum: %f\nmoi: %f\n", measurements.Temp, measurements.Hum, measurements.Moist)
-
-		moist := math.Floor(measurements.Moist*100) / 100
+		// 550 as highest limit, therefore 100%
+		moist := 100 * (math.Floor(measurements.Moist*100) / 100) / 550
 		temp := math.Floor(measurements.Temp*100) / 100
 		hum := math.Floor(measurements.Hum*100) / 100
+
+		fmt.Printf("temp: %f\nhum: %f\nmoi: %f\n", temp, hum, moist)
 
 		gMoist = moist
 		gTemp = temp

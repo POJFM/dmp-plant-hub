@@ -3,7 +3,6 @@ module github.com/SPSOAFM-IT18/dmp-plant-hub
 go 1.17
 
 require (
-	code.cloudfoundry.org/go-diodes v0.0.0-20220321163134-5073a5f4bcba
 	github.com/99designs/gqlgen v0.14.0
 	github.com/go-chi/chi v1.5.4
 	github.com/gorilla/websocket v1.4.2
