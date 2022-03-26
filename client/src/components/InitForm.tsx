@@ -34,7 +34,7 @@ export default function InitForm(props: any) {
 	let initMeasurementsInterval: any, fetchLocationFromCoordsInterval: any, fetchLocationFromCoordsFixingInterval: any
 	
 	useEffect(() => {
-		isSettings?.getSettings[0] && setFormActiveState(true)
+		!isSettings?.getSettings[0] && setFormActiveState(true)
 
 		formActiveState &&
 			!initMeasurementsInterval &&
@@ -43,19 +43,31 @@ export default function InitForm(props: any) {
 
 	const [createSettings] = useMutation(createSettingsMut, {
 		variables: {
-			limits_trigger: automaticIrrigationState,
-			water_level_limit: waterLevelLimit,
-			water_amount_limit: waterAmountLimit,
-			moist_limit: moistLimit,
-			scheduled_trigger: scheduledIrrigationState,
-			irrigation_duration: irrigationDuration,
-			hour_range: hourRange,
+			// limits_trigger: automaticIrrigationState,
+			// water_level_limit: waterLevelLimit,
+			// water_amount_limit: waterAmountLimit,
+			// moist_limit: moistLimit,
+			// scheduled_trigger: scheduledIrrigationState,
+			// irrigation_duration: irrigationDuration,
+			// hour_range: hourRange,
+			// chart_type: false,
+			// theme: true,
+			// language: true,
+			// location: location,
+			// lat: latitude,
+			// lon: longitude,
+			water_level_limit: 50.3,
+			water_amount_limit: 13.5,
+			moist_limit: 56.5,
+			scheduled_trigger: true,
+			hour_range: 24,
+			location: "Frýdek-Místek",
+			irrigation_duration: 20,
 			chart_type: false,
-			theme: true,
 			language: true,
-			location: location,
-			lat: latitude,
-			lon: longitude,
+			theme: true,
+			lat: 18.9,
+			lon: 49.53,
 		},
 	})
 

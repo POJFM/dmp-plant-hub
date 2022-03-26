@@ -9,7 +9,7 @@ export const createSettingsMut = gql`
 		$scheduled_trigger: Boolean
 		$hour_range: Int
 		$location: String
-		$irrigation_duration: Boolean
+		$irrigation_duration: Int
 		$chart_type: Boolean
 		$language: Boolean
 		$theme: Boolean
@@ -17,18 +17,21 @@ export const createSettingsMut = gql`
 		$lon: Float
 	) {
 		createSettings(
-			limits_trigger: $limits_trigger
-			water_level_limit: $water_level_limit
-			water_amount_limit: $water_amount_limit
-			moist_limit: $moist_limit
-			hour_range: $hour_range
-			location: $location
-			irrigation_duration: $irrigation_duration
-			chart_type: $chart_type
-			language: $language
-			theme: $theme
-			lat: $lat
-			lon: $lon
+			input: {
+				limits_trigger: $limits_trigger
+				water_level_limit: $water_level_limit
+				water_amount_limit: $water_amount_limit
+				moist_limit: $moist_limit
+				scheduled_trigger: $scheduled_trigger
+				hour_range: $hour_range
+				location: $location
+				irrigation_duration: $irrigation_duration
+				chart_type: $chart_type
+				language: $language
+				theme: $theme
+				lat: $lat
+				lon: $lon
+			}
 		) {
 			id
 		}
