@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	d "code.cloudfoundry.org/go-diodes"
+	db "github.com/SPSOAFM-IT18/dmp-plant-hub/database"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/model"
 	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
@@ -21,7 +21,8 @@ var (
 	LNtitle   string
 	LNstate   = "inactive"
 	LNaction  string
-	sensPump  *sens.Sensors
+	Isens     *sens.Sensors
+	Idb       *db.DB
 )
 
 func LoadInitMeasured(initM, initWLL *float64) {
@@ -29,16 +30,10 @@ func LoadInitMeasured(initM, initWLL *float64) {
 	WLL = *initWLL
 }
 
-func LoadLiveMeasure(dMoist, dHum, dTemp *d.OneToOne) {
-	pdMoist := d.NewPoller(dMoist)
-	pdTemp := d.NewPoller(dTemp)
-	pdHum := d.NewPoller(dHum)
-
-	moist = *(*float64)(pdMoist.Next())
-	hum = *(*float64)(pdHum.Next())
-	temp = *(*float64)(pdTemp.Next())
-
-	fmt.Println("kokot", moist)
+func LoadLiveMeasure(gMoist, gHum, gTemp *float64) {
+	moist = *gMoist
+	hum = *gHum
+	temp = *gTemp
 }
 
 func LoadLiveNotify(title, state, action string) {
@@ -47,12 +42,13 @@ func LoadLiveNotify(title, state, action string) {
 	LNaction = action
 }
 
-func GetLiveControl(cPumpState chan bool) {
-	cPumpState <- pumpState
+func GetLiveControl() bool {
+	return pumpState
 }
 
-func LoadPumpState(sensei *sens.Sensors) {
-	sensPump = sensei
+func LoadInstances(db *db.DB, sensei *sens.Sensors) {
+	Idb = db
+	Isens = sensei
 }
 
 func HandleGetInitMeasured(w http.ResponseWriter, _ *http.Request) {
@@ -196,14 +192,6 @@ func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 
 	if data.Restart {
 		os.Exit(0)
-	}
-
-	if data.PumpState {
-		sensPump.StartPump()
-	}
-
-	if !data.PumpState {
-		sensPump.StopPump()
 	}
 
 	pumpState = data.PumpState

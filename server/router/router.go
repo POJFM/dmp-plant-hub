@@ -56,7 +56,7 @@ func Router(db *database.DB, sensei *sens.Sensors) *chi.Mux {
 	r.MethodFunc("GET", "/live/control", mid.HandleGetLiveControl)
 	r.MethodFunc("POST", "/live/control", mid.HandlePostLiveControl)
 
-	mid.LoadPumpState(sensei)
+	mid.LoadInstances(db, sensei)
 
 	http.Handle("/", r)
 

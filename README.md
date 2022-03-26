@@ -24,4 +24,21 @@ yay -S arm-linux-gnueabihf-glibc-headers
 yay -S arm-linux-gnueabihf-gcc-stage2 arm-linux-gnueabihf-glibc
 ```
 
+## 🏠 Setup local subnet
+
+- Install dhcp package:
+  `yay -Syu dhcpcd`
+- Configure subnet in `/etc/dhcpd.conf`:
+
+```
+subnet 192.168.0.0 netmask 255.255.255.224 {
+  range 192.168.0.10 192.168.0.20;
+}
+```
+
+- Add your network card to subnet
+  `sudo ip addr add 192.168.0.1/24 dev enp3s0`
+- Restart dhcp daemon
+  `systemctl restart dhcpd4`
+
 To anyone having issues building `arm-linux-gnueabihf-gcc-stage1` (`arm-linux-gnueabihf-glibc-headers` dependency), ensure that your makepkg.conf doesn't include "-Werror=format-security" in cflags. This might be causing the build to fail. <sup>[[1]](https://aur.archlinux.org/packages/arm-linux-gnueabihf-gcc-stage1/#pinned-806072)</sup>
