@@ -27,10 +27,10 @@ var (
 func saveOnFourHoursPeriod(db *db.DB) {
 	utils.WaitTillWholeHour()
 
-	gocron.Every(15).Seconds().Do(func() {
-		moist := 45.8
-		temp := 3.48
-		hum := 15.5
+	gocron.Every(4).Hours().Do(func() {
+		moist := gMoist
+		temp := gTemp
+		hum := gHum
 		irr := false
 
 		measurement := &graphmodel.NewMeasurement{
