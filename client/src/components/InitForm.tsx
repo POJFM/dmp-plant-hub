@@ -33,15 +33,15 @@ export default function InitForm(props: any) {
 
 	let initMeasurementsInterval: any, fetchLocationFromCoordsInterval: any, fetchLocationFromCoordsFixingInterval: any
 	
-	console.log(isSettings)
+	console.log(isSettings?.getSettings.length < 1)
 
 	useEffect(() => {
-		!isSettings?.getSettings && setFormActiveState(true)
+		isSettings?.getSettings.length < 1 && setFormActiveState(true)
 
 		formActiveState &&
 			!initMeasurementsInterval &&
 			(initMeasurementsInterval = setInterval(() => initMeasurements(), 3000))
-	}, [formActiveState])
+	}, [isSettings])
 
 	const [createSettings] = useMutation(createSettingsMut, {
 		variables: {
@@ -59,6 +59,7 @@ export default function InitForm(props: any) {
 			lat: latitude,
 			lon: longitude,
 		},
+		refetchQueries: [{ query: settings }],
 	})
 
 	interface IGetCoordsProps {
