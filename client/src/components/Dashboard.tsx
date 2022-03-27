@@ -28,14 +28,12 @@ export default function Dashboard() {
 		[temp, setTemp] = useState<any>([]),
 		[moist, setMoist] = useState<any>([]),
 		[hum, setHum] = useState<any>([]),
-		[irrigationCount, setIrrigationCount] = useState<any>([]),
+		[irrigationCount, setIrrigationCount] = useState<any>(),
 		[months, setMonths] = useState<any>(),
 		[weather, setWeather] = useState<any>()
 
 	const { loading, error, data } = useQuery(dashboard),
 		chartType = data?.getSettings[0]?.chart_type === false ? 0 : 1
-
-		console.log(data)
 
 	let irrigationHistoryData: any = [],
 		measurementsData: any = [],
@@ -45,46 +43,51 @@ export default function Dashboard() {
 		arrayPassHum: any = [],
 		arrayPassMoist: any = []
 
-	// if (error !== undefined) {
-	// 	data.getMeasurements.filter(
-	// 		(filteredData: any) => filteredData.with_irrigation === true && irrigationHistoryData.push(filteredData)
-	// 	)
-	// 	data.getMeasurements.filter(
-	// 		(filteredData: any) => filteredData.with_irrigation === false && measurementsData.push(filteredData)
-	// 	)
-	// }
-
 	useEffect(() => {
-		document.title = 'Plant Hub | Dashboard'
+		data?.getMeasurements.filter(
+			(filteredData: any) => filteredData?.with_irrigation === true && irrigationHistoryData.push(filteredData)
+		)
+		data?.getMeasurements.filter(
+			(filteredData: any) => filteredData?.with_irrigation === false && measurementsData.push(filteredData)
+		)
 
-		const currentMonth = new Date().getMonth()
-		console.log(currentMonth)
+		console.log(data)
+		console.log(irrigationHistoryData)
+		console.log(measurementsData)
+
 		setMonths(getMonths())
 		console.log(months)
 
-		const ar = [1, 5, 1, 25, 1, 8, 21, 8, 10, 20, 8, 10, 20, 10, 20, 8, 10, 20, 10, 20, 8, 10, 20, 30, 15]
-		console.log(ar)
+		const currentMonth = new Date().getMonth() + 1
+		let irrigationCountObj: any = []
 
-		console.log(irrigationHistoryData)
-		console.log(measurementsData)
+		// Extract irrigation count for each month
+		for (let i = currentMonth; i < 13; i++) {
+			let month = 0
+			data?.getIrrigation.map((item: any) => {
+				let tMonth = item.timestamp.split(/\-(..?)/)[1].substring(1)
+				while (tMonth.charAt(0) === '0') {
+					tMonth = tMonth.substring(1);
+				}
+				i === parseInt(tMonth) && month++
+			})
+			irrigationCountObj?.push(month)
+			i > 11 && (i = 0)
+			i === currentMonth - 1 && (i = 13)
+		}
+
+		setIrrigationCount(irrigationCountObj)
+
+		console.log(irrigationCount)
+	}, [data])
+
+	useEffect(() => {
+		document.title = 'Plant Hub | Dashboard'
 
 		fetchWeatherForecast()
 
 		!weatherForecastInterval && (weatherForecastInterval = setInterval(() => fetchWeatherForecast(), 300_000))
 		!liveMasurementsInterval && (liveMasurementsInterval = setInterval(() => liveMeasurements(), 1000))
-		
-		// // Extract irrigation count for each month
-		// for (let i = currentMonth; i < 12; i++) {
-		// 	let month: number
-		// 	data.getIrrigation.map((item: any) => {
-		// 		item.timestamp === 'regex na jeden měsíc a číslo z loopu podle current month' && month++
-		// 	})
-		// 	setIrrigationCount((monthCount: any) => [...monthCount, month])
-		// 	console.log(i)
-		// 	i > 10 && (i = 0)
-		// 	i === currentMonth - 1 && (i = 12)
-		// }
-		// console.log(irrigationCount)
 	}, [])
 
 	const fetchWeatherForecast = () => {
@@ -138,7 +141,6 @@ export default function Dashboard() {
 				setHum(arrayPassHum)
 				setMoist(arrayPassMoist)
 
-				console.log('kokot temp')
 				console.log(temp)
 
 				setLiveMeasure(true)
@@ -235,21 +237,21 @@ export default function Dashboard() {
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterLevel.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{`${data ? data?.getIrrigation[0]?.water_level : 0
+										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? data?.getIrrigation[0]?.water_level : 0
 											} cm`}</span>
 									</div>
 									<div className="flex-row pt-5px" title="Objem vody v nádrži">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterAmount.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{`${data ? data?.getIrrigation[0]?.water_amount : 0
+										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? data?.getIrrigation[0]?.water_amount : 0
 											} l`}</span>
 									</div>
 									<div className="flex-row pt-5px" title="Celkový vyčerpaný objem vody">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterOverdrawn.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{`${data ? data?.getIrrigation[0]?.water_overdrawn : 0
+										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? data?.getIrrigation[0]?.water_overdrawn : 0
 											} l`}</span>
 									</div>
 								</div>
