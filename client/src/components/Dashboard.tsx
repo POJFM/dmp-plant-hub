@@ -45,8 +45,6 @@ export default function Dashboard() {
 		arrayPassHum: any = [],
 		arrayPassMoist: any = []
 
-
-
 	// if (error !== undefined) {
 	// 	data.getMeasurements.filter(
 	// 		(filteredData: any) => filteredData.with_irrigation === true && irrigationHistoryData.push(filteredData)
@@ -67,10 +65,14 @@ export default function Dashboard() {
 		const ar = [1, 5, 1, 25, 1, 8, 21, 8, 10, 20, 8, 10, 20, 10, 20, 8, 10, 20, 10, 20, 8, 10, 20, 30, 15]
 		console.log(ar)
 
+		console.log(irrigationHistoryData)
+		console.log(measurementsData)
+
 		fetchWeatherForecast()
 
 		!weatherForecastInterval && (weatherForecastInterval = setInterval(() => fetchWeatherForecast(), 300_000))
 		!liveMasurementsInterval && (liveMasurementsInterval = setInterval(() => liveMeasurements(), 1000))
+		
 		// // Extract irrigation count for each month
 		// for (let i = currentMonth; i < 12; i++) {
 		// 	let month: number

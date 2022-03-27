@@ -8,6 +8,7 @@ import (
 
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/database"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/env"
+	seq "github.com/SPSOAFM-IT18/dmp-plant-hub/test/sequences"
 
 	r "github.com/SPSOAFM-IT18/dmp-plant-hub/test/router"
 	//mid "github.com/SPSOAFM-IT18/dmp-plant-hub/test/middleware"
@@ -48,7 +49,7 @@ func main() {
 
 	// fmt.Println(int(time.Since(t0).Seconds()))
 
-	// go seq.MeasurementSequence()
+	go seq.MeasurementSequence()
 
 	// // adc.Adc()
 

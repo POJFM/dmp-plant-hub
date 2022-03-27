@@ -29,11 +29,11 @@ create table if not exists public.measurements
     ID              serial
         constraint measurements_pk
             primary key,
-    timestamp       timestamp             not null,
-    hum             float                 not null,
-    temp            float                 not null,
-    moist           float                 not null,
-    with_irrigation boolean default false not null
+    timestamp       timestamp default now() not null,
+    hum             float                   not null,
+    temp            float                   not null,
+    moist           float                   not null,
+    with_irrigation boolean default false   not null
 );
 
 create unique index measurements_id_uindex
