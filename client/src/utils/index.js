@@ -71,7 +71,23 @@ export const fetchCoordsFromLocation = (searchLocationValue) => {
 export const monthRegex = (string) => {
 	let tMonth = string.split(/\-(..?)/)[1].substring(1)
 	while (tMonth.charAt(0) === '0') {
-		tMonth = tMonth.substring(1);
+		tMonth = tMonth.substring(1)
 	}
 	return parseInt(tMonth)
+}
+
+export const dayRegex = (string) => {
+	let tDay = string.split(/\-(.....?)/)[1].substring(4)
+	while (tDay.charAt(0) === '0') {
+		tDay = tDay.substring(1)
+	}
+	return parseInt(tDay)
+}
+
+export const timeRegex = (string) => {
+	let tTime = string.split(/\-(...........?)/)[1].substring(6)
+	while (tTime.charAt(0) === '0') {
+		tTime = tTime.substring(1)
+	}
+	return tTime
 }

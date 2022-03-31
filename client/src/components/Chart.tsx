@@ -80,7 +80,7 @@ export const WaterConsumptionChart = ({ chartType, waterOverdrawn, irrigationCou
 					label: 'Spotřebováno vody',
 					backgroundColor: 'rgb(120, 206, 255)',
 					borderColor: 'rgb(30, 141, 203)',
-					data: /* waterOverdrawn */ [10, 7, 10, 20, 5, 35, 20],
+					data: /* waterOverdrawn */[10, 7, 10, 20, 5, 35, 20],
 					stack: 'Stack 4',
 					yAxisID: 'yAxis1',
 				},
@@ -118,16 +118,16 @@ export const WaterConsumptionChart = ({ chartType, waterOverdrawn, irrigationCou
 	else return <Bar options={waterConsumptionChartData.options} data={waterConsumptionChartData.data} />
 }
 
-export function IrrigationChart({ chartType, moist, hum, temp, irrigationCount }: any) {
+export function IrrigationChart({ chartType, moist, hum, temp, waterOverdrawn, dataframe }: any) {
 	const irrigationChartData = {
 		data: {
-			labels: months,
+			labels: dataframe,
 			datasets: [
 				{
 					label: 'Vlhkost půdy',
 					backgroundColor: 'rgb(172, 130, 49)',
 					borderColor: 'rgb(137, 98, 21)',
-					data: /* moist */[1, 5, 1, 25, 1, 8, 21],
+					data: moist,
 					stack: 'Stack 0',
 					yAxisID: 'yAxis1',
 				},
@@ -135,7 +135,7 @@ export function IrrigationChart({ chartType, moist, hum, temp, irrigationCount }
 					label: 'Vlhkost vzduchu',
 					backgroundColor: 'rgb(120, 206, 255)',
 					borderColor: 'rgb(30, 141, 203)',
-					data: /* hum */[3, 5, 10, 5, 8, 6, 19],
+					data: hum,
 					stack: 'Stack 1',
 					yAxisID: 'yAxis2',
 				},
@@ -143,15 +143,15 @@ export function IrrigationChart({ chartType, moist, hum, temp, irrigationCount }
 					label: 'Teplota vzduchu',
 					backgroundColor: 'rgb(255, 99, 132)',
 					borderColor: 'rgb(255, 0, 0)',
-					data: /* temp */[5, 8, 10, 20, 5, 10, 20],
+					data: temp,
 					stack: 'Stack 2',
 					yAxisID: 'yAxis3',
 				},
 				{
-					label: 'Počet zavlažení',
+					label: 'Spotřebováno vody',
 					backgroundColor: 'rgb(162, 231, 130)',
 					borderColor: 'rgb(102, 188, 62)',
-					data: irrigationCount,
+					data: waterOverdrawn,
 					stack: 'Stack 3',
 					yAxisID: 'yAxis4',
 				},
@@ -183,6 +183,13 @@ export function IrrigationChart({ chartType, moist, hum, temp, irrigationCount }
 					ticks: {
 						callback: (value: any) => {
 							return `${value}°C`
+						},
+					},
+				},
+				yAxis4: {
+					ticks: {
+						callback: (value: any) => {
+							return `${value}l`
 						},
 					},
 				},
