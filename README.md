@@ -24,6 +24,8 @@ yay -S arm-linux-gnueabihf-glibc-headers
 yay -S arm-linux-gnueabihf-gcc-stage2 arm-linux-gnueabihf-glibc
 ```
 
+To anyone having issues building `arm-linux-gnueabihf-gcc-stage1` (`arm-linux-gnueabihf-glibc-headers` dependency), ensure that your makepkg.conf doesn't include "-Werror=format-security" in cflags. This might be causing the build to fail. <sup>[[1]](https://aur.archlinux.org/packages/arm-linux-gnueabihf-gcc-stage1/#pinned-806072)</sup>
+
 ## 🏠 Setup local subnet
 
 - Install dhcp package:
@@ -41,4 +43,16 @@ subnet 192.168.0.0 netmask 255.255.255.224 {
 - Restart dhcp daemon
   `systemctl restart dhcpd4`
 
-To anyone having issues building `arm-linux-gnueabihf-gcc-stage1` (`arm-linux-gnueabihf-glibc-headers` dependency), ensure that your makepkg.conf doesn't include "-Werror=format-security" in cflags. This might be causing the build to fail. <sup>[[1]](https://aur.archlinux.org/packages/arm-linux-gnueabihf-gcc-stage1/#pinned-806072)</sup>
+## 📦 Build docker image for arm
+
+```
+# create bob the builder
+docker buildx create --name bob
+# switch to bob
+docker buildx use bob
+docker buildx inspect --bootstrap
+docker login
+docker buildx
+# build and push image
+docker buildx build --platform linux/arm64,linux/arm/v7 -t tassilobalbo/planthub-client --push .
+```
