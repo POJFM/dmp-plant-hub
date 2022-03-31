@@ -13,10 +13,8 @@ import { createSettingsMut } from '../graphql/mutations'
 //import { fetchCoordsFromLocation } from 'src/utils'
 
 export default function Settings() {
-	const { loading: settingsLoading, error: settingsError, data: settingsData } = useQuery(settings)
-	const [updateSettingsData, { data, loading, error }] = useMutation(createSettingsMut)
-
-	const [buttonsState, setButtonsState] = useState(false), // false
+	const { data: settingsData } = useQuery(settings),
+		[buttonsState, setButtonsState] = useState(false),
 		[automaticIrrigationState, setAutomaticIrrigationState] = useState(
 			settingsData?.getSettings[0]?.limits_trigger || true
 		),
@@ -29,7 +27,7 @@ export default function Settings() {
 		[scheduledIrrigationStateClass, setScheduledIrrigationStateClass] = useState<string>(
 			settingsData?.getSettings[0]?.scheduled_trigger ? '#000000' : 'var(--inactiveGrey)'
 		),
-		[moistLimit, setmoistLimit] = useState(settingsData?.getSettings[0]?.moist_limit),
+		[moistLimit, setMoistLimit] = useState(settingsData?.getSettings[0]?.moist_limit),
 		[waterAmountLimit, setWaterAmountLimit] = useState(settingsData?.getSettings[0]?.water_amount_limit),
 		[waterLevelLimit, setWaterLevelLimit] = useState(settingsData?.getSettings[0]?.water_level_limit),
 		[hourRange, setHourRange] = useState(settingsData?.getSettings[0]?.hour_range),
@@ -46,14 +44,14 @@ export default function Settings() {
 		document.title = 'Plant Hub | Settings'
 	}, [])
 
-	useEffect(() => {
-		setAutomaticIrrigationState(settingsData?.getSettings[0]?.limits_trigger || true)
+	const updateDataStates = () => {
+		setAutomaticIrrigationState(settingsData?.getSettings[0]?.limits_trigger)
 		setAutomaticIrrigationStateClass(settingsData?.getSettings[0]?.limits_trigger ? '#000000' : 'var(--inactiveGrey)')
 		setScheduledIrrigationState(settingsData?.getSettings[0]?.scheduled_trigger)
 		setScheduledIrrigationStateClass(settingsData?.getSettings[0]?.scheduled_trigger ? '#000000' : 'var(--inactiveGrey)')
 
 		setIrrigationDuration(settingsData?.getSettings[0]?.irrigation_duration)
-		setmoistLimit(settingsData?.getSettings[0]?.moist_limit)
+		setMoistLimit(settingsData?.getSettings[0]?.moist_limit)
 		setWaterAmountLimit(settingsData?.getSettings[0]?.water_amount_limit)
 		setWaterLevelLimit(settingsData?.getSettings[0]?.water_level_limit)
 		setHourRange(settingsData?.getSettings[0]?.hour_range)
@@ -65,6 +63,10 @@ export default function Settings() {
 		setLocation(settingsData?.getSettings[0]?.location)
 		setLatitude(settingsData?.getSettings[0]?.lat)
 		setLongitude(settingsData?.getSettings[0]?.lon)
+	}
+
+	useEffect(() => {
+		updateDataStates()
 	}, [settingsData])
 
 	const [createSettings] = useMutation(createSettingsMut, {
@@ -82,19 +84,6 @@ export default function Settings() {
 			theme: themeState,
 			lat: latitude,
 			lon: longitude,
-			// limits_trigger: true,
-			// water_level_limit: 5,
-			// water_amount_limit: 3,
-			// moist_limit: 30,
-			// scheduled_trigger: false,
-			// hour_range: null,
-			// location: "Ostrava",
-			// irrigation_duration: 3,
-			// chart_type: true,
-			// language: true,
-			// theme: true,
-			// lat: 49,
-			// lon: 18,
 		},
 		refetchQueries: [{ query: settings }],
 	})
@@ -123,82 +112,90 @@ export default function Settings() {
 
 	const updateInputData = (type: string, data: any) => {
 		setButtonsState(true)
-		type === 'irrigationDuration' && setIrrigationDuration(data?.target?.value)
-		type === 'moistLimit' && setmoistLimit(data?.target?.value)
-		type === 'waterAmountLimit' && setWaterAmountLimit(data?.target?.value)
-		type === 'waterLevelLimit' && setWaterLevelLimit(data?.target?.value)
-		type === 'hourRange' && setHourRange(data?.target?.value)
-		if (type === 'location') {
-			setGetCoords(data?.target?.value)
-			setGetCoordsState(true)
+		switch (type) {
+			case 'irrigationDuration': setIrrigationDuration(data?.target?.value); break
+			case 'moistLimit': setMoistLimit(data?.target?.value); break
+			case 'waterAmountLimit': setWaterAmountLimit(data?.target?.value); break
+			case 'waterLevelLimit': setWaterLevelLimit(data?.target?.value); break
+			case 'hourRange': setHourRange(data?.target?.value); break
+			case 'location': {
+				setGetCoords(data?.target?.value)
+				setGetCoordsState(true)
+				break
+			}
 		}
 	}
 
 	useEffect(() => {
-		fetchCoordsFromLocation(getCoords)
-		setGetCoordsState(false)
+		if (getCoordsState) {
+			fetchCoordsFromLocation(getCoords)
+			setGetCoordsState(false)
+		}
 	}, [getCoordsState])
 
 	const updateToggleState = (type: string) => {
-		if (type === 'automaticIrrigation') {
-			if (automaticIrrigationState === false) {
-				setAutomaticIrrigationState(true)
-				setButtonsState(true)
-				setIrrigationDurationStateClass('#000000')
-				setAutomaticIrrigationStateClass('#000000')
-			} else {
-				setAutomaticIrrigationState(false)
-				setAutomaticIrrigationStateClass('var(--inactiveGrey)')
-				if (scheduledIrrigationState === false) {
-					setButtonsState(false)
-					setIrrigationDurationStateClass('var(--inactiveGrey)')
-				}
-			}
-		}
-
-		if (type === 'scheduledIrrigation') {
-			if (scheduledIrrigationState === false) {
-				setScheduledIrrigationState(true)
-				setButtonsState(true)
-				setIrrigationDurationStateClass('#000000')
-				setScheduledIrrigationStateClass('#000000')
-				if (irrigationDuration == 0) {
-					setButtonsState(false)
-				}
-			} else {
-				setScheduledIrrigationState(false)
-				setScheduledIrrigationStateClass('var(--inactiveGrey)')
+		switch (type) {
+			case 'automaticIrrigation': {
 				if (automaticIrrigationState === false) {
-					setButtonsState(false)
-					setIrrigationDurationStateClass('var(--inactiveGrey)')
+					setAutomaticIrrigationState(true)
+					setButtonsState(true)
+					setIrrigationDurationStateClass('#000000')
+					setAutomaticIrrigationStateClass('#000000')
+				} else {
+					setAutomaticIrrigationState(false)
+					setAutomaticIrrigationStateClass('var(--inactiveGrey)')
+					if (scheduledIrrigationState === false) {
+						setButtonsState(false)
+						setIrrigationDurationStateClass('var(--inactiveGrey)')
+					}
 				}
+				break
 			}
-		}
-
-		if (type === 'chartType') {
-			setButtonsState(true)
-			if (!chartTypeState) {
-				setChartTypeState(true)
-			} else {
-				setChartTypeState(false)
+			case 'scheduledIrrigation': {
+				if (scheduledIrrigationState === false) {
+					setScheduledIrrigationState(true)
+					setButtonsState(true)
+					setIrrigationDurationStateClass('#000000')
+					setScheduledIrrigationStateClass('#000000')
+					if (irrigationDuration == 0) {
+						setButtonsState(false)
+					}
+				} else {
+					setScheduledIrrigationState(false)
+					setScheduledIrrigationStateClass('var(--inactiveGrey)')
+					if (automaticIrrigationState === false) {
+						setButtonsState(false)
+						setIrrigationDurationStateClass('var(--inactiveGrey)')
+					}
+				}
+				break
 			}
-		}
-
-		if (type === 'language') {
-			setButtonsState(true)
-			if (!languageState) {
-				setLanguageState(true)
-			} else {
-				setLanguageState(false)
+			case 'chartType': {
+				setButtonsState(true)
+				if (!chartTypeState) {
+					setChartTypeState(true)
+				} else {
+					setChartTypeState(false)
+				}
+				break
 			}
-		}
-
-		if (type === 'theme') {
-			setButtonsState(true)
-			if (!themeState) {
-				setThemeState(true)
-			} else {
-				setThemeState(false)
+			case 'language': {
+				setButtonsState(true)
+				if (!languageState) {
+					setLanguageState(true)
+				} else {
+					setLanguageState(false)
+				}
+				break
+			}
+			case 'theme': {
+				setButtonsState(true)
+				if (!themeState) {
+					setThemeState(true)
+				} else {
+					setThemeState(false)
+				}
+				break
 			}
 		}
 
@@ -206,25 +203,11 @@ export default function Settings() {
 	}
 
 	const handleCancelButton = () => {
+		updateDataStates()
 		setButtonsState(false)
-		setAutomaticIrrigationState(settingsData.limitsTrigger)
-		setAutomaticIrrigationStateClass(settingsData.limitsTrigger ? '#000000' : 'var(--inactiveGrey)')
-		setScheduledIrrigationState(settingsData.scheduledTrigger)
-		setScheduledIrrigationStateClass(settingsData.scheduledTrigger ? '#000000' : 'var(--inactiveGrey)')
-		setIrrigationDuration(settingsData.irrigationDuration)
 		setIrrigationDurationStateClass(buttonsState ? '#000000' : 'var(--inactiveGrey)')
-		setmoistLimit(settingsData.moistLimit)
-		setWaterAmountLimit(settingsData.waterAmountLimit)
-		setWaterLevelLimit(settingsData.waterLevelLimit)
-		setHourRange(settingsData.hourRange)
-		setChartTypeState(settingsData.chartType)
-		setLanguageState(settingsData.language)
-		setThemeState(settingsData.theme)
 		setGetCoordsState(false)
 		setGetCoords('')
-		setLocation(settingsData.location)
-		setLatitude(settingsData.lat)
-		setLongitude(settingsData.lon)
 	}
 
 	return (
