@@ -31,6 +31,7 @@ export default function Dashboard() {
 		[irrigationCount, setIrrigationCount] = useState<any>(),
 		[measurements, setMeasurements] = useState<any>(),
 		[irrigationHistory, setIrrigationHistory] = useState<any>(),
+		[waterOverdrawn, setWaterOverdrawn] = useState<any>(),
 		[months, setMonths] = useState<any>(),
 		[weather, setWeather] = useState<any>()
 
@@ -47,6 +48,7 @@ export default function Dashboard() {
 		let measurementsDataNotMonth: any = [],
 			measurementsDataNotAvg: any = [],
 			irrigationCountObj: any = [],
+			waterOverdrawnObj: any = [],
 			irrigationHistoryData: any = {
 				moist: [],
 				temp: [],
@@ -88,13 +90,19 @@ export default function Dashboard() {
 		// Extract irrigation count for each month
 		for (let i = 1; i < currentMonth + 1; i++) {
 			let month = 0,
-				measurementsInMonth: any = []
+				measurementsInMonth: any = [],
+				waterOverdrawnInMonth = 0
+
 			data?.getIrrigation.map((item: any) => {
 				let tMonth = monthRegex(item?.timestamp)
-				i === tMonth && month++
+				if(i === tMonth) {
+					month++
+					waterOverdrawnInMonth += item?.water_overdrawn
+				}
 			})
 
 			irrigationCountObj?.push(month)
+			waterOverdrawnObj?.push(waterOverdrawnInMonth)
 
 			measurementsDataNotMonth.map((item: any) => {
 				let tMonth = monthRegex(item?.timestamp)
@@ -107,7 +115,6 @@ export default function Dashboard() {
 			// i > 11 && (i = 0)
 			// i === currentMonth - 1 && (i = 13)
 		}
-
 
 		measurementsDataNotAvg.map((month: any) => {
 			let moistAvg = 0, tempAvg = 0, humAvg = 0
@@ -124,6 +131,7 @@ export default function Dashboard() {
 		})
 
 		setIrrigationCount(irrigationCountObj)
+		setWaterOverdrawn(waterOverdrawnObj)
 		setIrrigationHistory(irrigationHistoryData)
 		setMeasurements(measurementsData)
 	}, [data])
@@ -394,7 +402,7 @@ export default function Dashboard() {
 							<div className="flex-row 2xl:h-64 lg:h-48">
 								<WaterConsumptionChart
 									chartType={chartType}
-									waterOverdrawn={5 /* data.getIrrigation.waterOverdrawn */}
+									waterOverdrawn={waterOverdrawn}
 									irrigationCount={irrigationCount}
 								/>
 							</div>

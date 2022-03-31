@@ -80,7 +80,7 @@ export const WaterConsumptionChart = ({ chartType, waterOverdrawn, irrigationCou
 					label: 'Spotřebováno vody',
 					backgroundColor: 'rgb(120, 206, 255)',
 					borderColor: 'rgb(30, 141, 203)',
-					data: /* waterOverdrawn */[10, 7, 10, 20, 5, 35, 20],
+					data: waterOverdrawn,
 					stack: 'Stack 4',
 					yAxisID: 'yAxis1',
 				},
