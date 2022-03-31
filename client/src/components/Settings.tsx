@@ -16,9 +16,6 @@ export default function Settings() {
 	const { loading: settingsLoading, error: settingsError, data: settingsData } = useQuery(settings)
 	const [updateSettingsData, { data, loading, error }] = useMutation(createSettingsMut)
 
-	console.log("GQL:")
-	console.log(data)
-
 	const [buttonsState, setButtonsState] = useState(false), // false
 		[automaticIrrigationState, setAutomaticIrrigationState] = useState(
 			settingsData?.getSettings[0]?.limits_trigger || true
@@ -32,7 +29,7 @@ export default function Settings() {
 		[scheduledIrrigationStateClass, setScheduledIrrigationStateClass] = useState<string>(
 			settingsData?.getSettings[0]?.scheduled_trigger ? '#000000' : 'var(--inactiveGrey)'
 		),
-		[moistureLimit, setMoistureLimit] = useState(settingsData?.getSettings[0]?.moist_limit),
+		[moistLimit, setmoistLimit] = useState(settingsData?.getSettings[0]?.moist_limit),
 		[waterAmountLimit, setWaterAmountLimit] = useState(settingsData?.getSettings[0]?.water_amount_limit),
 		[waterLevelLimit, setWaterLevelLimit] = useState(settingsData?.getSettings[0]?.water_level_limit),
 		[hourRange, setHourRange] = useState(settingsData?.getSettings[0]?.hour_range),
@@ -45,9 +42,6 @@ export default function Settings() {
 		[latitude, setLatitude] = useState(settingsData?.getSettings[0]?.lat),
 		[longitude, setLongitude] = useState(settingsData?.getSettings[0]?.lon)
 
-	console.log(settingsData)
-	console.log(settingsError)
-
 	useEffect(() => {
 		document.title = 'Plant Hub | Settings'
 	}, [])
@@ -56,21 +50,54 @@ export default function Settings() {
 		setAutomaticIrrigationState(settingsData?.getSettings[0]?.limits_trigger || true)
 		setAutomaticIrrigationStateClass(settingsData?.getSettings[0]?.limits_trigger ? '#000000' : 'var(--inactiveGrey)')
 		setScheduledIrrigationState(settingsData?.getSettings[0]?.scheduled_trigger)
-		setIrrigationDuration(settingsData?.getSettings[0]?.irrigation_duration)
 		setScheduledIrrigationStateClass(settingsData?.getSettings[0]?.scheduled_trigger ? '#000000' : 'var(--inactiveGrey)')
-		setMoistureLimit(settingsData?.getSettings[0]?.moist_limit)
+
+		setIrrigationDuration(settingsData?.getSettings[0]?.irrigation_duration)
+		setmoistLimit(settingsData?.getSettings[0]?.moist_limit)
 		setWaterAmountLimit(settingsData?.getSettings[0]?.water_amount_limit)
 		setWaterLevelLimit(settingsData?.getSettings[0]?.water_level_limit)
 		setHourRange(settingsData?.getSettings[0]?.hour_range)
-		
-		setChartTypeState(settingsData?.getSettings[0]?.chart_type === false ? 0 : 1)
-		setLanguageState(settingsData?.getSettings[0]?.language === false ? 0 : 1)
-		setThemeState(settingsData?.getSettings[0]?.theme === false ? 0 : 1)
+
+		setChartTypeState(settingsData?.getSettings[0]?.chart_type)
+		setLanguageState(settingsData?.getSettings[0]?.language)
+		setThemeState(settingsData?.getSettings[0]?.theme)
 
 		setLocation(settingsData?.getSettings[0]?.location)
 		setLatitude(settingsData?.getSettings[0]?.lat)
 		setLongitude(settingsData?.getSettings[0]?.lon)
 	}, [settingsData])
+
+	const [createSettings] = useMutation(createSettingsMut, {
+		variables: {
+			limits_trigger: automaticIrrigationState,
+			water_level_limit: waterLevelLimit,
+			water_amount_limit: waterAmountLimit,
+			moist_limit: moistLimit,
+			scheduled_trigger: scheduledIrrigationState,
+			hour_range: hourRange,
+			location: location,
+			irrigation_duration: irrigationDuration,
+			chart_type: chartTypeState,
+			language: languageState,
+			theme: themeState,
+			lat: latitude,
+			lon: longitude,
+			// limits_trigger: true,
+			// water_level_limit: 5,
+			// water_amount_limit: 3,
+			// moist_limit: 30,
+			// scheduled_trigger: false,
+			// hour_range: null,
+			// location: "Ostrava",
+			// irrigation_duration: 3,
+			// chart_type: true,
+			// language: true,
+			// theme: true,
+			// lat: 49,
+			// lon: 18,
+		},
+		refetchQueries: [{ query: settings }],
+	})
 
 	const fetchCoordsFromLocation = (searchLocationValue: any) => {
 		axios
@@ -97,7 +124,7 @@ export default function Settings() {
 	const updateInputData = (type: string, data: any) => {
 		setButtonsState(true)
 		type === 'irrigationDuration' && setIrrigationDuration(data?.target?.value)
-		type === 'moistureLimit' && setMoistureLimit(data?.target?.value)
+		type === 'moistLimit' && setmoistLimit(data?.target?.value)
 		type === 'waterAmountLimit' && setWaterAmountLimit(data?.target?.value)
 		type === 'waterLevelLimit' && setWaterLevelLimit(data?.target?.value)
 		type === 'hourRange' && setHourRange(data?.target?.value)
@@ -150,28 +177,28 @@ export default function Settings() {
 
 		if (type === 'chartType') {
 			setButtonsState(true)
-			if (chartTypeState === 0) {
-				setChartTypeState(1)
+			if (!chartTypeState) {
+				setChartTypeState(true)
 			} else {
-				setChartTypeState(0)
+				setChartTypeState(false)
 			}
 		}
 
 		if (type === 'language') {
 			setButtonsState(true)
-			if (languageState === 0) {
-				setLanguageState(1)
+			if (!languageState) {
+				setLanguageState(true)
 			} else {
-				setLanguageState(0)
+				setLanguageState(false)
 			}
 		}
 
 		if (type === 'theme') {
 			setButtonsState(true)
-			if (themeState === 0) {
-				setThemeState(1)
+			if (!themeState) {
+				setThemeState(true)
 			} else {
-				setThemeState(0)
+				setThemeState(false)
 			}
 		}
 
@@ -180,14 +207,13 @@ export default function Settings() {
 
 	const handleCancelButton = () => {
 		setButtonsState(false)
-		// Will throw error because API is not accessible
 		setAutomaticIrrigationState(settingsData.limitsTrigger)
 		setAutomaticIrrigationStateClass(settingsData.limitsTrigger ? '#000000' : 'var(--inactiveGrey)')
 		setScheduledIrrigationState(settingsData.scheduledTrigger)
 		setScheduledIrrigationStateClass(settingsData.scheduledTrigger ? '#000000' : 'var(--inactiveGrey)')
 		setIrrigationDuration(settingsData.irrigationDuration)
 		setIrrigationDurationStateClass(buttonsState ? '#000000' : 'var(--inactiveGrey)')
-		setMoistureLimit(settingsData.moistureLimit)
+		setmoistLimit(settingsData.moistLimit)
 		setWaterAmountLimit(settingsData.waterAmountLimit)
 		setWaterLevelLimit(settingsData.waterLevelLimit)
 		setHourRange(settingsData.hourRange)
@@ -265,11 +291,11 @@ export default function Settings() {
 									</div>
 									<div
 										className="flex-row pt-1"
-										onBlur={(data: any) => updateInputData('moistureLimit', data.target.value)}
+										onBlur={(data: any) => updateInputData('moistLimit', data.target.value)}
 									>
 										<EditableField
-											key="moistureLimit"
-											defaultValue={moistureLimit}
+											key="moistLimit"
+											defaultValue={moistLimit}
 											active={automaticIrrigationState}
 											width="10"
 										/>
@@ -378,27 +404,7 @@ export default function Settings() {
 							</div>
 						</div>
 						<div className="flex-col ml-3">
-							<div
-								onClick={() =>
-									buttonsState &&
-									updateSettingsData({
-										variables: {
-											limitsTrigger: automaticIrrigationState,
-											waterLevelLimit: waterLevelLimit,
-											waterAmountLimit: waterAmountLimit,
-											moistureLimit: moistureLimit,
-											scheduledTrigger: scheduledIrrigationState,
-											hourRange: hourRange,
-											chartType: chartTypeState,
-											theme: themeState,
-											language: languageState,
-											location: location,
-											lat: latitude,
-											lon: longitude,
-										},
-									})
-								}
-							>
+							<div onClick={() => buttonsState && createSettings()}>
 								<SaveButton active={buttonsState} />
 							</div>
 						</div>

@@ -67,3 +67,11 @@ export const fetchCoordsFromLocation = (searchLocationValue) => {
 			console.error(error)
 		})
 }
+
+export const monthRegex = (string) => {
+	let tMonth = string.split(/\-(..?)/)[1].substring(1)
+	while (tMonth.charAt(0) === '0') {
+		tMonth = tMonth.substring(1);
+	}
+	return parseInt(tMonth)
+}
