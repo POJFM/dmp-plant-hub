@@ -33,12 +33,12 @@ export default function Sidebar(props: any) {
 					},
 				}
 			)
-			.then((res) => {
-				console.log(res)
-			})
-			.catch((error) => {
-				console.error(error)
-			})
+			// .then((res) => {
+			// 	console.log(res)
+			// })
+			// .catch((error) => {
+			// 	console.error(error)
+			// })
 	}
 
 	return (
@@ -113,10 +113,7 @@ export default function Sidebar(props: any) {
 						className={`flex-row sidebar-row ${linkHover === 'refresh' && 'sidebar-row-hover'}`}
 						onMouseEnter={() => setlinkHover('refresh')}
 						onMouseLeave={() => setlinkHover('off')}
-						onClick={() => {
-							handleRestart()
-							console.log('restart')
-						}}
+						onClick={() => handleRestart()}
 					>
 						<div className={`flex-row sidebar-row-tf`}>
 							<div className="text-2xl flex items-center">

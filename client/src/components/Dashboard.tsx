@@ -157,11 +157,11 @@ export default function Dashboard() {
 			})
 			.then((res) => {
 				setWeather(res.data.hourly.slice(0, 15))
-				console.log(res)
+				//console.log(res)
 			})
-			.catch((error) => {
-				console.error(error)
-			})
+			// .catch((error) => {
+			// 	console.error(error)
+			// })
 	}
 
 	const liveMeasurements = () => {

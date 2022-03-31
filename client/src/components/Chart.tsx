@@ -74,7 +74,7 @@ export function LiveMeasurementsChart({ chartType, temp, hum, moist }: any) {
 export const WaterConsumptionChart = ({ chartType, waterOverdrawn, irrigationCount }: any) => {
 	const waterConsumptionChartData = {
 		data: {
-			labels: months,
+			labels: months,   
 			datasets: [
 				{
 					label: 'Spotřebováno vody',

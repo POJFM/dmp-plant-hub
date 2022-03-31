@@ -34,11 +34,12 @@ export default function InitForm(props: any) {
 
 	useEffect(() => {
 		isSettings?.getSettings.length < 1 && setFormActiveState(true)
-
-		formActiveState &&
-			!initMeasurementsInterval &&
-			(initMeasurementsInterval = setInterval(() => initMeasurements(), 3000))
 	}, [isSettings])
+
+	useEffect(() => {
+		!initMeasurementsInterval &&
+			(initMeasurementsInterval = setInterval(() => initMeasurements(), 3000))
+	}, [formActiveState])
 
 	const [createSettings] = useMutation(createSettingsMut, {
 		variables: {
@@ -139,11 +140,9 @@ export default function InitForm(props: any) {
 				},
 			})
 			.then((res) => {
-				console.log(res)
+				//console.log(res)
 				setMoistLimit(res.data.moistLimit)
 				setWaterLevelLimit(res.data.waterLevelLimit)
-				console.log(moistLimit)
-				console.log(waterLevelLimit)
 				setLimitValues(true)
 			})
 			.catch((error) => {

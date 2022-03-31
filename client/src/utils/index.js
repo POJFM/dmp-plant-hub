@@ -47,7 +47,6 @@ export const fetchLocationFromCoords = (latitude, longitude) => {
 }
 
 export const fetchCoordsFromLocation = (searchLocationValue) => {
-	console.log(searchLocationValue)
 	axios
 		.request({
 			method: 'GET',
