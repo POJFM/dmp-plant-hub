@@ -7,11 +7,11 @@ import Finished from './states/Finished'
 import Warning from './states/Warning'
 
 export default function Notification(props: any) {
-	const [title, setTitle] = useState<string>(), // TEST => 'Zavlažování'
+	const [title, setTitle] = useState<string>(),
 		[notificationClass, setNotificationClass] = useState('hidden'),
-		[notificationStateClass, setNotificationStateClass] = useState<string>(), // TEST => 'var(--irrigationBlue)'
-		[state, setState] = useState<string>(), // TEST => 'inProgress'
-		[action, setAction] = useState<any>(), // TEST => 'Probíhá zavlažování'
+		[notificationStateClass, setNotificationStateClass] = useState<string>(),
+		[state, setState] = useState<string>(),
+		[action, setAction] = useState<any>(),
 		[notify, setNotify] = useState(false)
 
 	let getNotificationsInterval: any
@@ -35,6 +35,8 @@ export default function Notification(props: any) {
 					setState(res.data.state)
 					setAction(res.data.action)
 					setNotify(true)
+				} else {
+					setNotify(false)
 				}
 			})
 			.catch((error) => {
@@ -42,44 +44,19 @@ export default function Notification(props: any) {
 			})
 	}
 
-	// useEffect(() => {
-	// 	setNotificationClass('notification')
-	// 	if (state === 'physicalHelpRequired') {
-	// 		setNotificationStateClass('var(--warningRed)')
-	// 		setNotificationActionClass('var(--warningRed)')
-	// 	}
-	// 	state === 'inProgress' && setNotificationActionClass('var(--irrigationBlue)')
-	// }, [notify])
+	useEffect(() => {
+		if (notify) {
+			setNotificationClass('notification')
 
-	// TEST KOKOT
-	// const setKokot = () => {
-	// 	setState('finished')
-	// 	setAction('Zavlažování dokončeno')
-	// 	setNotificationStateClass('var(--green)')
-	// }
-
-	// const setKokot2 = () => {
-	// 	setTitle('Kontrola nádrže')
-	// 	setState('inProgress')
-	// 	setNotificationStateClass('var(--irrigationBlue)')
-	// 	setAction('Probíhá kontrola nádrže')
-	// }
-
-	// const setKokot3 = () => {
-	// 	setTitle('Doplňte nádrž')
-	// 	setState('physicalHelpRequired')
-	// 	setNotificationStateClass('var(--warningRed)')
-	// 	setAction('Nádrž je prázdná')
-	// }
-
-	// setTimeout(() => setNotificationClass('notification'), 3000)
-	// setTimeout(() => setKokot(), 8000)
-	// setTimeout(() => setKokot2(), 12000)
-	// setTimeout(() => setKokot3(), 13000)
-
-	// TEST KOKOT END
-	// if your dick is big enough
-	// you can take in bigger snuff
+			switch (state) {
+				case 'inProgress': setNotificationStateClass('var(--irrigationBlue)'); break
+				case 'finished': setNotificationStateClass('var(--green)'); break
+				case 'physicalHelpRequired': setNotificationStateClass('var(--warningRed)'); break
+			}
+		} else {
+			setNotificationClass('hidden')
+		}
+	}, [notify])
 
 	return (
 		<div className={notificationClass}>

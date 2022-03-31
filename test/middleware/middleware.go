@@ -9,10 +9,15 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/model"
 )
 
-var pumpState bool = false
-var moist = 0.0
-var hum = 0.0
-var temp = 0.0
+var (
+	pumpState bool = false
+	moist          = 0.0
+	hum            = 0.0
+	temp           = 0.0
+	LNtitle   string
+	LNstate   = "inactive"
+	LNaction  string
+)
 
 func LoadLiveMeasure(cMoist, cHum, cTemp float64) {
 	moist = cMoist
@@ -92,8 +97,7 @@ func HandlePostLiveMeasure(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleGetLiveNotify(w http.ResponseWriter, _ *http.Request) {
-	// actually default values, just haven't figured out how to pass them
-	data := model.LiveNotify{Title: "", State: "inactive", Action: ""}
+	data := model.LiveNotify{Title: LNtitle, State: LNstate, Action: LNaction}
 
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Content-Type", "application/json")
@@ -165,6 +169,16 @@ func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(data.PumpState)
 
 	pumpState = data.PumpState
+
+	if data.PumpState {
+		LNtitle = "Zavlažování"
+		LNstate = "inProgress"
+		LNaction = "Probíhá zavlažování"
+	} else {
+		LNtitle = ""
+		LNstate = "inactive"
+		LNaction = ""
+	}
 }
 
 func GetLiveControl(cPumpState chan bool) {
