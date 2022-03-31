@@ -13,19 +13,5 @@ services:
     env_file:
       - "docker.env"
     restart: always
-  client:
-    image: "tassilobalbo/planthub-client"
-    container_name: planthub-client
-    user: root
-    ports:
-      - "3000:3000"
-    restart: always
-  server:
-    image: "tassilobalbo/planthub-server"
-    container_name: planthub-server
-    user: root
-    ports:
-      - "5000:5000"
-    restart: always
 volumes:
   dbdata:

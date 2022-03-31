@@ -44,7 +44,6 @@ func Connect() *DB {
 }
 
 func (db *DB) CreateMeasurement(ctx context.Context, input *model.NewMeasurement) *model.Measurement {
-	//_, err := db.NewInsert().Model(&input).TableExpr("measurements").Exec()
 	_, err := db.DB.NewInsert().Model(input).ModelTableExpr("measurements").Exec(ctx)
 	if err != nil {
 		log.Println(err)
