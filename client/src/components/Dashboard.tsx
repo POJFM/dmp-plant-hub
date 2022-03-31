@@ -25,6 +25,7 @@ export default function Dashboard() {
 		[currentTemp, setCurrentTemp] = useState(0),
 		[currentMoist, setCurrentMoist] = useState(0),
 		[currentHum, setCurrentHum] = useState(0),
+		[overallWaterConsumption, setOverallWaterConsumption] = useState(0),
 		[temp, setTemp] = useState<any>([]),
 		[moist, setMoist] = useState<any>([]),
 		[hum, setHum] = useState<any>([]),
@@ -81,6 +82,8 @@ export default function Dashboard() {
 
 			irrigationHistoryData?.water_overdrawn?.push(item?.water_overdrawn)
 			irrigationHistoryData?.dataframe?.push(`${tDay}.${tMonth}. ${tTime}`)
+
+			setOverallWaterConsumption((value: number) => value + item?.water_overdrawn)
 		})
 
 		setMonths(getMonths())
@@ -298,7 +301,7 @@ export default function Dashboard() {
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterOverdrawn.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? data?.getIrrigation[0]?.water_overdrawn : 0
+										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? overallWaterConsumption : 0
 											} l`}</span>
 									</div>
 								</div>
