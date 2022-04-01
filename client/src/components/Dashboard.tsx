@@ -18,18 +18,21 @@ import {
 } from 'chart.js'
 import { LiveMeasurementsChart, WaterConsumptionChart, IrrigationChart, MeasurementsHistoryChart } from './Chart'
 import ReactScrollWheelHandler from 'react-scroll-wheel-handler'
-import { getMonths, monthRegex } from 'src/utils'
+import { getMonths, monthRegex, dayRegex, timeRegex } from 'src/utils'
 
 export default function Dashboard() {
 	const [liveMeasure, setLiveMeasure] = useState(false),
 		[currentTemp, setCurrentTemp] = useState(0),
 		[currentMoist, setCurrentMoist] = useState(0),
 		[currentHum, setCurrentHum] = useState(0),
+		[overallWaterConsumption, setOverallWaterConsumption] = useState(0),
 		[temp, setTemp] = useState<any>([]),
 		[moist, setMoist] = useState<any>([]),
 		[hum, setHum] = useState<any>([]),
 		[irrigationCount, setIrrigationCount] = useState<any>(),
 		[measurements, setMeasurements] = useState<any>(),
+		[irrigationHistory, setIrrigationHistory] = useState<any>(),
+		[waterOverdrawn, setWaterOverdrawn] = useState<any>(),
 		[months, setMonths] = useState<any>(),
 		[weather, setWeather] = useState<any>()
 
@@ -46,11 +49,13 @@ export default function Dashboard() {
 		let measurementsDataNotMonth: any = [],
 			measurementsDataNotAvg: any = [],
 			irrigationCountObj: any = [],
+			waterOverdrawnObj: any = [],
 			irrigationHistoryData: any = {
 				moist: [],
 				temp: [],
 				hum: [],
-				water_consumption: []
+				water_overdrawn: [],
+				dataframe: []
 			},
 			measurementsData: any = {
 				moist: [],
@@ -59,38 +64,48 @@ export default function Dashboard() {
 			}
 
 		data?.getMeasurements.filter(
-			(filteredData: any, i: number) => {
+			(filteredData: any) => {
 				if (filteredData?.with_irrigation === true) {
 					irrigationHistoryData?.moist?.push(filteredData?.moist)
 					irrigationHistoryData?.hum?.push(filteredData?.hum)
 					irrigationHistoryData?.temp?.push(filteredData?.temp)
-					irrigationHistoryData?.water_consummption?.push(data?.getIrrigation[i]?.water_overdrawn)
 				} else {
 					measurementsDataNotMonth.push(filteredData)
 				}
-				console.log(data?.getIrrigation[i]?.water_overdrawn)
 			}
 		)
 
-		console.log(data)
-		console.log(irrigationHistoryData)
-		console.log(measurementsDataNotMonth)
+		data?.getIrrigation.map((item: any) => {
+			let tMonth = monthRegex(item?.timestamp),
+				tDay = dayRegex(item?.timestamp),
+				tTime = timeRegex(item?.timestamp)
+
+			irrigationHistoryData?.water_overdrawn?.push(item?.water_overdrawn)
+			irrigationHistoryData?.dataframe?.push(`${tDay}.${tMonth}. ${tTime}`)
+
+			setOverallWaterConsumption((value: number) => value + item?.water_overdrawn)
+		})
 
 		setMonths(getMonths())
-		console.log(months)
 
 		const currentMonth = new Date().getMonth() + 1
 
 		// Extract irrigation count for each month
 		for (let i = 1; i < currentMonth + 1; i++) {
 			let month = 0,
-				measurementsInMonth: any = []
+				measurementsInMonth: any = [],
+				waterOverdrawnInMonth = 0
+
 			data?.getIrrigation.map((item: any) => {
 				let tMonth = monthRegex(item?.timestamp)
-				i === tMonth && month++
+				if(i === tMonth) {
+					month++
+					waterOverdrawnInMonth += item?.water_overdrawn
+				}
 			})
 
 			irrigationCountObj?.push(month)
+			waterOverdrawnObj?.push(waterOverdrawnInMonth)
 
 			measurementsDataNotMonth.map((item: any) => {
 				let tMonth = monthRegex(item?.timestamp)
@@ -104,10 +119,6 @@ export default function Dashboard() {
 			// i === currentMonth - 1 && (i = 13)
 		}
 
-		console.log(measurementsDataNotAvg)
-
-		setIrrigationCount(irrigationCountObj)
-
 		measurementsDataNotAvg.map((month: any) => {
 			let moistAvg = 0, tempAvg = 0, humAvg = 0
 
@@ -117,19 +128,15 @@ export default function Dashboard() {
 				humAvg += item?.hum
 			})
 
-			console.log(moistAvg)
-			console.log(moistAvg / month.length)
 			measurementsData?.moist?.push(moistAvg / month.length)
 			measurementsData?.hum?.push(tempAvg / month.length)
 			measurementsData?.temp?.push(humAvg / month.length)
 		})
 
-		console.log(measurementsData)
-
+		setIrrigationCount(irrigationCountObj)
+		setWaterOverdrawn(waterOverdrawnObj)
+		setIrrigationHistory(irrigationHistoryData)
 		setMeasurements(measurementsData)
-
-		console.log(irrigationCount)
-		console.log(measurements)
 	}, [data])
 
 	useEffect(() => {
@@ -153,11 +160,11 @@ export default function Dashboard() {
 			})
 			.then((res) => {
 				setWeather(res.data.hourly.slice(0, 15))
-				console.log(res)
+				//console.log(res)
 			})
-			.catch((error) => {
-				console.error(error)
-			})
+			// .catch((error) => {
+			// 	console.error(error)
+			// })
 	}
 
 	const liveMeasurements = () => {
@@ -170,15 +177,9 @@ export default function Dashboard() {
 				},
 			})
 			.then((res) => {
-				console.log(res)
-
 				setCurrentTemp(res.data.temp)
 				setCurrentHum(res.data.hum)
 				setCurrentMoist(res.data.moist)
-
-				// setTemp((tempItem: any) => [...tempItem, i])
-				// i > 25 && temp.filter((tempItemFilter: any) => setTemp((tempItem: any) => [...tempItem, tempItemFilter.indexOf < 25]))
-				// temp.length > 5 && console.log('kokot')
 
 				arrayPassTemp?.push(res.data.temp)
 				arrayPassHum?.push(res.data.hum)
@@ -191,8 +192,6 @@ export default function Dashboard() {
 				setTemp(arrayPassTemp)
 				setHum(arrayPassHum)
 				setMoist(arrayPassMoist)
-
-				console.log(temp)
 
 				setLiveMeasure(true)
 			})
@@ -302,7 +301,7 @@ export default function Dashboard() {
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterOverdrawn.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? data?.getIrrigation[0]?.water_overdrawn : 0
+										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? overallWaterConsumption : 0
 											} l`}</span>
 									</div>
 								</div>
@@ -385,11 +384,11 @@ export default function Dashboard() {
 									<div className="flex-row 2xl:h-96 lg:h-52">
 										<IrrigationChart
 											chartType={chartType}
-											moist={moist /* irrigationHistoryData.moist */}
-											hum={hum /* irrigationHistoryData.hum */}
-											temp={temp /* irrigationHistoryData.temp */}
-											//waterOverdrawn={ }
-											irrigationCount={irrigationCount}
+											moist={irrigationHistory?.moist}
+											hum={irrigationHistory?.hum}
+											temp={irrigationHistory?.temp}
+											waterOverdrawn={irrigationHistory?.water_overdrawn}
+											dataframe={irrigationHistory?.dataframe}
 										/>
 									</div>
 								</CardContent>
@@ -406,7 +405,7 @@ export default function Dashboard() {
 							<div className="flex-row 2xl:h-64 lg:h-48">
 								<WaterConsumptionChart
 									chartType={chartType}
-									waterOverdrawn={5 /* data.getIrrigation.waterOverdrawn */}
+									waterOverdrawn={waterOverdrawn}
 									irrigationCount={irrigationCount}
 								/>
 							</div>

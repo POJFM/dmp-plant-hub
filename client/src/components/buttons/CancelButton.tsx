@@ -10,11 +10,9 @@ export default function CancelButton({ props, active }: any) {
 		if(!active)  {
 			setActiveClass('button-inactive')
 			setTextColor('white')
-			console.log('inactive')
 		} else {
 			setActiveClass('button cancel-button hover:cancel-button-hover')
 			setTextColor('var(--darkGreen)')
-			console.log('active')
 		}
 	}, [active])
 

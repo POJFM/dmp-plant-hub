@@ -43,12 +43,12 @@ export default function Control(props) {
 					},
 				}
 			)
-			.then((res) => {
-				console.log(res)
-			})
-			.catch((error) => {
-				console.error(error)
-			})
+			// .then((res) => {
+			// 	console.log(res)
+			// })
+			// .catch((error) => {
+			// 	console.error(error)
+			// })
 
 		setPumpActiveClass('rotate-clockwise')
 		setWaterDropsActiveClass1('translate-down1')
@@ -74,12 +74,12 @@ export default function Control(props) {
 				},
 			}
 		)
-		.then((res) => {
-			console.log(res)
-		})
-		.catch((error) => {
-			console.error(error)
-		})
+		// .then((res) => {
+		// 	console.log(res)
+		// })
+		// .catch((error) => {
+		// 	console.error(error)
+		// })
 		
 		setPumpActiveClass('')
 		setWaterDropsActiveClass1('pump-water-drops')

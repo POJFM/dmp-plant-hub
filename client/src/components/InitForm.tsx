@@ -12,8 +12,7 @@ import SaveButton from './buttons/SaveButton'
 import { settings } from './../graphql/queries'
 
 export default function InitForm(props: any) {
-	// [createSettingsData, { data: createData, error, loading }] = useMutation(createSettings),
-	const { data: isSettings } = useQuery(settings), 
+	const { data: isSettings } = useQuery(settings),
 		[formActiveState, setFormActiveState] = useState(false),
 		[saveButtonState, setSaveButtonState] = useState(true),
 		[automaticIrrigationState, setAutomaticIrrigationState] = useState(true),
@@ -32,16 +31,15 @@ export default function InitForm(props: any) {
 		[mapClicked, setMapClicked] = useState(false)
 
 	let initMeasurementsInterval: any, fetchLocationFromCoordsInterval: any, fetchLocationFromCoordsFixingInterval: any
-	
-	console.log(isSettings?.getSettings.length < 1)
 
 	useEffect(() => {
 		isSettings?.getSettings.length < 1 && setFormActiveState(true)
-
-		formActiveState &&
-			!initMeasurementsInterval &&
-			(initMeasurementsInterval = setInterval(() => initMeasurements(), 3000))
 	}, [isSettings])
+
+	useEffect(() => {
+		!initMeasurementsInterval &&
+			(initMeasurementsInterval = setInterval(() => initMeasurements(), 3000))
+	}, [formActiveState])
 
 	const [createSettings] = useMutation(createSettingsMut, {
 		variables: {
@@ -142,11 +140,9 @@ export default function InitForm(props: any) {
 				},
 			})
 			.then((res) => {
-				console.log(res)
+				//console.log(res)
 				setMoistLimit(res.data.moistLimit)
 				setWaterLevelLimit(res.data.waterLevelLimit)
-				console.log(moistLimit)
-				console.log(waterLevelLimit)
 				setLimitValues(true)
 			})
 			.catch((error) => {
