@@ -26,6 +26,8 @@ services:
     user: root
     ports:
       - "5000:5000"
+    devices:
+      - "/dev/gpiomem:/dev/gpiomem"
     restart: always
 volumes:
   dbdata:
