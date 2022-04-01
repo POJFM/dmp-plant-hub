@@ -14,14 +14,14 @@ services:
       - "docker.env"
     restart: always
   client:
-    image: "tassilobalbo/planthub-client"
+    image: "tassilobalbo/planthub-client:latest"
     container_name: planthub-client
     user: root
     ports:
-      - "3000:3000"
+      - "80:80"
     restart: unless-stopped
   server:
-    image: "tassilobalbo/planthub-server"
+    image: "tassilobalbo/planthub-server:latest"
     container_name: planthub-server
     user: root
     ports:

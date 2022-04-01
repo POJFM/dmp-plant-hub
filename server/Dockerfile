@@ -1,4 +1,4 @@
-FROM golang:1.16-alpine
+FROM golang:alpine
 
 WORKDIR /app
 
@@ -10,5 +10,7 @@ RUN go mod download
 COPY . ./
 
 RUN go build -o /server
+
+COPY ./env/.env ./
 
 CMD ["/server"]
