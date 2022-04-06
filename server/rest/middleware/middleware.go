@@ -3,13 +3,12 @@ package middleware
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
-	"os"
-
 	db "github.com/SPSOAFM-IT18/dmp-plant-hub/database"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/model"
 	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/utils"
+	"net/http"
 )
 
 var (
@@ -191,7 +190,7 @@ func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(data.PumpState)
 
 	if data.Restart {
-		os.Exit(0)
+		utils.Exit()
 	}
 
 	pumpState = data.PumpState

@@ -18,20 +18,28 @@ func ArithmeticMean(list []float64) float64 {
 	return total / float64(len(list))
 }
 
+// TODO: make sure this works?
 func CatchInterrupt() {
 	sigchan := make(chan os.Signal)
 	signal.Notify(sigchan, os.Interrupt)
 	<-sigchan
-	log.Println("Program killed.. cleaning GPIO")
-	err := rpio.Close()
-	if err != nil {
-		log.Fatalln("Unable to clean GPIO")
-	}
-	os.Exit(0)
+	log.Println("Interrupt signal caught")
+	Exit()
 }
 
 func WaitTillWholeHour() {
 	for time.Now().Format("04") != "00" {
 		time.Sleep(1 * time.Minute)
 	}
+}
+
+func Exit() {
+	log.Println("Shutting down...")
+	log.Println("Attempting to clean GPIO...")
+	err := rpio.Close()
+	if err != nil {
+		log.Fatalln("Unable to clean GPIO")
+	}
+	log.Println("GPIO cleaned successfully! Exiting..")
+	os.Exit(0)
 }
