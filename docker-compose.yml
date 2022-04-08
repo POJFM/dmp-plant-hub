@@ -30,7 +30,7 @@ services:
       - "5000:5000"
     volumes:
       - "/sys:/sys"
-      - ./server/.env:/.env
+      - ./server/.env:/env/.env
     restart: always
 volumes:
   dbdata:
