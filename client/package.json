@@ -105,7 +105,6 @@
     "build": "yarn build:css && react-scripts build",
     "build:css": "postcss src/styles/tailwind.css -o src/styles/main.css",
     "watch:css": "postcss src/styles/tailwind.css -o src/styles/main.css",
-    "eject": "react-scripts eject",
     "codegen": "graphql-codegen --config codegen.yml"
   },
   "eslintConfig": {
