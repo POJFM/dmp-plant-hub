@@ -11,6 +11,6 @@ COPY . ./
 
 RUN go build -o /server
 
-COPY ./env/.env ./
+#COPY ./env/.env ./
 
 CMD ["/server"]

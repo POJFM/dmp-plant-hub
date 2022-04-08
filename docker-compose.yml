@@ -19,6 +19,8 @@ services:
     user: root
     ports:
       - "80:80"
+    volumes:
+      - ./client/.env:/usr/share/nginx/html/.env
     restart: unless-stopped
   server:
     image: "tassilobalbo/planthub-server:latest"
@@ -28,6 +30,7 @@ services:
       - "5000:5000"
     volumes:
       - "/sys:/sys"
+      - ./server/.env:/app/.env
     restart: always
 volumes:
   dbdata:
