@@ -467,9 +467,73 @@ Zde je příklad, který demonstruje typový systém Go spolu s rozhraním
 
 \clearpage
 
-\section{Interaktivní ovládání z WUI}
+
+\section{WUI}
+
+Webovovou aplikaci jsme napsali pomocí javascriptového frameworku
+React.js, CSS frameworku
+Tailwind a programovacího jazyku Typescript, který je supersetem javascriptu,
+podporujícím volitelné statické typování. Ve webovém rozhraní je možné zobrazit
+si statisky jak živě
+naměřených dat, tak dat uložených v databázi. Z OpenWeather API získáváme data
+o předpovědi počasí a do dahsboardu renderujeme předpovědi na dalších 15H.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth]{ui-inicializace.jpg}
+	\caption{Okno prvotního nastavení. Nastaví se zde limity a celkové
+		nastavení aplikace.}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth]{web-ui.png}
+	\caption{Dashborad \ac{WUI}}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth]{web-ui-pump.png}
+	\caption{Interaktivní ovládání celého systému lze provést v již
+		zmiňované webové aplikaci. Dovoluje uživateli kdykoliv spustit
+		čerpadlo na
+		zalévání rostliny.}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth]{web-ui-settings.png}
+	\caption{V nastavení se dá změnit nastavení aplikace i limitů pro
+		zavlažování. Nastavení se poté uloží do databáze.}
+\end{figure}
 
 \clearpage
+
+\section{Databáze}
+
+Pro databázi jsme se rozhodli použít databázový systém PostgreSQL.\@ Jak vyplývá
+z názvu, jedná se o SQL databázi, ty jsou vhodné pro ukládání velkého objemu
+dat, jako právě data z našich senzorů. Webová aplikace používá pro přístup k
+datům z databáze GraphQL API.\@
+
+GraphQL je query, který je konkurent řešení REST API.\@ Nabízí rychlejší
+tvorbu API a také umožňuje efektivnější přístup k datům z databáze. Umožňuje
+vybrat pouze data, která momentálně aplikace používá a dovoluje vynechat data,
+která zrovna potřebné nejsou.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\linewidth]{db.png}
+	\caption{Schéma databáze}
+\end{figure}
+
+\section{Webový server}
+
+Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě
+hlavně mezi cloudovými vývojáři a v oblasti vývoje microservices. Dokáže se
+exekuční rychlostí přiblížit k nízkoúrovňovým jazykům jako je C nebo Rust, ale
+zároveň zůstává velmi lidsky čitelný a jednoduchý na použití. Na rozdíl od
+jazyků jako C a Rust má například garbage collector.
 
 \section{Závěr}
 
