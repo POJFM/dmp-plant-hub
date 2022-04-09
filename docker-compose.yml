@@ -29,7 +29,8 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - "/sys:/sys"
+      - /sys:/sys
+      - /mem/dev:/mem/dev
       - ./server/.env:/app/env/.env
     restart: always
 volumes:
