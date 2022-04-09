@@ -50,7 +50,7 @@ func waitForDB(db *bun.DB) {
 			log.Println("Successfully connected to DB!")
 			return
 		}
-		log.Printf("Failed to connect DB. Retrying in 10s. Number of retries: %c\n", i)
+		log.Printf("Failed to connect DB. Retrying in 10s. Number of retries: %c", i)
 		time.Sleep(10 * time.Second)
 	}
 	log.Fatalf("DB CONN ERROR: %s", err)

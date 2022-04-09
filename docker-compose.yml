@@ -30,8 +30,9 @@ services:
       - "5000:5000"
     volumes:
       - /sys:/sys
-      - /mem/dev:/mem/dev
       - ./server/.env:/app/env/.env
+    devices:
+      - /dev/mem:/dev/mem
     restart: always
 volumes:
   dbdata:
