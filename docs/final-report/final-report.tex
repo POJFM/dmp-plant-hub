@@ -15,10 +15,6 @@
 \usepackage{listings}
 \usepackage{tabularx}
 \usepackage{changepage}
-% \hypersetup{hidelinks,backref=true,pagebackref=true,hyperindex=true,colorlinks=false,breaklinks=true,urlcolor= rouge,bookmarks=true,bookmarksopen=false,pdftitle={Title},pdfauthor={Author}}
-% \usepackage[acronym,toc,xindy]{glossaries}
-% % color glossary referencies
-% \renewcommand*{\glstextformat}[1]{\color{rouge}{\underline{\color{black} #1}}}
 
 \graphicspath{ {./img/} }
 \setlength{\parindent}{2em}
@@ -81,15 +77,13 @@ PlantHub je automatický zavlažovací systém s \ac{WUI}. Jádrem našeho syst�
 
 \section{Úvod}
 
-% TODO: rozdělit na hlavní úvod a na kapitolu koncepce projektu
+Naším cílem je návrh, sestavení a naprogramování automatického zavlažovacího systému s názvem PlantHub. Systém se skládá z řídící jednotky (stanice), senzorů, čerpadla, nádrže a \space \underline{\ac{WUI}}. Tato stanice pravidelně snímá data ze senzorů měřících teplotu a vlhkost vzduchu, vlhkost půdy a stav hladiny v nádrži, ze ktéré stanice přečerpává vodu. Naměřená data se živě odesílají a zobrazují ve \underline{\ac{WUI}} a ve stejné chvíli se samostatně, v periodě čtyř hodin ukládají do databáze. Přístup k naměřeným datům a \underline{\ac{WUI}} má pouze uživatel lokální sítě, do které je PlantHub připojen.
 
-Naším cílem je návrh, sestavení a naprogramování automatického zavlažovacího systému s názvem PlantHub. Systém se skládá z řídící jednotky (stanice), senzorů, čerpadla, nádrže a \space \underline{\ac{WUI}}. Tato stanice pravidelně snímá data ze senzorů měřících teplotu a vlhkost vzduchu, vlhkost půdy a stav hladiny v nádrži, ze které pak stanice přečerpává vodu pomocí čerpadla spouštěného tranzistorem. Naměřená data se posílají živě pomocí \ac{REST} \space \ac{API} prostřednictvím protokolu HTTP do \underline{\ac{WUI}}. Samostatně se poté v periodě čtyř hodin ukládají do PostgreSQL databáze běžící v docker kontejneru. Docker kontejner si můžeme představit jako jednodušší a lépe škálovatelnou verzi virtualizace. Uložená data se vykreslí do statistik změn teploty a vlhkosti vzduchu, vlhkosti půdy a počtů zavlažování v časovém rozsahu zobrazitelných ve \underline{\ac{WUI}}. Pro načtení historických dat z databáze používáme \ac{GraphQL} \underline{\ac{API}}, jelikož nabízí šetrnější přístup k datům, vybráním pouze těch záznamů z tabulky, které opravdu využíváme. V případě nedostupnosti serveru by se ve \space \underline{\ac{WUI}} měla pořád načítat živě naměřená data z \underline{\ac{REST}} \space \underline{\ac{API}}. Přístup k naměřeným datům a \underline{\ac{WUI}} má pouze uživatel lokální sítě, do které je PlantHub připojen pomocí ethernet kabelu. Pro správnou funkci stanice je tedy zapotřebí router s přístupem k internetu a DHCP serverem.
+\underline{\ac{WUI}} je hostované na naší stanici. Uživatel má možnost zobrazení statistik jak živě naměřených dat, tak dat historických. \underline{\ac{WUI}} také nabízí manuální kontrolu nad čerpadlem, nastavení \underline{\ac{WUI}} a samotné řídící jednotky.
 
-\underline{\ac{WUI}} hostované na naší stanici, je sestavené pomocí javascriptového frameworku React.js, CSS frameworku Tailwind a programovacího jazyku Typescript. Tento jazyk je supersetem javascriptu, a narozdíl od něj přidává možnost statického typování. Uživatel má možnost zobrazení statistik jak živě naměřených dat, tak dat historických v nastavitelných grafech dashboardu. \underline{\ac{WUI}} také nabízí manuální kontrolu nad čerpadlem s časovačem začátku zavlažování a restartem hlavního programu. Nastavitelné je jak \underline{\ac{WUI}} tak i samotné faktory zavlažování, jako je limit vlhkosti půdy, doba zavlažování nebo limit hladiny vody.
+Jednotlivé součásti a moduly stanice jsme vybrali podle finanční dostupnosti a adekvátních technických požadavků na přesnost měření. Obvod jsme v testovací verzi postavili na nepájivém poli a ve finální verzi navrhli a objednali vlastní \ac{PCB}. Pro ochranu naší stanice jsme navrhli kryt, který jsme následně vytiskli na 3D tiskárně.
 
-Jednotlivé součásti a moduly stanice jsme vybrali podle finanční dostupnosti a adekvátních technických požadavků na přesnost měření. Zapojení těchto modulů do obvodu jsme nejprve provedli ve webové aplikaci EasyEDA, která nabízí jednoduché prostředky pro návrh technických schémat. Tento obvod jsme poté v testovací verzi postavili na nepájivém poli a ve finální verzi navrhli a objednali vlastní \ac{PCB}. Pro ochranu naší stanice jsme v open-source programu FreeCad navrhli model krytu, který jsme následně vytiskli na 3D tiskárně. Vymstila se nám však nepřesnost rozměrů krytu a při vkládání stanice do krytu se nám podařilo zlomit SD kartu s operačním systémem, daty a nasazenými programy. Po reinstalaci operačního systému jsme opravili rozměry vytvořeného modelu krytu a vytiskli kryt podruhé, tentokrát ve správných rozměrech.
-
-Hlavní program jsme v prvotní verzi psali ve vysokoúrovňovém programovacím jazyce Python, od kterého jsme nakonec upustili kvůli vysokým technickým nárokům. Naše rozhodnutí nás nakonec dovedlo k jazyku Go vytvořeného Googlem a určeného pro concurrency, rychlou kompilaci i průběh programu, backend webových aplikací a mnoho dalších u. Tento jazyk se nám zalíbil natolik že jsme se v něm rozhodli vytvořit jak \underline{\ac{API}}, databázové funkce, tak i hlavní program. Program je rozdělen na několik sekvencí, z toho hlavní jsou měřící sekvence kde se každou sekundu provádí měření dat ze senzorů a následné odesílání na \underline{\ac{REST}} \space \underline{\ac{API}} webové aplikace a kanály vytvořené pro komunikaci mezi go rutinama a sekvence controlleru, která pomocí snímání dat z databáze určuje, jestli se jedná o první spuštění PlantHubu, a podle toho určí jestli se spustí incializační sekvence nebo sekvence zavlažování.
+Hlavní program jsme napsali v programovacím jazyce Go, jehož hlavní využití je k vytváření backendů webových aplikací. Tento jazyk se nám zalíbil natolik že jsme se v něm rozhodli vytvořit jak \ac{API}, databázové funkce, tak i hlavní program. Program je rozdělen na několik sekvencí, z toho hlavní jsou měřící sekvence a sekvence controlleru, která pomocí snímání dat z databáze určuje, jestli se jedná o první spuštění PlantHubu, a podle toho určí jestli se spustí incializační sekvence nebo sekvence samotného zavlažování.
 
 \clearpage
 
@@ -194,6 +188,8 @@ Testovací verzi našeho obvodu jsme postavili na nepájivém kontaktním poli. 
 
 \section{Fyzická realizace}
 
+Vymstila se nám však nepřesnost rozměrů krytu a při vkládání stanice do krytu se nám podařilo zlomit SD kartu s operačním systémem, daty a nasazenými programy. Po reinstalaci operačního systému jsme opravili rozměry vytvořeného modelu krytu a vytiskli kryt podruhé, tentokrát ve správných rozměrech.
+
 \subsection{Pouzdro}
 
 \subsection{Hub}
@@ -230,13 +226,11 @@ Fáze programu se spouštějí buďto v samostatné go rutině a komunikují spo
 
 \subsubsection{Měření}
 
-Senzor vlhkosti půdy a \underline{\ac{DHT11}} průběžně posílají naměřená data do \underline{\ac{RPi}}, kde se ukládají do databáze. Jestliže naměřené hodnoty překročí limitní hodnoty, \underline{\ac{RPi}} pošle signál pro otevření tranzistoru což spustí čerpadlo.
-
-% TODO: více rozvést vliv obou senzorů
+Senzor vlhkosti půdy a \underline{\ac{DHT11}} průběžně posílají naměřená data do \underline{\ac{WUI}}. Hlavní program ve stejné chvíli čte data ze senzorů a kontroluje jestli naměřené hodnoty nepřekračují limitní hodnoty pro spuštění zavlažování, pokud ano \underline{\ac{RPi}} pošle signál pro otevření tranzistoru což spustí čerpadlo.
 
 \subsubsection{Periodické ukládání dat}
 
-V samostatné rutině běží funkce pro ukládání naměřených dat v periodě 4 hodin. Naměřená data jsou následně statisticky zobrazena ve \underline{\ac{WUI}}.
+V samostatné rutině běží funkce pro ukládání naměřených dat v periodě 4 hodin. Tato rutina, stejně jako ostatní, čte hodnoty senzorů z měřící sekvence. Naměřená data jsou následně statisticky zobrazena ve \underline{\ac{WUI}}.
 
 \subsubsection{Controller}
 
@@ -364,14 +358,15 @@ Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě 
 
 \section{Bezpečnost}
 
+\clearpage
+
 \section{Závěr}
 
-Náš projekt je stále ve vývoji a mnoho z kritických funkcí projektu není ještě dokončeno. S vývojem dále pokračujeme, protože se jedná o naši maturitní práci. Myslíme si, ale že tento projekt má v budoucnu potenciál stát se úspěšným startupem, proto plánujeme pokračovat ve vývoji i po maturitě.
+Náš projekt je stále ve vývoji a některé z funkcí projektu nefungujou podle našich představ, i přes to, je náš systém v této chvíli použitelný. Myslíme si, ale že tento projekt má v budoucnu potenciál stát se úspěšným startupem, proto plánujeme pokračovat ve vývoji i po maturitě. 
 
-Tato práce byla pro nás velkým přínosem, naučili jsme se mnoho nových dovedností a načerpali nové informace.
+Abychom však tento projekt mohli pojmout jako plně funkční systém museli bychom ještě dokončit a předělat některé klíčové části. Jednalo by se především o rozdělení hostingu webové aplikace a databáze na samostatný server a zajištění modulárnosti celého systému rozdělením řídící jednotky na samostatné moduly a hub zodpovědný za jejich provoz. V dalších, né natolik prioritních, krocích se můžeme bavit o dokončení plánované tmavé verze \underline{\ac{WUI}} a přidání podpory více jazyků. A pro odlišení od konkurence mnoha jiných zavlažovacích systémů, přidání chytrých funkcí vypočítávání spotřeby vody a energie na základě předpovědi počasí typu kytky a oblasti. 
 
-% TODO: co zbývá dokončit?
-% TODO: Budoucí plány
+Tato práce byla pro nás velkým přínosem, naučili jsme se mnoho nových dovedností a načerpali nové informace, které v naší profesi bezpochyby dále využijeme.
 
 \clearpage
 
