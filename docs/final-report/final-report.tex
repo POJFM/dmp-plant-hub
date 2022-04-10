@@ -143,7 +143,6 @@ Hlavní program jsme v prvotní verzi psali ve vysokoúrovňovém programovacím
 	\acro{GraphQL}{Graph query languge}
 	\acro{PCB}{Printed circuit board}
 	\acro{RPi}{Raspberry Pi}
-	\acro{CPU}{Central Processing Unit}
 	\acro{ARM}{Advanced RISC Machines}
 	\acro{GPIO}{General-purpose input/output}
 	\acro{ADC}{Analogově digitální převodník}
@@ -151,17 +150,13 @@ Hlavní program jsme v prvotní verzi psali ve vysokoúrovňovém programovacím
 	\acro{HC-SR04}{Ultrasonický senzor vzdálenosti}
 	\acro{LED}{Light Emitting Diode}
 	\acro{SAR}{Successive-approximation}
-	\acro{PETG}{Polyethylene terephthalate glycol filament}
-	\acro{LSB}{Least significant bit}
-	\acro{CLR}{Common Language Runtime}
-	\acro{JVM}{Java virtual machine}
 \end{acronym}
 
 \clearpage
 
 \section{Hardware}
 
-Vyvinuli jsme vhodné pouzdro pro naše Raspberry, abychom ochránili citlivé elektronické součástky a zároveň měli možnost jednoduše vyjmout stanici z krytu. Budeme ho tisknout na 3D tiskárně pevným \ac{PETG} filamentem. K zavlažování je potřeba postavit i nádrž na vodu, ze které bude naše čerpadlo přečerpávat vodu k zavlažování. Rozhodli jsme se pro nádobu s co největším objemem a postavili ji z upraveného 5L soudku.
+Vyvinuli jsme vhodné pouzdro pro naše Raspberry, abychom ochránili citlivé elektronické součástky a zároveň měli možnost jednoduše vyjmout stanici z krytu. Budeme ho tisknout na 3D tiskárně pevným Polyethylene terephthalate glycol(PETG) filamentem. K zavlažování je potřeba postavit i nádrž na vodu, ze které bude naše čerpadlo přečerpávat vodu k zavlažování. Rozhodli jsme se pro nádobu s co největším objemem a postavili ji z upraveného 5L soudku.
 
 \subsection{Senzory}
 
@@ -183,7 +178,7 @@ Jedná se o kapacitní senzor, který se skládá ze dvou vodivých desek a pře
 
 % TODO: toto je prý na kokot napsané
 % mr. sumbal nechápe co je SAR
-% Přemapujeme tedy analogový signál do osmi různých digitálních hodnot, kterým se také říká 3bitové rozlišení, to definuje tu nejmenší hodnotu změny, který převodník dokáže rozlišit, této hodnotě se říká \ac{LSB}. \ac{ADC} poté pomocí \ac{SAR} definuje adresu v binárním podání srozumitelným pro digitální vstup.
+% Přemapujeme tedy analogový signál do osmi různých digitálních hodnot, kterým se také říká 3bitové rozlišení, to definuje tu nejmenší hodnotu změny, který převodník dokáže rozlišit, této hodnotě se říká Least significant bit (LSB). \ac{ADC} poté pomocí \ac{SAR} definuje adresu v binárním podání srozumitelným pro digitální vstup.
 
 % \begin{figure}[h]
 % 	\centering
@@ -217,7 +212,7 @@ jakéhokoliv výkonu a nároků na zdroj.
 
 \subsection{Architektura ARM}
 
-\ac{ARM} je nejnovější \ac{CPU} architektura. Využívají ji všechny moderní
+\ac{ARM} je nejnovější Central Processing Unit (CPU) architektura. Využívají ji všechny moderní
 chytré
 telefony, zařízení s operačním systémem Android i Apple produkty. Dnes už mají
 \ac{ARM} procesory zařízení s Windows nebo MacOS.\@
@@ -364,7 +359,7 @@ vestavěné nástroje pro paralelní programování. Výkon Go je srovnatelný s
 C a C++, ale zároveň nabízí rychlý a jednoduchý vývoj aplikací.
 
 Stejně jako C a C++ se Go kompiluje do nativního strojového kódu, takže
-nepotřebujeme běhové prostředí jako \ac{CLR} a \ac{JVM}. To má řadu výhod,
+nepotřebujeme běhové prostředí jako Common Language Runtime (CLR) a Java Virtual Machine (JVM). To má řadu výhod,
 třeba při
 distribuci aplikace v aplikačních kontejnerech jako je Docker.
 
@@ -407,7 +402,7 @@ React.js, CSS frameworku
 Tailwind a programovacího jazyku Typescript, který je supersetem javascriptu,
 podporujícím volitelné statické typování. Ve webovém rozhraní je možné zobrazit
 si statisky jak živě
-naměřených dat, tak dat uložených v databázi. Z OpenWeather API získáváme data
+naměřených dat, tak dat uložených v databázi. Z OpenWeather \ac{API} získáváme data
 o předpovědi počasí a do dahsboardu renderujeme předpovědi na dalších 15H.
 
 \begin{figure}[h]
@@ -445,12 +440,12 @@ o předpovědi počasí a do dahsboardu renderujeme předpovědi na dalších 15
 
 Pro databázi jsme se rozhodli použít databázový systém PostgreSQL.\@ Jak
 vyplývá
-z názvu, jedná se o SQL databázi, ty jsou vhodné pro ukládání velkého objemu
+z názvu, jedná se o Structured Query Language (SQL) databázi, ty jsou vhodné pro ukládání velkého objemu
 dat, jako právě data z našich senzorů. Webová aplikace používá pro přístup k
-datům z databáze GraphQL API.\@
+datům z databáze GraphQL \ac{API}.\@
 
-GraphQL je query, který je konkurent řešení REST API.\@ Nabízí rychlejší
-tvorbu API a také umožňuje efektivnější přístup k datům z databáze. Umožňuje
+GraphQL je query, který je konkurent řešení \ac{REST} \ac{API}.\@ Nabízí rychlejší
+tvorbu \ac{API} a také umožňuje efektivnější přístup k datům z databáze. Umožňuje
 vybrat pouze data, která momentálně aplikace používá a dovoluje vynechat data,
 která zrovna potřebné nejsou.
 
