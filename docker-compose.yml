@@ -28,6 +28,7 @@ services:
     user: root
     ports:
       - "5000:5000"
+    privileged: true
     volumes:
       - /sys:/sys
       - ./server/.env:/app/env/.env
