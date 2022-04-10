@@ -119,18 +119,18 @@ Naším cílem je návrh, sestavení a naprogramování automatického zavlažov
 
 Jednotlivé součásti a moduly stanice jsme vybrali podle finanční dostupnosti a adekvátních technických požadavků na přesnost měření. Zapojení těchto modulů do obvodu jsme nejprve provedli ve webové aplikaci EasyEDA, která nabízí jednoduché prostředky pro návrh technických schémat. Tento obvod jsme poté v testovací verzi postavili na nepájivém poli a ve finální verzi navrhli a objednali vlastní \ac{PCB}. Pro ochranu naší stanice jsme v open-source programu FreeCad navrhli model krytu, který jsme následně vytiskli na 3D tiskárně. Vymstila se nám však nepřesnost rozměrů krytu a při vkládání stanice do krytu se nám podařilo zlomit SD kartu s operačním systémem, daty a nasazenými programy. Po reinstalaci operačního systému jsme opravili rozměry vytvořeného modelu krytu a vytiskli kryt podruhé, tentokrát ve správných rozměrech.
 
-Hlavní program jsme v prvotní verzi psali ve vysokoúrovňovém programovacím jazyce Python, od kterého jsme nakonec upustili kvůli vysokým technickým nárokům. Naše rozhodnutí nás nakonec dovedlo k jazyku Go vytvořeného Googlem a určeného pro concurrency, rychlou kompilaci i průběh programu, backend webových aplikací a mnoho dalších u. Tento jazyk se nám zalíbil natolik že jsme se v něm rozhodli vytvořit jak \ac{API}, databázové funkce, tak i hlavní program. Program je rozdělen na několik sekvencí, z toho hlavní jsou měřící sekvence kde se každou sekundu provádí měření dat ze senzorů a následné odesílání na \ac{REST} \ac{API} webové aplikace a channely vytvořené pro komunikaci mezi go rutinama a sekvence controlleru, která pomocí snímání dat z databáze určuje, jestli se jedná o první spuštění PlantHubu, a podle toho určí jestli se spustí incializační sekvence nebo sekvence zavlažování.
+Hlavní program jsme v prvotní verzi psali ve vysokoúrovňovém programovacím jazyce Python, od kterého jsme nakonec upustili kvůli vysokým technickým nárokům. Naše rozhodnutí nás nakonec dovedlo k jazyku Go vytvořeného Googlem a určeného pro concurrency, rychlou kompilaci i průběh programu, backend webových aplikací a mnoho dalších u. Tento jazyk se nám zalíbil natolik že jsme se v něm rozhodli vytvořit jak \ac{API}, databázové funkce, tak i hlavní program. Program je rozdělen na několik sekvencí, z toho hlavní jsou měřící sekvence kde se každou sekundu provádí měření dat ze senzorů a následné odesílání na \ac{REST} \ac{API} webové aplikace a kanály vytvořené pro komunikaci mezi go rutinama a sekvence controlleru, která pomocí snímání dat z databáze určuje, jestli se jedná o první spuštění PlantHubu, a podle toho určí jestli se spustí incializační sekvence nebo sekvence zavlažování.
 
 \clearpage
 
 \section{Seznam zkratek a pojmů}
-
+% TODO: přidat vysvětlení somehow
 \begin{acronym}
 	\acro{WUI}{Webové uživatelské rozhraní}
 	\acro{API}{Application programming interface}
 	\acro{REST}{Representaion programming interface}
 	\acro{GraphQL}{Graph query languge}
-	\acro{PCB}{Printed circuit board}
+	\acro{PCB}{plošný spoj}
 	\acro{RPi}{Raspberry Pi}
 	\acro{CPU}{Central Processing Unit}
 	\acro{ARM}{Advanced RISC Machines}
@@ -189,27 +189,15 @@ Všechny naměřené údaje jsou v převodníku senzoru přepočítány a odesl�
 
 \subsubsection{Čerpadlo}
 
-Naše zvolené ponorné mini čerpadlo eses se skládá z DC motoru, na němž je
-upevněna centrifuga pro
-čerpání vody a vlastního pouzdra, z kterého vede otvor pro napojení odtokové
-hadičky. Čerpadlo je připojeno na zdroj napětí 5V a zem.
+Naše zvolené ponorné mini čerpadlo eses se skládá z DC motoru, na němž je upevněna centrifuga pro čerpání vody a vlastního pouzdra, z kterého vede otvor pro napojení odtokové hadičky. Čerpadlo je připojeno na zdroj napětí 5V a zem.
 
 \subsubsection{Tranzistor 2N2222}
 
-Protože samotný signální pin neposkytuje dostatečné napětí pro chod čerpadla
-ovládáme jej tranzistorem 2N2222. Tento tranzistor je bipolární
-Negative-Positive-Negative tranzistor, to znamená že jeho polarita je nastavená
-tak aby na kolektoru přijímal pozitivní napětí. Díky našemu vyměnitelnému
-připojení modulů je
-možné čerpadlo vyměnit a přívodný kabel používat jako spouštěč čerpadla
-jakéhokoliv výkonu a nároků na zdroj.
+Protože samotný signální pin neposkytuje dostatečné napětí pro chod čerpadla ovládáme jej tranzistorem 2N2222. Tento tranzistor je bipolární Negative-Positive-Negative tranzistor, to znamená že jeho polarita je nastavená tak aby na kolektoru přijímal pozitivní napětí. Díky našemu vyměnitelnému připojení modulů je možné čerpadlo vyměnit za jiné a přívodný kabel používat jako spouštěč čerpadla jakéhokoliv výkonu a nároků na zdroj.
 
 \subsection{Architektura ARM}
 
-\ac{ARM} je nejnovější \ac{CPU} architektura. Využívají ji všechny moderní
-chytré
-telefony, zařízení s operačním systémem Android i Apple produkty. Dnes už mají
-\ac{ARM} procesory zařízení s Windows nebo MacOS.\@
+\ac{ARM} je nejnovější \ac{CPU} architektura. Využívají ji všechny moderní chytré telefony, zařízení s operačním systémem Android i Apple produkty. Dnes už mají \ac{ARM} procesory zařízení s Windows nebo MacOS.
 
 % \ac{ARM} je založen na RISC (Reduced Instruction Set Computing), tyto procesory jsou designované na 
 
@@ -217,13 +205,7 @@ telefony, zařízení s operačním systémem Android i Apple produkty. Dnes už
 
 \section{Návrh obvodu a plošného spoje}
 
-Testovací verzi našeho obvodu jsme postavili na nepájivém kontaktním poli,
-které jsme používali pouze v testovací verzi. Jakmile jsme měli vše plně
-odzkoušeno a plně otestováno přešli jsme na profesionálnější řešení.
-Což tedy v druhé fázi znamenalo sestrojit a nechat vytisknout náš vlastní obvod
-přepracovaného schématu \ac{PCB} a vytisknutého společnosti JLCPCB na naše
-vlastní
-náklady.
+Testovací verzi našeho obvodu jsme postavili na nepájivém kontaktním poli. Jakmile jsme měli vše plně odzkoušeno a plně otestováno, přešli jsme na profesionálnější řešení. Což tedy v druhé fázi znamenalo navrhnout a nechat vytisknout náš vlastní obvod přepracovaného schématu \ac{PCB} a vytisknutého společností JLCPCB na naše vlastní náklady.
 
 \begin{figure}[h]
 	\centering
@@ -256,10 +238,7 @@ náklady.
 
 \subsection{Postup práce}
 
-Náš hlavní program pro zavlažování a komunikaci s databází a \ac{WUI}
-jsme začali psát ve vysokoúrovňovém programovacím jazyce Python. Od toho jsme
-ale nakonec upustili kvůli horší výkonu, a tak jsme program přepsali v
-programovacím jazyku Go.
+Náš hlavní program pro zavlažování a komunikaci s databází a \ac{WUI} jsme začali psát ve vysokoúrovňovém programovacím jazyce Python. Od toho jsme ale nakonec upustili kvůli horší výkonu, a tak jsme program přepsali v programovacím jazyku Go.
 
 \begin{figure}[h]
 	\centering
@@ -269,120 +248,62 @@ programovacím jazyku Go.
 
 \subsection{Fáze programu}
 
-Fáze programu se spouštějí buďto v samostatné go rutině a komunikují spolu
-pomocí channelů nebo na základě podmínek kde se po splnění požadavků ukončí.
+Fáze programu se spouštějí buďto v samostatné go rutině a komunikují spolu pomocí kanálů nebo na základě podmínek, kde se po splnění požadavků ukončí.
 
 \subsubsection{Měření}
 
-Senzor vlhkosti půdy a \ac{DHT11} průběžně posílají naměřená data do \ac{RPi},
-kde se
-ukládají do databáze. Jestliže naměřené hodnoty překročí limitní hodnoty,
-\ac{RPi}
-pošle signál pro otevření tranzistoru což spustí čerpadlo.
+Senzor vlhkosti půdy a \ac{DHT11} průběžně posílají naměřená data do \ac{RPi}, kde se ukládají do databáze. Jestliže naměřené hodnoty překročí limitní hodnoty, \ac{RPi} pošle signál pro otevření tranzistoru což spustí čerpadlo.
+
+% TODO: více rozvést vliv obou senzorů
 
 \subsubsection{Periodické ukládání dat}
 
-V samostatné rutině běží funkce pro ukládání naměřených dat v periodě 4 hodin.
-Naměřená data jsou následně statisticky zobrazena v \ac{WUI}.
+V samostatné rutině běží funkce pro ukládání naměřených dat v periodě 4 hodin. Naměřená data jsou následně statisticky zobrazena v \ac{WUI}.
 
 \subsubsection{Controller}
 
-Po spuštění měřící sekvence a sekvence periodického ukládání dat se spustí
-buďto incializační sekvence a nebo zavlažovací sekvence podle toho jestli jsou
-v databázi data nastavení, nastavovaná ve \ac{WUI}. Pokud data nejsou tak
-program
-čeká na uložení dat z \ac{WUI} a \ac{LED} dioda bliká dvakrát po sobě dokud
-data
-nejsou
-dostupná, pokud ano spustí se zavlažovací sekvence, načtou se limitní data z
-databáze a v periodě 1 sekundy se budou číst data o vlhkosti půdy.
+Po spuštění měřící sekvence a sekvence periodického ukládání dat se spustí buďto inicializační sekvence a nebo zavlažovací sekvence podle toho, jestli se v databázi nachází předchozí nastavení. Pokud předchozí nastavení nejsou nalezena, program čeká na uložení dat z \ac{WUI} a \ac{LED} dioda bliká dvakrát po sobě, dokud data nejsou dostupná. Pokud jsou, spustí se zavlažovací sekvence, načtou se limitní data z databáze a v periodě jedné sekundy se budou číst data o vlhkosti půdy.
 
 \subsubsection{Inicializace}
 
-Půda musí být ze začátku suchá. Senzor vlhkosti půdy zasuneme co nejhlouběji do
-půdy. \ac{RPi} bude chvíli sbírat data a pak je zprůměruje do hodnoty, která
-bude
-sloužit jako limit pro spuštění čerpadla.
+Půda musí být ze začátku suchá. Senzor vlhkosti půdy zasuneme co nejhlouběji do půdy. \ac{RPi} bude chvíli sbírat data a pak je zprůměruje do hodnoty, která bude sloužit jako limit pro spuštění čerpadla.
 
 V \ac{WUI} jde navíc ještě manuálně nastavit hranice vlhkosti půdy pro spuštění
 čerpadla.
 
-Nastavit se dá také množství vody, které bude přečerpáno při jednom spuštění a
-jaká je hranice pro přijatelnou výšku hladiny vody v nádrži. Pokud nejsou tyto
-hodnoty uvedeny čerpadlo bude vodu přečerpávat, dokud se nezmění hodnota
-kapacitního čidla pro měření vlhkosti půdy a \ac{HC-SR04} použije výchozí
-nastavení.
+Nastavit se dá také množství vody, které bude přečerpáno při jednom spuštění a jaká je hranice pro přijatelnou výšku hladiny vody v nádrži. Pokud nejsou tyto hodnoty uvedeny čerpadlo bude vodu přečerpávat, dokud se nezmění hodnota kapacitního čidla pro měření vlhkosti půdy a \ac{HC-SR04} použije výchozí nastavení.
 
 \subsubsection{Zavlažování}
 
-Čerpadlo začne čerpat vodu a zavlažovat rostlinu. Voda se čerpá tak dlouho,
-dokud senzor vlhkosti půdy nezmění svou hodnotu nebo dokud není vyčerpán limit
-přečerpané vody na jedno spuštění.
+Čerpadlo začne čerpat vodu a zavlažovat rostlinu. Voda se čerpá tak dlouho, dokud senzor vlhkosti půdy nezmění svou hodnotu nebo dokud není vyčerpán limit přečerpané vody na jedno spuštění.
 
 \subsubsection{Kontrola}
 
-Po ukončení přečerpávání se spustí \ac{HC-SR04} a změří výšku hladiny vody.
-Naměřená
-data poté odešle do \ac{RPi} kde se uloží do databáze. Pokud bude naměřená
-hodnota
-nižší, než je limitní hodnota, začne blikat \ac{LED} a \ac{RPi} odešle
-upozornění o
-doplnění nádrže do \ac{WUI}. Jakmile bude hladina doplněna, signalizace se
-vypne.
+Po ukončení přečerpávání se spustí \ac{HC-SR04} a změří výšku hladiny vody. Naměřená data poté odešle do \ac{RPi} kde se uloží do databáze. Pokud bude naměřená hodnota nižší, než je limitní hodnota, začne blikat \ac{LED} a \ac{RPi} odešle upozornění o doplnění nádrže do \ac{WUI}. Jakmile bude hladina doplněna, signalizace se vypne.
 
 \subsubsection{Ukládání dat}
 
-Náš systém ukládá zvlášť periodicky naměřená data a data naměřená před
-zavlažováním, dále ukládá nastavení jak pro limity k zavlažování, tak pro
-\ac{WUI}.
+Náš systém ukládá zvlášť periodicky naměřená data a data naměřená před zavlažováním, dále ukládá nastavení jak pro limity k zavlažování, tak pro \ac{WUI}.
 
 \subsection{Go}
 
-Go je open-source programovací jazyk, který byl vytvořen společností Google v
-roce 2009. Je to stále relativně nový programovací jazyk, který se nevyvinul z
-jiných jazyků jako C\# a Java. Go ignoruje teorii o programovacích jazycích.
-Místo toho aby se zaměřoval na akademické teorie, se zaměřuje na reálné
-praktiky používané pro vývoj next-gen v cloudových, distribuovaných a
-souběžných aplikacích.
+Go je open-source programovací jazyk, který byl vytvořen společností Google v roce 2009. Je to stále relativně nový programovací jazyk, který se nevyvinul z jiných jazyků jako C\# a Java. Go ignoruje teorii o programovacích jazycích. Místo toho aby se zaměřoval na akademické teorie, se zaměřuje na reálné praktiky používané pro vývoj next-gen v cloudových, distribuovaných a souběžných aplikacích.
 
-Jazyk Go je staticky typovaný a využívá garbage collector, jedná se o
-kompilovaný programovací jazyk, který své binární soubory kompiluje pro každou
-platformu. Dá se zařadit do skupiny C jazyků na základě jeho základního
-syntaxe. Go poskytuje expresivní syntax s jednoduchým typovým systémem a má
-vestavěné nástroje pro paralelní programování. Výkon Go je srovnatelný s jazyky
-C a C++, ale zároveň nabízí rychlý a jednoduchý vývoj aplikací.
+Jazyk Go je staticky typovaný a využívá garbage collector, jedná se o kompilovaný programovací jazyk, který své binární soubory kompiluje pro každou platformu. Dá se zařadit do skupiny C jazyků na základě jeho základního syntaxe. Go poskytuje expresivní syntax s jednoduchým typovým systémem a má vestavěné nástroje pro paralelní programování. Výkon Go je srovnatelný s jazyky C a C++, ale zároveň nabízí rychlý a jednoduchý vývoj aplikací.
 
-Stejně jako C a C++ se Go kompiluje do nativního strojového kódu, takže
-nepotřebujeme běhové prostředí jako \ac{CLR} a \ac{JVM}. To má řadu výhod,
-třeba při
-distribuci aplikace v aplikačních kontejnerech jako je Docker.
+Stejně jako C a C++ se Go kompiluje do nativního strojového kódu, takže nepotřebujeme běhové prostředí jako \ac{CLR} a \ac{JVM}. To má řadu výhod, třeba při distribuci aplikace v aplikačních kontejnerech jako je Docker.
 
 \subsubsection{Paralelní programování v Go}
 
-Vývoj počítačů se značně posunul v průběhu posledního desetiletí. V minulosti
-aplikace běžely na počítačích pouze s jediným procesorovým jádrem. Dnes je
-standardní vidět čtyř-jádrové procesory v uživatelských počítačích, dokonce i
-naše Raspberry má dvě jádra. Stále ale používáme programovací jazyky a
-technologie navržené v éře, kdy byly dostupné pouze jednojádrové procesory.
+Vývoj počítačů se v průběhu posledního desetiletí značně posunul. V minulosti aplikace běžely na počítačích pouze s jediným procesorovým jádrem. Dnes je standardní vidět čtyřjádrové procesory v uživatelských počítačích, dokonce i naše Raspberry má dvě jádra. Stále ale používáme programovací jazyky a technologie navržené v éře, kdy byly dostupné pouze jednojádrové procesory.
 
-Většina programovacích jazyků dnes nabízí knihovny nebo frameworky pro
-paralelní programování, ale nemají tuto vlastnost zbudovanou přímo v jádře
-jazyka. V Go je paralelní programování součástí jazyka už od samotného počátku.
-Používá takzvané Gorutiny, které umožňují spouštět funkce souběžně. Souběžné
-funkce pak mezi sebou mohou komunikovat a předávat data pomocí kanálů. Dokonce
-i některé standardní knihovny jazyka mají zabudovanou souběžnost. Například
-standardní knihovna `net/http' pro programování HTTP zpracovává přicházející
-požadavky souběžně pomocí Gorutin.
+Většina programovacích jazyků dnes nabízí knihovny nebo frameworky pro \linebreak paralelní programování, ale nemají tuto vlastnost zbudovanou přímo v jádře jazyka. V Go je paralelní programování součástí jazyka už od samotného počátku. Používá takzvané Gorutiny, které umožňují spouštět funkce souběžně. Souběžné funkce pak mezi sebou mohou komunikovat a předávat data pomocí kanálů. Dokonce i některé standardní knihovny jazyka mají zabudovanou souběžnost. Například standardní knihovna `net/http' pro programování HTTP zpracovává přicházející požadavky souběžně pomocí Gorutin.
 
 \subsubsection{Typový systém}
 
-Pragmatický design Go neobsahuje klíčové slovo pro třídu a jeho objektová
-orientace je odlišná od tradičních objektově orientovaných programovacích
-jazyků. V Go nahrazuje funkci tradiční třídy typ struct. Dědění není v go
-podporováno, ale podporuje kompozici typů.
+Pragmatický design Go neobsahuje klíčové slovo pro třídu a jeho objektová orientace je odlišná od tradičních objektově orientovaných programovacích jazyků. V Go nahrazuje funkci tradiční třídy typ struct. Dědění není v go podporováno, ale podporuje kompozici typů.
 
-Zde je příklad, který demonstruje typový systém Go spolu s rozhraním
-(interface), typem struct a vnořením pro typovou kompozici.
+Zde je příklad, který demonstruje typový systém Go spolu s rozhraním (interface), typem struct a vnořením pro typovou kompozici.
 
 %Ukázka typového systému
 
@@ -391,13 +312,7 @@ Zde je příklad, který demonstruje typový systém Go spolu s rozhraním
 
 \section{WUI}
 
-Webovovou aplikaci jsme napsali pomocí javascriptového frameworku
-React.js, CSS frameworku
-Tailwind a programovacího jazyku Typescript, který je supersetem javascriptu,
-podporujícím volitelné statické typování. Ve webovém rozhraní je možné zobrazit
-si statisky jak živě
-naměřených dat, tak dat uložených v databázi. Z OpenWeather API získáváme data
-o předpovědi počasí a do dahsboardu renderujeme předpovědi na dalších 15H.
+Webovovou aplikaci jsme napsali pomocí javascriptového frameworku React.js, CSS frameworku Tailwind a programovacího jazyku Typescript, který je supersetem javascriptu, podporujícím volitelné statické typování. Ve webovém rozhraní je možné zobrazit si statisky jak živě naměřených dat, tak dat uložených v databázi. Z OpenWeather API získáváme data o předpovědi počasí a do dahsboardu renderujeme předpovědi na dalších 15H.
 
 \begin{figure}[h]
 	\centering
@@ -432,15 +347,9 @@ o předpovědi počasí a do dahsboardu renderujeme předpovědi na dalších 15
 
 \section{Databáze}
 
-Pro databázi jsme se rozhodli použít databázový systém PostgreSQL.\@ Jak vyplývá
-z názvu, jedná se o SQL databázi, ty jsou vhodné pro ukládání velkého objemu
-dat, jako právě data z našich senzorů. Webová aplikace používá pro přístup k
-datům z databáze GraphQL API.\@
+Pro databázi jsme se rozhodli použít databázový systém PostgreSQL.\@ Jak vyplývá z názvu, jedná se o SQL databázi, ty jsou vhodné pro ukládání velkého objemu dat, jako právě data z našich senzorů. Webová aplikace používá pro přístup k datům z databáze GraphQL API.\@
 
-GraphQL je query, který je konkurent řešení REST API.\@ Nabízí rychlejší
-tvorbu API a také umožňuje efektivnější přístup k datům z databáze. Umožňuje
-vybrat pouze data, která momentálně aplikace používá a dovoluje vynechat data,
-která zrovna potřebné nejsou.
+GraphQL je query, který je konkurent řešení REST API.\@ Nabízí rychlejší tvorbu API a také umožňuje efektivnější přístup k datům z databáze. Umožňuje vybrat pouze data, která momentálně aplikace používá a dovoluje vynechat data, která zrovna potřebné nejsou.
 
 \begin{figure}[h]
 	\centering
@@ -450,23 +359,18 @@ která zrovna potřebné nejsou.
 
 \section{Webový server}
 
-Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě
-hlavně mezi cloudovými vývojáři a v oblasti vývoje microservices. Dokáže se
-exekuční rychlostí přiblížit k nízkoúrovňovým jazykům jako je C nebo Rust, ale
-zároveň zůstává velmi lidsky čitelný a jednoduchý na použití. Na rozdíl od
-jazyků jako C a Rust má například garbage collector.
+Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě hlavně mezi cloudovými vývojáři a v oblasti vývoje microservices. Dokáže se v rychlosti provedení programu přiblížit k nízkoúrovňovým jazykům jako je C nebo Rust, ale zároveň zůstává velmi lidsky čitelný a jednoduchý na použití. Na rozdíl od jazyků jako C a Rust má například garbage collector.
+
+% TODO: upřesnit co je to garbage collector
 
 \section{Závěr}
 
-Náš projekt je stále ve vývoji a mnoho z kritických funkcí projektu není ještě
-dokončeno. S vývojem dále pokračujeme, protože se jedná o naši maturitní práci.
-Myslíme si, ale že tento projekt má v budoucnu potenciál stát se úspěšným
-startupem, takže plánujeme pokračovat ve vývoji i po maturitě.
+Náš projekt je stále ve vývoji a mnoho z kritických funkcí projektu není ještě dokončeno. S vývojem dále pokračujeme, protože se jedná o naši maturitní práci. Myslíme si, ale že tento projekt má v budoucnu potenciál stát se úspěšným startupem, proto plánujeme pokračovat ve vývoji i po maturitě.
 
-Tato práce byla pro nás velkým přínosem, naučili jsme se mnoho nových
-dovedností a načerpali nové informace.
+Tato práce byla pro nás velkým přínosem, naučili jsme se mnoho nových dovedností a načerpali nové informace.
 
-% Budoucí plány
+% TODO: co zbývá dokončit?
+% TODO: Budoucí plány
 
 \clearpage
 
@@ -484,20 +388,15 @@ dovedností a načerpali nové informace.
 	\item \href{https://git-scm.com/}{Git}.
 	\item \href{https://www.figma.com/}{Figma}.
 	\item \href{https://www.freecadweb.org/}{FreeCad}.
-	\item
-
-	      \href{https://componentsearchengine.com/library/easyeda}{EasyEDA}.
+	\item \href{https://componentsearchengine.com/library/easyeda}{EasyEDA}.
 \end{itemize}
 
 \section{Seznam příloh}
 
 \begin{itemize}
-	\item \href{https://github.com/POJFM/dmp-plant-hub}{Zdrojový kód na
-		      github.com}
+	\item \href{https://github.com/POJFM/dmp-plant-hub}{Zdrojový kód, dostupný na github.com/POJFM/dmp-plant-hub}
 	\item Prezentace
-	\item
-
-	      \href{https://www.youtube.com/watch?v=oo2_pDX5OE4}{Videoprezentace}
+	\item \href{https://www.youtube.com/watch?v=oo2_pDX5OE4}{Videoprezentace, dostupná na youtube.com/watch?v=oo2_pDX5OE4}
 \end{itemize}
 
 \end{document}
