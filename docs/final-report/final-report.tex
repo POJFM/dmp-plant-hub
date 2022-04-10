@@ -14,7 +14,7 @@
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{tabularx}
-% \usepackage[backend=biber,style=alphabetic]{biblatex}
+\usepackage{changepage}
 
 \graphicspath{ {./img/} }
 \setlength{\parindent}{2em}
@@ -24,17 +24,16 @@
 \title{PlantHub}
 \author{Filip Sikora, Jakub Vantuch}
 \date{}
-% \addbibresource{cites.bib}
 
 \begin{document}
-% whats this
+
 \renewcommand\refname{}
 
-% TODO: fix the damn header image
-
 \begin{titlepage}
-	\noindent\includegraphics[width=\linewidth]{header.png}
-	\vspace{0.1cm} \\
+	\begin{adjustwidth}{-20mm}{-7.5mm} 
+		\vspace*{-1.5cm}
+		\noindent\includegraphics[width=\linewidth]{header.png}
+	\end{adjustwidth}
 	\begin{center}
 		\vspace*{0.2cm}
 		\Huge\textbf{MATURITNÍ ZKOUŠKA}
@@ -91,21 +90,24 @@ Hlavní program jsme v prvotní verzi psali ve vysokoúrovňovém programovacím
 \clearpage
 
 \section{Seznam zkratek a pojmů}
-% TODO: přidat vysvětlení somehow
 \begin{acronym}
-	\acro{WUI}{Webové uživatelské rozhraní}
-	\acro{API}{Application programming interface}
-	\acro{REST}{Representaion programming interface}
-	\acro{GraphQL}{Graph query languge}
+	\acro{WUI}{webové uživatelské rozhraní}	
+	\acro{API}{application programming interface} \\
+		Spojení pro přenos dat mezi zařízeními nebo programy pomocí http protokolu.
+	\acro{REST}{representaion programming interface} \\
+		Definuje strukturu \ac{API} tak, že zobrazuje všechna data.
+	\acro{GraphQL}{graph query languge} \\
+		Definuje strukturu \ac{API} tak, že se zobrazujou pouze vybraná a vyfilterovaná data. 
 	\acro{PCB}{plošný spoj}
 	\acro{RPi}{Raspberry Pi}
-	\acro{ARM}{Advanced RISC Machines}
-	\acro{GPIO}{General-purpose input/output}
-	\acro{ADC}{Analogově digitální převodník}
-	\acro{DHT11}{Digital humidity temperature v.11}
+	\acro{ARM}{advanced RISC Machines} \\ 
+		what is arm
+	\acro{GPIO}{general-purpose input/output} \\ 
+		what is gpio
+	\acro{ADC}{analogově digitální převodník}
+	\acro{DHT11}{digital humidity temperature v.11}
 	\acro{HC-SR04}{Ultrasonický senzor vzdálenosti}
-	\acro{LED}{Light Emitting Diode}
-	\acro{SAR}{Successive-approximation}
+	\acro{LED}{light emitting diode}
 \end{acronym}
 
 \clearpage
@@ -134,7 +136,7 @@ Jedná se o kapacitní senzor, který se skládá ze dvou vodivých desek a pře
 
 % TODO: toto je prý na kokot napsané
 % mr. sumbal nechápe co je SAR
-% Přemapujeme tedy analogový signál do osmi různých digitálních hodnot, kterým se také říká 3bitové rozlišení, to definuje tu nejmenší hodnotu změny, který převodník dokáže rozlišit, této hodnotě se říká Least significant bit (LSB). \ac{ADC} poté pomocí \ac{SAR} definuje adresu v binárním podání srozumitelným pro digitální vstup.
+% Přemapujeme tedy analogový signál do osmi různých digitálních hodnot, kterým se také říká 3bitové rozlišení, to definuje tu nejmenší hodnotu změny, který převodník dokáže rozlišit, této hodnotě se říká Least significant bit (LSB). \ac{ADC} poté pomocí metody successive-approximation definuje adresu v binární formě srozumitelné pro digitální vstup.
 
 % \begin{figure}[h]
 % 	\centering
@@ -159,9 +161,7 @@ Protože samotný signální pin neposkytuje dostatečné napětí pro chod čer
 
 \subsection{Architektura ARM}
 
-\ac{ARM} je nejnovější CPU architektura. Využívají ji všechny moderní chytré telefony, zařízení s operačním systémem Android i Apple produkty. Dnes už mají \ac{ARM} procesory zařízení s Windows nebo MacOS.\@
-
-% \ac{ARM} je založen na RISC (Reduced Instruction Set Computing), tyto procesory jsou designované na 
+\ac{ARM} je založen na Reduced Instruction Set Computing (RISC) a je to nejnověji používaná CPU architektura. Tyto procesory jsou designované na všechny moderní chytré telefony, zařízení s operačním systémem Android i Apple produkty.
 
 \clearpage
 
@@ -327,9 +327,9 @@ která zrovna potřebné nejsou.
 
 \section{Webový server}
 
-Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě hlavně mezi cloudovými vývojáři a v oblasti vývoje microservices. Dokáže se v rychlosti provedení programu přiblížit k nízkoúrovňovým jazykům jako je C nebo Rust, ale zároveň zůstává velmi lidsky čitelný a jednoduchý na použití. Na rozdíl od jazyků jako C a Rust má například garbage collector.
+Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě hlavně mezi cloudovými vývojáři a v oblasti vývoje microservices. Dokáže se v rychlosti provedení programu přiblížit k nízkoúrovňovým jazykům jako je C nebo Rust, ale zároveň zůstává velmi lidsky čitelný a jednoduchý na použití. Na rozdíl od jazyků jako C a Rust má například garbage collector, který periodicky čistí paměť a zabraňuje memory leakům.
 
-% TODO: upřesnit co je to garbage collector
+\section{Bezpečnost}
 
 \section{Závěr}
 
