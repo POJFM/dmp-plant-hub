@@ -111,76 +111,15 @@ zavlažování; automatizace; statistika; živě; RaspberryPi; uživatelské roz
 
 \section{Úvod}
 
-Mým cílem je návrh, sestavení a naprogramování automatického zavlažovacího
-systému s názvem PlantHub. Systém se skládá z řídící jednotky (stanice),
-senzorů, čerpadla, nádrže a \ac{WUI}. Tato stanice pravidelně snímá data ze
-senzorů
-měřících
-teplotu a vlhkost vzduchu, vlhkost půdy a stav hladiny v nádrži, z té pak
-stanice přečerpává vodu pomocí čerpadla spouštěného tranzistorem. Naměřená
-data
-se posílají živě pomocí \ac{REST} \ac{API} prostřednictvím
-protokolu HTTP do \ac{WUI}. Samostně se poté v periodě čtyř hodin ukládají do
-PostgreSQL databáze běžící v docker
-containeru. Docker container si můžeme představit jako jednodušší a lépe
-škálovatelnou verzi
-virtualizace. Uložená data se vykreslí do
-statistik
-změn teploty a vlhkosti vzduchu, vlhkosti půdy a počtů zavlažování v časovém
-rozsahu zobrazitelných v dashboardu \ac{WUI}. Pro načtení historických dat z
-databáze
-používáme \ac{GraphQL} \ac{API}, jelikož nabízí šetrnější přístup k datům,
-vybráním pouze
-těch záznamů z tabulky, které opravdu využíváme. V případě nedostupnosti
-serveru by se ve \ac{WUI} měla pořád načítat živě naměřená data z \ac{REST}
-\ac{API}. Přístup
-k naměřeným datům a
-\ac{WUI} má pouze
-uživatel lokální
-sítě, do které je planthub připojen pomocí ethernet kabelu. Pro správnou funkci
-stanice je tedy zapotřebí router s přístupem k internetu a DHCP serverem.
+% TODO: rozdělit na hlavní úvod a na kapitolu koncepce projektu
 
-Ve \ac{WUI} hostovaném na naší stanici, a sestavém pomocí javascriptového
-frameworku
-React.js, CSS frameworku
-Tailwind a programovacího jazyku Typescript, který je supersetem javascriptu,
-podporujícím volitelné statické typování, má uživatel
-možnost zobrazení statistik jak živě naměřených dat tak dat historických v
-nastavitelných grafech dashboardu. \ac{WUI} také nabízí manuální kontrolu nad
-čerpadlem s časovačem začátku zavlažování a restartem hlavního programu.
-Nastavitelné je jak \ac{WUI} tak i samotné faktory zavlažování jako je limit
-vlhkosti
-půdy, doba zavlažování nebo limit hladiny vody.
+Naším cílem je návrh, sestavení a naprogramování automatického zavlažovacího systému s názvem PlantHub. Systém se skládá z řídící jednotky (stanice), senzorů, čerpadla, nádrže a \ac{WUI}. Tato stanice pravidelně snímá data ze senzorů měřících teplotu a vlhkost vzduchu, vlhkost půdy a stav hladiny v nádrži, ze které pak stanice přečerpává vodu pomocí čerpadla spouštěného tranzistorem. Naměřená data se posílají živě pomocí \ac{REST} \ac{API} prostřednictvím protokolu HTTP do \ac{WUI}. Samostatně se poté v periodě čtyř hodin ukládají do PostgreSQL databáze běžící v docker kontejneru. Docker kontejner si můžeme představit jako jednodušší a lépe škálovatelnou verzi virtualizace. Uložená data se vykreslí do statistik změn teploty a vlhkosti vzduchu, vlhkosti půdy a počtů zavlažování v časovém rozsahu zobrazitelných v rozhraní \ac{WUI}. Pro načtení historických dat z databáze používáme \ac{GraphQL} \ac{API}, jelikož nabízí šetrnější přístup k datům, vybráním pouze těch záznamů z tabulky, které opravdu využíváme. V případě nedostupnosti serveru by se ve \ac{WUI} měla pořád načítat živě naměřená data z \ac{REST}\ac{API}. Přístup k naměřeným datům a\ac{WUI} má pouze uživatel lokální sítě, do které je PlantHub připojen pomocí ethernet kabelu. Pro správnou funkci stanice je tedy zapotřebí router s přístupem k internetu a DHCP serverem.
 
-Jednotlivé součásti a moduly stanice jsme vybrali podle finanční dostupnosti a
-adekvátních technických
-požadavků na přesnost měření.
-Zapojení těchto modulů do obvodu jsme prvně provedli ve webové aplikaci
-EasyEDA, která nabízí jednoduché prostředky pro návrh technických
-schémat. Tento obvod jsme poté v testovací verzi postavili na nepájivém
-poli a ve finální verzi navrhli a objednali vlastní \ac{PCB}. Pro ochranu naší
-stanice jsme v open-source programu FreeCad navrhli model krytu, který jsme
-následně vytiskli na 3D tiskárně. Vymstila se nám však nepřesnost rozměrů krytu
-a při vkládání stanice do krytu se nám podařilo zlomit SD kartu s operačním
-systémem, daty a nasazenými programy. Po reinstalaci operačního systému jsme
-opravili rozměry vytvořeného modelu krytu a
-vytiskli kryt podruhé, tentokrát ve správných rozměrech.
+\ac{WUI} hostovaném na naší stanici, je sestavené pomocí javascriptového frameworku React.js, CSS frameworku Tailwind a programovacího jazyku Typescript, který je supersetem javascriptu, podporujícím volitelné statické typování. Uživatel má možnost zobrazení statistik jak živě naměřených dat, tak dat historických v nastavitelných grafech dashboardu. \ac{WUI} také nabízí manuální kontrolu nad čerpadlem s časovačem začátku zavlažování a restartem hlavního programu. Nastavitelné je jak \ac{WUI} tak i samotné faktory zavlažování, jako je limit vlhkosti půdy, doba zavlažování nebo limit hladiny vody.
 
-Hlavní program jsme v prvotní verzi psali ve vysokoúrovňovém programovacím
-jazyce Python, od kterého jsme nakonec upustili kvůli vysokým technickým
-nárokům. Naše rozhodnutí nás nakonec dovedlo k jazyku
-Go vytvořeného Googlem a určeného pro concurrency, rychlou kompilaci i průběh
-programu, backend webových aplikací a mnoho
-další funkcionality. Tento jazyk se nám zalíbil natolik že jsme se v něm
-rozhodli
-udělat jak \ac{API},
-databázové funkce tak i hlavní program. Program je rozdělen na několik sekvencí
-z toho hlavní jsou měřící sekvence kde se každou sekundu provádí měření dat ze
-senzorů a následné odesílání na \ac{REST} \ac{API} webové aplikace a channely
-vytvořené
-pro komunikaci mezi go rutinama a sekvence controlleru, která pomocí snímání
-dat z databáze určuje jestli se jedná o první spuštění PlantHubu, a podle toho
-určí jestli se spustí incializační sekvence nebo sekvence zavlažování.
+Jednotlivé součásti a moduly stanice jsme vybrali podle finanční dostupnosti a adekvátních technických požadavků na přesnost měření. Zapojení těchto modulů do obvodu jsme nejprve provedli ve webové aplikaci EasyEDA, která nabízí jednoduché prostředky pro návrh technických schémat. Tento obvod jsme poté v testovací verzi postavili na nepájivém poli a ve finální verzi navrhli a objednali vlastní \ac{PCB}. Pro ochranu naší stanice jsme v open-source programu FreeCad navrhli model krytu, který jsme následně vytiskli na 3D tiskárně. Vymstila se nám však nepřesnost rozměrů krytu a při vkládání stanice do krytu se nám podařilo zlomit SD kartu s operačním systémem, daty a nasazenými programy. Po reinstalaci operačního systému jsme opravili rozměry vytvořeného modelu krytu a vytiskli kryt podruhé, tentokrát ve správných rozměrech.
+
+Hlavní program jsme v prvotní verzi psali ve vysokoúrovňovém programovacím jazyce Python, od kterého jsme nakonec upustili kvůli vysokým technickým nárokům. Naše rozhodnutí nás nakonec dovedlo k jazyku Go vytvořeného Googlem a určeného pro concurrency, rychlou kompilaci i průběh programu, backend webových aplikací a mnoho dalších u. Tento jazyk se nám zalíbil natolik že jsme se v něm rozhodli vytvořit jak \ac{API}, databázové funkce, tak i hlavní program. Program je rozdělen na několik sekvencí, z toho hlavní jsou měřící sekvence kde se každou sekundu provádí měření dat ze senzorů a následné odesílání na \ac{REST} \ac{API} webové aplikace a channely vytvořené pro komunikaci mezi go rutinama a sekvence controlleru, která pomocí snímání dat z databáze určuje, jestli se jedná o první spuštění PlantHubu, a podle toho určí jestli se spustí incializační sekvence nebo sekvence zavlažování.
 
 \clearpage
 
@@ -211,44 +150,29 @@ určí jestli se spustí incializační sekvence nebo sekvence zavlažování.
 
 \section{Hardware}
 
-Potřebujeme vyvinout vhodné pouzdro pro naše Raspberry, abychom ochránili
-citlivé elektronické součástky a ve stejné chvíli měli možnost jednoduše
-vyjmout stanici z krytu. Budeme ho tisknout na 3D tiskárně pevným \ac{PETG}
-filamentem. K
-zavlažování je potřeba postavit i nádrž na vodu, ze které bude naše čerpadlo
-přečerpávat vodu k zavlažování, proto jsme se rozhodli pro nádobu s co
-nejvetším objemem a postavili ji z upraveného 5L soudku.
+Vyvinuli jsme vhodné pouzdro pro naše Raspberry, abychom ochránili citlivé elektronické součástky a zároveň měli možnost jednoduše vyjmout stanici z krytu. Budeme ho tisknout na 3D tiskárně pevným \ac{PETG} filamentem. K zavlažování je potřeba postavit i nádrž na vodu, ze které bude naše čerpadlo přečerpávat vodu k zavlažování. Rozhodli jsme se pro nádobu s co největším objemem a postavili ji z upraveného 5L soudku.
 
 \subsection{Senzory}
 
 \subsubsection{Senzor teploty a vlhkosti vzduchu DHT11}
 
-Senzor \ac{DHT11} se skládá z jednotky pro měření teploty, jednotky pro měření
-vlhkosti a převodníku.
+Senzor \ac{DHT11} se skládá z jednotky pro měření teploty, jednotky pro měření vlhkosti vzduchu a převodníku.
 
-Teplotu měří senzor thermistorem. Thermistor je keramický polovodič, který
-zmenšuje svou rezistivitu, když se okolní teplota zvýší.
+Teplotu měří senzor termistorem. Termistor je keramický polovodič, který zmenšuje svou rezistivitu, když se okolní teplota zvýší.
 
-Vlhkost měří senzor na základě rezistivity substrátu umístěného mezi dvěma
-elektrodami. Tento substrát zachytává vlhkost a vytváří tak vodivé prostředí
+Vlhkost měří senzor na základě rezistivity substrátu umístěného mezi dvěma elektrodami. Tento substrát zachytává vlhkost a vytváří tak vodivé prostředí
 
 \subsubsection{Senzor vlhkosti půdy}
 
-Jedná se o kapacitní senzor, ten se skládá ze dvou vodivých desek a převodníku.
-Čidlo funguje na způsob kapacitoru avšak jeho kapacita je ovlivněna vlhkostí,
-která ovlivňuje dielektrikum mezi dvěma deskami.
+Jedná se o kapacitní senzor, který se skládá ze dvou vodivých desek a převodníku. Čidlo funguje na způsob kapacitoru avšak jeho kapacita je ovlivněna vlhkostí, která ovlivňuje dielektrikum mezi dvěma deskami.
 
 \subsubsection{Analogově digitální převodník MCP3008}
 
-\ac{RPi} má v rámci \ac{GPIO} pouze digitální vstupy, protože je ale senzor
-vlhkosti půdy
-analogový museli jsme použít \ac{ADC}. Přemapujeme tedy analogový
-signál
-do
-osmi různých digitálních hodnot, kterým se také říká 3bitové rozlišení, to
-definuje tu nejmenší hodnotu změny, který převodník dokáže rozlišit, této
-hodnotě se říká \ac{LSB}. \ac{ADC} poté pomocí \ac{SAR}
-definuje adresu v binárním podání srozumitelným pro digitální vstup.
+\ac{RPi} má v rámci \ac{GPIO} pouze digitální vstupy, protože je ale senzor vlhkosti půdy analogový museli jsme použít \ac{ADC}.
+
+% TODO: toto je prý na kokot napsané
+% mr. sumbal nechápe co je SAR
+% Přemapujeme tedy analogový signál do osmi různých digitálních hodnot, kterým se také říká 3bitové rozlišení, to definuje tu nejmenší hodnotu změny, který převodník dokáže rozlišit, této hodnotě se říká \ac{LSB}. \ac{ADC} poté pomocí \ac{SAR} definuje adresu v binárním podání srozumitelným pro digitální vstup.
 
 % \begin{figure}[h]
 % 	\centering
@@ -258,13 +182,10 @@ definuje adresu v binárním podání srozumitelným pro digitální vstup.
 
 \subsubsection{Ultrasonický senzor HC-SR04}
 
-\ac{HC-SR04} vydává zvukové vibrace na vysoké frekvenci, neslyšitelné pro
-lidské
-ucho. Poté čeká, až se zvuk odrazí zpět, a vypočítá vzdálenost na základě času
-měřeného od vysílání zvukové vlny k zpětnému přijmutí
+\ac{HC-SR04} vydává zvukové vibrace na vysoké frekvenci, neslyšitelné pro lidské ucho. Poté čeká, až se zvuk odrazí zpět od překážky, a vypočítá vzdálenost na základě času měřeného od vysílání zvukové vlny k zpětnému přijmutí
 
-Všechny naměřené údaje jsou v převodníku senzoru přepočítány na jednotky dané
-veličiny a odeslány analogovým signálem do řídící jednotky.
+Všechny naměřené údaje jsou v převodníku senzoru přepočítány a odeslány analogovým signálem do řídící jednotky.
+% TODO: převodník nepřepočítává hovno, za jak dlouho se zvuk vrátí počítá code
 
 \subsubsection{Čerpadlo}
 
