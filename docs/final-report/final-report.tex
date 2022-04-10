@@ -14,6 +14,8 @@
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{tabularx}
+\usepackage{changepage}
+% \usepackage[backend=biber,style=alphabetic]{biblatex}
 
 \newcommand{\subtitle}[1]{%
 	\posttitle{%
@@ -35,8 +37,10 @@
 \subtitle{MATURITNÍ ZKOUŠKA }
 \author{Filip Sikora, Jakub Vantuch}
 \date{}
+% \addbibresource{cites.bib}
 
 \begin{document}
+\renewcommand\refname{}
 
 \begin{titlepage}
 	\noindent\includegraphics[width=\linewidth]{header.png}
@@ -56,8 +60,8 @@
 	\end{center}
 	\begin{tabularx}{\textwidth}{l@{\hskip 0.5cm}XXl}
 		Obor vzdělání:        & \multicolumn{3}{c}{\textbf{18 – 20 –
-		M/01
-		Informační technologie}}
+				M/01
+				Informační technologie}}
 		\\[10pt]
 		Třída:                & \textbf{4. IT}
 		                      &
@@ -75,11 +79,18 @@
 	a
 	dalších zdrojů informací.“
 
-	\begin{tabularx}{\textwidth}{l@{\hskip 0.5cm}XXl}
+	\noindent\begin{tabularx}{\textwidth}{l@{\hskip 0.5cm}XXl}
 		\\[10pt]
-		V Frýdku-Místku, dne:             & \textbf{\dotfill}
-		                                  &
-		\textbf{\dotfill} & podpis
+		V Frýdku-Místku, dne: & \textbf{\dotfill}
+		                      &
+		\textbf{\dotfill}     & podpis
+	\end{tabularx}
+	
+	\noindent\begin{tabularx}{\textwidth}{l@{\hskip 0.5cm}XXl}
+		\\[10pt]
+		V Frýdku-Místku, dne: & \textbf{\dotfill}
+		                      &
+		\textbf{\dotfill}     & podpis
 	\end{tabularx}
 \end{titlepage}
 
@@ -111,7 +122,7 @@ zavlažování; automatizace; statistika; živě; RaspberryPi; uživatelské roz
 
 \section{Úvod}
 
-Mým cílem je návrh, sestavení a naprogramování automatického zavlažovacího
+Našimm cílem je návrh, sestavení a naprogramování automatického zavlažovacího
 systému s názvem PlantHub. Systém se skládá z řídící jednotky (stanice),
 senzorů, čerpadla, nádrže a \ac{WUI}. Tato stanice pravidelně snímá data ze
 senzorů
@@ -511,7 +522,8 @@ o předpovědi počasí a do dahsboardu renderujeme předpovědi na dalších 15
 
 \section{Databáze}
 
-Pro databázi jsme se rozhodli použít databázový systém PostgreSQL.\@ Jak vyplývá
+Pro databázi jsme se rozhodli použít databázový systém PostgreSQL.\@ Jak
+vyplývá
 z názvu, jedná se o SQL databázi, ty jsou vhodné pro ukládání velkého objemu
 dat, jako právě data z našich senzorů. Webová aplikace používá pro přístup k
 datům z databáze GraphQL API.\@
@@ -549,24 +561,43 @@ dovedností a načerpali nové informace.
 
 \clearpage
 
-\section{Použité zdroje}
+\section{Použitá literatura další zdroje }
 
-\begin{itemize}
-	\item \href{http://www.latex-tutorial.com}{LaTeX-Tutorial}.
-	\item \href{http://www.freecodecamp.org}{Free Code Camp}.
-	\item \href{http://www.go.dev}{Go lang}.
-	\item \href{http://www.reactjs.org}{React.js}.
-	\item \href{http://www.tailwindcss.com}{Tailwind CSS}.
-	\item \href{http://www.typescriptlang.org}{Typescript}.
-	\item \href{https://www.kali.org/tools/code-oss}{Code-OSS}.
-	\item \href{https://www.jetbrains.com/go/}{Goland}.
-	\item \href{https://git-scm.com/}{Git}.
-	\item \href{https://www.figma.com/}{Figma}.
-	\item \href{https://www.freecadweb.org/}{FreeCad}.
-	\item
+\begin{thebibliography}{9}
+	\vspace*{-1.5cm}
+	\bibitem{texbook}
+	“Home,” LaTeX, 06-May-2021. [Online]. Available: \href{https://latex-tutorial.com/}{https://latex-tutorial.com/}. [Zpřístupněno: 10-Dubna-2022]. 
 
-	      \href{https://componentsearchengine.com/library/easyeda}{EasyEDA}.
-\end{itemize}
+	\bibitem{golang}
+	“Build fast, reliable, and efficient software at scale,” Go. [Online]. Dostupné z: \href{https://go.dev/}{https://go.dev/}. [Zpřístupněno: 10-Dubna-2022]. 
+
+	\bibitem{react}
+	“React – a JavaScript library for building user interfaces,” – A JavaScript library for building user interfaces. [Online]. Available: \href{https://reactjs.org/}{https://reactjs.org/}. [Zpřístupněno: 10-Dubna-2022]. 
+
+	\bibitem{tailwindcss}
+	“Rapidly build modern websites without ever leaving your HTML.,” Tailwind CSS. [Online]. Available: \href{http://www.tailwindcss.com/}{http://www.tailwindcss.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+
+	\bibitem{typescript}
+	“JavaScript with syntax for types.,” TypeScript. [Online]. Available: \href{http://www.typescriptlang.org/}{http://www.typescriptlang.org/}. [Zpřístupněno: 10-Dubna-2022]. 
+
+	\bibitem{vscode}
+	Microsoft, “Visual studio code - code editing. redefined,” RSS, 03-Nov-2021. [Online]. Available: \href{https://code.visualstudio.com/}{https://code.visualstudio.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+
+	\bibitem{goland}
+	“Goland by jetbrains: More than just A go ide,” JetBrains. [Online]. Available: \href{https://www.jetbrains.com/go/}{https://www.jetbrains.com/go/}. [Zpřístupněno: 10-Dubna-2022]. 
+
+	\bibitem{git}
+	Git. [Online]. Available: \href{https://git-scm.com/}{https://git-scm.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+
+	\bibitem{figma}
+	“The Collaborative Interface Design Tool.,” Figma. [Online]. Available: \href{https://www.figma.com/}{https://www.figma.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+
+	\bibitem{freecad}
+	“Freecad,” FreeCAD. [Online]. Available: \href{https://www.freecadweb.org/}{https://www.freecadweb.org/}. [Zpřístupněno: 10-Dubna-2022]. 
+
+	\bibitem{easyeda}
+	Supplyframe, “EasyEDA,” Component Search Engine. [Online]. Available: \href{https://componentsearchengine.com/library/easyeda}{https://componentsearchengine.com/library/easyeda}. [Zpřístupněno: 10-Dubna-2022]. 
+\end{thebibliography}
 
 \section{Seznam příloh}
 
