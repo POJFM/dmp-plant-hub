@@ -14,37 +14,27 @@
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{tabularx}
-\usepackage{changepage}
 % \usepackage[backend=biber,style=alphabetic]{biblatex}
 
-\newcommand{\subtitle}[1]{%
-	\posttitle{%
-		\par\end{center}
-		\begin{center}\large#1\end{center}
-		\vskip0.5em}%
-}
-
-\newcommand*\wildcard[2][5cm]{\vspace*{2cm}\parbox{#1}{\centering\hrulefill\par#2\par}}
-
 \graphicspath{ {./img/} }
-
-%\onehalfspacing
 \setlength{\parindent}{2em}
 \setlength{\parskip}{0.1em}
 \linespread{1.5}
 
 \title{PlantHub}
-\subtitle{MATURITNÍ ZKOUŠKA }
 \author{Filip Sikora, Jakub Vantuch}
 \date{}
 % \addbibresource{cites.bib}
 
 \begin{document}
+% whats this
 \renewcommand\refname{}
+
+% TODO: fix the damn header image
 
 \begin{titlepage}
 	\noindent\includegraphics[width=\linewidth]{header.png}
-	%\vspace{0.1cm} \\
+	\vspace{0.1cm} \\
 	\begin{center}
 		\vspace*{0.2cm}
 		\Huge\textbf{MATURITNÍ ZKOUŠKA}
@@ -54,30 +44,19 @@
 		\Large Téma č. 4 \\
 		\vspace*{1cm}
 		\Large Zavlažovací systém PlantHub \\
-		\vspace*{1.3cm}
-		%\vfill
+		\vfill
 		\normalsize
 	\end{center}
 	\begin{tabularx}{\textwidth}{l@{\hskip 0.5cm}XXl}
 		Obor vzdělání: & \multicolumn{3}{c}{\textbf{18 – 20 – M/01 Informační technologie}} \\[10pt]
 		Třída: & \textbf{4. IT} & Autor práce: & \textbf{Jakub Vantuch} \\[10pt]
 		Školní rok: & \textbf{2021/22} & Vedoucí učitel práce: & \textbf{Ing. Jiří Sumbal}
-		\vspace*{2cm}
+		\vspace*{1cm}
 	\end{tabularx}
-	„Prohlašuji, že jsem tuto práci vypracoval samostatně a použil jsem literárních pramenů a informací, které cituji a uvádím v seznamu použité literatury a dalších zdrojů informací.“
-
-	\noindent\begin{tabularx}{\textwidth}{l@{\hskip 0.5cm}XXl}
-		\\[10pt]
-		V Frýdku-Místku, dne: & \textbf{\dotfill}
-		                      &
-		\textbf{\dotfill}     & podpis
-	\end{tabularx}
-	
-	\noindent\begin{tabularx}{\textwidth}{l@{\hskip 0.5cm}XXl}
-		\\[10pt]
-		V Frýdku-Místku, dne: & \textbf{\dotfill}
-		                      &
-		\textbf{\dotfill}     & podpis
+	„Prohlašuji, že jsem tuto práci vypracoval samostatně a použil jsem literárních pramenů a informací, které cituji a uvádím v seznamu použité literatury a dalších zdrojů informací.“ \\
+	\vspace*{0.5cm} \\
+	\begin{tabularx}{\textwidth}{l@{\hskip 1cm}X@{\hskip 1cm}X}
+		Ve Frýdku-Místku, dne: & \dotfill & \dotfill
 	\end{tabularx}
 \end{titlepage}
 
@@ -89,7 +68,7 @@ PlantHub je automatický zavlažovací systém s \ac{WUI}. Jádrem našeho syst�
 
 \section*{Klíčová slova}
 
-zavlažování; automatizace; statistika; živě; RaspberryPi; uživatelské rozhraní
+\noindent zavlažování; automatizace; statistika; živě; RaspberryPi; uživatelské rozhraní
 
 \clearpage
 
