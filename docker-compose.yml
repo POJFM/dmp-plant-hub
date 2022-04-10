@@ -34,7 +34,6 @@ services:
       - ./server/.env:/app/env/.env
     devices:
       - /dev/mem:/dev/mem
-      - /dev/gpiomem:/dev/gpiomem
     restart: always
 volumes:
   dbdata:
