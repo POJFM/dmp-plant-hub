@@ -15,4 +15,5 @@ build/
 *.fls
 *.aux
 *.toc
+*.out
 __latexindent_temp.tex
