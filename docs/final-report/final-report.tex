@@ -52,10 +52,12 @@
 		Školní rok: & \textbf{2021/22} & Vedoucí učitel práce: & \textbf{Ing. Jiří Sumbal}
 		\vspace*{1cm}
 	\end{tabularx}
-	„Prohlašuji, že jsem tuto práci vypracoval samostatně a použil jsem literárních pramenů a informací, které cituji a uvádím v seznamu použité literatury a dalších zdrojů informací.“ \\
+	„Prohlašujeme, že jsme tuto práci vypracovali samostatně a použili jsme literárních pramenů a informací, které citujeme a uvádíme v seznamu použité literatury a dalších zdrojů informací.“ \\
 	\vspace*{0.5cm} \\
-	\begin{tabularx}{\textwidth}{l@{\hskip 1cm}X@{\hskip 1cm}X}
-		Ve Frýdku-Místku, dne: & \dotfill & \dotfill
+	\renewcommand{\arraystretch}{2}
+	\begin{tabularx}{\textwidth}{l@{\hskip 0.75cm}X@{\hskip 1.5cm}X@{\hskip 0.75cm}l}
+		Ve Frýdku-Místku, dne: & \dotfill & \dotfill & podpis \\
+		Ve Frýdku-Místku, dne: & \dotfill & \dotfill & podpis \\
 	\end{tabularx}
 \end{titlepage}
 
@@ -335,12 +337,11 @@ React.js, CSS frameworku Tailwind a programovacího jazyku Typescript, který je
 
 \subsection{SQL}
 
-
-Pro databázi jsme se rozhodli použít databázový systém PostgreSQL.\@ Jak vyplývá z názvu, jedná se o Structured Query Language (SQL) databázi, ty jsou vhodné pro ukládání velkého objemu dat, jako právě data z našich senzorů. Webová aplikace používá pro přístup k datům z databáze \underline{\ac{GraphQL}} \space \underline{\ac{API}}.\@
+Pro databázi jsme se rozhodli použít databázový systém PostgreSQL.\@ Jak vyplývá z názvu, jedná se o Structured Query Language (SQL) databázi, ty jsou vhodné pro ukládání velkého objemu dat, jako právě data z našich senzorů. Webová aplikace používá pro přístup k datům z databáze \ac{GraphQL} \space \underline{\ac{API}}.\@
 
 \subsection{GraphQL}
 
-Jedná se o typ přenosu dat z možností filtrace a dotazovací funkcionality. V mnoha ohledech je to konkurent řešení přenosu dat pomocí \underline{\ac{REST}} \space \underline{\ac{API}}.\@ Nabízí rychlejší tvorbu \underline{\ac{API}} \space a také umožňuje efektivnější přístup k datům z databáze. Umožňuje vybrat pouze data, která momentálně aplikace používá a dovoluje vynechat data, která zrovna potřebné nejsou.
+Jedná se o typ přenosu dat z možností filtrace a dotazovací funkcionality. V mnoha ohledech je to konkurent řešení přenosu dat pomocí \ac{REST} \space \underline{\ac{API}}.\@ Nabízí rychlejší tvorbu \underline{\ac{API}} \space a také umožňuje efektivnější přístup k datům z databáze. Umožňuje vybrat pouze data, která momentálně aplikace používá a dovoluje vynechat data, která zrovna potřebné nejsou.
 
 \subsection{Schéma databáze}
 
@@ -375,37 +376,37 @@ Tato práce byla pro nás velkým přínosem, naučili jsme se mnoho nových dov
 \begin{thebibliography}{9}
 	\vspace*{-1.5cm}
 	\bibitem{texbook}
-	“Home,” LaTeX, 06-May-2021. [Online]. Available: \href{https://latex-tutorial.com/}{https://latex-tutorial.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“Home,” LaTeX, 06-May-2021. [Online]. Dostupné z: \href{https://latex-tutorial.com/}{https://latex-tutorial.com/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{golang}
 	“Build fast, reliable, and efficient software at scale,” Go. [Online]. Dostupné z: \href{https://go.dev/}{https://go.dev/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{react}
-	“React – a JavaScript library for building user interfaces,” – A JavaScript library for building user interfaces. [Online]. Available: \href{https://reactjs.org/}{https://reactjs.org/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“React – a JavaScript library for building user interfaces,” – A JavaScript library for building user interfaces. [Online]. Dostupné z: \href{https://reactjs.org/}{https://reactjs.org/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{tailwindcss}
-	“Rapidly build modern websites without ever leaving your HTML.,” Tailwind CSS. [Online]. Available: \href{http://www.tailwindcss.com/}{http://www.tailwindcss.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“Rapidly build modern websites without ever leaving your HTML.,” Tailwind CSS. [Online]. Dostupné z: \href{http://www.tailwindcss.com/}{http://www.tailwindcss.com/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{typescript}
-	“JavaScript with syntax for types.,” TypeScript. [Online]. Available: \href{http://www.typescriptlang.org/}{http://www.typescriptlang.org/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“JavaScript with syntax for types.,” TypeScript. [Online]. Dostupné z: \href{http://www.typescriptlang.org/}{http://www.typescriptlang.org/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{vscode}
-	Microsoft, “Visual studio code - code editing. redefined,” RSS, 03-Nov-2021. [Online]. Available: \href{https://code.visualstudio.com/}{https://code.visualstudio.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+	Microsoft, “Visual studio code - code editing. redefined,” RSS, 03-Nov-2021. [Online]. Dostupné z: \href{https://code.visualstudio.com/}{https://code.visualstudio.com/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{goland}
-	“Goland by jetbrains: More than just A go ide,” JetBrains. [Online]. Available: \href{https://www.jetbrains.com/go/}{https://www.jetbrains.com/go/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“Goland by jetbrains: More than just A go ide,” JetBrains. [Online]. Dostupné z: \href{https://www.jetbrains.com/go/}{https://www.jetbrains.com/go/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{git}
-	Git. [Online]. Available: \href{https://git-scm.com/}{https://git-scm.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+	Git. [Online]. Dostupné z: \href{https://git-scm.com/}{https://git-scm.com/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{figma}
-	“The Collaborative Interface Design Tool.,” Figma. [Online]. Available: \href{https://www.figma.com/}{https://www.figma.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“The Collaborative Interface Design Tool.,” Figma. [Online]. Dostupné z: \href{https://www.figma.com/}{https://www.figma.com/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{freecad}
-	“Freecad,” FreeCAD. [Online]. Available: \href{https://www.freecadweb.org/}{https://www.freecadweb.org/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“Freecad,” FreeCAD. [Online]. Dostupné z: \href{https://www.freecadweb.org/}{https://www.freecadweb.org/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{easyeda}
-	Supplyframe, “EasyEDA,” Component Search Engine. [Online]. Available: \href{https://componentsearchengine.com/library/easyeda}{https://componentsearchengine.com/library/easyeda}. [Zpřístupněno: 10-Dubna-2022]. 
+	Supplyframe, “EasyEDA,” Component Search Engine. [Online]. Dostupné z: \href{https://componentsearchengine.com/library/easyeda}{https://componentsearchengine.com/library/easyeda}. [Zpřístupněno: 10-Dubna-2022]. 
 \end{thebibliography}
 
 \section{Seznam příloh}
