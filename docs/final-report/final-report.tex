@@ -110,8 +110,6 @@ Hlavní program jsme napsali v programovacím jazyce Go, jehož hlavní využit�
 
 \section{Hardware}
 
-Vyvinuli jsme vhodné pouzdro pro naše \underline{\ac{RPi}}, abychom ochránili citlivé elektronické součástky a zároveň měli možnost jednoduše vyjmout stanici z krytu. Budeme ho tisknout na 3D tiskárně pevným Polyethylene terephthalate glycol (PETG) filamentem. K zavlažování je potřeba postavit i nádrž na vodu, ze které bude naše čerpadlo přečerpávat vodu k zavlažování. Rozhodli jsme se pro nádobu s co největším objemem a postavili ji z upraveného 5L pivního soudku.
-
 \subsection{Senzory}
 
 \subsubsection{Senzor teploty a vlhkosti vzduchu DHT11}
@@ -163,6 +161,10 @@ Vybrali jsme si jej, protože kombinuje malou velikost a vyšší výpočetní s
 
 Advanced RISC Machines (ARM) je založen na Reduced Instruction Set Computing (RISC) a je to nejnověji používaná CPU architektura. Tyto procesory jsou designované na všechny moderní chytré telefony, zařízení s operačním systémem Android i Apple produkty.
 
+\subsection{Router}
+
+Připojení \underline{\ac{RPi}} do lokální sítě je provedeno pomocí ethernet kabelu do patřičného routeru s dynamic host configuration protocol (DHCP) mechanismem. Klientský počítač připojený do stejné sítě si poté může jednoduše zobrazit \underline{\ac{WUI}} hostované na samotném \underline{\ac{RPi}}
+
 \section{Návrh obvodu a plošného spoje}
 
 \subsection{Testovací verze}
@@ -206,9 +208,39 @@ Vymstila se nám však nepřesnost rozměrů krytu a při vkládání stanice do
 
 \subsection{Pouzdro}
 
+Navhrli jsme vhodné pouzdro pro naše \underline{\ac{RPi}}, abychom ochránili citlivé elektronické součástky a zároveň měli možnost jednoduše vyjmout stanici z krytu. Pouzdro jsme vytiskli na školní 3D tiskárně pevným Polyethylene terephthalate glycol (PETG) filamentem.
+
+%TODO předělat na fotku pouzdra
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.72\linewidth]{go.png}
+	\caption{Pouzdro}
+\end{figure}
+
 \subsection{Hub}
 
+Zkompletovaný hub se tedy skládá z pouzdra, \underline{\ac{RPi}}, \underline{\ac{PCB}} a připojených senzorů, ethernet kabelu a zdrojového kabelu. Jednoduchým způsobem je možno hub rozebrat pro možnou opravu.
+
+%TODO předělat na fotku hubu
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.72\linewidth]{go.png}
+	\caption{Hub}
+\end{figure}
+
 \subsection{Nádrž}
+
+K zavlažování bylo potřeba postavit i nádrž na vodu, ze které bude naše čerpadlo přečerpávat vodu k zavlažování. Nejvhodnější řešení byla nádoba s co největším objemem, která bude jednoduše přenosná, odolná a nebude složité připevnit na ní senzory. Nakonec jsme ji postavili z upraveného 5L pivního soudku, natřeli antikorozní barvou a upravili ji, k našim potřebám.
+
+%TODO předělat na fotku nádrže
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.72\linewidth]{go.png}
+	\caption{Nádrž}
+\end{figure}
 
 \subsection{Celý systém}
 
@@ -324,7 +356,7 @@ Okno prvotního nastavení. Nastaví se zde limity a celkové nastavení aplikac
 	\caption{Manuální ovládání}
 \end{figure}
 
-Manuální ovládání čerpadla dovoluje uživateli kdykoliv spustit zavlažování, i po dokončení manuálního zavlažování se spustí kontrola hladiny vody v nádrži.
+Manuální ovládání čerpadla dovoluje uživateli kdykoliv spustit zavlažování, i po dokončení manuálního zavlažování se spustí kontrola hladiny vody v nádrži. Při úpravě limitních hodnot či jiných nastevení řídící jednotky je nutno zařízení restartovat. K tomu v sidebaru \underline{\ac{WUI}} slouží možnost "Restart HW".
 
 \subsection{Nastavení}
 
@@ -336,7 +368,6 @@ Manuální ovládání čerpadla dovoluje uživateli kdykoliv spustit zavlažov�
 
 V nastavení se dá změnit nastavení aplikace i limitů pro zavlažování. Nastavení se poté uloží do databáze.
 
-\subsection{Restart HW}
 \subsection{Notifikace}
 
 \clearpage
