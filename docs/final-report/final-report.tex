@@ -14,7 +14,7 @@
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{tabularx}
-% \usepackage[backend=biber,style=alphabetic]{biblatex}
+\usepackage{changepage}
 
 \graphicspath{ {./img/} }
 \setlength{\parindent}{2em}
@@ -24,17 +24,17 @@
 \title{PlantHub}
 \author{Filip Sikora, Jakub Vantuch}
 \date{}
-% \addbibresource{cites.bib}
 
 \begin{document}
-% whats this
+\renewcommand*\listfigurename{}
+\renewcommand{\figurename}{Obr.}
 \renewcommand\refname{}
 
-% TODO: fix the damn header image
-
 \begin{titlepage}
-	\noindent\includegraphics[width=\linewidth]{header.png}
-	\vspace{0.1cm} \\
+	\begin{adjustwidth}{-20mm}{-7.5mm} 
+		\vspace*{-1.5cm}
+		\noindent\includegraphics[width=\linewidth]{header.png}
+	\end{adjustwidth}
 	\begin{center}
 		\vspace*{0.2cm}
 		\Huge\textbf{MATURITNÍ ZKOUŠKA}
@@ -53,10 +53,12 @@
 		Školní rok: & \textbf{2021/22} & Vedoucí učitel práce: & \textbf{Ing. Jiří Sumbal}
 		\vspace*{1cm}
 	\end{tabularx}
-	„Prohlašuji, že jsem tuto práci vypracoval samostatně a použil jsem literárních pramenů a informací, které cituji a uvádím v seznamu použité literatury a dalších zdrojů informací.“ \\
+	„Prohlašujeme, že jsme tuto práci vypracovali samostatně a použili jsme literárních pramenů a informací, které citujeme a uvádíme v seznamu použité literatury a dalších zdrojů informací.“ \\
 	\vspace*{0.5cm} \\
-	\begin{tabularx}{\textwidth}{l@{\hskip 1cm}X@{\hskip 1cm}X}
-		Ve Frýdku-Místku, dne: & \dotfill & \dotfill
+	\renewcommand{\arraystretch}{2}
+	\begin{tabularx}{\textwidth}{l@{\hskip 0.75cm}X@{\hskip 1.5cm}X@{\hskip 0.75cm}l}
+		Ve Frýdku-Místku, dne: & \dotfill & \dotfill & podpis \\
+		Ve Frýdku-Místku, dne: & \dotfill & \dotfill & podpis \\
 	\end{tabularx}
 \end{titlepage}
 
@@ -64,11 +66,11 @@
 
 \section*{Anotace}
 
-PlantHub je automatický zavlažovací systém s \ac{WUI}. Jádrem našeho systému je mikropočítač \ac{RPi} s procesorovou architekturou \ac{ARM}, \ac{GPIO} a možností připojení pomocí ethernetu. Vybrali jsme si jej, protože kombinuje malou velikost a vyšší výpočetní sílu než Arduino. Musí totiž zvládnout řídit všechny senzory, ukládat data do databáze a zároveň hostuje i samotnou webovou aplikaci. Systém PlantHub dále získává informace o teplotě, vlhkosti a tlaku vzduchu a promítá je ve svém \ac{WUI}. Ve stejné chvíli naměřená data ukládá do databáze v periodě 4 hodin. Jelikož voda časem v nádrže dojde, systém PlantHub snímá stav hladiny vody v nádrži a včas upozorní, že je třeba ji doplnit.
+PlantHub je zavlažovací systém, s plánovaným a automatickým způsobem zavlažování. Nastavení celého systému je možno upravit přes \ac{WUI}, které navíc nabízí i dashboard a prostředí pro manuální ovládání čerpadla. Jádrem našeho systému je mikropočítač \ac{RPi}, který slouží jako hostovací zařízení pro webový server a databázi, a zároveň jako řídící jednotka celého našeho systému. Systém PlantHub dále získává informace o vlhkosti půdy, teplotě a vlhkosti vzduchu a hladině vody, a vykresluje je ve svém \underline{\ac{WUI}}. Ve stejné chvíli naměřená data ukládá do databáze v periodě 4 hodin. Jelikož voda časem v nádrže dojde, systém PlantHub snímá stav hladiny vody v nádrži a včas upozorní, že je třeba ji doplnit.
 
 \section*{Klíčová slova}
 
-\noindent zavlažování; automatizace; statistika; živě; RaspberryPi; uživatelské rozhraní
+\noindent zavlažování; automatizace; statistika; mikropočítač; uživatelské rozhraní
 
 \clearpage
 
@@ -78,41 +80,35 @@ PlantHub je automatický zavlažovací systém s \ac{WUI}. Jádrem našeho syst�
 
 \section{Úvod}
 
-% TODO: rozdělit na hlavní úvod a na kapitolu koncepce projektu
+Naším cílem je návrh, sestavení a naprogramování automatického zavlažovacího systému s názvem PlantHub. Systém se skládá z řídící jednotky (stanice), senzorů, čerpadla, nádrže a \space \underline{\ac{WUI}}. Tato stanice pravidelně snímá data ze senzorů měřících teplotu a vlhkost vzduchu, vlhkost půdy a stav hladiny v nádrži, ze které stanice přečerpává vodu. Naměřená data se živě odesílají a zobrazují ve \underline{\ac{WUI}} a ve stejné chvíli se samostatně, v periodě čtyř hodin ukládají do databáze. Přístup k naměřeným datům a \underline{\ac{WUI}} má pouze uživatel lokální sítě, do které je PlantHub připojen.
 
-Naším cílem je návrh, sestavení a naprogramování automatického zavlažovacího systému s názvem PlantHub. Systém se skládá z řídící jednotky (stanice), senzorů, čerpadla, nádrže a \ac{WUI}. Tato stanice pravidelně snímá data ze senzorů měřících teplotu a vlhkost vzduchu, vlhkost půdy a stav hladiny v nádrži, ze které pak stanice přečerpává vodu pomocí čerpadla spouštěného tranzistorem. Naměřená data se posílají živě pomocí \ac{REST} \ac{API} prostřednictvím protokolu HTTP do \ac{WUI}. Samostatně se poté v periodě čtyř hodin ukládají do PostgreSQL databáze běžící v docker kontejneru. Docker kontejner si můžeme představit jako jednodušší a lépe škálovatelnou verzi virtualizace. Uložená data se vykreslí do statistik změn teploty a vlhkosti vzduchu, vlhkosti půdy a počtů zavlažování v časovém rozsahu zobrazitelných v rozhraní \ac{WUI}. Pro načtení historických dat z databáze používáme \ac{GraphQL} \ac{API}, jelikož nabízí šetrnější přístup k datům, vybráním pouze těch záznamů z tabulky, které opravdu využíváme. V případě nedostupnosti serveru by se ve \ac{WUI} měla pořád načítat živě naměřená data z \ac{REST}\ac{API}. Přístup k naměřeným datům a\ac{WUI} má pouze uživatel lokální sítě, do které je PlantHub připojen pomocí ethernet kabelu. Pro správnou funkci stanice je tedy zapotřebí router s přístupem k internetu a DHCP serverem.
+\underline{\ac{WUI}} je hostované na naší stanici. Uživatel má možnost zobrazení statistik jak živě naměřených dat, tak dat historických. \underline{\ac{WUI}} také nabízí manuální kontrolu nad čerpadlem, nastavením \underline{\ac{WUI}} a samotné řídící jednotky.
 
-\ac{WUI} hostovaném na naší stanici, je sestavené pomocí javascriptového frameworku React.js, CSS frameworku Tailwind a programovacího jazyku Typescript, který je supersetem javascriptu, podporujícím volitelné statické typování. Uživatel má možnost zobrazení statistik jak živě naměřených dat, tak dat historických v nastavitelných grafech dashboardu. \ac{WUI} také nabízí manuální kontrolu nad čerpadlem s časovačem začátku zavlažování a restartem hlavního programu. Nastavitelné je jak \ac{WUI} tak i samotné faktory zavlažování, jako je limit vlhkosti půdy, doba zavlažování nebo limit hladiny vody.
+Jednotlivé součásti a moduly stanice jsme vybrali podle finanční dostupnosti a adekvátních technických požadavků na přesnost měření. Obvod jsme v testovací verzi postavili na nepájivém poli a ve finální verzi navrhli a objednali vlastní \ac{PCB}. Pro ochranu naší stanice jsme navrhli kryt, který jsme následně vytiskli na 3D tiskárně.
 
-Jednotlivé součásti a moduly stanice jsme vybrali podle finanční dostupnosti a adekvátních technických požadavků na přesnost měření. Zapojení těchto modulů do obvodu jsme nejprve provedli ve webové aplikaci EasyEDA, která nabízí jednoduché prostředky pro návrh technických schémat. Tento obvod jsme poté v testovací verzi postavili na nepájivém poli a ve finální verzi navrhli a objednali vlastní \ac{PCB}. Pro ochranu naší stanice jsme v open-source programu FreeCad navrhli model krytu, který jsme následně vytiskli na 3D tiskárně. Vymstila se nám však nepřesnost rozměrů krytu a při vkládání stanice do krytu se nám podařilo zlomit SD kartu s operačním systémem, daty a nasazenými programy. Po reinstalaci operačního systému jsme opravili rozměry vytvořeného modelu krytu a vytiskli kryt podruhé, tentokrát ve správných rozměrech.
-
-Hlavní program jsme v prvotní verzi psali ve vysokoúrovňovém programovacím jazyce Python, od kterého jsme nakonec upustili kvůli vysokým technickým nárokům. Naše rozhodnutí nás nakonec dovedlo k jazyku Go vytvořeného Googlem a určeného pro concurrency, rychlou kompilaci i průběh programu, backend webových aplikací a mnoho dalších u. Tento jazyk se nám zalíbil natolik že jsme se v něm rozhodli vytvořit jak \ac{API}, databázové funkce, tak i hlavní program. Program je rozdělen na několik sekvencí, z toho hlavní jsou měřící sekvence kde se každou sekundu provádí měření dat ze senzorů a následné odesílání na \ac{REST} \ac{API} webové aplikace a kanály vytvořené pro komunikaci mezi go rutinama a sekvence controlleru, která pomocí snímání dat z databáze určuje, jestli se jedná o první spuštění PlantHubu, a podle toho určí jestli se spustí incializační sekvence nebo sekvence zavlažování.
+Hlavní program jsme napsali v programovacím jazyce Go, jehož hlavní využití je vytváření backendů webových aplikací. Tento jazyk se nám zalíbil natolik že jsme se v něm rozhodli vytvořit jak \ac{API}, databázové funkce, tak i hlavní program. Program je rozdělen na několik sekvencí, z toho hlavní jsou měřící sekvence a sekvence controlleru, která pomocí snímání dat z databáze určuje, jestli se jedná o první spuštění PlantHubu, a podle toho určí jestli se spustí incializační sekvence nebo sekvence samotného zavlažování.
 
 \clearpage
 
 \section{Seznam zkratek a pojmů}
-% TODO: přidat vysvětlení somehow
 \begin{acronym}
-	\acro{WUI}{Webové uživatelské rozhraní}
-	\acro{API}{Application programming interface}
-	\acro{REST}{Representaion programming interface}
-	\acro{GraphQL}{Graph query languge}
+	\acro{WUI}{webové uživatelské rozhraní}	
+	\acro{API}{application programming interface} \\
+		Spojení pro přenos dat mezi zařízeními nebo programy pomocí http protokolu.
+	\acro{REST}{representaion programming interface} \\
+		Definuje strukturu \underline{\ac{API}} tak, že zobrazuje všechna data a vytváří k nim jednoduchý přístup. Protože ale nenačítá pouze vybraná data, není tento proces vždy vhodný, jelikož může v mnoha případech zpomalovat celou aplikaci. 
+	\acro{GraphQL}{graph query language}
 	\acro{PCB}{plošný spoj}
 	\acro{RPi}{Raspberry Pi}
-	\acro{ARM}{Advanced RISC Machines}
-	\acro{GPIO}{General-purpose input/output}
-	\acro{ADC}{Analogově digitální převodník}
-	\acro{DHT11}{Digital humidity temperature v.11}
+	\acro{ADC}{analogově digitální převodník}
+	\acro{DHT11}{digital humidity temperature v.11}
 	\acro{HC-SR04}{Ultrasonický senzor vzdálenosti}
-	\acro{LED}{Light Emitting Diode}
-	\acro{SAR}{Successive-approximation}
+	\acro{LED}{light emitting diode}
 \end{acronym}
 
 \clearpage
 
 \section{Hardware}
-
-Vyvinuli jsme vhodné pouzdro pro naše Raspberry, abychom ochránili citlivé elektronické součástky a zároveň měli možnost jednoduše vyjmout stanici z krytu. Budeme ho tisknout na 3D tiskárně pevným Polyethylene terephthalate glycol(PETG) filamentem. K zavlažování je potřeba postavit i nádrž na vodu, ze které bude naše čerpadlo přečerpávat vodu k zavlažování. Rozhodli jsme se pro nádobu s co největším objemem a postavili ji z upraveného 5L soudku.
 
 \subsection{Senzory}
 
@@ -130,11 +126,11 @@ Jedná se o kapacitní senzor, který se skládá ze dvou vodivých desek a pře
 
 \subsubsection{Analogově digitální převodník MCP3008}
 
-\ac{RPi} má v rámci \ac{GPIO} pouze digitální vstupy, protože je ale senzor vlhkosti půdy analogový museli jsme použít \ac{ADC}.
+\underline{\ac{RPi}} má v rámci general-purpose input/output (GPIO) pinů pouze digitální vstupy, protože je ale senzor vlhkosti půdy analogový museli jsme použít \ac{ADC}.
 
 % TODO: toto je prý na kokot napsané
 % mr. sumbal nechápe co je SAR
-% Přemapujeme tedy analogový signál do osmi různých digitálních hodnot, kterým se také říká 3bitové rozlišení, to definuje tu nejmenší hodnotu změny, který převodník dokáže rozlišit, této hodnotě se říká Least significant bit (LSB). \ac{ADC} poté pomocí \ac{SAR} definuje adresu v binárním podání srozumitelným pro digitální vstup.
+% Přemapujeme tedy analogový signál do osmi různých digitálních hodnot, kterým se také říká 3bitové rozlišení, to definuje tu nejmenší hodnotu změny, který převodník dokáže rozlišit, této hodnotě se říká Least significant bit (LSB). \underline{\ac{ADC}} poté pomocí metody successive-approximation definuje adresu v binární formě srozumitelné pro digitální vstup.
 
 % \begin{figure}[h]
 % 	\centering
@@ -144,49 +140,111 @@ Jedná se o kapacitní senzor, který se skládá ze dvou vodivých desek a pře
 
 \subsubsection{Ultrasonický senzor HC-SR04}
 
-\ac{HC-SR04} vydává zvukové vibrace na vysoké frekvenci, neslyšitelné pro lidské ucho. Poté čeká, až se zvuk odrazí zpět od překážky, a vypočítá vzdálenost na základě času měřeného od vysílání zvukové vlny k zpětnému přijmutí
+\ac{HC-SR04} vydává zvukové vibrace na vysoké frekvenci, neslyšitelné pro lidské ucho. Poté čeká, až se zvuk odrazí zpět od překážky, a vypočítá vzdálenost na základě času měřeného od vysílání zvukové vlny k zpětnému přijmutí.
 
 Všechny naměřené údaje jsou v převodníku senzoru přepočítány a odeslány analogovým signálem do řídící jednotky.
 % TODO: převodník nepřepočítává hovno, za jak dlouho se zvuk vrátí počítá code
 
 \subsubsection{Čerpadlo}
 
-Naše zvolené ponorné mini čerpadlo eses se skládá z DC motoru, na němž je upevněna centrifuga pro čerpání vody a vlastního pouzdra, z kterého vede otvor pro napojení odtokové hadičky. Čerpadlo je připojeno na zdroj napětí 5V a zem.
+Námi zvolené ponorné mini čerpadlo eses se skládá z DC motoru, na němž je upevněna centrifuga pro čerpání vody a vlastního pouzdra, z kterého vede otvor pro napojení odtokové hadičky. Čerpadlo je připojeno na zdroj napětí 5V a jeho kostra je přizemněna.
 
 \subsubsection{Tranzistor 2N2222}
 
 Protože samotný signální pin neposkytuje dostatečné napětí pro chod čerpadla ovládáme jej tranzistorem 2N2222. Tento tranzistor je bipolární Negative-Positive-Negative tranzistor, to znamená že jeho polarita je nastavená tak aby na kolektoru přijímal pozitivní napětí. Díky našemu vyměnitelnému připojení modulů je možné čerpadlo vyměnit za jiné a přívodný kabel používat jako spouštěč čerpadla jakéhokoliv výkonu a nároků na zdroj.
 
-\subsection{Architektura ARM}
+\subsection{Raspberry Pi}
 
-\ac{ARM} je nejnovější CPU architektura. Využívají ji všechny moderní chytré telefony, zařízení s operačním systémem Android i Apple produkty. Dnes už mají \ac{ARM} procesory zařízení s Windows nebo MacOS.\@
+Vybrali jsme si jej, protože kombinuje malou velikost a vyšší výpočetní sílu než Arduino. Musí totiž zvládnout řídit všechny senzory, ukládat data do databáze a zároveň hostuje i samotnou webovou aplikaci.
 
-% \ac{ARM} je založen na RISC (Reduced Instruction Set Computing), tyto procesory jsou designované na 
+\subsubsection{Architektura ARM}
 
-\clearpage
+Advanced RISC Machines (ARM) je založen na Reduced Instruction Set Computing (RISC) a je to nejnověji používaná CPU architektura. Tyto procesory jsou designované na všechny moderní chytré telefony, zařízení s operačním systémem Android i Apple produkty.
+
+\subsection{Router}
+
+Připojení \underline{\ac{RPi}} do lokální sítě je provedeno pomocí ethernet kabelu do patřičného routeru s dynamic host configuration protocol (DHCP) mechanismem. Klientský počítač připojený do stejné sítě si poté může jednoduše zobrazit \underline{\ac{WUI}} hostované na samotném \underline{\ac{RPi}}
 
 \section{Návrh obvodu a plošného spoje}
 
-Testovací verzi našeho obvodu jsme postavili na nepájivém kontaktním poli. Jakmile jsme měli vše plně odzkoušeno a plně otestováno, přešli jsme na profesionálnější řešení. Což tedy v druhé fázi znamenalo navrhnout a nechat vytisknout náš vlastní obvod přepracovaného schématu \ac{PCB} a vytisknutého společností JLCPCB na naše vlastní náklady.
+\subsection{Testovací verze}
 
-\begin{figure}[h]
-	\centering
-	\begin{subfigure}[b]{0.4\linewidth}
-		\includegraphics[width=\linewidth]{pcb.png}
-		\caption{Diagram \ac{PCB}}
-	\end{subfigure}
-	\begin{subfigure}[b]{0.4\linewidth}
-		\includegraphics[width=\linewidth]{planthub.png}
-		\caption{PlantHub \ac{PCB} se senzory}
-	\end{subfigure}
-	\caption{}
+V prvním kroku jsme si vytvořili grafické znázornění celého obvodu (Obr. \ref{fig:graficke-znazorneni-obvodu}) v nástroji figma \cite{figma}, Testovací verzi našeho obvodu jsme postavili na nepájivém kontaktním poli. Jakmile jsme měli vše plně odzkoušeno a plně otestováno, přešli jsme na profesionálnější řešení.
+
+\noindent\begin{figure}[h]
+	\includegraphics[width=\linewidth]{obvod.png}
+	\caption{Grafické znázornění obvodu}
+	\label{fig:graficke-znazorneni-obvodu}
 \end{figure}
+
+\clearpage
+
+\subsection{Finální verze}
+
+Ve finální verzi jsme v nástroji EasyEDA \cite{easyeda} navrhli naše vlastní schéma obvodu (Obr. \ref{fig:schema-obvodu}). Toto schéma jsme si nechali vytisknout společností JLCPCB, a po doručení jsme na něj napájeli patřičné komponenty (Obr. \ref{fig:finalni-verze}).
+
+\vspace*{2cm}
+\begin{figure}[h]
+	\begin{minipage}[t]{0.5\linewidth}
+		\includegraphics[width=\linewidth]{pcb.png}
+		\caption{Schéma obvodu}
+		\label{fig:schema-obvodu}
+	\end{minipage}
+	\hfill
+	\begin{minipage}[t]{0.5\linewidth}
+		\includegraphics[width=\linewidth]{planthub.png}
+		\caption{Finální verze \underline{\ac{PCB}} se senzory}
+		\label{fig:finalni-verze}
+	\end{minipage}
+\end{figure}
+
+%\caption{}
 
 \clearpage
 
 \section{Fyzická realizace}
 
-% předělat na fotku celého planthubu
+Vymstila se nám však nepřesnost rozměrů krytu a při vkládání stanice do krytu se nám podařilo zlomit SD kartu s operačním systémem, daty a nasazenými programy. Po reinstalaci operačního systému jsme opravili rozměry vytvořeného modelu krytu a vytiskli kryt podruhé, tentokrát ve správných rozměrech.
+
+\subsection{Pouzdro}
+
+Navhrli jsme vhodné pouzdro pro naše \underline{\ac{RPi}}, abychom ochránili citlivé elektronické součástky a zároveň měli možnost jednoduše vyjmout stanici z krytu. Pouzdro jsme vytiskli na školní 3D tiskárně pevným Polyethylene terephthalate glycol (PETG) filamentem.
+
+%TODO předělat na fotku pouzdra
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.72\linewidth]{go.png}
+	\caption{Pouzdro}
+\end{figure}
+
+\subsection{Hub}
+
+Zkompletovaný hub se tedy skládá z pouzdra, \underline{\ac{RPi}}, \underline{\ac{PCB}} a připojených senzorů, ethernet kabelu a zdrojového kabelu. Jednoduchým způsobem je možno hub rozebrat pro možnou opravu.
+
+%TODO předělat na fotku hubu
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.72\linewidth]{go.png}
+	\caption{Hub}
+\end{figure}
+
+\subsection{Nádrž}
+
+K zavlažování bylo potřeba postavit i nádrž na vodu, ze které bude naše čerpadlo přečerpávat vodu k zavlažování. Nejvhodnější řešení byla nádoba s co největším objemem, která bude jednoduše přenosná, odolná a nebude složité připevnit na ní senzory. Nakonec jsme ji postavili z upraveného 5L pivního soudku, natřeli antikorozní barvou a upravili ji, k našim potřebám.
+
+%TODO předělat na fotku nádrže
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.72\linewidth]{go.png}
+	\caption{Nádrž}
+\end{figure}
+
+\subsection{Celý systém}
+
+%TODO předělat na fotku celého planthubu
 
 \begin{figure}[h]
 	\centering
@@ -200,7 +258,7 @@ Testovací verzi našeho obvodu jsme postavili na nepájivém kontaktním poli. 
 
 \subsection{Postup práce}
 
-Náš hlavní program pro zavlažování a komunikaci s databází a \ac{WUI} jsme začali psát ve vysokoúrovňovém programovacím jazyce Python. Od toho jsme ale nakonec upustili kvůli horší výkonu, a tak jsme program přepsali v programovacím jazyku Go.
+Náš hlavní program pro zavlažování a komunikaci s databází a \underline{\ac{WUI}} jsme začali psát ve vysokoúrovňovém programovacím jazyce Python. Od toho jsme ale nakonec upustili kvůli horší výkonu, a tak jsme program přepsali v programovacím jazyku Go.
 
 \begin{figure}[h]
 	\centering
@@ -214,26 +272,23 @@ Fáze programu se spouštějí buďto v samostatné go rutině a komunikují spo
 
 \subsubsection{Měření}
 
-Senzor vlhkosti půdy a \ac{DHT11} průběžně posílají naměřená data do \ac{RPi}, kde se ukládají do databáze. Jestliže naměřené hodnoty překročí limitní hodnoty, \ac{RPi} pošle signál pro otevření tranzistoru což spustí čerpadlo.
-
-% TODO: více rozvést vliv obou senzorů
+Senzor vlhkosti půdy a \underline{\ac{DHT11}} průběžně posílají naměřená data do \underline{\ac{WUI}}. Hlavní program ve stejné chvíli čte data ze senzorů a kontroluje jestli naměřené hodnoty nepřekračují limitní hodnoty pro spuštění zavlažování, pokud ano \underline{\ac{RPi}} pošle signál pro otevření tranzistoru což spustí čerpadlo.
 
 \subsubsection{Periodické ukládání dat}
 
-V samostatné rutině běží funkce pro ukládání naměřených dat v periodě 4 hodin. Naměřená data jsou následně statisticky zobrazena v \ac{WUI}.
+V samostatné rutině běží funkce pro ukládání naměřených dat v periodě 4 hodin. Tato rutina, stejně jako ostatní, čte hodnoty senzorů z měřící sekvence. Naměřená data jsou následně statisticky zobrazena ve \underline{\ac{WUI}}.
 
 \subsubsection{Controller}
 
-Po spuštění měřící sekvence a sekvence periodického ukládání dat se spustí buďto inicializační sekvence a nebo zavlažovací sekvence podle toho, jestli se v databázi nachází předchozí nastavení. Pokud předchozí nastavení nejsou nalezena, program čeká na uložení dat z \ac{WUI} a \ac{LED} dioda bliká dvakrát po sobě, dokud data nejsou dostupná. Pokud jsou, spustí se zavlažovací sekvence, načtou se limitní data z databáze a v periodě jedné sekundy se budou číst data o vlhkosti půdy.
+Po spuštění měřící sekvence a sekvence periodického ukládání dat se spustí buďto inicializační sekvence a nebo zavlažovací sekvence podle toho, jestli se v databázi nachází předchozí nastavení. Pokud předchozí nastavení nejsou nalezena, program čeká na uložení dat z \space \underline{\ac{WUI}} a \ac{LED} bliká dvakrát po sobě, dokud data nejsou dostupná. Pokud jsou, spustí se zavlažovací sekvence, načtou se limitní data z databáze a v periodě jedné sekundy se budou číst data o vlhkosti půdy.
 
 \subsubsection{Inicializace}
 
-Půda musí být ze začátku suchá. Senzor vlhkosti půdy zasuneme co nejhlouběji do půdy. \ac{RPi} bude chvíli sbírat data a pak je zprůměruje do hodnoty, která bude sloužit jako limit pro spuštění čerpadla.
+Půda musí být ze začátku suchá. Senzor vlhkosti půdy zasuneme co nejhlouběji do půdy. \underline{\ac{RPi}} bude chvíli sbírat data a pak je zprůměruje do hodnoty, která bude sloužit jako limit pro spuštění čerpadla.
 
-V \ac{WUI} jde navíc ještě manuálně nastavit hranice vlhkosti půdy pro spuštění
-čerpadla.
+Ve \underline{\ac{WUI}} jde navíc ještě manuálně nastavit hranice vlhkosti půdy pro spuštění čerpadla.
 
-Nastavit se dá také množství vody, které bude přečerpáno při jednom spuštění a jaká je hranice pro přijatelnou výšku hladiny vody v nádrži. Pokud nejsou tyto hodnoty uvedeny čerpadlo bude vodu přečerpávat, dokud se nezmění hodnota kapacitního čidla pro měření vlhkosti půdy a \ac{HC-SR04} použije výchozí nastavení.
+Nastavit se dá také množství vody, které bude přečerpáno při jednom spuštění a jaká je hranice pro přijatelnou výšku hladiny vody v nádrži. Pokud nejsou tyto hodnoty uvedeny čerpadlo bude vodu přečerpávat, dokud se nezmění hodnota kapacitního čidla pro měření vlhkosti půdy a \space \underline{\ac{HC-SR04}} použije výchozí nastavení.
 
 \subsubsection{Zavlažování}
 
@@ -241,13 +296,13 @@ Nastavit se dá také množství vody, které bude přečerpáno při jednom spu
 
 \subsubsection{Kontrola}
 
-Po ukončení přečerpávání se spustí \ac{HC-SR04} a změří výšku hladiny vody. Naměřená data poté odešle do \ac{RPi} kde se uloží do databáze. Pokud bude naměřená hodnota nižší, než je limitní hodnota, začne blikat \ac{LED} a \ac{RPi} odešle upozornění o doplnění nádrže do \ac{WUI}. Jakmile bude hladina doplněna, signalizace se vypne.
+Po ukončení přečerpávání se spustí \underline{\ac{HC-SR04}} a změří výšku hladiny vody. Naměřená data poté odešle do \underline{\ac{RPi}} kde se uloží do databáze. Pokud bude naměřená hodnota nižší, než je limitní hodnota, začne blikat \underline{\ac{LED}} a \underline{\ac{RPi}} odešle upozornění o doplnění nádrže do \underline{\ac{WUI}}. Jakmile bude hladina doplněna, signalizace se vypne.
 
 \subsubsection{Ukládání dat}
 
-Náš systém ukládá zvlášť periodicky naměřená data a data naměřená před zavlažováním, dále ukládá nastavení jak pro limity k zavlažování, tak pro \ac{WUI}.
+Náš systém ukládá zvlášť periodicky naměřená data a data naměřená před zavlažováním, dále ukládá nastavení jak pro limity k zavlažování, tak pro \underline{\ac{WUI}}.
 
-\subsection{Go}
+\subsection{Programovací jazyk Go}
 
 Go je open-source programovací jazyk, který byl vytvořen společností Google v roce 2009. Je to stále relativně nový programovací jazyk, který se nevyvinul z jiných jazyků jako C\# a Java. Go ignoruje teorii o programovacích jazycích. Místo toho aby se zaměřoval na akademické teorie, se zaměřuje na reálné praktiky používané pro vývoj next-gen v cloudových, distribuovaných a souběžných aplikacích.
 
@@ -258,66 +313,76 @@ nepotřebujeme běhové prostředí jako Common Language Runtime (CLR) a Java Vi
 
 \subsubsection{Paralelní programování v Go}
 
-Vývoj počítačů se v průběhu posledního desetiletí značně posunul. V minulosti aplikace běžely na počítačích pouze s jediným procesorovým jádrem. Dnes je standardní vidět čtyřjádrové procesory v uživatelských počítačích, dokonce i naše Raspberry má dvě jádra. Stále ale používáme programovací jazyky a technologie navržené v éře, kdy byly dostupné pouze jednojádrové procesory.
+Vývoj počítačů se v průběhu posledního desetiletí značně posunul. V minulosti aplikace běžely na počítačích pouze s jediným procesorovým jádrem. Dnes je standardní vidět čtyřjádrové procesory v uživatelských počítačích, dokonce i naše \underline{\ac{RPi}} má dvě jádra. Stále ale používáme programovací jazyky a technologie navržené v éře, kdy byly dostupné pouze jednojádrové procesory.
 
 Většina programovacích jazyků dnes nabízí knihovny nebo frameworky pro \linebreak paralelní programování, ale nemají tuto vlastnost zbudovanou přímo v jádře jazyka. V Go je paralelní programování součástí jazyka už od samotného počátku. Používá takzvané Gorutiny, které umožňují spouštět funkce souběžně. Souběžné funkce pak mezi sebou mohou komunikovat a předávat data pomocí kanálů. Dokonce i některé standardní knihovny jazyka mají zabudovanou souběžnost. Například standardní knihovna `net/http' pro programování HTTP zpracovává přicházející požadavky souběžně pomocí Gorutin.
 
 \subsubsection{Typový systém}
 
-Pragmatický design Go neobsahuje klíčové slovo pro třídu a jeho objektová orientace je odlišná od tradičních objektově orientovaných programovacích jazyků. V Go nahrazuje funkci tradiční třídy typ struct. Dědění není v go podporováno, ale podporuje kompozici typů.
-
-Zde je příklad, který demonstruje typový systém Go spolu s rozhraním (interface), typem struct a vnořením pro typovou kompozici.
-
-%Ukázka typového systému
+Pragmatický design Go neobsahuje klíčové slovo pro třídu a jeho objektová orientace je odlišná od tradičních objektově orientovaných programovacích jazyků. V Go nahrazuje funkci tradiční třídy typ struct. Dědění není v go podporováno, ale podporuje kompozici typů (Příloha 1).
 
 \clearpage
 
-
 \section{WUI}
 
+\subsection{Programování WUI}
+
 Webovovou aplikaci jsme napsali pomocí javascriptového frameworku
-React.js, CSS frameworku Tailwind a programovacího jazyku Typescript, který je supersetem javascriptu, podporujícím volitelné statické typování. Ve webovém rozhraní je možné zobrazit
-si statisky jak živě naměřených dat, tak dat uložených v databázi. Z OpenWeather \ac{API} získáváme data o předpovědi počasí a do dahsboardu renderujeme předpovědi na dalších 15H.
+React.js, CSS frameworku Tailwind a programovacího jazyku Typescript, který je supersetem javascriptu, podporujícím volitelné statické typování. Ve webovém rozhraní je možné zobrazit si statisky jak živě naměřených dat, tak dat uložených v databázi. Z OpenWeather \underline{\ac{API}} získáváme data o předpovědi počasí a do dahsboardu renderujeme předpovědi na dalších 15h.
+
+\subsection{Inicializační formulář}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=\linewidth]{ui-inicializace.jpg}
-	\caption{Okno prvotního nastavení. Nastaví se zde limity a celkové
-		nastavení aplikace.}
+	\caption{Inicializační formulář}
 \end{figure}
+
+Okno prvotního nastavení. Nastaví se zde limity a celkové nastavení aplikace.
+
+\subsection{Dashboard}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=\linewidth]{web-ui.png}
-	\caption{Dashborad \ac{WUI}}
+	\caption{Dashboard}
 \end{figure}
+
+\subsection{Manuální ovládání}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=\linewidth]{web-ui-pump.png}
-	\caption{Interaktivní ovládání celého systému lze provést v již
-		zmiňované webové aplikaci. Dovoluje uživateli kdykoliv spustit
-		čerpadlo na
-		zalévání rostliny.}
+	\caption{Manuální ovládání}
 \end{figure}
+
+Manuální ovládání čerpadla dovoluje uživateli kdykoliv spustit zavlažování, i po dokončení manuálního zavlažování se spustí kontrola hladiny vody v nádrži. Při úpravě limitních hodnot či jiných nastevení řídící jednotky je nutno zařízení restartovat. K tomu v sidebaru \underline{\ac{WUI}} slouží možnost "Restart HW".
+
+\subsection{Nastavení}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=\linewidth]{web-ui-settings.png}
-	\caption{V nastavení se dá změnit nastavení aplikace i limitů pro
-		zavlažování. Nastavení se poté uloží do databáze.}
+	\caption{Nastavení}
 \end{figure}
+
+V nastavení se dá změnit nastavení aplikace i limitů pro zavlažování. Nastavení se poté uloží do databáze.
+
+\subsection{Notifikace}
 
 \clearpage
 
 \section{Databáze}
 
-Pro databázi jsme se rozhodli použít databázový systém PostgreSQL.\@ Jak vyplývá z názvu, jedná se o Structured Query Language (SQL) databázi, ty jsou vhodné pro ukládání velkého objemu dat, jako právě data z našich senzorů. Webová aplikace používá pro přístup k datům z databáze GraphQL \ac{API}.\@
+\subsection{SQL}
 
-GraphQL je query, který je konkurent řešení \ac{REST} \ac{API}.\@ Nabízí rychlejší
-tvorbu \ac{API} a také umožňuje efektivnější přístup k datům z databáze. Umožňuje
-vybrat pouze data, která momentálně aplikace používá a dovoluje vynechat data,
-která zrovna potřebné nejsou.
+Pro databázi jsme se rozhodli použít databázový systém PostgreSQL.\@ Jak vyplývá z názvu, jedná se o Structured Query Language (SQL) databázi, ty jsou vhodné pro ukládání velkého objemu dat, jako právě data z našich senzorů. Webová aplikace používá pro přístup k datům z databáze \ac{GraphQL} \space \underline{\ac{API}}.\@
+
+\subsection{GraphQL}
+
+Jedná se o typ přenosu dat z možností filtrace a dotazovací funkcionality. V mnoha ohledech je to konkurent řešení přenosu dat pomocí \ac{REST} \space \underline{\ac{API}}.\@ Nabízí rychlejší tvorbu \underline{\ac{API}} \space a také umožňuje efektivnější přístup k datům z databáze. Umožňuje vybrat pouze data, která momentálně aplikace používá a dovoluje vynechat data, která zrovna potřebné nejsou.
+
+\subsection{Schéma databáze}
 
 \begin{figure}[h]
 	\centering
@@ -327,18 +392,21 @@ která zrovna potřebné nejsou.
 
 \section{Webový server}
 
-Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě hlavně mezi cloudovými vývojáři a v oblasti vývoje microservices. Dokáže se v rychlosti provedení programu přiblížit k nízkoúrovňovým jazykům jako je C nebo Rust, ale zároveň zůstává velmi lidsky čitelný a jednoduchý na použití. Na rozdíl od jazyků jako C a Rust má například garbage collector.
+Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě hlavně mezi cloudovými vývojáři a v oblasti vývoje microservices. Dokáže se v rychlosti provedení programu přiblížit k nízkoúrovňovým jazykům jako je C nebo Rust, ale zároveň zůstává velmi lidsky čitelný a jednoduchý na použití. Na rozdíl od jazyků jako C a Rust má například garbage collector, který periodicky čistí paměť a zabraňuje memory leakům.
 
-% TODO: upřesnit co je to garbage collector
+\section{Docker a kontejnerizace}
+
+\section{Bezpečnost}
+
+\clearpage
 
 \section{Závěr}
 
-Náš projekt je stále ve vývoji a mnoho z kritických funkcí projektu není ještě dokončeno. S vývojem dále pokračujeme, protože se jedná o naši maturitní práci. Myslíme si, ale že tento projekt má v budoucnu potenciál stát se úspěšným startupem, proto plánujeme pokračovat ve vývoji i po maturitě.
+Náš projekt je stále ve vývoji a některé z funkcí projektu nefungujou podle našich představ, i přes to, je náš systém v této chvíli použitelný. Myslíme si, ale že tento projekt má v budoucnu potenciál stát se úspěšným startupem, proto plánujeme pokračovat ve vývoji i po maturitě. 
 
-Tato práce byla pro nás velkým přínosem, naučili jsme se mnoho nových dovedností a načerpali nové informace.
+Abychom však tento projekt mohli pojmout jako plně funkční systém museli bychom ještě dokončit a předělat některé klíčové části. Jednalo by se především o rozdělení hostingu webové aplikace a databáze na samostatný server a zajištění modulárnosti celého systému rozdělením řídící jednotky na samostatné moduly a hub zodpovědný za jejich provoz. V dalších, né natolik prioritních, krocích se můžeme bavit o dokončení plánované tmavé verze \underline{\ac{WUI}} a přidání podpory více jazyků. A pro odlišení od konkurence mnoha jiných zavlažovacích systémů, přidání chytrých funkcí vypočítávání spotřeby vody a energie na základě předpovědi počasí typu kytky a oblasti. 
 
-% TODO: co zbývá dokončit?
-% TODO: Budoucí plány
+Tato práce byla pro nás velkým přínosem, naučili jsme se mnoho nových dovedností a načerpali nové informace, které v naší profesi bezpochyby dále využijeme.
 
 \clearpage
 
@@ -347,45 +415,51 @@ Tato práce byla pro nás velkým přínosem, naučili jsme se mnoho nových dov
 \begin{thebibliography}{9}
 	\vspace*{-1.5cm}
 	\bibitem{texbook}
-	“Home,” LaTeX, 06-May-2021. [Online]. Available: \href{https://latex-tutorial.com/}{https://latex-tutorial.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“Home,” LaTeX, 06-May-2021. [Online]. Dostupné z: \href{https://latex-tutorial.com/}{https://latex-tutorial.com/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{golang}
 	“Build fast, reliable, and efficient software at scale,” Go. [Online]. Dostupné z: \href{https://go.dev/}{https://go.dev/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{react}
-	“React – a JavaScript library for building user interfaces,” – A JavaScript library for building user interfaces. [Online]. Available: \href{https://reactjs.org/}{https://reactjs.org/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“React – a JavaScript library for building user interfaces,” – A JavaScript library for building user interfaces. [Online]. Dostupné z: \href{https://reactjs.org/}{https://reactjs.org/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{tailwindcss}
-	“Rapidly build modern websites without ever leaving your HTML.,” Tailwind CSS. [Online]. Available: \href{http://www.tailwindcss.com/}{http://www.tailwindcss.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“Rapidly build modern websites without ever leaving your HTML.,” Tailwind CSS. [Online]. Dostupné z: \href{http://www.tailwindcss.com/}{http://www.tailwindcss.com/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{typescript}
-	“JavaScript with syntax for types.,” TypeScript. [Online]. Available: \href{http://www.typescriptlang.org/}{http://www.typescriptlang.org/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“JavaScript with syntax for types.,” TypeScript. [Online]. Dostupné z: \href{http://www.typescriptlang.org/}{http://www.typescriptlang.org/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{vscode}
-	Microsoft, “Visual studio code - code editing. redefined,” RSS, 03-Nov-2021. [Online]. Available: \href{https://code.visualstudio.com/}{https://code.visualstudio.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+	Microsoft, “Visual studio code - code editing. redefined,” RSS, 03-Nov-2021. [Online]. Dostupné z: \href{https://code.visualstudio.com/}{https://code.visualstudio.com/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{goland}
-	“Goland by jetbrains: More than just A go ide,” JetBrains. [Online]. Available: \href{https://www.jetbrains.com/go/}{https://www.jetbrains.com/go/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“Goland by jetbrains: More than just A go ide,” JetBrains. [Online]. Dostupné z: \href{https://www.jetbrains.com/go/}{https://www.jetbrains.com/go/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{git}
-	Git. [Online]. Available: \href{https://git-scm.com/}{https://git-scm.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+	Git. [Online]. Dostupné z: \href{https://git-scm.com/}{https://git-scm.com/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{figma}
-	“The Collaborative Interface Design Tool.,” Figma. [Online]. Available: \href{https://www.figma.com/}{https://www.figma.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“The Collaborative Interface Design Tool.,” Figma. [Online]. Dostupné z: \href{https://www.figma.com/}{https://www.figma.com/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{freecad}
-	“Freecad,” FreeCAD. [Online]. Available: \href{https://www.freecadweb.org/}{https://www.freecadweb.org/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“Freecad,” FreeCAD. [Online]. Dostupné z: \href{https://www.freecadweb.org/}{https://www.freecadweb.org/}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{easyeda}
-	Supplyframe, “EasyEDA,” Component Search Engine. [Online]. Available: \href{https://componentsearchengine.com/library/easyeda}{https://componentsearchengine.com/library/easyeda}. [Zpřístupněno: 10-Dubna-2022]. 
+	Supplyframe, “EasyEDA,” Component Search Engine. [Online]. Dostupné z: \href{https://componentsearchengine.com/library/easyeda}{https://componentsearchengine.com/library/easyeda}. [Zpřístupněno: 10-Dubna-2022]. 
 \end{thebibliography}
+
+\section{Seznam obrázků}
+
+\vspace*{-1.5cm}
+\listoffigures
 
 \section{Seznam příloh}
 
 \begin{itemize}
-	\item \href{https://github.com/POJFM/dmp-plant-hub}{Zdrojový kód, dostupný na github.com/POJFM/dmp-plant-hub}
-	\item Prezentace
-	\item \href{https://www.youtube.com/watch?v=oo2_pDX5OE4}{Videoprezentace, dostupná na youtube.com}
+	\item Příloha 1: Typový systém v Go.png
+	\item Příloha 2: Zdrojový kód
+	\item Příloha 3: Modely krytu
+	\item Příloha 4: Prezentace.pdf
 \end{itemize}
 
-\end{document}
+\end{document} 
