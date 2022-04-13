@@ -17,8 +17,8 @@ create table if not exists public.settings
     chart_type          boolean default false not null,
     language            boolean default false not null,
     theme               boolean default false not null,
-    lat                 float                 not null,
-    lon                 float                 not null
+    lat                 float,
+    lon                 float
 );
 
 create unique index settings_id_uindex
