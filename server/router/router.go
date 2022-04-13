@@ -20,12 +20,12 @@ import (
 func Router(db *database.DB, sensei *sens.Sensors) *chi.Mux {
 	r := chi.NewRouter()
 
-	//Add CORS middleware around every request
-	//See https://github.com/rs/cors for full option listing
+	// Add CORS middleware around every request
+	// See https://github.com/rs/cors for full option listing
 	r.Use(cors.New(cors.Options{
 		AllowedOrigins:   []string{env.Process("CORS")},
 		AllowCredentials: true,
-		Debug:            true,
+		Debug:            false,
 	}).Handler)
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{DB: db}}))
@@ -55,6 +55,8 @@ func Router(db *database.DB, sensei *sens.Sensors) *chi.Mux {
 
 	r.MethodFunc("GET", "/live/control", mid.HandleGetLiveControl)
 	r.MethodFunc("POST", "/live/control", mid.HandlePostLiveControl)
+
+	r.MethodFunc("POST", "/api/weather", mid.HandleGetWeather)
 
 	mid.LoadInstances(db, sensei)
 

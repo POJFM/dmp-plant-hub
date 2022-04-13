@@ -8,7 +8,7 @@ import (
 )
 
 func Process(key string) string {
-	err := godotenv.Load("env/.env", ".env")
+	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal("Error loading .env, make sure there is one")
 	}

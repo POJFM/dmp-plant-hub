@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/utils"
 	"log"
 	"net/http"
 
@@ -14,6 +15,7 @@ import (
 )
 
 func main() {
+	go utils.CatchInterrupt()
 	db := database.Connect()
 	sensei := sens.Init()
 	sensei.StopLED()

@@ -12,7 +12,6 @@ RUN yarn build
 # stage 2 - build the final image and copy the react build files
 FROM nginx:stable-alpine
 COPY --from=build /app/build /usr/share/nginx/html
-#COPY --from=build /app/.env /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d
 EXPOSE 80

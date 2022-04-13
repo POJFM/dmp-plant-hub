@@ -18,7 +18,6 @@ func ArithmeticMean(list []float64) float64 {
 	return total / float64(len(list))
 }
 
-// TODO: make sure this works?
 func CatchInterrupt() {
 	sigchan := make(chan os.Signal)
 	signal.Notify(sigchan, os.Interrupt)

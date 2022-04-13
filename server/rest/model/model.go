@@ -21,3 +21,8 @@ type LiveControl struct {
 	Restart   bool `json:"restart"`
 	PumpState bool `json:"pumpState"`
 }
+
+type LatLon struct {
+	Lat float64 `json:"lat"`
+	Lon float64 `json:"lon"`
+}

@@ -19,8 +19,6 @@ services:
     user: root
     ports:
       - "80:80"
-    volumes:
-      - ./client/.env:/usr/share/nginx/html/.env
     restart: unless-stopped
   server:
     image: "tassilobalbo/planthub-server:latest"
@@ -31,7 +29,7 @@ services:
     privileged: true
     volumes:
       - /sys:/sys
-      - ./server/.env:/app/env/.env
+      - ./server/.env:/app/.env
     devices:
       - /dev/mem:/dev/mem
     restart: always
