@@ -104,6 +104,7 @@ Hlavní program jsme napsali v programovacím jazyce Go, jehož hlavní využit�
 	\acro{DHT11}{digital humidity temperature v.11}
 	\acro{HC-SR04}{Ultrasonický senzor vzdálenosti}
 	\acro{LED}{light emitting diode}
+	\acro{DHCP}{dynamic host configuration protocol}
 	\acro{SAR}{successive-approximation}
 	\acro{MSB}{most significant bit}
 	\acro{LSB}{least significant bit}
@@ -226,7 +227,7 @@ Advanced RISC Machines (ARM) je založen na Reduced Instruction Set Computing (R
 
 \subsection{Router}
 
-Připojení \underline{\ac{RPi}} do lokální sítě je provedeno pomocí ethernet kabelu do patřičného routeru s dynamic host configuration protocol (DHCP) mechanismem. Klientský počítač připojený do stejné sítě si poté může jednoduše zobrazit \underline{\ac{WUI}} hostované na samotném \underline{\ac{RPi}}
+Připojení \underline{\ac{RPi}} do lokální sítě je provedeno pomocí ethernet kabelu do patřičného routeru s \ac{DHCP} mechanismem. Klientský počítač připojený do stejné sítě si poté může jednoduše zobrazit \underline{\ac{WUI}} hostované na samotném \underline{\ac{RPi}}
 
 \section{Návrh obvodu a plošného spoje}
 
@@ -402,6 +403,8 @@ React.js, CSS frameworku Tailwind a programovacího jazyku Typescript, který je
 
 Okno prvotního nastavení. Nastaví se zde limity a celkové nastavení aplikace.
 
+\clearpage
+
 \subsection{Dashboard}
 
 \begin{figure}[h]
@@ -409,6 +412,8 @@ Okno prvotního nastavení. Nastaví se zde limity a celkové nastavení aplikac
 	\includegraphics[width=\linewidth]{web-ui.png}
 	\caption{Dashboard}
 \end{figure}
+
+\clearpage
 
 \subsection{Manuální ovládání}
 
@@ -420,6 +425,8 @@ Okno prvotního nastavení. Nastaví se zde limity a celkové nastavení aplikac
 
 Manuální ovládání čerpadla dovoluje uživateli kdykoliv spustit zavlažování, i po dokončení manuálního zavlažování se spustí kontrola hladiny vody v nádrži. Při úpravě limitních hodnot či jiných nastevení řídící jednotky je nutno zařízení restartovat. K tomu v sidebaru \underline{\ac{WUI}} slouží možnost "Restart HW".
 
+\clearpage
+
 \subsection{Nastavení}
 
 \begin{figure}[h]
@@ -429,6 +436,8 @@ Manuální ovládání čerpadla dovoluje uživateli kdykoliv spustit zavlažov�
 \end{figure}
 
 V nastavení se dá změnit nastavení aplikace i limitů pro zavlažování. Nastavení se poté uloží do databáze.
+
+\clearpage
 
 \subsection{Notifikace}
 
@@ -458,7 +467,11 @@ Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě 
 
 \section{Docker a kontejnerizace}
 
+Kontejnerizaci můžeme přirovnat k virtualizaci. Můžeme si představit kontejner jako takový odlehčený virtuální počítač. Jde o izolaci aplikace od klientského systému, místo toho abychom virtualizovali všechny funkce počítače vituálně. Virtualizujeme pouze funkce nezbytně nutné pro funkci izolované aplikace.
+
 \section{Bezpečnost}
+
+PlantHub je izolován v lokální síti, tak že na něj má přístup jen klientské zařízení. Součástí PlantHubu je i router který pomocí \underline{\ac{DHCP}} spojuje tyto zařízení. Pro rozšíření PlantHubu do zvdálené síte by byly za potřebí privtání klíče.
 
 \clearpage
 
@@ -466,7 +479,7 @@ Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě 
 
 Náš projekt je stále ve vývoji a některé z funkcí projektu nefungujou podle našich představ, i přes to, je náš systém v této chvíli použitelný. Myslíme si, ale že tento projekt má v budoucnu potenciál stát se úspěšným startupem, proto plánujeme pokračovat ve vývoji i po maturitě. 
 
-Abychom však tento projekt mohli pojmout jako plně funkční systém museli bychom ještě dokončit a předělat některé klíčové části. Jednalo by se především o rozdělení hostingu webové aplikace a databáze na samostatný server a zajištění modulárnosti celého systému rozdělením řídící jednotky na samostatné moduly a hub zodpovědný za jejich provoz. V dalších, né natolik prioritních, krocích se můžeme bavit o dokončení plánované tmavé verze \underline{\ac{WUI}} a přidání podpory více jazyků. A pro odlišení od konkurence mnoha jiných zavlažovacích systémů, přidání chytrých funkcí vypočítávání spotřeby vody a energie na základě předpovědi počasí typu kytky a oblasti. 
+Abychom však tento projekt mohli pojmout jako plně funkční systém museli bychom ještě dokončit a předělat některé klíčové části. Jednalo by se především o rozdělení hostingu webové aplikace a databáze na samostatný server a zajištění modulárnosti celého systému rozdělením řídící jednotky na samostatné moduly a hub zodpovědný za jejich provoz. V dalších, né natolik prioritních, krocích se můžeme bavit o dokončení plánované tmavé verze \underline{\ac{WUI}} a přidání podpory více jazyků. A pro odlišení od konkurence mnoha jiných zavlažovacích systémů, přidání chytrých funkcí vypočítávání spotřeby vody a energie na základě předpovědi počasí typu kytky a oblasti. Uvažovali jsme také nad soukromou databází rostlin a jejich rozdělení na základě stylu pěstování. V kommerčním modelu bychom mohli z této databáze vytvořit placené \underline{\ac{API}} pro další zavlažovací systémy.
 
 Tato práce byla pro nás velkým přínosem, naučili jsme se mnoho nových dovedností a načerpali nové informace, které v naší profesi bezpochyby dále využijeme.
 
