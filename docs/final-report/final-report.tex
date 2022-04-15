@@ -109,7 +109,7 @@ Hlavní program jsme napsali v programovacím jazyce Go, jehož hlavní využit�
 	\acro{LSB}{least significant bit}
 	\acro{Vref}[$ V_{ref}$]{Referenční napětí}
 	\acro{Vin}[$ V_{in}$]{Vstupní napětí}
-	\acro{Vdac}[$ V_{dac}$]{Napětí zpětně převedené do dekadické hodnoty z poslední binární hodnoty}
+	\acro{Vdac}[$ V_{dac}$]{Napětí převedené z digitální do analogové hodnoty}
 \end{acronym}
 
 \clearpage
@@ -136,11 +136,15 @@ Jedná se o kapacitní senzor, který se skládá ze dvou vodivých desek a pře
 
 Pomocí \underline{\ac{ADC}} v integrovaném obvodu s 10-bitovým rozlišením tedy přemapujeme analogový signál do osmi různých digitálních hodnot, kterým se také říká bitové rozlišení. \underline{\ac{ADC}} měří hodnoty od 0 až po 1023 a následně je pomocí Serial Peripheral Interface (SPI) komunikace posílá do \underline{\ac{RPi}}. \underline{\ac{RPi}} metodou \ac{SAR} definuje adresu v binární formě srozumitelné pro digitální vstup. V první iteraci převodu se na \underline{\ac{SAR}} registru nastaví první bit na logickou hodnotu 1, stane se z něj \ac{MSB}, ten určuje pozici výstupu srovnávání dané iterace. Je nutné mít správné referenční napětí, to totiž určuje nejvyšší možnou binární adresu. Adresa v první iteraci teda bude polovinou nejvyšší možné binární adresy + 1. V další iteraci je první bit \ac{LSB}, to je ten bit který se v dané iteraci používá pro výstup srovnávání, a druhý bit se stává \underline{\ac{MSB}}. Srovnává se hodnota zpětné konverze binární adresy s hodnotou analogového vstupu, pokud je větší na \underline{\ac{MSB}} se nastaví logická hodnota 1, pokud menší tak logická hodnota 0. Podle počtu bitů \underline{\ac{ADC}} se určují iterace a přesnost převedené hodnoty.
 
-Pro jednoduchost příklad se 4-bitovým \underline{\ac{ADC}}
+\vspace*{1cm}
+\noindent Příklad funkcionality, pro jednoduchost se 4-bitovým \underline{\ac{ADC}}. \\
 
-\ac{Vref} = 16V; \ac{Vin} = 11.2V; \ac{Vdac} se v 1. iteraci rovná polovině \underline{\ac{Vref}}.
+\noindent\ac{Vref}$ = 16V$ \\
+\noindent\ac{Vin}$ = 11.2V$ \\
 
 1. iterace
+
+\ac{Vdac}$ = \frac{1}{2} \underline{\ac{Vref}}$
 
 \begin{center}
 	\begin{tabular}{ |c|c|c|c| } 
@@ -154,9 +158,9 @@ Pro jednoduchost příklad se 4-bitovým \underline{\ac{ADC}}
 
 2. iterace
 
-	\ac{Vdac} = 8
+	$\ac{Vdac} = 8$
 
-	\underline{\ac{Vin}} > \underline{\ac{Vdac}} => \underline{\ac{LSB}} = 1; \underline{\ac{MSB}} = 1
+	$\underline{\ac{Vin}} > \underline{\ac{Vdac}} => \underline{\ac{LSB}} = 1; \underline{\ac{MSB}} = 1$
 
 \begin{center}
 	\begin{tabular}{ |c|c|c|c| } 
@@ -170,9 +174,9 @@ Pro jednoduchost příklad se 4-bitovým \underline{\ac{ADC}}
 
 3. iterace
 
-	\ac{Vdac} = 12
+	$\ac{Vdac} = 12$
 
-	\underline{\ac{Vin}} < \underline{\ac{Vdac}} => \underline{\ac{LSB}} = 0; \underline{\ac{MSB}} = 1
+	$\underline{\ac{Vin}} < \underline{\ac{Vdac}} => \underline{\ac{LSB}} = 0; \underline{\ac{MSB}} = 1$
 
 \begin{center}
 	\begin{tabular}{ |c|c|c|c| } 
@@ -186,9 +190,9 @@ Pro jednoduchost příklad se 4-bitovým \underline{\ac{ADC}}
 
 4. iterace
 
-	\ac{Vdac} = 10
+$\ac{Vdac} = 10$
 
-	\underline{\ac{Vin}} > \underline{\ac{Vdac}} => \underline{\ac{LSB}} = 1; \underline{\ac{MSB}} = 1
+	$\underline{\ac{Vin}} > \underline{\ac{Vdac}} => \underline{\ac{LSB}} = 1; \underline{\ac{MSB}} = 1$
 
 \begin{center}
 	\begin{tabular}{ |c|c|c|c| } 
@@ -200,22 +204,9 @@ Pro jednoduchost příklad se 4-bitovým \underline{\ac{ADC}}
 	\end{tabular}
 \end{center}
 
-% TODO: toto je prý na kokot napsané
-% mr. sumbal nechápe co je SAR
-% Přemapujeme tedy analogový signál do osmi různých digitálních hodnot, kterým se také říká 3bitové rozlišení, to definuje tu nejmenší hodnotu změny, který převodník dokáže rozlišit, této hodnotě se říká Least significant bit (LSB). \underline{\ac{ADC}} poté pomocí metody successive-approximation definuje adresu v binární formě srozumitelné pro digitální vstup.
-
-% \begin{figure}[h]
-% 	\centering
-% 	\includegraphics[width=8cm]{sar_adc.png}
-% 	\caption{\ac{SAR}}
-% \end{figure}
-
 \subsubsection{Ultrasonický senzor HC-SR04}
 
 \ac{HC-SR04} vydává zvukové vibrace na vysoké frekvenci, neslyšitelné pro lidské ucho. Poté čeká, až se zvuk odrazí zpět od překážky, a vypočítá vzdálenost na základě času měřeného od vysílání zvukové vlny k zpětnému přijmutí.
-
-Všechny naměřené údaje jsou v převodníku senzoru přepočítány a odeslány analogovým signálem do řídící jednotky.
-% TODO: převodník nepřepočítává hovno, za jak dlouho se zvuk vrátí počítá code
 
 \subsubsection{Čerpadlo}
 
@@ -258,19 +249,17 @@ Ve finální verzi jsme v nástroji EasyEDA \cite{easyeda} navrhli naše vlastn�
 \vspace*{2cm}
 \begin{figure}[h]
 	\begin{minipage}[t]{0.5\linewidth}
-		\includegraphics[width=\linewidth]{pcb.png}
+		\includegraphics[width=\linewidth]{pcb-schema.png}
 		\caption{Schéma obvodu}
 		\label{fig:schema-obvodu}
 	\end{minipage}
 	\hfill
 	\begin{minipage}[t]{0.5\linewidth}
-		\includegraphics[width=\linewidth]{planthub.png}
+		\includegraphics[width=\linewidth]{pcb.png}
 		\caption{Finální verze \underline{\ac{PCB}} se senzory}
 		\label{fig:finalni-verze}
 	\end{minipage}
 \end{figure}
-
-%\caption{}
 
 \clearpage
 
@@ -282,11 +271,10 @@ Vymstila se nám však nepřesnost rozměrů krytu a při vkládání stanice do
 
 Navhrli jsme vhodné pouzdro pro naše \underline{\ac{RPi}}, abychom ochránili citlivé elektronické součástky a zároveň měli možnost jednoduše vyjmout stanici z krytu. Pouzdro jsme vytiskli na školní 3D tiskárně pevným Polyethylene terephthalate glycol (PETG) filamentem.
 
-%TODO předělat na fotku pouzdra
-
+\vspace*{1cm}
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.72\linewidth]{go.png}
+	\includegraphics[width=0.67\linewidth]{pouzdro.jpeg}
 	\caption{Pouzdro}
 \end{figure}
 
@@ -294,34 +282,36 @@ Navhrli jsme vhodné pouzdro pro naše \underline{\ac{RPi}}, abychom ochránili 
 
 Zkompletovaný hub se tedy skládá z pouzdra, \underline{\ac{RPi}}, \underline{\ac{PCB}} a připojených senzorů, ethernet kabelu a zdrojového kabelu. Jednoduchým způsobem je možno hub rozebrat pro možnou opravu.
 
-%TODO předělat na fotku hubu
-
+\vspace*{1cm}
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.72\linewidth]{go.png}
+	\includegraphics[width=0.82\linewidth]{hub.jpeg}
 	\caption{Hub}
 \end{figure}
+
+\clearpage
 
 \subsection{Nádrž}
 
 K zavlažování bylo potřeba postavit i nádrž na vodu, ze které bude naše čerpadlo přečerpávat vodu k zavlažování. Nejvhodnější řešení byla nádoba s co největším objemem, která bude jednoduše přenosná, odolná a nebude složité připevnit na ní senzory. Nakonec jsme ji postavili z upraveného 5L pivního soudku, natřeli antikorozní barvou a upravili ji, k našim potřebám.
 
-%TODO předělat na fotku nádrže
-
+\vspace*{1cm}
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.72\linewidth]{go.png}
+	\includegraphics[width=0.7\linewidth]{nadrz.jpeg}
 	\caption{Nádrž}
 \end{figure}
 
+\clearpage
+
 \subsection{Celý systém}
 
-%TODO předělat na fotku celého planthubu
+Celý systém se tedy skládá z Hubu, nádrže, rostliny, routeru a klientského zařízení. Sestavení trvá asi 5 minut, protože musíme počkat než se načte OS \underline{\ac{RPi}} a pak zapojit všechny modulární části našeho systému.
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.72\linewidth]{go.png}
-	\caption{Fyzická realizace}
+	\includegraphics[width=0.9\linewidth]{planthub.jpeg}
+	\caption{Celý systém}
 \end{figure}
 
 \clearpage
