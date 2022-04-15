@@ -28,7 +28,8 @@ var (
 func saveOnFourHoursPeriod(db *db.DB) {
 	utils.WaitTillWholeHour()
 
-	err := gocron.Every(4).Hours().Do(func() {
+	// err := gocron.Every(4).Hours().Do(func() {
+	err := gocron.Every(1).Minutes().Do(func() {
 		moist := gMoist
 		temp := gTemp
 		hum := gHum
@@ -294,17 +295,18 @@ func initializationSequence(sensei *sens.Sensors) {
 }
 
 func measurementSequence(sensei *sens.Sensors) {
-	gocron.Every(2).Seconds().Do(func() {
+	err := gocron.Every(5).Seconds().Do(func() {
 		measurements := sensei.Measure()
 
 		// 550 as highest limit, therefore 100%
-		moiststr, _ := strconv.ParseFloat(strconv.FormatFloat(100*(math.Floor(measurements.Moist*100)/100)/550, 'f', -2, 64), 64)
+		moiststr, _ := strconv.ParseFloat(strconv.FormatFloat(100-(100*(math.Floor(measurements.Moist*100)/100)/1023), 'f', -2, 64), 64)
 		moist, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", moiststr), 64)
 
 		temp := math.Floor(measurements.Temp*100) / 100
 		hum := math.Floor(measurements.Hum*100) / 100
 
 		// fmt.Printf("temp: %f\nhum: %f\nmoi: %f\n", temp, hum, moist)
+		// fmt.Printf("moiraw: %f", measurements.Moist)
 		// fmt.Println("kokot: ", math.Floor(measurements.Moist*100)/100)
 
 		gMoist = moist
@@ -314,5 +316,8 @@ func measurementSequence(sensei *sens.Sensors) {
 		mid.LoadLiveMeasure(&moist, &hum, &temp)
 	},
 	)
+	if err != nil {
+		log.Printf("Gocron error: %v", err)
+	}
 	<-gocron.Start()
 }

@@ -56,7 +56,13 @@ func Router(db *database.DB, sensei *sens.Sensors) *chi.Mux {
 	r.MethodFunc("GET", "/live/control", mid.HandleGetLiveControl)
 	r.MethodFunc("POST", "/live/control", mid.HandlePostLiveControl)
 
-	r.MethodFunc("POST", "/api/weather", mid.HandleGetWeather)
+	r.MethodFunc("GET", "/api/weather", mid.HandleGetWeather)
+
+	r.MethodFunc("GET", "/api/geocode", mid.HandleGetGeocode)
+	r.MethodFunc("POST", "/api/geocode", mid.HandlePostGeocode)
+
+	r.MethodFunc("GET", "/api/geocode", mid.HandleGetGoogle)
+	r.MethodFunc("POST", "/api/geocode", mid.HandlePostGoogle)
 
 	mid.LoadInstances(db, sensei)
 

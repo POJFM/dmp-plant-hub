@@ -152,8 +152,7 @@ export default function Dashboard() {
 		axios
 			.request({
 				method: 'GET',
-				url: `https://api.openweathermap.org/data/2.5/onecall?lat=${data?.getSettings[0]?.lat}&lon=${data?.getSettings[0]?.lon}&exclude=daily,minutely,alerts&units=metric&appid=${process.env.REACT_APP_FORECAST_API_KEY
-				}`,
+				url: `http://4.2.0.225:5000/api/weather`,
 				headers: {
 					'Content-Type': 'application/json',
 				},

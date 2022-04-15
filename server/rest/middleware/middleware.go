@@ -150,17 +150,34 @@ func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 }
 
 // TODO: Well this didn't work :(
-func HandleGetWeather(w http.ResponseWriter, r *http.Request) {
+func HandleGetWeather(w http.ResponseWriter, _ *http.Request) {
 	w = setGetHeader(w)
-	var latlon model.LatLon
-	if err := json.NewDecoder(r.Body).Decode(&latlon); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-	}
-	res, err := http.Get("https://api.openweathermap.org/data/2.5/onecall?lat=" + strconv.FormatFloat(latlon.Lat, 'E', -1, 64) + "&lon=" + strconv.FormatFloat(latlon.Lon, 'E', -1, 64) + "&exclude=daily,minutely,alerts&units=metric&appid=" + env.Process("WEATHER_API_KEY")) //nolint:bodyclose
+	settings := Idb.GetSettingByColumn([]string{"lat", "lon"})
+	fmt.Println("------------------KOKOT---------------------")
+	fmt.Printf("lat: %f", *settings.Lon)
+	fmt.Printf("lon: %f", *settings.Lon)
+	res, err := http.Get("https://api.openweathermap.org/data/2.5/onecall?lat=" + strconv.FormatFloat(*settings.Lat, 'E', -1, 64) + "&lon=" + strconv.FormatFloat(*settings.Lon, 'E', -1, 64) + "&exclude=daily,minutely,alerts&units=metric&appid=" + env.Process("WEATHER_API_KEY")) //nolint:bodyclose
 	if err != nil {
 		w.WriteHeader(res.StatusCode)
 	}
 	defer res.Body.Close()
+	fmt.Println(res.Body)
 	w.WriteHeader(http.StatusOK)
 	_, _ = io.Copy(w, res.Body)
+}
+
+func HandleGetGeocode(w http.ResponseWriter, _ *http.Request) {
+
+}
+
+func HandlePostGeocode(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func HandleGetGoogle(w http.ResponseWriter, _ *http.Request) {
+
+}
+
+func HandlePostGoogle(w http.ResponseWriter, r *http.Request) {
+
 }
