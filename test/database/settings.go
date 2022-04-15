@@ -96,7 +96,7 @@ func (db *DB) GetSettingByColumn(columns []string) model.Setting {
 // checks if settings are already present
 func (db *DB) CheckSettings() (isSettingsPresent bool) {
 	var s []model.Setting
-	err := db.DB.NewSelect().Model(&s).Limit(1).Scan(context.Background())
+	err := db.DB.NewSelect().Model(s).Limit(1).Scan(context.Background())
 	if err != nil {
 		log.Println(err)
 	}

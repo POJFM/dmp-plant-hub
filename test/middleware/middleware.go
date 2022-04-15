@@ -3,8 +3,10 @@ package middleware
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 
+	db "github.com/SPSOAFM-IT18/dmp-plant-hub/test/database"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/env"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/model"
 )
@@ -17,6 +19,9 @@ var (
 	LNtitle   string
 	LNstate   = "inactive"
 	LNaction  string
+	Idb       *db.DB
+	lat       float64
+	lon       float64
 )
 
 func LoadLiveMeasure(cMoist, cHum, cTemp float64) {
@@ -25,25 +30,27 @@ func LoadLiveMeasure(cMoist, cHum, cTemp float64) {
 	temp = cTemp
 }
 
+func LoadInstances(db *db.DB) {
+	Idb = db
+}
+
 func HandleGetInitMeasured(w http.ResponseWriter, _ *http.Request) {
-	// TEST
-	data := model.InitMeasured{MoistLimit: 53.5, WaterLevelLimit: 50}
+	data := model.GetInitMeasured{MoistLimit: 53.5, WaterLevelLimit: 50}
 
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Accept", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
-
 	w.Header().Set("Access-Control-Allow-Methods", "GET")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	w.WriteHeader(http.StatusOK)
 
 	res, err := json.Marshal(data)
 	if err != nil {
 		return
 	}
 
-	w.Write(res)
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write(res)
 }
 
 func HandlePostInitMeasured(w http.ResponseWriter, r *http.Request) {
@@ -56,9 +63,11 @@ func HandlePostInitMeasured(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.WriteHeader(http.StatusOK)
 
-	var data model.InitMeasured
+	var data model.PostInitMeasured
 	_ = json.NewDecoder(r.Body).Decode(&data)
-	fmt.Print("POST INIT MEASURED: ", data)
+
+	lat = data.Lat
+	lon = data.Lon
 }
 
 func HandleGetLiveMeasure(w http.ResponseWriter, _ *http.Request) {
@@ -183,4 +192,73 @@ func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 
 func GetLiveControl(cPumpState chan bool) {
 	cPumpState <- pumpState
+}
+
+func HandleGetWeather(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Accept", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
+
+	w.Header().Set("Access-Control-Allow-Methods", "GET")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.WriteHeader(http.StatusOK)
+	//w = setGetHeader(w)
+	if Idb.CheckSettings() {
+		geocodes := Idb.GetSettingByColumn([]string{"lat", "lon"})
+		lat = *geocodes.Lat
+		lon = *geocodes.Lon
+	}
+
+	res, err := http.Get("https://api.openweathermap.org/data/2.5/onecall?lat=" + fmt.Sprintf("%f", lat) + "&lon=" + fmt.Sprintf("%f", lon) + "&exclude=daily,minutely,alerts&units=metric&appid=" + env.Process("WEATHER_API_KEY")) //nolint:bodyclose
+
+	if err != nil {
+		w.WriteHeader(res.StatusCode)
+	}
+	defer res.Body.Close()
+	fmt.Println(res.Body)
+
+	w.WriteHeader(http.StatusOK)
+	_, _ = io.Copy(w, res.Body)
+}
+
+func HandleGetGeocode(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Accept", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
+
+	w.Header().Set("Access-Control-Allow-Methods", "GET")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.WriteHeader(http.StatusOK)
+	//w = setGetHeader(w)
+
+	if Idb.CheckSettings() {
+		geocodes := Idb.GetSettingByColumn([]string{"lat", "lon"})
+		lat = *geocodes.Lat
+		lon = *geocodes.Lon
+	}
+
+	res, err := http.Get("https://api.opencagedata.com/geocode/v1/json?q=" + fmt.Sprintf("%f", lat) + "+" + fmt.Sprintf("%f", lon) + "&key=8304212f88754efebd94ab11c9689e19") //nolint:bodyclose
+
+	if err != nil {
+		w.WriteHeader(res.StatusCode)
+	}
+	defer res.Body.Close()
+	//fmt.Println(res.Body)
+
+	w.WriteHeader(http.StatusOK)
+	_, _ = io.Copy(w, res.Body)
+}
+
+func HandlePostGeocode(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func HandleGetGoogle(w http.ResponseWriter, _ *http.Request) {
+
+}
+
+func HandlePostGoogle(w http.ResponseWriter, r *http.Request) {
+
 }

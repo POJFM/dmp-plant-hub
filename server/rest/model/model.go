@@ -1,8 +1,13 @@
 package model
 
-type InitMeasured struct {
+type GetInitMeasured struct {
 	MoistLimit      float64 `json:"moistLimit"`
 	WaterLevelLimit float64 `json:"waterLevelLimit"`
+}
+
+type PostInitMeasured struct {
+	Lat float64 `json:"lat"`
+	Lon float64 `json:"lon"`
 }
 
 type LiveMeasure struct {

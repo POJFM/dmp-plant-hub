@@ -11,8 +11,8 @@ import (
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/model"
 )
 
-func PostInitMeasured(rawData model.InitMeasured) {
-	data := model.InitMeasured{
+func PostInitMeasured(rawData model.GetInitMeasured) {
+	data := model.GetInitMeasured{
 		MoistLimit:      rawData.MoistLimit,
 		WaterLevelLimit: rawData.WaterLevelLimit,
 	}
