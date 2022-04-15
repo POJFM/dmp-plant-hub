@@ -104,6 +104,12 @@ Hlavní program jsme napsali v programovacím jazyce Go, jehož hlavní využit�
 	\acro{DHT11}{digital humidity temperature v.11}
 	\acro{HC-SR04}{Ultrasonický senzor vzdálenosti}
 	\acro{LED}{light emitting diode}
+	\acro{SAR}{successive-approximation}
+	\acro{MSB}{most significant bit}
+	\acro{LSB}{least significant bit}
+	\acro{Vref}[$ V_{ref}$]{Referenční napětí}
+	\acro{Vin}[$ V_{in}$]{Vstupní napětí}
+	\acro{Vdac}[$ V_{dac}$]{Napětí zpětně převedené do dekadické hodnoty z poslední binární hodnoty}
 \end{acronym}
 
 \clearpage
@@ -127,6 +133,72 @@ Jedná se o kapacitní senzor, který se skládá ze dvou vodivých desek a pře
 \subsubsection{Analogově digitální převodník MCP3008}
 
 \underline{\ac{RPi}} má v rámci general-purpose input/output (GPIO) pinů pouze digitální vstupy, protože je ale senzor vlhkosti půdy analogový museli jsme použít \ac{ADC}.
+
+Pomocí \underline{\ac{ADC}} v integrovaném obvodu s 10-bitovým rozlišením tedy přemapujeme analogový signál do osmi různých digitálních hodnot, kterým se také říká bitové rozlišení. \underline{\ac{ADC}} měří hodnoty od 0 až po 1023 a následně je pomocí Serial Peripheral Interface (SPI) komunikace posílá do \underline{\ac{RPi}}. \underline{\ac{RPi}} metodou \ac{SAR} definuje adresu v binární formě srozumitelné pro digitální vstup. V první iteraci převodu se na \underline{\ac{SAR}} registru nastaví první bit na logickou hodnotu 1, stane se z něj \ac{MSB}, ten určuje pozici výstupu srovnávání dané iterace. Je nutné mít správné referenční napětí, to totiž určuje nejvyšší možnou binární adresu. Adresa v první iteraci teda bude polovinou nejvyšší možné binární adresy + 1. V další iteraci je první bit \ac{LSB}, to je ten bit který se v dané iteraci používá pro výstup srovnávání, a druhý bit se stává \underline{\ac{MSB}}. Srovnává se hodnota zpětné konverze binární adresy s hodnotou analogového vstupu, pokud je větší na \underline{\ac{MSB}} se nastaví logická hodnota 1, pokud menší tak logická hodnota 0. Podle počtu bitů \underline{\ac{ADC}} se určují iterace a přesnost převedené hodnoty.
+
+Pro jednoduchost příklad se 4-bitovým \underline{\ac{ADC}}
+
+\ac{Vref} = 16V; \ac{Vin} = 11.2V; \ac{Vdac} se v 1. iteraci rovná polovině \underline{\ac{Vref}}.
+
+1. iterace
+
+\begin{center}
+	\begin{tabular}{ |c|c|c|c| } 
+		\hline
+		(\underline{\ac{MSB}}) & & & \\ 
+		\hline
+		1 & 0 & 0 & 0 \\ 
+		\hline
+	\end{tabular}
+\end{center}
+
+2. iterace
+
+	\ac{Vdac} = 8
+
+	\underline{\ac{Vin}} > \underline{\ac{Vdac}} => \underline{\ac{LSB}} = 1; \underline{\ac{MSB}} = 1
+
+\begin{center}
+	\begin{tabular}{ |c|c|c|c| } 
+		\hline
+		(\underline{\ac{LSB}}) & (\underline{\ac{MSB}}) & & \\ 
+		\hline
+		1 & 1 & 0 & 0 \\ 
+		\hline
+	\end{tabular}
+\end{center}
+
+3. iterace
+
+	\ac{Vdac} = 12
+
+	\underline{\ac{Vin}} < \underline{\ac{Vdac}} => \underline{\ac{LSB}} = 0; \underline{\ac{MSB}} = 1
+
+\begin{center}
+	\begin{tabular}{ |c|c|c|c| } 
+		\hline
+		& (\underline{\ac{LSB}}) & (\underline{\ac{MSB}}) & \\ 
+		\hline
+		1 & 0 & 1 & 0 \\ 
+		\hline
+	\end{tabular}
+\end{center}
+
+4. iterace
+
+	\ac{Vdac} = 10
+
+	\underline{\ac{Vin}} > \underline{\ac{Vdac}} => \underline{\ac{LSB}} = 1; \underline{\ac{MSB}} = 1
+
+\begin{center}
+	\begin{tabular}{ |c|c|c|c| } 
+		\hline
+		& & (\underline{\ac{LSB}}) & (\underline{\ac{MSB}}) \\ 
+		\hline
+		1 & 0 & 1 & 1 \\ 
+		\hline
+	\end{tabular}
+\end{center}
 
 % TODO: toto je prý na kokot napsané
 % mr. sumbal nechápe co je SAR
@@ -415,37 +487,37 @@ Tato práce byla pro nás velkým přínosem, naučili jsme se mnoho nových dov
 \begin{thebibliography}{9}
 	\vspace*{-1.5cm}
 	\bibitem{texbook}
-	“Home,” LaTeX, 06-May-2021. [Online]. Dostupné z: \href{https://latex-tutorial.com/}{https://latex-tutorial.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“Home,” LaTeX, 06-May-2021. [Online]. Dostupné z: \underline{\href{https://latex-tutorial.com/}{https://latex-tutorial.com/}}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{golang}
-	“Build fast, reliable, and efficient software at scale,” Go. [Online]. Dostupné z: \href{https://go.dev/}{https://go.dev/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“Build fast, reliable, and efficient software at scale,” Go. [Online]. Dostupné z: \underline{\href{https://go.dev/}{https://go.dev/}}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{react}
-	“React – a JavaScript library for building user interfaces,” – A JavaScript library for building user interfaces. [Online]. Dostupné z: \href{https://reactjs.org/}{https://reactjs.org/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“React – a JavaScript library for building user interfaces,” – A JavaScript library for building user interfaces. [Online]. Dostupné z: \underline{\href{https://reactjs.org/}{https://reactjs.org/}}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{tailwindcss}
-	“Rapidly build modern websites without ever leaving your HTML.,” Tailwind CSS. [Online]. Dostupné z: \href{http://www.tailwindcss.com/}{http://www.tailwindcss.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“Rapidly build modern websites without ever leaving your HTML.,” Tailwind CSS. [Online]. Dostupné z: \underline{\href{http://www.tailwindcss.com/}{http://www.tailwindcss.com/}}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{typescript}
-	“JavaScript with syntax for types.,” TypeScript. [Online]. Dostupné z: \href{http://www.typescriptlang.org/}{http://www.typescriptlang.org/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“JavaScript with syntax for types.,” TypeScript. [Online]. Dostupné z: \underline{\href{http://www.typescriptlang.org/}{http://www.typescriptlang.org/}}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{vscode}
-	Microsoft, “Visual studio code - code editing. redefined,” RSS, 03-Nov-2021. [Online]. Dostupné z: \href{https://code.visualstudio.com/}{https://code.visualstudio.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+	Microsoft, “Visual studio code - code editing. redefined,” RSS, 03-Nov-2021. [Online]. Dostupné z: \underline{\href{https://code.visualstudio.com/}{https://code.visualstudio.com/}}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{goland}
-	“Goland by jetbrains: More than just A go ide,” JetBrains. [Online]. Dostupné z: \href{https://www.jetbrains.com/go/}{https://www.jetbrains.com/go/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“Goland by jetbrains: More than just A go ide,” JetBrains. [Online]. Dostupné z: \underline{\href{https://www.jetbrains.com/go/}{https://www.jetbrains.com/go/}}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{git}
-	Git. [Online]. Dostupné z: \href{https://git-scm.com/}{https://git-scm.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+	Git. [Online]. Dostupné z: \underline{\href{https://git-scm.com/}{https://git-scm.com/}}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{figma}
-	“The Collaborative Interface Design Tool.,” Figma. [Online]. Dostupné z: \href{https://www.figma.com/}{https://www.figma.com/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“The Collaborative Interface Design Tool.,” Figma. [Online]. Dostupné z: \underline{\href{https://www.figma.com/}{https://www.figma.com/}}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{freecad}
-	“Freecad,” FreeCAD. [Online]. Dostupné z: \href{https://www.freecadweb.org/}{https://www.freecadweb.org/}. [Zpřístupněno: 10-Dubna-2022]. 
+	“Freecad,” FreeCAD. [Online]. Dostupné z: \underline{\href{https://www.freecadweb.org/}{https://www.freecadweb.org/}}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{easyeda}
-	Supplyframe, “EasyEDA,” Component Search Engine. [Online]. Dostupné z: \href{https://componentsearchengine.com/library/easyeda}{https://componentsearchengine.com/library/easyeda}. [Zpřístupněno: 10-Dubna-2022]. 
+	Supplyframe, “EasyEDA,” Component Search Engine. [Online]. Dostupné z: \underline{\href{https://componentsearchengine.com/library/easyeda}{https://componentsearchengine.com/library/easyeda}}. [Zpřístupněno: 10-Dubna-2022]. 
 \end{thebibliography}
 
 \section{Seznam obrázků}
