@@ -75,6 +75,27 @@ export default function InitForm(props: any) {
 			navigator.geolocation.getCurrentPosition((position) => {
 				setLatitude(position.coords.latitude)
 				setLongitude(position.coords.longitude)
+				axios
+					.post(
+						`http://${process.env.REACT_APP_GO_IP}:5000/init/measured`,
+						{
+							lat: latitude,
+							lon: longitude
+						},
+						{
+							headers: {
+								'Content-Type': 'application/x-www-form-urlencoded',
+							},
+						}
+					)
+					.then((res) => {
+						console.log(res)
+					})
+					.catch((error) => {
+						console.error(error)
+					})
+				formActiveState && setTimeout(() => fetchLocationFromCoords(), coords ? 100_000_000 : 3000)
+
 				setInitCoords(false)
 			})
 		}
@@ -87,7 +108,7 @@ export default function InitForm(props: any) {
 		axios
 			.request({
 				method: 'GET',
-				url: `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`,
+				url: `http://${process.env.REACT_APP_GO_IP}:5000/api/geocodes`,
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -105,13 +126,11 @@ export default function InitForm(props: any) {
 			})
 	}
 
-	formActiveState && setTimeout(() => fetchLocationFromCoords(), coords ? 100_000_000 : 1000)
-
 	const fetchCoordsFromLocation = (searchLocationValue: any) => {
 		axios
 			.request({
 				method: 'GET',
-				url: `https://api.opencagedata.com/geocode/v1/json?q=${searchLocationValue}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`,
+				url: `http://${process.env.REACT_APP_GO_IP}:5000/api/geocodes`,
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -134,7 +153,7 @@ export default function InitForm(props: any) {
 		axios
 			.request({
 				method: 'GET',
-				url: `http://4.2.0.225:5000/init/measured`,
+				url: `http://${process.env.REACT_APP_GO_IP}:5000/init/measured`,
 				headers: {
 					'Content-Type': 'application/json',
 				},

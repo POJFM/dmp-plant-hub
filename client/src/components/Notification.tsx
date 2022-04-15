@@ -24,7 +24,7 @@ export default function Notification(props: any) {
 		axios
 			.request({
 				method: 'GET',
-				url: `http://4.2.0.225:5000/live/notify`,
+				url: `http://${process.env.REACT_APP_GO_IP}:5000/live/notify`,
 				headers: {
 					'Content-Type': 'application/json',
 				},

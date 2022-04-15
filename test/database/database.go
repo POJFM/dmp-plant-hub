@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"log"
+	"time"
 
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/env"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/test/graph/model"
@@ -21,7 +22,7 @@ func Connect() *DB {
 	// BUNDB
 
 	conn := sql.OpenDB(pgdriver.NewConnector(
-		pgdriver.WithDSN("postgres://postgres:@127.0.0.1:5420/test?sslmode=disable"),
+		pgdriver.WithDSN("postgres://postgres:@"+env.Process("DB_URL")+"/test?sslmode=disable"),
 		pgdriver.WithUser(env.Process("DB_USER")),
 		pgdriver.WithPassword(env.Process("DB_PSWD")),
 		pgdriver.WithDatabase(env.Process("DB_NAME")),
@@ -34,17 +35,28 @@ func Connect() *DB {
 		bundebug.FromEnv("BUNDEBUG"),
 	))
 
-	if err := db.Ping(); err != nil {
-		log.Fatalf("DB CONN ERROR: %s", err)
-	}
+	waitForDB(db)
 
 	return &DB{
 		db,
 	}
 }
 
+func waitForDB(db *bun.DB) {
+	var err error
+	for i := 0; i < 120; i++ {
+		err = db.Ping()
+		if err == nil {
+			log.Println("Successfully connected to DB!")
+			return
+		}
+		log.Printf("Failed to connect DB. Retrying in 10s. Number of retries: %v", i)
+		time.Sleep(10 * time.Second)
+	}
+	log.Fatalf("DB CONN ERROR: %s", err)
+}
+
 func (db *DB) CreateMeasurement(ctx context.Context, input *model.NewMeasurement) *model.Measurement {
-	//_, err := db.NewInsert().Model(&input).TableExpr("measurements").Exec()
 	_, err := db.DB.NewInsert().Model(input).ModelTableExpr("measurements").Exec(ctx)
 	if err != nil {
 		log.Println(err)
@@ -65,18 +77,6 @@ func (db *DB) GetMeasurements(ctx context.Context) []*model.Measurement {
 	}
 	return measurements
 }
-
-/* TODO
-func (db *DB) GetMeasurementsAverage(ctx context.Context) (measurementsAvg *sens.Measurements) {
-	measurements := make([]*model.Measurement, 0)
-	err := db.DB.NewSelect().Model(&measurements).Limit(50).Scan(context.Background())
-	if err != nil {
-		log.Println(err)
-	}
-	measurementsAvg.Moist = MeasurementsAvg()
-	return
-}
-*/
 
 func (db *DB) GetIrrigation(ctx context.Context) []*model.IrrigationHistory {
 	irrigationHistory := make([]*model.IrrigationHistory, 0)

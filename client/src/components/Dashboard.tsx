@@ -152,14 +152,14 @@ export default function Dashboard() {
 		axios
 			.request({
 				method: 'GET',
-				url: `http://4.2.0.225:5000/api/weather`,
+				url: `http://localhost:5000/api/weather`,
 				headers: {
 					'Content-Type': 'application/json',
 				},
 			})
 			.then((res) => {
 				setWeather(res.data.hourly.slice(0, 15))
-				//console.log(res)
+				console.log(res)
 			})
 			// .catch((error) => {
 			// 	console.error(error)
@@ -170,7 +170,7 @@ export default function Dashboard() {
 		axios
 			.request({
 				method: 'GET',
-				url: `http://4.2.0.225:5000/live/measure`,
+				url: `http://${process.env.REACT_APP_GO_IP}:5000/live/measure`,
 				headers: {
 					'Content-Type': 'application/json',
 				},
