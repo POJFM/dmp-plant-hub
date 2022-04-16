@@ -467,11 +467,11 @@ Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě 
 
 \section{Docker a kontejnerizace}
 
-Kontejnerizaci můžeme přirovnat k virtualizaci. Můžeme si představit kontejner jako takový odlehčený virtuální počítač. Jde o izolaci aplikace od klientského systému, místo toho abychom virtualizovali všechny funkce počítače vituálně. Virtualizujeme pouze funkce nezbytně nutné pro funkci izolované aplikace.
+Docker kontejner si můžeme představit jako takový odlehčený virtuální počítač, ale s lepší škálovatelností a cílením hlavně na prostředí, důležité pro vývoj aplikací. Jde především o izolaci \underline{\ac{WUI}} od hostovaného systému, a plnou kontrolu nad prostředím \underline{\ac{WUI}}, databáze a hlavního programu.
 
 \section{Bezpečnost}
 
-PlantHub je izolován v lokální síti, tak že na něj má přístup jen klientské zařízení. Součástí PlantHubu je i router který pomocí \underline{\ac{DHCP}} spojuje tyto zařízení. Pro rozšíření PlantHubu do zvdálené síte by byly za potřebí privtání klíče.
+PlantHub je izolován v lokální síti, takže na něj má přístup jen klientské zařízení. Součástí PlantHubu je i router který pomocí \underline{\ac{DHCP}} spojuje tyto zařízení. Pro rozšíření PlantHubu do vzdálené sítě by byly zapotřebí privátní klíče.
 
 \clearpage
 
@@ -479,7 +479,7 @@ PlantHub je izolován v lokální síti, tak že na něj má přístup jen klien
 
 Náš projekt je stále ve vývoji a některé z funkcí projektu nefungujou podle našich představ, i přes to, je náš systém v této chvíli použitelný. Myslíme si, ale že tento projekt má v budoucnu potenciál stát se úspěšným startupem, proto plánujeme pokračovat ve vývoji i po maturitě. 
 
-Abychom však tento projekt mohli pojmout jako plně funkční systém museli bychom ještě dokončit a předělat některé klíčové části. Jednalo by se především o rozdělení hostingu webové aplikace a databáze na samostatný server a zajištění modulárnosti celého systému rozdělením řídící jednotky na samostatné moduly a hub zodpovědný za jejich provoz. V dalších, né natolik prioritních, krocích se můžeme bavit o dokončení plánované tmavé verze \underline{\ac{WUI}} a přidání podpory více jazyků. A pro odlišení od konkurence mnoha jiných zavlažovacích systémů, přidání chytrých funkcí vypočítávání spotřeby vody a energie na základě předpovědi počasí typu kytky a oblasti. Uvažovali jsme také nad soukromou databází rostlin a jejich rozdělení na základě stylu pěstování. V kommerčním modelu bychom mohli z této databáze vytvořit placené \underline{\ac{API}} pro další zavlažovací systémy.
+Abychom však tento projekt mohli pojmout jako plně funkční systém museli bychom ještě dokončit a předělat některé klíčové části. Jednalo by se především o rozdělení hostingu webové aplikace a databáze na samostatný server a zajištění modulárnosti celého systému rozdělením řídící jednotky na samostatné moduly a hub zodpovědný za jejich provoz. V dalších, né natolik prioritních, krocích se můžeme bavit o dokončení plánované tmavé verze \underline{\ac{WUI}} a přidání podpory více jazyků. A pro odlišení od konkurence mnoha jiných zavlažovacích systémů, přidání chytrých funkcí vypočítávání spotřeby vody a energie na základě předpovědi počasí typu kytky a oblasti. Uvažovali jsme také nad soukromou databází rostlin a jejich rozdělení na základě způsobu pěstování. V komerčním modelu bychom mohli z této databáze vytvořit placené \underline{\ac{API}} pro jiné zavlažovací systémy.
 
 Tato práce byla pro nás velkým přínosem, naučili jsme se mnoho nových dovedností a načerpali nové informace, které v naší profesi bezpochyby dále využijeme.
 
