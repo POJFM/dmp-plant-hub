@@ -153,13 +153,7 @@ func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleGetWeather(w http.ResponseWriter, _ *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Accept", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
-
-	w.Header().Set("Access-Control-Allow-Methods", "GET")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w = setGetHeader(w)
 	w.WriteHeader(http.StatusOK)
 	//w = setGetHeader(w)
 	if Idb.CheckSettings() {
@@ -181,13 +175,7 @@ func HandleGetWeather(w http.ResponseWriter, _ *http.Request) {
 }
 
 func HandleGetGeocode(w http.ResponseWriter, _ *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Accept", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
-
-	w.Header().Set("Access-Control-Allow-Methods", "GET")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w = setGetHeader(w)
 	w.WriteHeader(http.StatusOK)
 	//w = setGetHeader(w)
 

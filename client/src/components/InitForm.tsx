@@ -77,7 +77,7 @@ export default function InitForm(props: any) {
 				setLongitude(position.coords.longitude)
 				axios
 					.post(
-						`http://${process.env.REACT_APP_GO_IP}:5000/init/measured`,
+						`http://4.2.0.225:5000/init/measured`,
 						{
 							lat: latitude,
 							lon: longitude
@@ -108,7 +108,7 @@ export default function InitForm(props: any) {
 		axios
 			.request({
 				method: 'GET',
-				url: `http://${process.env.REACT_APP_GO_IP}:5000/api/geocodes`,
+				url: `http://4.2.0.225:5000/api/geocodes`,
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -130,7 +130,7 @@ export default function InitForm(props: any) {
 		axios
 			.request({
 				method: 'GET',
-				url: `http://${process.env.REACT_APP_GO_IP}:5000/api/geocodes`,
+				url: `http://4.2.0.225:5000/api/geocodes`,
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -153,7 +153,7 @@ export default function InitForm(props: any) {
 		axios
 			.request({
 				method: 'GET',
-				url: `http://${process.env.REACT_APP_GO_IP}:5000/init/measured`,
+				url: `http://4.2.0.225:5000/init/measured`,
 				headers: {
 					'Content-Type': 'application/json',
 				},
