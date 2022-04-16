@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"math"
-	"strconv"
 	"time"
 
 	db "github.com/SPSOAFM-IT18/dmp-plant-hub/database"
@@ -20,19 +19,34 @@ import (
 )
 
 var (
-	gMoist float64
-	gHum   float64
-	gTemp  float64
+	gMoist     float64
+	gLastMoist float64
+	gHum       float64
+	gLastHum   float64
+	gTemp      float64
+	gLastTemp  float64
 )
 
 func saveOnFourHoursPeriod(db *db.DB) {
 	utils.WaitTillWholeHour()
 
-	// err := gocron.Every(4).Hours().Do(func() {
-	err := gocron.Every(1).Minutes().Do(func() {
-		moist := gMoist
-		temp := gTemp
-		hum := gHum
+	err := gocron.Every(4).Hours().Do(func() {
+		hum := 0.0
+		temp := 0.0
+		moist := 0.0
+		// average data from a 10-minute interval
+		for i := 0; i < 100; i++ {
+			hum += gHum
+			temp += gTemp
+			moist += gMoist
+			time.Sleep(6 * time.Second)
+		}
+		avgHum := hum / 100
+		avgTemp := temp / 100
+		avgMoist := moist / 100
+		hum = math.Floor(avgHum*100) / 100
+		temp = math.Floor(avgTemp*100) / 100
+		moist = math.Floor(avgMoist*100) / 100
 		irr := false
 
 		measurement := &graphmodel.NewMeasurement{
@@ -120,12 +134,10 @@ func CheckingSequence(db *db.DB, sensei *sens.Sensors) {
 	waterLevel := fmt.Sprintf("V nádrži zbývá %fl vody", sensei.ReadWaterLevel())
 	// Dodělat na water amount v litrech
 	mid.LoadLiveNotify("Kontrola Nádrže", "finished", waterLevel)
-	// req.PostLiveNotify(model.LiveNotify{Title: "Kontrola Nádrže", State: "finished", Action: waterLevel})
 
 	time.Sleep(3000 * time.Millisecond)
 
 	mid.LoadLiveNotify("", "inactive", "")
-	// req.PostLiveNotify(model.LiveNotify{Title: "", State: "inactive", Action: ""})
 }
 
 func irrigationSequenceMode(db *db.DB, sensei *sens.Sensors, limitsTrigger, scheduledTrigger bool, moistureLimit, waterAmountLimit, pumpFlow *float64, irrigationDuration *int) {
@@ -171,19 +183,9 @@ func irrigationSequenceMode(db *db.DB, sensei *sens.Sensors, limitsTrigger, sche
 			moist := gMoist
 			temp := gTemp
 			hum := gHum
-
 			// time passed from running pump will be represented as liters
 			var flowMeasure float64
 			t0 := time.Now()
-
-			// fmt.Println("kokot debil")
-
-			// fmt.Println("moist: ", moistt)
-			// fmt.Println("moistt: ", tempt)
-			// fmt.Println("moisttt: ", humt)
-			// fmt.Println("moistlimit: ", *moistureLimit)
-			// fmt.Println("irrDur: ", *irrigationDuration)
-
 			if (moist > *moistureLimit) || mid.GetLiveControl() {
 				log.Println("Starting irrigation...🌿🤖🚿")
 
@@ -194,35 +196,20 @@ func irrigationSequenceMode(db *db.DB, sensei *sens.Sensors, limitsTrigger, sche
 					WithIrrigation: &irr,
 				}
 				ctx := context.Background()
-
 				db.CreateMeasurement(ctx, measurement)
-
 				mid.LoadLiveNotify("Zavlažování", "inProgress", "Probíhá zavlažování")
-				// req.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "inProgress", Action: "Probíhá zavlažování"})
-
 				sensei.StartPump()
-
-				// fmt.Println("moist: ", moistt)
-				// fmt.Println("moistlimit: ", *moistureLimit)
-				// fmt.Println("irrDur: ", *irrigationDuration)
-
 				if moist > *moistureLimit {
 					// TimeToOverdraw is calculated by dividing amount by flow
 					for i := 0; i < *irrigationDuration; i++ {
 						flowMeasure = time.Since(t0).Seconds()
-						// fmt.Println(i)
-						// fmt.Println(int(time.Since(t0).Seconds()))
 						if moist < *moistureLimit || flowMeasure < *waterAmountLimit/(*pumpFlow) {
 							i = *irrigationDuration
 						}
 						time.Sleep(1 * time.Second)
 					}
 				}
-
-				// req.PostLiveNotify(model.LiveNotify{Title: "Zavlažování", State: "finished", Action: "Zavlažování dokončeno"})
-
 				sensei.StopPump()
-
 				CheckingSequence(db, sensei)
 			}
 			time.Sleep(2 * time.Second)
@@ -235,20 +222,14 @@ func irrigationSequence(db *db.DB, sensei *sens.Sensors) {
 
 	settings := db.GetSettingByColumn([]string{"limits_trigger", "scheduled_trigger", "moist_limit", "water_amount_limit", "irrigation_duration", "hour_range"})
 
-	// fmt.Println("hook 1")
 	// Definovaný průtok čerpadla
 	var pumpFlow = 1.75 // litr/min
 
 	if *settings.LimitsTrigger && !(*settings.ScheduledTrigger) {
-		// fmt.Println("hook 2")
-
 		irrigationSequenceMode(db, sensei, true, false, settings.MoistLimit, settings.WaterAmountLimit, &pumpFlow, settings.IrrigationDuration)
-		// fmt.Println("hook 3")
 	}
 
 	if *settings.ScheduledTrigger && !(*settings.LimitsTrigger) {
-		// fmt.Println("hook 4")
-
 		utils.WaitTillWholeHour()
 
 		gocron.Every(uint64(*settings.HourRange)).Hours().Do(func() {
@@ -258,8 +239,6 @@ func irrigationSequence(db *db.DB, sensei *sens.Sensors) {
 	}
 
 	if *settings.ScheduledTrigger && *settings.LimitsTrigger {
-		// fmt.Println("hook 5")
-
 		irrigationSequenceMode(db, sensei, true, false, settings.MoistLimit, settings.WaterAmountLimit, &pumpFlow, settings.IrrigationDuration)
 
 		utils.WaitTillWholeHour()
@@ -291,27 +270,36 @@ func initializationSequence(sensei *sens.Sensors) {
 	waterLevel := utils.ArithmeticMean(waterLevelAvg)
 
 	mid.LoadInitMeasured(&moistureLevel, &waterLevel)
-	// req.PostInitMeasured(model.InitMeasured{MoistLimit: moistureLevel, WaterLevelLimit: waterLevel})
 }
 
 func measurementSequence(sensei *sens.Sensors) {
-	err := gocron.Every(5).Seconds().Do(func() {
+	err := gocron.Every(2).Seconds().Do(func() {
 		measurements := sensei.Measure()
-
-		// 550 as highest limit, therefore 100%
-		moiststr, _ := strconv.ParseFloat(strconv.FormatFloat(100-(100*(math.Floor(measurements.Moist*100)/100)/1023), 'f', -2, 64), 64)
-		moist, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", moiststr), 64)
 
 		temp := math.Floor(measurements.Temp*100) / 100
 		hum := math.Floor(measurements.Hum*100) / 100
+		moist := math.Floor(measurements.Moist*100) / 100
 
-		// fmt.Printf("temp: %f\nhum: %f\nmoi: %f\n", temp, hum, moist)
-		// fmt.Printf("moiraw: %f", measurements.Moist)
-		// fmt.Println("kokot: ", math.Floor(measurements.Moist*100)/100)
+		// filter out bad data
+		if temp <= 0 {
+			temp = gLastTemp
+		}
+		if hum <= 0 {
+			hum = gLastHum
+		}
+		if moist == 100 {
+			moist = gLastMoist
+		}
 
-		gMoist = moist
 		gTemp = temp
+		gLastTemp = temp
 		gHum = hum
+		gLastHum = hum
+		gMoist = moist
+		gLastMoist = moist
+
+		fmt.Printf("temp: %f\nhum: %f\nmoi: %f\n", temp, hum, moist)
+		go fmt.Printf("sonicbuzik: %f", sensei.ReadWaterLevel())
 
 		mid.LoadLiveMeasure(&moist, &hum, &temp)
 	},

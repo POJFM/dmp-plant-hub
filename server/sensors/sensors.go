@@ -106,7 +106,7 @@ func (s *Sensors) ReadMoisture() (moisture float64) {
 
 	res := int(data[1]&3)<<8 + int(data[2])
 
-	moisture = float64(res)
+	moisture = 100 - 100*float64(res)/1023
 	// TODO: map moisture value to percentage
 	// Vdd and Vref are at 5v. Change *5 to *3.3 if you are
 	// powering the chip with 3.3v
