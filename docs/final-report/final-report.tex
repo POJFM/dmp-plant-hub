@@ -1,8 +1,9 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[czech,12pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[sfdefault]{ClearSans}
 \usepackage[T1]{fontenc}
 \usepackage[left=35mm,right=20mm,top=25mm,bottom=25mm]{geometry}
+\usepackage[autostyle]{csquotes}
 \usepackage[czech]{babel}
 \usepackage{titling}
 \usepackage{graphicx}
@@ -369,7 +370,7 @@ Náš systém ukládá zvlášť periodicky naměřená data a data naměřená 
 
 Go je open-source programovací jazyk, který byl vytvořen společností Google v roce 2009. Je to stále relativně nový programovací jazyk, který se nevyvinul z jiných jazyků jako C\# a Java. Go ignoruje teorii o programovacích jazycích. Místo toho aby se zaměřoval na akademické teorie, se zaměřuje na reálné praktiky používané pro vývoj next-gen v cloudových, distribuovaných a souběžných aplikacích.
 
-Jazyk Go je staticky typovaný a využívá garbage collector, jedná se o kompilovaný programovací jazyk, který své binární soubory kompiluje pro každou platformu. Dá se zařadit do skupiny C jazyků na základě jeho základního syntaxe. Go poskytuje expresivní syntax s jednoduchým typovým systémem a má vestavěné nástroje pro paralelní programování. Výkon Go je srovnatelný s jazyky C a C++, ale zároveň nabízí rychlý a jednoduchý vývoj aplikací.
+Jazyk Go je staticky typovaný a využívá garbage collector (automatický správce paměti), jedná se o kompilovaný programovací jazyk, který své binární soubory kompiluje pro každou platformu. Dá se zařadit do skupiny C jazyků na základě jeho základního syntaxe. Go poskytuje expresivní syntax s jednoduchým typovým systémem a má vestavěné nástroje pro paralelní programování. Výkon Go je srovnatelný s jazyky C a C++, ale zároveň nabízí rychlý a jednoduchý vývoj aplikací.
 
 Stejně jako C a C++ se Go kompiluje do nativního strojového kódu, takže
 nepotřebujeme běhové prostředí jako Common Language Runtime (CLR) a Java Virtual Machine (JVM). To má řadu výhod, třeba při distribuci aplikace v aplikačních kontejnerech jako je Docker.
@@ -435,7 +436,7 @@ Manuální ovládání čerpadla dovoluje uživateli kdykoliv spustit zavlažov�
 	\caption{Nastavení}
 \end{figure}
 
-V nastavení se dá změnit nastavení aplikace i limitů pro zavlažování. Nastavení se poté uloží do databáze.
+V nastavení lze změnit nastavení aplikace včetně limitů pro zavlažování a doby zavlažování. Na výběr máme automatické a plánované zavlažování. V prvním režimu PlantHub zavlažuje automaticky, kdy a jak moc má zavlažit vyhodnotí z dat senzoru vlhkosti půdy. Při plánovaném zavlažování nastavíme intervaly ve kterých se má zavlažovat. V nastavení aplikace se nastavuje lokace předpovědi počasí. Nastavení se ukládají do databáze.
 
 \clearpage
 
@@ -463,11 +464,37 @@ Jedná se o typ přenosu dat z možností filtrace a dotazovací funkcionality. 
 
 \section{Webový server}
 
-Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě hlavně mezi cloudovými vývojáři a v oblasti vývoje microservices. Dokáže se v rychlosti provedení programu přiblížit k nízkoúrovňovým jazykům jako je C nebo Rust, ale zároveň zůstává velmi lidsky čitelný a jednoduchý na použití. Na rozdíl od jazyků jako C a Rust má například garbage collector, který periodicky čistí paměť a zabraňuje memory leakům.
+Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě hlavně mezi cloudovými vývojáři a v oblasti vývoje microservices. Dokáže se v rychlosti provedení programu přiblížit k nízkoúrovňovým jazykům jako je C nebo Rust, ale zároveň zůstává velmi lidsky čitelný a jednoduchý na použití. Na rozdíl od jazyků jako C a Rust má například garbage collector (automatický správce paměti), který periodicky čistí paměť a zabraňuje memory leakům.
 
 \section{Docker a kontejnerizace}
 
 Docker kontejner si můžeme představit jako takový odlehčený virtuální počítač, ale s lepší škálovatelností a cílením hlavně na prostředí, důležité pro vývoj aplikací. Jde především o izolaci \underline{\ac{WUI}} od hostovaného systému, a plnou kontrolu nad prostředím \underline{\ac{WUI}}, databáze a hlavního programu.
+
+Kontejnerizace je zabalení aplikace spolu se všemi nutnými komponenty, jako jsou knihovny, frameworky a další závislosti do svého vlastního \enquote{kontejneru}, který je izolovaný od zbytku systému.
+
+Daná aplikace nebo program potom může být spuštěna konzistentně kdekoliv, nezávisle na prostředí, operačním systému i architektury hostového systému. Aplikace věží zcela nezávisle na zbytku systému. Kontejner imituje jakousi bublinu, která aplikaci obklopuje a izoluje ji. Je to v podstatě plně funkční a přenosné výpočetní prostředí. Toto je hlavním důvodem proč jsme zvolili kontejnerizaci pro náš projekt. V případě, že bychom chtěli vyrobit více jednotek, tak můžeme na jednotlivé Raspberry Pi nasadit předpřipravené kontejnery a nemusíme se skoro vůbec zabývat konfigurací operačního systému Raspberry Pi.
+
+Kontejnery poskytují alternativu ke klasickém vývoji aplikací na jedné platformě nebo operačním systému, tento přístup může zhoršit kompatibilitu aplikace s jinými systémy, které nemusí sdílet stejné prostředí jako systém na kterém byla aplikace původně vyvíjena. Tato zhoršená kompatibilita může způsobit všelijaké problémy a chyby aplikace, které se potom musí řešit navíc. V realitě to pak znamená prodloužený čas vývoje, snížená produktivita a frustrace vývojářů.
+
+Díky zabalení aplikace v kontejneru, pak může být jednoduše spouštěna napříč platformami a operačními systémy. Také ji můžeme jednoduše přesouvat mezi zařízeními, protože vše co potřebuje má zabaleno ve svém kontejneru.
+
+Myšlenka kontejnerizace existuje dlouho. Docker ale v roce 2013 stanovil standart kontejnerizace technologií Docker Engine. Docker Engine přinesl jednoduché nástroje pro vývoj, díky nimž se stal vývoj s použitím kontejnerů snadný. Zavedl také univerzální přístup k distribuci kontejnerů, což zrychlilo adopci kontejnerizace. Dnes si vývojáři mohou vybrat z nabídky kontejnerizačních platforem, které podporují standart Open Container Initiative vyvinuté společností Docker.
+
+\subsection{Výhody kontejnerizace}
+
+Kontejnery sdílejí kernel (jádro) operačního systému s jejich hostem. Kontejnery tak nepotřebují svůj vlastní operační systém a díky tomu jsou výpočetně nenáročné. Můžou tak běžet stejně na jakémkoliv zařízení, ať už se jedná o malé Raspberry Pi nebo cloudové datacentra.
+
+\subsection{Kontejnery vs. virtuální počítače}
+
+Virtuální počítač je virtuální prostředí, které funguje jako běžný počítač. Má svůj vlastní virtuální procesor, paměť, síťový adaptér a úložiště. Tyto komponenty jsou virtualizovány na fyzickém hardwaru hostujicího systému.
+
+Kontejnerizace a virtualizace jsou podobné v tom, že poskytují plnou izolaci aplikace, aby byla jednoduše spustitelná v různých prostředích. Hlavním rozdílem je velikost, výpočetní náročnost a přenosnost.
+
+Virtuální počítač je větší z této dvojice, jeho velikost je typicky měřena v gigabytech. Obsahuje svůj vlastní operační systém, který mu dovoluje provádět několik výpočetně náročných funkcí zároveň. Jeho zvýšený výpočetní výkon, mu umožňuje zapouzdřit, rozdělit, duplikovat a emulovat celé servery, operační systémy, desktopy, databáze a počítačové sítě.
+
+Kontejnery jsou mnohem menší, velikostí většinou v řádech megabytů a neobsahují nic víc než samotnou aplikaci a nutné prostředí pro její běh.
+
+Virtuální počítače fungují dobře v tradičních a monolitických IT architekturách. Kontejnery byly navrženy s důrazem na nejnovější a vznikající technologie jako cloudy, CI/CD a DevOps.
 
 \section{Bezpečnost}
 
