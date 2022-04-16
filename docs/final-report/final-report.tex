@@ -267,11 +267,13 @@ Ve finální verzi jsme v nástroji EasyEDA \cite{easyeda} navrhli naše vlastn�
 
 \section{Fyzická realizace}
 
-Vymstila se nám však nepřesnost rozměrů krytu a při vkládání stanice do krytu se nám podařilo zlomit SD kartu s operačním systémem, daty a nasazenými programy. Po reinstalaci operačního systému jsme opravili rozměry vytvořeného modelu krytu a vytiskli kryt podruhé, tentokrát ve správných rozměrech.
+% Vymstila se nám však nepřesnost rozměrů krytu a při vkládání stanice do krytu se nám podařilo zlomit SD kartu s operačním systémem, daty a nasazenými programy. Po reinstalaci operačního systému jsme opravili rozměry vytvořeného modelu krytu a vytiskli kryt podruhé, tentokrát ve správných rozměrech.
 
 \subsection{Pouzdro}
 
 Navhrli jsme vhodné pouzdro pro naše \underline{\ac{RPi}}, abychom ochránili citlivé elektronické součástky a zároveň měli možnost jednoduše vyjmout stanici z krytu. Pouzdro jsme vytiskli na školní 3D tiskárně pevným Polyethylene terephthalate glycol (PETG) filamentem.
+
+Při první iteraci našeho pouzdra jsme nepřidali dostatečnou toleranci pro SD kartu, která přesahuje hranice PCB o několik milimetrů. Omámeni nadšením z první hmatatelné verze našeho pouzdra, jsme se neopatrně a rychle pokusili, napasovat pouzdro na Raspberry Pi. Naší neopatrností se nám podařilo zmiňovanou SD kartu zlomit. Za odměnu jsme si znova procvičili instalaci a konfiguraci operačního systému Raspberry Pi.
 
 \vspace*{1cm}
 \begin{figure}[h]
@@ -392,7 +394,9 @@ Pragmatický design Go neobsahuje klíčové slovo pro třídu a jeho objektová
 \subsection{Programování WUI}
 
 Webovovou aplikaci jsme napsali pomocí javascriptového frameworku
-React.js, CSS frameworku Tailwind a programovacího jazyku Typescript, který je supersetem javascriptu, podporujícím volitelné statické typování. Ve webovém rozhraní je možné zobrazit si statisky jak živě naměřených dat, tak dat uložených v databázi. Z OpenWeather \underline{\ac{API}} získáváme data o předpovědi počasí a do dahsboardu renderujeme předpovědi na dalších 15h.
+React.js, CSS frameworku Tailwind a programovacího jazyku Typescript, který je dialektem javascriptu, podporující volitelné statické typování. JavaScript je dynamicky typovaný jazyk, statické typování je výhodné hlavně u větších aplikací, kde zjednodušuje odchytávání chyb v oblasti datových typů, nebo jim předchází úplně.
+
+Ve webovém rozhraní je možné zobrazit si statisky jak živě naměřených dat, tak dat uložených v databázi. Z OpenWeather \underline{\ac{API}} získáváme data o předpovědi počasí a do dahsboardu zobrazujeme předpovědi na dalších 15h.
 
 \subsection{Inicializační formulář}
 
@@ -402,7 +406,7 @@ React.js, CSS frameworku Tailwind a programovacího jazyku Typescript, který je
 	\caption{Inicializační formulář}
 \end{figure}
 
-Okno prvotního nastavení. Nastaví se zde limity a celkové nastavení aplikace.
+Okno prvotního nastavení obsahuje uživatelsky přívětivé rozhraní, které uživatele provede nastavením systému. Nastaví se mód zavlažování, limitní hodnoty a lokace ze které má PlantHub ukazovat předpověď počasí.
 
 \clearpage
 
@@ -414,6 +418,10 @@ Okno prvotního nastavení. Nastaví se zde limity a celkové nastavení aplikac
 	\caption{Dashboard}
 \end{figure}
 
+Prostředí dashboardu (nástěnky) je hlavní částí webové aplikace. Uživatel zde může sledovat aktuální dění v podobně real-time dat ze senzorů a aktuálního stavu nádrže. K tomu jsme mu připravili praktickou kartu s předpovědí počasí a karty s grafy historických dat.
+
+Prvním takovýmto grafem je historie zavlažování. Tento graf zobrazuje statisticky jaká byla teplota, vlhkost vzduchu a vlhkost půdy těsně před zavlažováním. Další dva grafy jsou na pravé straně, první zobrazuje spotřebu vody při zavlažování za jednotlivé měsíce. Druhý vykresluje historické průměry naměřených dat v jednotlivých měsících.
+
 \clearpage
 
 \subsection{Manuální ovládání}
@@ -424,7 +432,7 @@ Okno prvotního nastavení. Nastaví se zde limity a celkové nastavení aplikac
 	\caption{Manuální ovládání}
 \end{figure}
 
-Manuální ovládání čerpadla dovoluje uživateli kdykoliv spustit zavlažování, i po dokončení manuálního zavlažování se spustí kontrola hladiny vody v nádrži. Při úpravě limitních hodnot či jiných nastevení řídící jednotky je nutno zařízení restartovat. K tomu v sidebaru \underline{\ac{WUI}} slouží možnost "Restart HW".
+Manuální ovládání čerpadla dovoluje uživateli kdykoliv spustit zavlažování, po dokončení manuálního zavlažování se také spustí kontrola hladiny vody v nádrži. Při úpravě limitních hodnot či jiných nastevení řídící jednotky je nutno zařízení restartovat. K tomu v sidebaru \underline{\ac{WUI}} slouží možnost \enquote{Restart HW}.
 
 \clearpage
 
@@ -442,7 +450,13 @@ V nastavení lze změnit nastavení aplikace včetně limitů pro zavlažování
 
 \subsection{Notifikace}
 
-\clearpage
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth]{notifikace.png}
+	\caption{Sada notifikací}
+\end{figure}
+
+Součástí webového rozhraní jsou i praktické notifikace, které uživatele upozorňují na aktuální stav PlantHubu. Poskytují vizuální zpětnou vazbu při průběhu zavlažování a kontrole nádrže. Při úspěšném dokončení zavlažování informují uživatele. V případě, že je nádrž na vodu prázdná, tak uživatele s touto skutečností seznámí.
 
 \section{Databáze}
 
@@ -453,6 +467,8 @@ Pro databázi jsme se rozhodli použít databázový systém PostgreSQL.\@ Jak v
 \subsection{GraphQL}
 
 Jedná se o typ přenosu dat z možností filtrace a dotazovací funkcionality. V mnoha ohledech je to konkurent řešení přenosu dat pomocí \ac{REST} \space \underline{\ac{API}}.\@ Nabízí rychlejší tvorbu \underline{\ac{API}} \space a také umožňuje efektivnější přístup k datům z databáze. Umožňuje vybrat pouze data, která momentálně aplikace používá a dovoluje vynechat data, která zrovna potřebné nejsou.
+
+\clearpage
 
 \subsection{Schéma databáze}
 
@@ -468,7 +484,7 @@ Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě 
 
 \section{Docker a kontejnerizace}
 
-Docker kontejner si můžeme představit jako takový odlehčený virtuální počítač, ale s lepší škálovatelností a cílením hlavně na prostředí, důležité pro vývoj aplikací. Jde především o izolaci \underline{\ac{WUI}} od hostovaného systému, a plnou kontrolu nad prostředím \underline{\ac{WUI}}, databáze a hlavního programu.
+% Docker kontejner si můžeme představit jako takový odlehčený virtuální počítač, ale s lepší škálovatelností a cílením hlavně na prostředí, důležité pro vývoj aplikací. Jde především o izolaci \underline{\ac{WUI}} od hostovaného systému, a plnou kontrolu nad prostředím \underline{\ac{WUI}}, databáze a hlavního programu.
 
 Kontejnerizace je zabalení aplikace spolu se všemi nutnými komponenty, jako jsou knihovny, frameworky a další závislosti do svého vlastního \enquote{kontejneru}, který je izolovaný od zbytku systému.
 
