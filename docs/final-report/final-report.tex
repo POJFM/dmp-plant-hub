@@ -212,7 +212,15 @@ $\ac{Vdac} = 10$
 
 \subsubsection{Čerpadlo}
 
-Námi zvolené ponorné mini čerpadlo eses se skládá z DC motoru, na němž je upevněna centrifuga pro čerpání vody a vlastního pouzdra, z kterého vede otvor pro napojení odtokové hadičky. Čerpadlo je připojeno na zdroj napětí 5V a jeho kostra je přizemněna.
+Námi zvolené ponorné mini čerpadlo se skládá z DC motoru, na němž je upevněna centrifuga pro čerpání vody a vlastního pouzdra, z kterého vede otvor pro napojení odtokové hadičky. Čerpadlo je připojeno na zdroj napětí a jeho kostra je uzemněna. Bohužel v procesu testování se nám pokazilo čerpadlo, takže jsme museli vymyslet alternativní cestu, která se nakonec ukázala tou lepší variantou. Koupili jsme nové silnější čerpadlo, připojili k němu samostatný zdroj a přidali relé na jeho spouštění, jako je ukázáno v schématu (Obr. \ref{fig:schema-obvodu-cerpadla}), které jsme vytvořili v nástroji EasyEDA \cite{easyeda}. Zdroj \underline{\ac{RPi}} jsme použili jako signální pin pro spínání relé a vše jsme poskládali do samostatného krytu.
+
+\vspace*{1cm}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.67\linewidth]{pump-schema.png}
+	\caption{Schéma obvodu čerpadla}
+	\label{fig:schema-obvodu-cerpadla}
+\end{figure}
 
 \subsubsection{Tranzistor 2N2222}
 
@@ -246,7 +254,7 @@ V prvním kroku jsme si vytvořili grafické znázornění celého obvodu (Obr. 
 
 \subsection{Finální verze}
 
-Ve finální verzi jsme v nástroji EasyEDA \cite{easyeda} navrhli naše vlastní schéma obvodu (Obr. \ref{fig:schema-obvodu}). Toto schéma jsme si nechali vytisknout společností JLCPCB, a po doručení jsme na něj napájeli patřičné komponenty (Obr. \ref{fig:finalni-verze}).
+Ve finální verzi jsme navrhli naše vlastní schéma hlavního obvodu (Obr. \ref{fig:schema-obvodu}). Toto schéma jsme si nechali vytisknout společností JLCPCB, a po doručení jsme na něj napájeli patřičné komponenty (Obr. \ref{fig:finalni-verze}).
 
 \vspace*{2cm}
 \begin{figure}[h]
@@ -563,7 +571,7 @@ Tato práce byla pro nás velkým přínosem, naučili jsme se mnoho nových dov
 	“Freecad,” FreeCAD. [Online]. Dostupné z: \underline{\href{https://www.freecadweb.org/}{https://www.freecadweb.org/}}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{easyeda}
-	Supplyframe, “EasyEDA,” Component Search Engine. [Online]. Dostupné z: \underline{\href{https://componentsearchengine.com/library/easyeda}{https://componentsearchengine.com/library/easyeda}}. [Zpřístupněno: 10-Dubna-2022]. 
+	An easier and PowerfulOnline PCB design tool. EasyEDA. [Online]. Dostupné z: \underline{\href{https://easyeda.com/}{https://easyeda.com/}}. [Zpřístupněno: 10-Dubna-2022]. 
 \end{thebibliography}
 
 \section{Seznam obrázků}
