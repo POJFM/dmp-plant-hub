@@ -212,7 +212,15 @@ $\ac{Vdac} = 10$
 
 \subsubsection{Čerpadlo}
 
-Námi zvolené ponorné mini čerpadlo eses se skládá z DC motoru, na němž je upevněna centrifuga pro čerpání vody a vlastního pouzdra, z kterého vede otvor pro napojení odtokové hadičky. Čerpadlo je připojeno na zdroj napětí 5V a jeho kostra je přizemněna.
+Námi zvolené ponorné mini čerpadlo se skládá z DC motoru, na němž je upevněna centrifuga pro čerpání vody a vlastního pouzdra, z kterého vede otvor pro napojení odtokové hadičky. Čerpadlo je připojeno na zdroj napětí a jeho kostra je uzemněna. Bohužel v procesu testování se nám pokazilo čerpadlo, takže jsme museli vymyslet alternativní cestu, která se nakonec ukázala tou lepší variantou. Koupili jsme nové silnější čerpadlo, připojili k němu samostatný zdroj a přidali relé na jeho spouštění, jako je ukázáno v schématu (Obr. \ref{fig:schema-obvodu-cerpadla}), které jsme vytvořili v nástroji EasyEDA \cite{easyeda}. Zdroj \underline{\ac{RPi}} jsme použili jako signální pin pro spínání relé a vše jsme poskládali do samostatného krytu.
+
+\vspace*{1cm}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.67\linewidth]{pump-schema.png}
+	\caption{Schéma obvodu čerpadla}
+	\label{fig:schema-obvodu-cerpadla}
+\end{figure}
 
 \subsubsection{Tranzistor 2N2222}
 
@@ -246,7 +254,7 @@ V prvním kroku jsme si vytvořili grafické znázornění celého obvodu (Obr. 
 
 \subsection{Finální verze}
 
-Ve finální verzi jsme v nástroji EasyEDA \cite{easyeda} navrhli naše vlastní schéma obvodu (Obr. \ref{fig:schema-obvodu}). Toto schéma jsme si nechali vytisknout společností JLCPCB a po doručení jsme na něj napájeli patřičné komponenty (Obr. \ref{fig:finalni-verze}).
+Ve finální verzi jsme navrhli naše vlastní schéma hlavního obvodu (Obr. \ref{fig:schema-obvodu}). Toto schéma jsme si nechali vytisknout společností JLCPCB a po doručení jsme na něj napájeli patřičné komponenty (Obr. \ref{fig:finalni-verze}).
 
 \vspace*{2cm}
 \begin{figure}[h]
@@ -515,7 +523,15 @@ Virtuální počítače fungují dobře v tradičních a monolitických IT archi
 
 \section{Bezpečnost}
 
-PlantHub je izolován v lokální síti, takže na něj má přístup jen klientské zařízení. Součástí PlantHubu je i router, který pomocí \underline{\ac{DHCP}} spojuje tyto zařízení. Pro rozšíření PlantHubu do vzdálené sítě, by byly zapotřebí privátní klíče.
+Náš projekt spadá do kategorie zařízení IoT, neboli Internet of Things. Česky by to byl \enquote{Internet věcí}. Bezpečnost IoT zařízení bylo vždy velké téma. Zařízení IoT jsou totiž nechvalně známé svou nedostatečnou bezpečností. Tyto zařízení často bývají pro útočníky pomyslnou bránou do lokální sítě jejich oběti.
+
+Rozmach těchto zařízení u běžných lidí tento problém zvýraznil. Mezi poslední trendy technologie patří chytré domy, kde je vše ovládáno chytrými zařízeními, které lze nastavovat na dálku pomocí telefonu. Hlavní charakteristikou IoT je schopnost zařízení připojit se k internetu a interagovat se svým okolí pomocí sběrem a výměnou dat. Zařízení od chytrých ledniček, termostatů, automatických vysavačů a žaluzií až po žárovky. Tím že jsou všechny tyto zařízení připojeny k internetu, jen zvyšujeme šanci napadení.
+
+% TODO: ono to je připojené k internetu - předpověď počasí, soo idk bout this brah
+
+Náš projekt je zcela nezávislý na serverech v cloudu, místo toho je komunikace s PlantHubem zprostředkována pouze v lokální síti. Tímto designem jsme sice znemožnili přístup k PlantHubu mimo lokální síť, ale zároveň jsme velmi pozitivně ovlivnili bezpečnost celého systému. Vyřadili jsme totiž nejpravděpodobnější zdroj nebezpečí - připojení k internetu. K přístupu mimo lokální síť bychom potřebovali VPN server v lokální síti.
+
+K tomu jsme vybrali Fedora IoT jako naši linuxovou distribuci. Tato distribuce je přímo určená zařízením jako je naše, jak již vyplývá z názvu distribuce. Byla navržena s velkým důrazem na bezpečnost a základní nastavení distribuce je velmi bezpečné. Mezi bezpečnostní funkce patří SecureBoot, automatické šifrování úložiště, firewall a další.
 
 \clearpage
 
@@ -564,7 +580,7 @@ Tato práce, byla pro nás velkým přínosem. Naučili jsme se mnoho nových do
 	“Freecad,” FreeCAD. [Online]. Dostupné z: \underline{\href{https://www.freecadweb.org/}{https://www.freecadweb.org/}}. [Zpřístupněno: 10-Dubna-2022]. 
 
 	\bibitem{easyeda}
-	Supplyframe, “EasyEDA,” Component Search Engine. [Online]. Dostupné z: \underline{\href{https://componentsearchengine.com/library/easyeda}{https://componentsearchengine.com/library/easyeda}}. [Zpřístupněno: 10-Dubna-2022]. 
+	An easier and PowerfulOnline PCB design tool. EasyEDA. [Online]. Dostupné z: \underline{\href{https://easyeda.com/}{https://easyeda.com/}}. [Zpřístupněno: 10-Dubna-2022]. 
 \end{thebibliography}
 
 \section{Seznam obrázků}
