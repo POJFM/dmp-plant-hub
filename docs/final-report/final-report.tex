@@ -67,7 +67,7 @@
 
 \section*{Anotace}
 
-PlantHub je zavlažovací systém, s plánovaným a automatickým způsobem zavlažování. Nastavení celého systému je možno upravit přes \ac{WUI}, které navíc nabízí i dashboard a prostředí pro manuální ovládání čerpadla. Jádrem našeho systému je mikropočítač \ac{RPi}, který slouží jako hostovací zařízení pro webový server a databázi, a zároveň jako řídící jednotka celého našeho systému. Systém PlantHub dále získává informace o vlhkosti půdy, teplotě a vlhkosti vzduchu a hladině vody, a vykresluje je ve svém \underline{\ac{WUI}}. Ve stejné chvíli naměřená data ukládá do databáze v periodě 4 hodin. Jelikož voda časem v nádrže dojde, systém PlantHub snímá stav hladiny vody v nádrži a včas upozorní, že je třeba ji doplnit.
+PlantHub je zavlažovací systém, s plánovaným a automatickým způsobem zavlažování. Nastavení celého systému je možno upravit přes \ac{WUI}, které navíc nabízí i dashboard a prostředí pro manuální ovládání čerpadla. Jádrem našeho systému je mikropočítač \ac{RPi}, který slouží jako hostovací zařízení pro webový server, databázi, a zároveň jako řídící jednotka celého našeho systému. Systém PlantHub dále získává informace o vlhkosti půdy, teplotě, vlhkosti vzduchu, hladině vody a vykresluje je ve svém \underline{\ac{WUI}}. Ve stejné chvíli naměřená data ukládá do databáze v periodě 4 hodin. Jelikož voda časem v nádrži dojde, systém PlantHub snímá stav hladiny vody v nádrži a včas upozorní, že je třeba ji doplnit.
 
 \section*{Klíčová slova}
 
@@ -81,13 +81,13 @@ PlantHub je zavlažovací systém, s plánovaným a automatickým způsobem zavl
 
 \section{Úvod}
 
-Naším cílem je návrh, sestavení a naprogramování automatického zavlažovacího systému s názvem PlantHub. Systém se skládá z řídící jednotky (stanice), senzorů, čerpadla, nádrže a \space \underline{\ac{WUI}}. Tato stanice pravidelně snímá data ze senzorů měřících teplotu a vlhkost vzduchu, vlhkost půdy a stav hladiny v nádrži, ze které stanice přečerpává vodu. Naměřená data se živě odesílají a zobrazují ve \underline{\ac{WUI}} a ve stejné chvíli se samostatně, v periodě čtyř hodin ukládají do databáze. Přístup k naměřeným datům a \underline{\ac{WUI}} má pouze uživatel lokální sítě, do které je PlantHub připojen.
+Naším cílem je návrh, sestavení a naprogramování automatického zavlažovacího systému s názvem PlantHub. Systém se skládá z řídící jednotky (stanice), senzorů, čerpadla, nádrže a \space \underline{\ac{WUI}}. Tato stanice pravidelně snímá data ze senzorů měřících teplotu a vlhkost vzduchu, vlhkost půdy a stav hladiny v nádrži, ze které stanice přečerpává vodu. Naměřená data se živě odesílají a zobrazují ve \underline{\ac{WUI}}, ve stejné chvíli se samostatně, v periodě čtyř hodin ukládají do databáze. Přístup k naměřeným datům a \underline{\ac{WUI}} má pouze uživatel lokální sítě, do které je PlantHub připojen.
 
 \underline{\ac{WUI}} je hostované na naší stanici. Uživatel má možnost zobrazení statistik jak živě naměřených dat, tak dat historických. \underline{\ac{WUI}} také nabízí manuální kontrolu nad čerpadlem, nastavením \underline{\ac{WUI}} a samotné řídící jednotky.
 
 Jednotlivé součásti a moduly stanice jsme vybrali podle finanční dostupnosti a adekvátních technických požadavků na přesnost měření. Obvod jsme v testovací verzi postavili na nepájivém poli a ve finální verzi navrhli a objednali vlastní \ac{PCB}. Pro ochranu naší stanice jsme navrhli kryt, který jsme následně vytiskli na 3D tiskárně.
 
-Hlavní program jsme napsali v programovacím jazyce Go, jehož hlavní využití je vytváření backendů webových aplikací. Tento jazyk se nám zalíbil natolik že jsme se v něm rozhodli vytvořit jak \ac{API}, databázové funkce, tak i hlavní program. Program je rozdělen na několik sekvencí, z toho hlavní jsou měřící sekvence a sekvence controlleru, která pomocí snímání dat z databáze určuje, jestli se jedná o první spuštění PlantHubu, a podle toho určí jestli se spustí incializační sekvence nebo sekvence samotného zavlažování.
+Hlavní program jsme napsali v programovacím jazyce Go, jehož hlavní využití je vytváření backendů webových aplikací. Tento jazyk se nám zalíbil natolik, že jsme se v něm rozhodli vytvořit jak \ac{API}, databázové funkce, tak i hlavní program. Program je rozdělen na několik sekvencí, z toho hlavní jsou měřící sekvence a sekvence controlleru, která pomocí snímání dat z databáze určuje, zda se jedná o první spuštění PlantHubu. Na základě toho určí, jestli se spustí incializační sekvence nebo sekvence samotného zavlažování.
 
 \clearpage
 
@@ -97,7 +97,7 @@ Hlavní program jsme napsali v programovacím jazyce Go, jehož hlavní využit�
 	\acro{API}{application programming interface} \\
 		Spojení pro přenos dat mezi zařízeními nebo programy pomocí http protokolu.
 	\acro{REST}{representaion programming interface} \\
-		Definuje strukturu \underline{\ac{API}} tak, že zobrazuje všechna data a vytváří k nim jednoduchý přístup. Protože ale nenačítá pouze vybraná data, není tento proces vždy vhodný, jelikož může v mnoha případech zpomalovat celou aplikaci. 
+		Definuje strukturu \underline{\ac{API}} tak, že zobrazuje všechna data a vytváří k nim jednoduchý přístup. Protože, ale nenačítá pouze vybraná data, není tento proces vždy vhodný, jelikož může v mnoha případech zpomalovat celou aplikaci. 
 	\acro{GraphQL}{graph query language}
 	\acro{PCB}{plošný spoj}
 	\acro{RPi}{Raspberry Pi}
@@ -126,7 +126,7 @@ Senzor \ac{DHT11} se skládá z jednotky pro měření teploty, jednotky pro mě
 
 Teplotu měří senzor termistorem. Termistor je keramický polovodič, který zmenšuje svou rezistivitu, když se okolní teplota zvýší.
 
-Vlhkost měří senzor na základě rezistivity substrátu umístěného mezi dvěma elektrodami. Tento substrát zachytává vlhkost a vytváří tak vodivé prostředí
+Vlhkost měří senzor na základě rezistivity substrátu, umístěného mezi dvěma elektrodami. Tento substrát zachytává vlhkost a vytváří tak vodivé prostředí.
 
 \subsubsection{Senzor vlhkosti půdy}
 
@@ -134,9 +134,9 @@ Jedná se o kapacitní senzor, který se skládá ze dvou vodivých desek a pře
 
 \subsubsection{Analogově digitální převodník MCP3008}
 
-\underline{\ac{RPi}} má v rámci general-purpose input/output (GPIO) pinů pouze digitální vstupy, protože je ale senzor vlhkosti půdy analogový museli jsme použít \ac{ADC}.
+\underline{\ac{RPi}} má v rámci general-purpose input/output (GPIO) pinů pouze digitální vstupy, protože je ale senzor vlhkosti půdy analogový, museli jsme použít \ac{ADC}.
 
-Pomocí \underline{\ac{ADC}} v integrovaném obvodu s 10-bitovým rozlišením tedy přemapujeme analogový signál do osmi různých digitálních hodnot, kterým se také říká bitové rozlišení. \underline{\ac{ADC}} měří hodnoty od 0 až po 1023 a následně je pomocí Serial Peripheral Interface (SPI) komunikace posílá do \underline{\ac{RPi}}. \underline{\ac{RPi}} metodou \ac{SAR} definuje adresu v binární formě srozumitelné pro digitální vstup. V první iteraci převodu se na \underline{\ac{SAR}} registru nastaví první bit na logickou hodnotu 1, stane se z něj \ac{MSB}, ten určuje pozici výstupu srovnávání dané iterace. Je nutné mít správné referenční napětí, to totiž určuje nejvyšší možnou binární adresu. Adresa v první iteraci teda bude polovinou nejvyšší možné binární adresy + 1. V další iteraci je první bit \ac{LSB}, to je ten bit který se v dané iteraci používá pro výstup srovnávání, a druhý bit se stává \underline{\ac{MSB}}. Srovnává se hodnota zpětné konverze binární adresy s hodnotou analogového vstupu, pokud je větší na \underline{\ac{MSB}} se nastaví logická hodnota 1, pokud menší tak logická hodnota 0. Podle počtu bitů \underline{\ac{ADC}} se určují iterace a přesnost převedené hodnoty.
+Pomocí \underline{\ac{ADC}} v integrovaném obvodu s 10-bitovým rozlišením tedy přemapujeme analogový signál do osmi různých digitálních hodnot, kterým se také říká bitové rozlišení. \underline{\ac{ADC}} měří hodnoty od 0 až po 1023 a následně je pomocí Serial Peripheral Interface (SPI) komunikace posílá do \underline{\ac{RPi}}. \underline{\ac{RPi}} metodou \ac{SAR} definuje adresu v binární formě, srozumitelné pro digitální vstup. V první iteraci převodu se na \underline{\ac{SAR}} registru nastaví první bit na logickou hodnotu 1, stane se z něj \ac{MSB}, ten určuje pozici výstupu srovnávání dané iterace. Je nutné mít správné referenční napětí, to totiž určuje\linebreak nejvyšší možnou binární adresu. Adresa v první iteraci teda bude polovinou nejvyšší možné binární adresy + 1. V další iteraci je první bit \ac{LSB}, to je ten bit, který se v dané iteraci používá pro výstup srovnávání a druhý bit se stává \underline{\ac{MSB}}. Srovnává se hodnota zpětné konverze binární adresy s hodnotou analogového vstupu, pokud je větší, na \underline{\ac{MSB}} se nastaví logická hodnota 1, pokud menší tak logická hodnota 0. Podle počtu bitů \underline{\ac{ADC}} se určují iterace a přesnost převedené hodnoty.
 
 \vspace*{1cm}
 \noindent Příklad funkcionality, pro jednoduchost se 4-bitovým \underline{\ac{ADC}}. \\
@@ -208,7 +208,7 @@ $\ac{Vdac} = 10$
 
 \subsubsection{Ultrasonický senzor HC-SR04}
 
-\ac{HC-SR04} vydává zvukové vibrace na vysoké frekvenci, neslyšitelné pro lidské ucho. Poté čeká, až se zvuk odrazí zpět od překážky, a vypočítá vzdálenost na základě času měřeného od vysílání zvukové vlny k zpětnému přijmutí.
+\ac{HC-SR04} vydává zvukové vibrace na vysoké frekvenci, neslyšitelné pro lidské ucho. Poté čeká, až se zvuk odrazí zpět od překážky a vypočítá vzdálenost, na základě času měřeného od vysílání zvukové vlny k zpětnému přijmutí.
 
 \subsubsection{Čerpadlo}
 
@@ -216,11 +216,11 @@ Námi zvolené ponorné mini čerpadlo eses se skládá z DC motoru, na němž j
 
 \subsubsection{Tranzistor 2N2222}
 
-Protože samotný signální pin neposkytuje dostatečné napětí pro chod čerpadla ovládáme jej tranzistorem 2N2222. Tento tranzistor je bipolární Negative-Positive-Negative tranzistor, to znamená že jeho polarita je nastavená tak aby na kolektoru přijímal pozitivní napětí. Díky našemu vyměnitelnému připojení modulů je možné čerpadlo vyměnit za jiné a přívodný kabel používat jako spouštěč čerpadla jakéhokoliv výkonu a nároků na zdroj.
+Protože samotný signální pin neposkytuje dostatečné napětí pro chod čerpadla, ovládáme jej tranzistorem 2N2222. Tento tranzistor je bipolární Negative-Positive-Negative tranzistor, to znamená, že jeho polarita je nastavená tak, aby na kolektoru přijímal pozitivní napětí. Díky našemu vyměnitelnému připojení modulů, je možné čerpadlo vyměnit za jiné a přívodný kabel používat jako spouštěč čerpadla jakéhokoliv výkonu a nároků na zdroj.
 
 \subsection{Raspberry Pi}
 
-Vybrali jsme si jej, protože kombinuje malou velikost a vyšší výpočetní sílu než Arduino. Musí totiž zvládnout řídit všechny senzory, ukládat data do databáze a zároveň hostuje i samotnou webovou aplikaci.
+Vybrali jsme si jej, protože kombinuje malou velikost a vyšší výpočetní sílu, než Arduino. Musí totiž zvládnout řídit všechny senzory, ukládat data do databáze a zároveň hostuje i samotnou webovou aplikaci.
 
 \subsubsection{Architektura ARM}
 
@@ -228,7 +228,7 @@ Advanced RISC Machines (ARM) je založen na Reduced Instruction Set Computing (R
 
 \subsection{Router}
 
-Připojení \underline{\ac{RPi}} do lokální sítě je provedeno pomocí ethernet kabelu do patřičného routeru s \ac{DHCP} mechanismem. Klientský počítač připojený do stejné sítě si poté může jednoduše zobrazit \underline{\ac{WUI}} hostované na samotném \underline{\ac{RPi}}
+Připojení \underline{\ac{RPi}} do lokální sítě je provedeno pomocí ethernet kabelu do patřičného routeru s \ac{DHCP} mechanismem. Klientský počítač připojený do stejné sítě, si poté může jednoduše zobrazit \underline{\ac{WUI}} hostované na samotném \underline{\ac{RPi}}
 
 \section{Návrh obvodu a plošného spoje}
 
@@ -246,7 +246,7 @@ V prvním kroku jsme si vytvořili grafické znázornění celého obvodu (Obr. 
 
 \subsection{Finální verze}
 
-Ve finální verzi jsme v nástroji EasyEDA \cite{easyeda} navrhli naše vlastní schéma obvodu (Obr. \ref{fig:schema-obvodu}). Toto schéma jsme si nechali vytisknout společností JLCPCB, a po doručení jsme na něj napájeli patřičné komponenty (Obr. \ref{fig:finalni-verze}).
+Ve finální verzi jsme v nástroji EasyEDA \cite{easyeda} navrhli naše vlastní schéma obvodu (Obr. \ref{fig:schema-obvodu}). Toto schéma jsme si nechali vytisknout společností JLCPCB a po doručení jsme na něj napájeli patřičné komponenty (Obr. \ref{fig:finalni-verze}).
 
 \vspace*{2cm}
 \begin{figure}[h]
@@ -271,20 +271,21 @@ Ve finální verzi jsme v nástroji EasyEDA \cite{easyeda} navrhli naše vlastn�
 
 \subsection{Pouzdro}
 
-Navhrli jsme vhodné pouzdro pro naše \underline{\ac{RPi}}, abychom ochránili citlivé elektronické součástky a zároveň měli možnost jednoduše vyjmout stanici z krytu. Pouzdro jsme vytiskli na školní 3D tiskárně pevným Polyethylene terephthalate glycol (PETG) filamentem.
+Navrhli jsme vhodné pouzdro (Obr. \ref{fig:pouzdro}) pro naše \underline{\ac{RPi}}, abychom ochránili citlivé elektronické součástky a zároveň měli možnost jednoduše vyjmout stanici z krytu. Pouzdro jsme vytiskli na školní 3D tiskárně pevným Polyethylene terephthalate glycol (PETG) filamentem.
 
-Při první iteraci našeho pouzdra jsme nepřidali dostatečnou toleranci pro SD kartu, která přesahuje hranice PCB o několik milimetrů. Omámeni nadšením z první hmatatelné verze našeho pouzdra, jsme se neopatrně a rychle pokusili, napasovat pouzdro na Raspberry Pi. Naší neopatrností se nám podařilo zmiňovanou SD kartu zlomit. Za odměnu jsme si znova procvičili instalaci a konfiguraci operačního systému Raspberry Pi.
+Při první iteraci našeho pouzdra jsme nepřidali dostatečnou toleranci pro SD kartu, která přesahuje hranice PCB o několik milimetrů. Omámeni nadšením z první hmatatelné verze našeho pouzdra, jsme se neopatrně a rychle pokusili, napasovat pouzdro na Raspberry Pi. Naší neopatrností se nám podařilo zmiňovanou SD kartu zlomit. Za odměnu jsme si tedy znova procvičili instalaci a konfiguraci operačního systému Raspberry Pi.
 
 \vspace*{1cm}
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.67\linewidth]{pouzdro.jpeg}
 	\caption{Pouzdro}
+	\label{fig:pouzdro}
 \end{figure}
 
 \subsection{Hub}
 
-Zkompletovaný hub se tedy skládá z pouzdra, \underline{\ac{RPi}}, \underline{\ac{PCB}} a připojených senzorů, ethernet kabelu a zdrojového kabelu. Jednoduchým způsobem je možno hub rozebrat pro možnou opravu.
+Zkompletovaný hub se tedy skládá z pouzdra, \underline{\ac{RPi}}, \underline{\ac{PCB}} a připojených senzorů, ethernet kabelu a zdrojového kabelu. Jednoduchým způsobem je možno hub rozebrat pro případnou opravu.
 
 \vspace*{1cm}
 \begin{figure}[h]
@@ -297,7 +298,7 @@ Zkompletovaný hub se tedy skládá z pouzdra, \underline{\ac{RPi}}, \underline{
 
 \subsection{Nádrž}
 
-K zavlažování bylo potřeba postavit i nádrž na vodu, ze které bude naše čerpadlo přečerpávat vodu k zavlažování. Nejvhodnější řešení byla nádoba s co největším objemem, která bude jednoduše přenosná, odolná a nebude složité připevnit na ní senzory. Nakonec jsme ji postavili z upraveného 5L pivního soudku, natřeli antikorozní barvou a upravili ji, k našim potřebám.
+K zavlažování bylo potřeba postavit nádrž na vodu, ze které bude naše čerpadlo přečerpávat vodu k zavlažování. Nejvhodnějším řešením je nádoba s co\linebreak největším objemem, která bude jednoduše přenosná, odolná a nebude složité\linebreak připevnit na ní senzory. Nakonec jsme ji postavili z upraveného 5L pivního soudku, natřeli antikorozní barvou a upravili podle našich potřeb.
 
 \vspace*{1cm}
 \begin{figure}[h]
@@ -310,7 +311,7 @@ K zavlažování bylo potřeba postavit i nádrž na vodu, ze které bude naše 
 
 \subsection{Celý systém}
 
-Celý systém se tedy skládá z Hubu, nádrže, rostliny, routeru a klientského zařízení. Sestavení trvá asi 5 minut, protože musíme počkat než se načte OS \underline{\ac{RPi}} a pak zapojit všechny modulární části našeho systému.
+Celý systém se tedy skládá z Hubu, nádrže, rostliny, routeru a klientského zařízení. Sestavení trvá asi 5 minut, protože musíme počkat, než se načte OS \underline{\ac{RPi}} a následně zapojit všechny modulární části našeho systému.
 
 \begin{figure}[h]
 	\centering
@@ -324,7 +325,7 @@ Celý systém se tedy skládá z Hubu, nádrže, rostliny, routeru a klientskéh
 
 \subsection{Postup práce}
 
-Náš hlavní program pro zavlažování a komunikaci s databází a \underline{\ac{WUI}} jsme začali psát ve vysokoúrovňovém programovacím jazyce Python. Od toho jsme ale nakonec upustili kvůli horší výkonu, a tak jsme program přepsali v programovacím jazyku Go.
+Náš hlavní program pro zavlažování, komunikaci s databází a \underline{\ac{WUI}} jsme začali psát ve vysokoúrovňovém programovacím jazyce Python. Od toho jsme nakonec upustili, kvůli horšímu výkonu. Program jsme přepsali v programovacím jazyku Go.
 
 \begin{figure}[h]
 	\centering
@@ -334,11 +335,11 @@ Náš hlavní program pro zavlažování a komunikaci s databází a \underline{
 
 \subsection{Fáze programu}
 
-Fáze programu se spouštějí buďto v samostatné go rutině a komunikují spolu pomocí kanálů nebo na základě podmínek, kde se po splnění požadavků ukončí.
+Fáze programu se spouštějí buďto v samostatné go rutině a komunikují spolu pomocí kanálů, nebo na základě podmínek, kde se po splnění požadavků ukončí.
 
 \subsubsection{Měření}
 
-Senzor vlhkosti půdy a \underline{\ac{DHT11}} průběžně posílají naměřená data do \underline{\ac{WUI}}. Hlavní program ve stejné chvíli čte data ze senzorů a kontroluje jestli naměřené hodnoty nepřekračují limitní hodnoty pro spuštění zavlažování, pokud ano \underline{\ac{RPi}} pošle signál pro otevření tranzistoru což spustí čerpadlo.
+Senzor vlhkosti půdy a \underline{\ac{DHT11}} průběžně posílají naměřená data do \underline{\ac{WUI}}. Hlavní program ve stejné chvíli čte data ze senzorů a kontroluje jestli naměřené hodnoty nepřekračují limitní hodnoty pro spuštění zavlažování. Pokud ano, \underline{\ac{RPi}} pošle signál pro otevření tranzistoru, což spustí čerpadlo.
 
 \subsubsection{Periodické ukládání dat}
 
@@ -346,7 +347,7 @@ V samostatné rutině běží funkce pro ukládání naměřených dat v period�
 
 \subsubsection{Controller}
 
-Po spuštění měřící sekvence a sekvence periodického ukládání dat se spustí buďto inicializační sekvence a nebo zavlažovací sekvence podle toho, jestli se v databázi nachází předchozí nastavení. Pokud předchozí nastavení nejsou nalezena, program čeká na uložení dat z \space \underline{\ac{WUI}} a \ac{LED} bliká dvakrát po sobě, dokud data nejsou dostupná. Pokud jsou, spustí se zavlažovací sekvence, načtou se limitní data z databáze a v periodě jedné sekundy se budou číst data o vlhkosti půdy.
+Po spuštění měřící sekvence a sekvence periodického ukládání dat, se spustí buďto inicializační sekvence, nebo zavlažovací sekvence. Podle toho, jestli se v databázi nachází předchozí nastavení. Pokud předchozí nastavení nejsou nalezena, program čeká na uložení dat z \space \underline{\ac{WUI}} a \ac{LED} bliká dvakrát po sobě, dokud data nejsou dostupná. Pokud jsou data k dispozici, spustí se zavlažovací sekvence a načtou se limitní data z databáze. V periodě jedné sekundy se budou číst data o vlhkosti půdy.
 
 \subsubsection{Inicializace}
 
@@ -354,38 +355,38 @@ Půda musí být ze začátku suchá. Senzor vlhkosti půdy zasuneme co nejhloub
 
 Ve \underline{\ac{WUI}} jde navíc ještě manuálně nastavit hranice vlhkosti půdy pro spuštění čerpadla.
 
-Nastavit se dá také množství vody, které bude přečerpáno při jednom spuštění a jaká je hranice pro přijatelnou výšku hladiny vody v nádrži. Pokud nejsou tyto hodnoty uvedeny čerpadlo bude vodu přečerpávat, dokud se nezmění hodnota kapacitního čidla pro měření vlhkosti půdy a \space \underline{\ac{HC-SR04}} použije výchozí nastavení.
+Nastavit se dá také množství vody, které bude přečerpáno při jednom spuštění a jaká je hranice pro přijatelnou výšku hladiny vody v nádrži. Pokud nejsou tyto hodnoty uvedeny, čerpadlo bude vodu přečerpávat, dokud se nezmění hodnota kapacitního čidla pro měření vlhkosti půdy a \space \underline{\ac{HC-SR04}} použije výchozí nastavení.
 
 \subsubsection{Zavlažování}
 
-Čerpadlo začne čerpat vodu a zavlažovat rostlinu. Voda se čerpá tak dlouho, dokud senzor vlhkosti půdy nezmění svou hodnotu nebo dokud není vyčerpán limit přečerpané vody na jedno spuštění.
+Čerpadlo začne čerpat vodu a zavlažovat rostlinu. Voda se čerpá tak dlouho, dokud senzor vlhkosti půdy nezmění svou hodnotu, nebo dokud není vyčerpán limit přečerpané vody na jedno spuštění.
 
 \subsubsection{Kontrola}
 
-Po ukončení přečerpávání se spustí \underline{\ac{HC-SR04}} a změří výšku hladiny vody. Naměřená data poté odešle do \underline{\ac{RPi}} kde se uloží do databáze. Pokud bude naměřená hodnota nižší, než je limitní hodnota, začne blikat \underline{\ac{LED}} a \underline{\ac{RPi}} odešle upozornění o doplnění nádrže do \underline{\ac{WUI}}. Jakmile bude hladina doplněna, signalizace se vypne.
+Po ukončení přečerpávání se spustí \underline{\ac{HC-SR04}} a změří výšku hladiny vody. Naměřená data poté odešle do \underline{\ac{RPi}}, kde se uloží do databáze. Pokud bude naměřená hodnota nižší, než je limitní hodnota, začne blikat \underline{\ac{LED}} a \underline{\ac{RPi}} odešle upozornění o doplnění nádrže do \underline{\ac{WUI}}. Jakmile bude hladina vody doplněna, signalizace se vypne.
 
 \subsubsection{Ukládání dat}
 
-Náš systém ukládá zvlášť periodicky naměřená data a data naměřená před zavlažováním, dále ukládá nastavení jak pro limity k zavlažování, tak pro \underline{\ac{WUI}}.
+Náš systém ukládá zvlášť periodicky naměřená data a data naměřená před zavlažováním. Dále ukládá nastavení jak pro limity k zavlažování, tak pro \underline{\ac{WUI}}.
 
 \subsection{Programovací jazyk Go}
 
-Go je open-source programovací jazyk, který byl vytvořen společností Google v roce 2009. Je to stále relativně nový programovací jazyk, který se nevyvinul z jiných jazyků jako C\# a Java. Go ignoruje teorii o programovacích jazycích. Místo toho aby se zaměřoval na akademické teorie, se zaměřuje na reálné praktiky používané pro vývoj next-gen v cloudových, distribuovaných a souběžných aplikacích.
+Go je open-source programovací jazyk, který byl vytvořen společností Google v roce 2009. Je to stále relativně nový programovací jazyk, který se nevyvinul z jiných jazyků jako C\# a Java. Go ignoruje teorii o programovacích jazycích. Místo toho, aby se zaměřoval na akademické teorie, zaměřuje se na reálné praktiky, používané pro vývoj next-gen v cloudových, distribuovaných a souběžných aplikacích.
 
-Jazyk Go je staticky typovaný a využívá garbage collector (automatický správce paměti), jedná se o kompilovaný programovací jazyk, který své binární soubory kompiluje pro každou platformu. Dá se zařadit do skupiny C jazyků na základě jeho základního syntaxe. Go poskytuje expresivní syntax s jednoduchým typovým systémem a má vestavěné nástroje pro paralelní programování. Výkon Go je srovnatelný s jazyky C a C++, ale zároveň nabízí rychlý a jednoduchý vývoj aplikací.
+Jazyk Go je staticky typovaný a využívá garbage collector (automatický správce paměti). Jedná se o kompilovaný programovací jazyk, který své binární soubory kompiluje pro každou platformu. Dá se zařadit do skupiny C jazyků, podle jeho základní syntaxe. Go poskytuje expresivní syntax s jednoduchým typovým systémem a má vestavěné nástroje pro paralelní programování. Výkon Go je srovnatelný s jazyky C a C++, ale zároveň nabízí rychlý a jednoduchý vývoj aplikací.
 
 Stejně jako C a C++ se Go kompiluje do nativního strojového kódu, takže
-nepotřebujeme běhové prostředí jako Common Language Runtime (CLR) a Java Virtual Machine (JVM). To má řadu výhod, třeba při distribuci aplikace v aplikačních kontejnerech jako je Docker.
+nepotřebujeme běhové prostředí jako Common Language Runtime (CLR) a Java Virtual Machine (JVM). To má řadu výhod, třeba při distribuci aplikace v aplikačních kontejnerech, jako je Docker.
 
 \subsubsection{Paralelní programování v Go}
 
-Vývoj počítačů se v průběhu posledního desetiletí značně posunul. V minulosti aplikace běžely na počítačích pouze s jediným procesorovým jádrem. Dnes je standardní vidět čtyřjádrové procesory v uživatelských počítačích, dokonce i naše \underline{\ac{RPi}} má dvě jádra. Stále ale používáme programovací jazyky a technologie navržené v éře, kdy byly dostupné pouze jednojádrové procesory.
+Vývoj počítačů se v průběhu posledního desetiletí značně posunul. V minulosti aplikace běžely na počítačích pouze s jediným procesorovým jádrem. Dnes jsou standartně k vidění čtyřjádrové procesory v uživatelských počítačích, dokonce i naše \underline{\ac{RPi}} má dvě jádra. Stále používáme programovací jazyky a technologie navržené v éře, kdy byly dostupné pouze jednojádrové procesory.
 
-Většina programovacích jazyků dnes nabízí knihovny nebo frameworky pro \linebreak paralelní programování, ale nemají tuto vlastnost zbudovanou přímo v jádře jazyka. V Go je paralelní programování součástí jazyka už od samotného počátku. Používá takzvané Gorutiny, které umožňují spouštět funkce souběžně. Souběžné funkce pak mezi sebou mohou komunikovat a předávat data pomocí kanálů. Dokonce i některé standardní knihovny jazyka mají zabudovanou souběžnost. Například standardní knihovna `net/http' pro programování HTTP zpracovává přicházející požadavky souběžně pomocí Gorutin.
+Většina programovacích jazyků dnes nabízí knihovny, nebo frameworky pro \linebreak paralelní programování, ale nemají tuto vlastnost zabudovanou přímo v jádře jazyka. V Go je paralelní programování součástí jazyka už od samotného počátku. Používá takzvané Gorutiny, které umožňují spouštět funkce souběžně. Souběžné funkce pak mezi sebou mohou komunikovat a předávat data pomocí kanálů. Dokonce i některé standardní knihovny jazyka mají zabudovanou souběžnost. Například standardní knihovna `net/http' pro programování HTTP, zpracovává přicházející požadavky souběžně pomocí Gorutin.
 
 \subsubsection{Typový systém}
 
-Pragmatický design Go neobsahuje klíčové slovo pro třídu a jeho objektová orientace je odlišná od tradičních objektově orientovaných programovacích jazyků. V Go nahrazuje funkci tradiční třídy typ struct. Dědění není v go podporováno, ale podporuje kompozici typů (Příloha 1).
+Pragmatický design Go neobsahuje klíčové slovo pro třídu a jeho objektová orientace je odlišná od tradičních, objektově orientovaných programovacích jazyků. V Go nahrazuje funkci tradiční třídy typ struct. Dědění není v go podporováno, ale podporuje kompozici typů (Příloha 1).
 
 \clearpage
 
@@ -394,9 +395,9 @@ Pragmatický design Go neobsahuje klíčové slovo pro třídu a jeho objektová
 \subsection{Programování WUI}
 
 Webovovou aplikaci jsme napsali pomocí javascriptového frameworku
-React.js, CSS frameworku Tailwind a programovacího jazyku Typescript, který je dialektem javascriptu, podporující volitelné statické typování. JavaScript je dynamicky typovaný jazyk, statické typování je výhodné hlavně u větších aplikací, kde zjednodušuje odchytávání chyb v oblasti datových typů, nebo jim předchází úplně.
+React.js, CSS frameworku Tailwind a programovacího jazyku Typescript, který je dialektem javascriptu, podporující volitelné statické typování. JavaScript je dynamicky typovaný jazyk. Statické typování je výhodné hlavně u větších aplikací, kde zjednodušuje odchytávání chyb v oblasti datových typů, nebo jim předchází úplně.
 
-Ve webovém rozhraní je možné zobrazit si statisky jak živě naměřených dat, tak dat uložených v databázi. Z OpenWeather \underline{\ac{API}} získáváme data o předpovědi počasí a do dahsboardu zobrazujeme předpovědi na dalších 15h.
+Ve webovém rozhraní je možné zobrazit si statisky, jak živě naměřených dat, tak dat uložených v databázi. Z OpenWeather \underline{\ac{API}} získáváme data o předpovědi počasí a do dahsboardu zobrazujeme předpovědi na dalších 15h.
 
 \subsection{Inicializační formulář}
 
@@ -406,7 +407,7 @@ Ve webovém rozhraní je možné zobrazit si statisky jak živě naměřených d
 	\caption{Inicializační formulář}
 \end{figure}
 
-Okno prvotního nastavení obsahuje uživatelsky přívětivé rozhraní, které uživatele provede nastavením systému. Nastaví se mód zavlažování, limitní hodnoty a lokace ze které má PlantHub ukazovat předpověď počasí.
+Okno prvotního nastavení obsahuje uživatelsky přívětivé rozhraní, které uživatele provede nastavením systému. Nastaví se mód zavlažování, limitní hodnoty a lokace, ze které má PlantHub ukazovat předpověď počasí.
 
 \clearpage
 
@@ -420,7 +421,7 @@ Okno prvotního nastavení obsahuje uživatelsky přívětivé rozhraní, které
 
 Prostředí dashboardu (nástěnky) je hlavní částí webové aplikace. Uživatel zde může sledovat aktuální dění v podobně real-time dat ze senzorů a aktuálního stavu nádrže. K tomu jsme mu připravili praktickou kartu s předpovědí počasí a karty s grafy historických dat.
 
-Prvním takovýmto grafem je historie zavlažování. Tento graf zobrazuje statisticky jaká byla teplota, vlhkost vzduchu a vlhkost půdy těsně před zavlažováním. Další dva grafy jsou na pravé straně, první zobrazuje spotřebu vody při zavlažování za jednotlivé měsíce. Druhý vykresluje historické průměry naměřených dat v jednotlivých měsících.
+Prvním takovýmto grafem je historie zavlažování. Tento graf zobrazuje statisticky jaká byla teplota, vlhkost vzduchu a vlhkost půdy, těsně před zavlažováním. Na pravé straně jsou umístěny další dva grafy, první zobrazuje spotřebu vody při zavlažování za jednotlivé měsíce. Druhý potom vykresluje historické průměry naměřených dat v jednotlivých měsících.
 
 \clearpage
 
@@ -432,7 +433,7 @@ Prvním takovýmto grafem je historie zavlažování. Tento graf zobrazuje stati
 	\caption{Manuální ovládání}
 \end{figure}
 
-Manuální ovládání čerpadla dovoluje uživateli kdykoliv spustit zavlažování, po dokončení manuálního zavlažování se také spustí kontrola hladiny vody v nádrži. Při úpravě limitních hodnot či jiných nastevení řídící jednotky je nutno zařízení restartovat. K tomu v sidebaru \underline{\ac{WUI}} slouží možnost \enquote{Restart HW}.
+Manuální ovládání čerpadla dovoluje uživateli kdykoliv spustit zavlažování. Po dokončení manuálního zavlažování, se také spustí kontrola hladiny vody v nádrži. Při úpravě limitních hodnot, či jiných nastavení řídící jednotky, je nutno zařízení restartovat. K tomu v menu \underline{\ac{WUI}} slouží možnost \enquote{Restart HW}.
 
 \clearpage
 
@@ -444,7 +445,7 @@ Manuální ovládání čerpadla dovoluje uživateli kdykoliv spustit zavlažov�
 	\caption{Nastavení}
 \end{figure}
 
-V nastavení lze změnit nastavení aplikace včetně limitů pro zavlažování a doby zavlažování. Na výběr máme automatické a plánované zavlažování. V prvním režimu PlantHub zavlažuje automaticky, kdy a jak moc má zavlažit vyhodnotí z dat senzoru vlhkosti půdy. Při plánovaném zavlažování nastavíme intervaly ve kterých se má zavlažovat. V nastavení aplikace se nastavuje lokace předpovědi počasí. Nastavení se ukládají do databáze.
+V nastavení lze změnit nastavení aplikace, včetně limitů pro zavlažování a doby zavlažování. Na výběr máme automatické a plánované zavlažování. V prvním režimu PlantHub zavlažuje automaticky, kdy a jak moc má zavlažit, vyhodnotí z dat senzoru vlhkosti půdy. Při plánovaném zavlažování nastavíme intervaly, ve kterých se má zavlažovat. V nastavení aplikace se nastavuje lokace pro předpověď počasí. Nastavení se ukládají do databáze.
 
 \clearpage
 
@@ -456,7 +457,7 @@ V nastavení lze změnit nastavení aplikace včetně limitů pro zavlažování
 	\caption{Sada notifikací}
 \end{figure}
 
-Součástí webového rozhraní jsou i praktické notifikace, které uživatele upozorňují na aktuální stav PlantHubu. Poskytují vizuální zpětnou vazbu při průběhu zavlažování a kontrole nádrže. Při úspěšném dokončení zavlažování informují uživatele. V případě, že je nádrž na vodu prázdná, tak uživatele s touto skutečností seznámí.
+Součástí webového rozhraní jsou i praktické notifikace, které uživatele upozorňují na aktuální stav PlantHubu. Poskytují vizuální zpětnou vazbu, při průběhu zavlažování a kontrole nádrže. Při úspěšném dokončení zavlažování, informují uživatele. V případě, že je nádrž na vodu prázdná, tak uživatele s touto skutečností seznámí.
 
 \section{Databáze}
 
@@ -466,7 +467,7 @@ Pro databázi jsme se rozhodli použít databázový systém PostgreSQL.\@ Jak v
 
 \subsection{GraphQL}
 
-Jedná se o typ přenosu dat z možností filtrace a dotazovací funkcionality. V mnoha ohledech je to konkurent řešení přenosu dat pomocí \ac{REST} \space \underline{\ac{API}}.\@ Nabízí rychlejší tvorbu \underline{\ac{API}} \space a také umožňuje efektivnější přístup k datům z databáze. Umožňuje vybrat pouze data, která momentálně aplikace používá a dovoluje vynechat data, která zrovna potřebné nejsou.
+Jedná se o typ přenosu dat z možností filtrace a dotazovací funkcionality. V mnoha ohledech je to konkurent řešení přenosu dat pomocí \ac{REST} \space \underline{\ac{API}}.\@ Nabízí rychlejší tvorbu \underline{\ac{API}} \space a také umožňuje efektivnější přístup k datům z databáze. Umožňuje vybrat pouze data, která momentálně aplikace používá a dovoluje vynechat data, která zrovna potřebná nejsou.
 
 \clearpage
 
@@ -480,51 +481,51 @@ Jedná se o typ přenosu dat z možností filtrace a dotazovací funkcionality. 
 
 \section{Webový server}
 
-Web server jsme napsali v moderním jazyku Go, který nyní roste v popularitě hlavně mezi cloudovými vývojáři a v oblasti vývoje microservices. Dokáže se v rychlosti provedení programu přiblížit k nízkoúrovňovým jazykům jako je C nebo Rust, ale zároveň zůstává velmi lidsky čitelný a jednoduchý na použití. Na rozdíl od jazyků jako C a Rust má například garbage collector (automatický správce paměti), který periodicky čistí paměť a zabraňuje memory leakům.
+Web server jsme napsali v moderním jazyku Go, který nyní získává na popularitě, hlavně mezi cloudovými vývojáři a v oblasti vývoje microservices. Dokáže se v rychlosti provedení programu přiblížit k nízkoúrovňovým jazykům, jako je C nebo Rust, ale zároveň zůstává velmi lidsky čitelný a jednoduchý na použití. Na rozdíl od jazyků jako C a Rust, má například garbage collector (automatický správce paměti), který periodicky čistí paměť a zabraňuje memory leakům.
 
 \section{Docker a kontejnerizace}
 
 % Docker kontejner si můžeme představit jako takový odlehčený virtuální počítač, ale s lepší škálovatelností a cílením hlavně na prostředí, důležité pro vývoj aplikací. Jde především o izolaci \underline{\ac{WUI}} od hostovaného systému, a plnou kontrolu nad prostředím \underline{\ac{WUI}}, databáze a hlavního programu.
 
-Kontejnerizace je zabalení aplikace spolu se všemi nutnými komponenty, jako jsou knihovny, frameworky a další závislosti do svého vlastního \enquote{kontejneru}, který je izolovaný od zbytku systému.
+Kontejnerizace je zabalení aplikace spolu se všemi nutnými komponenty, jako jsou knihovny, frameworky a další závislosti (dependencies), do svého vlastního \enquote{kontejneru}, který je izolovaný od zbytku systému.
 
-Daná aplikace nebo program potom může být spuštěna konzistentně kdekoliv, nezávisle na prostředí, operačním systému i architektury hostového systému. Aplikace věží zcela nezávisle na zbytku systému. Kontejner imituje jakousi bublinu, která aplikaci obklopuje a izoluje ji. Je to v podstatě plně funkční a přenosné výpočetní prostředí. Toto je hlavním důvodem proč jsme zvolili kontejnerizaci pro náš projekt. V případě, že bychom chtěli vyrobit více jednotek, tak můžeme na jednotlivé Raspberry Pi nasadit předpřipravené kontejnery a nemusíme se skoro vůbec zabývat konfigurací operačního systému Raspberry Pi.
+Daná aplikace nebo program, potom může být spuštěna konzistentně kdekoliv, nezávisle na prostředí, operačním systému i architektury hostového systému. Aplikace běží zcela nezávisle na zbytku systému. Kontejner imituje jakousi bublinu, která aplikaci obklopuje a izoluje. Je to v podstatě plně funkční a přenosné výpočetní prostředí. Toto je hlavním důvodem, proč jsme zvolili kontejnerizaci pro náš projekt. V případě, že bychom chtěli vyrobit více jednotek, tak můžeme na jednotlivé Raspberry Pi nasadit předpřipravené kontejnery a nemusíme se skoro vůbec zabývat konfigurací operačního systému Raspberry Pi.
 
-Kontejnery poskytují alternativu ke klasickém vývoji aplikací na jedné platformě nebo operačním systému, tento přístup může zhoršit kompatibilitu aplikace s jinými systémy, které nemusí sdílet stejné prostředí jako systém na kterém byla aplikace původně vyvíjena. Tato zhoršená kompatibilita může způsobit všelijaké problémy a chyby aplikace, které se potom musí řešit navíc. V realitě to pak znamená prodloužený čas vývoje, snížená produktivita a frustrace vývojářů.
+Kontejnery poskytují alternativu ke klasickému vývoji aplikací na jedné platformě, nebo operačním systému. Tento přístup může zhoršit kompatibilitu aplikace s jinými systémy, které nemusí sdílet stejné prostředí, jako systém, na kterém byla aplikace původně vyvíjena. Tato zhoršená kompatibilita může způsobit všelijaké problémy a chyby aplikace, které se potom musí řešit navíc. V realitě to pak znamená prodloužený čas vývoje, snížení produktivity a frustraci vývojářů.
 
-Díky zabalení aplikace v kontejneru, pak může být jednoduše spouštěna napříč platformami a operačními systémy. Také ji můžeme jednoduše přesouvat mezi zařízeními, protože vše co potřebuje má zabaleno ve svém kontejneru.
+Díky zabalení aplikace v kontejneru, pak může být jednoduše spouštěna napříč platformami a operačními systémy. Také ji můžeme jednoduše přesouvat mezi zařízeními, protože vše co potřebuje, má zabaleno ve svém kontejneru.
 
-Myšlenka kontejnerizace existuje dlouho. Docker ale v roce 2013 stanovil standart kontejnerizace technologií Docker Engine. Docker Engine přinesl jednoduché nástroje pro vývoj, díky nimž se stal vývoj s použitím kontejnerů snadný. Zavedl také univerzální přístup k distribuci kontejnerů, což zrychlilo adopci kontejnerizace. Dnes si vývojáři mohou vybrat z nabídky kontejnerizačních platforem, které podporují standart Open Container Initiative vyvinuté společností Docker.
+Myšlenka kontejnerizace existuje dlouho. Docker, ale v roce 2013 stanovil standart kontejnerizace technologií Docker Engine. Docker Engine přinesl jednoduché nástroje pro vývoj, díky nimž se stal vývoj s použitím kontejnerů snadný. Zavedl také univerzální přístup k distribuci kontejnerů, což zrychlilo adopci kontejnerizace. Dnes si vývojáři mohou vybrat z nabídky kontejnerizačních platforem, které podporují standart Open Container Initiative, vyvinuté společností Docker.
 
 \subsection{Výhody kontejnerizace}
 
-Kontejnery sdílejí kernel (jádro) operačního systému s jejich hostem. Kontejnery tak nepotřebují svůj vlastní operační systém a díky tomu jsou výpočetně nenáročné. Můžou tak běžet stejně na jakémkoliv zařízení, ať už se jedná o malé Raspberry Pi nebo cloudové datacentra.
+Kontejnery sdílejí kernel (jádro) operačního systému s jejich hostem. Kontejnery tak nepotřebují svůj vlastní operační systém a díky tomu jsou výpočetně nenáročné. Můžou tak běžet stejně na jakémkoliv zařízení, ať už se jedná o malé Raspberry Pi, nebo cloudové datacentra.
 
 \subsection{Kontejnery vs. virtuální počítače}
 
 Virtuální počítač je virtuální prostředí, které funguje jako běžný počítač. Má svůj vlastní virtuální procesor, paměť, síťový adaptér a úložiště. Tyto komponenty jsou virtualizovány na fyzickém hardwaru hostujicího systému.
 
-Kontejnerizace a virtualizace jsou podobné v tom, že poskytují plnou izolaci aplikace, aby byla jednoduše spustitelná v různých prostředích. Hlavním rozdílem je velikost, výpočetní náročnost a přenosnost.
+Kontejnerizace a virtualizace jsou podobné v tom, že poskytují plnou izolaci aplikace, aby byla jednoduše spustitelná v různých typech prostředí. Hlavním rozdílem je velikost, výpočetní náročnost a přenosnost.
 
 Virtuální počítač je větší z této dvojice, jeho velikost je typicky měřena v gigabytech. Obsahuje svůj vlastní operační systém, který mu dovoluje provádět několik výpočetně náročných funkcí zároveň. Jeho zvýšený výpočetní výkon, mu umožňuje zapouzdřit, rozdělit, duplikovat a emulovat celé servery, operační systémy, desktopy, databáze a počítačové sítě.
 
-Kontejnery jsou mnohem menší, velikostí většinou v řádech megabytů a neobsahují nic víc než samotnou aplikaci a nutné prostředí pro její běh.
+Kontejnery jsou mnohem menší, velikostí většinou v řádech megabytů a neobsahují nic víc, než samotnou aplikaci a nutné prostředí pro její běh.
 
-Virtuální počítače fungují dobře v tradičních a monolitických IT architekturách. Kontejnery byly navrženy s důrazem na nejnovější a vznikající technologie jako cloudy, CI/CD a DevOps.
+Virtuální počítače fungují dobře v tradičních a monolitických IT architekturách. Kontejnery byly navrženy s důrazem na nejnovější a vznikající technologie, jako cloudy, CI/CD a DevOps.
 
 \section{Bezpečnost}
 
-PlantHub je izolován v lokální síti, takže na něj má přístup jen klientské zařízení. Součástí PlantHubu je i router který pomocí \underline{\ac{DHCP}} spojuje tyto zařízení. Pro rozšíření PlantHubu do vzdálené sítě by byly zapotřebí privátní klíče.
+PlantHub je izolován v lokální síti, takže na něj má přístup jen klientské zařízení. Součástí PlantHubu je i router, který pomocí \underline{\ac{DHCP}} spojuje tyto zařízení. Pro rozšíření PlantHubu do vzdálené sítě, by byly zapotřebí privátní klíče.
 
 \clearpage
 
 \section{Závěr}
 
-Náš projekt je stále ve vývoji a některé z funkcí projektu nefungujou podle našich představ, i přes to, je náš systém v této chvíli použitelný. Myslíme si, ale že tento projekt má v budoucnu potenciál stát se úspěšným startupem, proto plánujeme pokračovat ve vývoji i po maturitě. 
+Náš projekt je stále ve vývoji a některé z funkcí tohoto projektu, nefungují podle našich představ. I přes to, je náš systém v této chvíli použitelný. Myslíme si, že tento projekt má v budoucnu potenciál stát se úspěšným startupem. Proto plánujeme pokračovat v jeho vývoji i po maturitě.
 
-Abychom však tento projekt mohli pojmout jako plně funkční systém museli bychom ještě dokončit a předělat některé klíčové části. Jednalo by se především o rozdělení hostingu webové aplikace a databáze na samostatný server a zajištění modulárnosti celého systému rozdělením řídící jednotky na samostatné moduly a hub zodpovědný za jejich provoz. V dalších, né natolik prioritních, krocích se můžeme bavit o dokončení plánované tmavé verze \underline{\ac{WUI}} a přidání podpory více jazyků. A pro odlišení od konkurence mnoha jiných zavlažovacích systémů, přidání chytrých funkcí vypočítávání spotřeby vody a energie na základě předpovědi počasí typu kytky a oblasti. Uvažovali jsme také nad soukromou databází rostlin a jejich rozdělení na základě způsobu pěstování. V komerčním modelu bychom mohli z této databáze vytvořit placené \underline{\ac{API}} pro jiné zavlažovací systémy.
+Abychom však tento projekt mohli pojmout jako plně funkční systém, museli bychom ještě dokončit a předělat některé klíčové části. Jednalo by se především o rozdělení hostingu webové aplikace a databáze na samostatný server. Zajištění modulárnosti celého systému rozdělením řídící jednotky na samostatné moduly a hub zodpovědný za jejich provoz. V dalších neprioritních krocích, se můžeme bavit o dokončení plánované tmavé verze \underline{\ac{WUI}} a přidání podpory více jazyků. Pro odlišení od konkurence mnoha jiných zavlažovacích systémů, přidáme chytré funkce vypočítávání spotřeby vody, energie a na základě předpovědi počasí, typu rostliny a lokace. Uvažovali jsme také nad soukromou databází rostlin a jejich rozdělení, na základě způsobu pěstování. V komerčním modelu, bychom mohli z této databáze vytvořit placené \underline{\ac{API}}, pro jiné zavlažovací systémy.
 
-Tato práce byla pro nás velkým přínosem, naučili jsme se mnoho nových dovedností a načerpali nové informace, které v naší profesi bezpochyby dále využijeme.
+Tato práce, byla pro nás velkým přínosem. Naučili jsme se mnoho nových dovedností a načerpali nové informace, které v naší profesi bezpochyby dále využijeme.
 
 \clearpage
 
