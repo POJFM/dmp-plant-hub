@@ -37,10 +37,27 @@ func (db *DB) GetSettings(ctx context.Context) []*model.Setting {
 	return settings
 }
 
-// TODO: DIS IS FOKEN RETARDED, WE NEED TO FIX THIS CRAP FUCK SHIT
 func (db *DB) UpdateSettings(ctx context.Context, input *model.NewSettings) *model.Setting {
-	values := db.DB.NewValues(input)
-	_, err := db.DB.NewUpdate().With("_data", values).Model(input).TableExpr("_data").Bulk().Where("settings.id = 1").Exec(ctx)
+	// values := db.DB.NewValues(input)
+	// modl := make([]*model.Setting, 0)
+	wellthisiskindadumb := 0
+	settings := model.Setting{
+		ID:                 &wellthisiskindadumb,
+		LimitsTrigger:      input.LimitsTrigger,
+		WaterLevelLimit:    input.WaterLevelLimit,
+		WaterAmountLimit:   input.WaterAmountLimit,
+		MoistLimit:         input.MoistLimit,
+		ScheduledTrigger:   input.ScheduledTrigger,
+		HourRange:          input.HourRange,
+		Location:           input.Location,
+		IrrigationDuration: input.IrrigationDuration,
+		ChartType:          input.ChartType,
+		Language:           input.Language,
+		Theme:              input.Theme,
+		Lat:                input.Lat,
+		Lon:                input.Lon,
+	}
+	_, err := db.DB.NewUpdate().Model(&settings).Where("id = ?", 0).Exec(ctx)
 	if err != nil {
 		log.Println(err)
 	}

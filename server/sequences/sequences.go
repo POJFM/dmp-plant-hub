@@ -298,8 +298,8 @@ func measurementSequence(sensei *sens.Sensors) {
 		gMoist = moist
 		gLastMoist = moist
 
-		fmt.Printf("temp: %f\nhum: %f\nmoi: %f\n", temp, hum, moist)
-		go fmt.Printf("sonicbuzik: %f", sensei.ReadWaterLevel())
+		// fmt.Printf("temp: %f\nhum: %f\nmoi: %f\n", temp, hum, moist)
+		// go fmt.Printf("sonicbuzik: %f", sensei.ReadWaterLevel())
 
 		mid.LoadLiveMeasure(&moist, &hum, &temp)
 	},
