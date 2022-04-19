@@ -9,7 +9,7 @@ import SaveButton from './buttons/SaveButton'
 import CancelButton from './buttons/CancelButton'
 import { useQuery, useMutation } from '@apollo/client'
 import { settings } from '../graphql/queries'
-import { createSettingsMut } from '../graphql/mutations'
+import { updateSettingsMut } from '../graphql/mutations'
 //import { fetchCoordsFromLocation } from 'src/utils'
 
 export default function Settings() {
@@ -69,7 +69,7 @@ export default function Settings() {
 		updateDataStates()
 	}, [settingsData])
 
-	const [createSettings] = useMutation(createSettingsMut, {
+	const [createSettings] = useMutation(updateSettingsMut, {
 		variables: {
 			limits_trigger: automaticIrrigationState,
 			water_level_limit: waterLevelLimit,
