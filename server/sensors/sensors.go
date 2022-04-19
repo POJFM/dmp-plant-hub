@@ -39,7 +39,7 @@ func Init() *Sensors {
 	PUMP.Output()
 
 	return &Sensors{
-		hc:  hcsr.NewHCSR04(TRIG, ECHO),
+		hc:  hcsr.NewHCSR04("/dev/ttyUSB0", 9600),
 		dht: dht.NewDHT11(DHT),
 	}
 }
