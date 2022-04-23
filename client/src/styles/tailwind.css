@@ -181,26 +181,6 @@
 		pointer-events: none;
 	}
 
-	.input-field-error {
-		border-bottom: 1px solid var(--warningRed);
-		padding: 0 10px;
-		position: relative;
-	}
-
-	.input-field-error .input-field-label {
-		color: var(--warningRed);
-		font-size: 0.8em;
-		position: absolute;
-	}
-
-	.input-field-error .input-field-input {
-		border: none;
-		font-size: 1.2em;
-		color: var(--warningRed);
-		outline: 0;
-		pointer-events: none;
-	}
-
 	.input-field-editable {
 		border-bottom: 1px solid var(--darkGreen);
 		padding: 0 10px;

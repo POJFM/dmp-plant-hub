@@ -12,15 +12,34 @@
 \usepackage{acronym}
 \usepackage{setspace}
 \usepackage{indentfirst}
-\usepackage{hyperref}
 \usepackage{listings}
 \usepackage{tabularx}
 \usepackage{changepage}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{sectsty}
+\usepackage[letterspace=-30]{microtype}
+\usepackage{tgtermes}
+\usepackage{afterpage}
+
+%\setmainfont{Calibri}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+
+\definecolor{blue}{RGB}{32, 91, 157}
 
 \graphicspath{ {./img/} }
 \setlength{\parindent}{2em}
 \setlength{\parskip}{0.1em}
 \linespread{1.5}
+\sectionfont{\color{blue}}
+\subsectionfont{\color{blue}}
+\subsubsectionfont{\color{blue}}
+
 
 \title{PlantHub}
 \author{Filip Sikora, Jakub Vantuch}
@@ -31,37 +50,72 @@
 \renewcommand{\figurename}{Obr.}
 \renewcommand\refname{}
 
+\afterpage{\blankpage}
 \begin{titlepage}
-	\begin{adjustwidth}{-20mm}{-7.5mm} 
-		\vspace*{-1.5cm}
-		\noindent\includegraphics[width=\linewidth]{header.png}
-	\end{adjustwidth}
+	\vspace*{-1.7cm}
+	\noindent\includegraphics[width=\linewidth]{header.png}
 	\begin{center}
-		\vspace*{0.2cm}
-		\Huge\textbf{MATURITNÍ ZKOUŠKA}
-		\vspace*{1cm} \\
-		\large \emph{PRAKTICKÁ ZKOUŠKA Z ODBORNÝCH PŘEDMĚTŮ}
-		\vspace*{1cm} \\
-		\Large Téma č. 4 \\
-		\vspace*{1cm}
-		\Large Zavlažovací systém PlantHub \\
+		\vspace*{4.4cm}
+		{\fontsize{19}{20}\selectfont\lsstyle{\textcolor{blue}{MATURITNÍ ZKOUŠKA}}}
+		\vspace*{7mm} \\
+		\small\textbf{\emph{PRAKTICKÁ ZKOUŠKA Z ODBORNÝCH PŘEDMĚTŮ}}
+		\vspace*{5.7cm} \\
+		\large\textbf{\textcolor{blue}{Zavlažovací systém PlantHub}} \\
+		\vspace*{5mm}
+		\large\textbf{\textcolor{blue}{Téma č. 4}} \\
 		\vfill
 		\normalsize
 	\end{center}
+	%\vspace*{1cm}
 	\begin{tabularx}{\textwidth}{l@{\hskip 0.5cm}XXl}
-		Obor vzdělání: & \multicolumn{3}{c}{\textbf{18 – 20 – M/01 Informační technologie}} \\[10pt]
-		Třída: & \textbf{4. IT} & Autor práce: & \textbf{Jakub Vantuch} \\[10pt]
-		Školní rok: & \textbf{2021/22} & Vedoucí učitel práce: & \textbf{Ing. Jiří Sumbal}
+		Obor vzdělání: & \multicolumn{2}{l}{\textbf{18 – 20 – M/01 Informační technologie}} \\[10pt]
+		& \multicolumn{2}{l}{\textbf{Informační technologie}} \\[10pt]
+		Třída: & \textbf{4. IT} & Autor práce: & \textbf{Jakub Vantuch, Filip sikora} \\[10pt]
+		Školní rok: & \textbf{2021/22} & Vedoucí učitel práce: & \textbf{Ing. Jiří Sumbal} \\[10pt]
+		& & Oponent práce: & \textbf{Ing. Beňová Jiřina} \\[10pt]
 		\vspace*{1cm}
 	\end{tabularx}
-	„Prohlašujeme, že jsme tuto práci vypracovali samostatně a použili jsme literárních pramenů a informací, které citujeme a uvádíme v seznamu použité literatury a dalších zdrojů informací.“ \\
-	\vspace*{0.5cm} \\
-	\renewcommand{\arraystretch}{2}
-	\begin{tabularx}{\textwidth}{l@{\hskip 0.75cm}X@{\hskip 1.5cm}X@{\hskip 0.75cm}l}
-		Ve Frýdku-Místku, dne: & \dotfill & \dotfill & podpis \\
-		Ve Frýdku-Místku, dne: & \dotfill & \dotfill & podpis \\
-	\end{tabularx}
 \end{titlepage}
+
+\clearpage
+
+\section*{Prohlášení autora}
+
+„Prohlašujeme, že jsme tuto práci vypracovali samostatně a použili jsme literárních pramenů a informací, které citujeme a uvádíme v seznamu použité literatury a dalších zdrojů informací.“ \\
+\vspace*{0.5cm} \\
+\renewcommand{\arraystretch}{2}
+\begin{tabularx}{\textwidth}{l@{\hskip 0.75cm}X@{\hskip 1.5cm}X@{\hskip 0.75cm}l}
+	Ve Frýdku-Místku, dne: & \dotfill & \dotfill & podpis \\
+	Ve Frýdku-Místku, dne: & \dotfill & \dotfill & podpis \\
+\end{tabularx}
+
+\clearpage
+
+\section*{Zadaní práce}
+
+\subsection*{Jakub Vantuch}
+
+\begin{itemize}
+	\item Hardwarové řešení - stanovení cílů, volba hardware (řídící jednotka, senzory, akční členy)  
+	\item Návrh obvodu a plošného spoje
+	\item Fyzická realizace
+	\item Naprogramování řídící jednotky
+	\item Interaktivní ovládání PlantHubu z webového UI
+	\item Odladění, ověření funkčnosti
+\end{itemize}
+
+\subsection*{Filip Sikora}
+
+\begin{itemize}
+	\item Softwarové řešení - stanovení cílů, volba sw platformy a konkrétního software  
+	\item Konfigurace RPi jako webového serveru
+	\item Vytvoření databáze
+	\item Vytvoření front end
+	\item Vytvoření back end
+	\item Nastavení bezpečnosti
+	\item Interaktivní ovládání PlantHubu z webového UI
+	\item Odladění, ověření funkčnosti
+\end{itemize}
 
 \clearpage
 
@@ -545,7 +599,14 @@ Tato práce, byla pro nás velkým přínosem. Naučili jsme se mnoho nových do
 
 \clearpage
 
-\section{Použitá literatura další zdroje }
+\section{Seznam obrázků}
+
+\vspace*{-1.5cm}
+\listoffigures
+
+\clearpage
+
+\section{Reference}
 
 \begin{thebibliography}{9}
 	\vspace*{-1.5cm}
@@ -583,10 +644,16 @@ Tato práce, byla pro nás velkým přínosem. Naučili jsme se mnoho nových do
 	An easier and PowerfulOnline PCB design tool. EasyEDA. [Online]. Dostupné z: \underline{\href{https://easyeda.com/}{https://easyeda.com/}}. [Zpřístupněno: 10-Dubna-2022]. 
 \end{thebibliography}
 
-\section{Seznam obrázků}
+\section{Seznam použitého softwaru}
 
-\vspace*{-1.5cm}
-\listoffigures
+\begin{enumerate}
+	\item Visual Studio Code
+	\item GoLand
+	\item EasyEDA
+	\item FreeCAD
+	\item Figma
+	\item Git
+\end{enumerate}
 
 \section{Seznam příloh}
 
@@ -596,5 +663,7 @@ Tato práce, byla pro nás velkým přínosem. Naučili jsme se mnoho nových do
 	\item Příloha 3: Modely krytu
 	\item Příloha 4: Prezentace.pdf
 \end{itemize}
+
+\section{Přílohy}
 
 \end{document} 
