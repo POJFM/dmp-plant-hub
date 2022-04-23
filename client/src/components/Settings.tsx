@@ -270,6 +270,7 @@ export default function Settings() {
 											defaultValue={irrigationDuration}
 											active={irrigationDurationStateClass === '#000000'}
 											width="10"
+											dataType="number"
 										/>
 									</div>
 									<div
@@ -281,6 +282,7 @@ export default function Settings() {
 											defaultValue={moistLimit}
 											active={automaticIrrigationState}
 											width="10"
+											dataType="number"
 										/>
 									</div>
 									<div
@@ -292,6 +294,7 @@ export default function Settings() {
 											defaultValue={waterAmountLimit}
 											active={automaticIrrigationState}
 											width="10"
+											dataType="number"
 										/>
 									</div>
 									<div
@@ -303,6 +306,7 @@ export default function Settings() {
 											defaultValue={waterLevelLimit}
 											active={automaticIrrigationState}
 											width="10"
+											dataType="number"
 										/>
 									</div>
 									<div
@@ -314,6 +318,7 @@ export default function Settings() {
 											defaultValue={hourRange}
 											active={scheduledIrrigationState}
 											width="10"
+											dataType="number"
 										/>
 									</div>
 								</div>
@@ -374,7 +379,13 @@ export default function Settings() {
 										onChange={(data: any) => updateInputData('location', data)}
 										onBlur={(data: any) => updateInputData('location', data)}
 									>
-										<EditableField key="city" defaultValue={location} active="true" width="40" />
+										<EditableField 
+											key="city" 
+											defaultValue={location} 
+											active="true" 
+											width="40" 
+											dataType="string"
+										/>
 									</div>
 								</div>
 							</div>

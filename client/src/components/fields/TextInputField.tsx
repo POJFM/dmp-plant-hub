@@ -1,4 +1,4 @@
-export default function TextInputField({ item, name, defaultValue, active }: any) {
+export default function TextInputField({ item, name, defaultValue, active, dataType }: any) {
 	let activeClass
 	active && (activeClass = 'input-field')
 	!active && (activeClass = 'input-field-inactive')
@@ -8,7 +8,7 @@ export default function TextInputField({ item, name, defaultValue, active }: any
 			<label htmlFor="name" className="input-field-label">
 				{name}
 			</label>
-			<input type="text" id={item} className="input-field-input mt-4" name={item} defaultValue={defaultValue} />
+			<input type={dataType === 'number' ? 'number' : 'text'} id={item} className="input-field-input mt-4" name={item} defaultValue={defaultValue} />
 		</div>
 	)
 }

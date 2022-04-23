@@ -259,14 +259,19 @@ export default function InitForm(props: any) {
 											item="irrigationDuration"
 											name="Doba zavlažování (s)"
 											defaultValue={irrigationDuration}
+											dataType="number"
 											active={true}
 										/>
 									</div>
-									<div className="flex-row p-1 pt-5px mt-2" onBlur={(data: any) => setMoistLimit(data.target.value)}>
+									<div
+										className="flex-row p-1 pt-5px mt-2"
+										onBlur={(data: any) => setMoistLimit(data.target.value)}
+									>
 										<TextInputField
 											item="moistLimit"
 											name="Limit vlhkosti půdy (%)"
 											defaultValue={moistLimit}
+											dataType="number"
 											active={automaticIrrigationState}
 										/>
 									</div>
@@ -278,6 +283,7 @@ export default function InitForm(props: any) {
 											item="waterAmountLimit"
 											name="Limit objemu nádrže (l)"
 											defaultValue={waterAmountLimit}
+											dataType="number"
 											active={automaticIrrigationState}
 										/>
 									</div>
@@ -289,6 +295,7 @@ export default function InitForm(props: any) {
 											item="waterLevelLimit"
 											name="Limit hladiny vody (cm)"
 											defaultValue={waterLevelLimit}
+											dataType="number"
 											active={automaticIrrigationState}
 										/>
 									</div>
@@ -297,6 +304,7 @@ export default function InitForm(props: any) {
 											item="hourRange"
 											name="Rozsah hodin (h)"
 											defaultValue={hourRange}
+											dataType="number"
 											active={scheduledIrrigationState}
 										/>
 									</div>
@@ -304,7 +312,13 @@ export default function InitForm(props: any) {
 										className="flex-row p-1 pt-5px mt-2"
 										onBlur={(data: any) => fetchCoordsFromLocation(data.target.value)}
 									>
-										<TextInputField item="location" name="Lokace" defaultValue={location} active="true" />
+										<TextInputField
+											item="location"
+											name="Lokace"
+											defaultValue={location}
+											dataType="string"
+											active="true"
+										/>
 									</div>
 									<div className="flex-row p-1 pt-5px mt-2">
 										<div
