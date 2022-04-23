@@ -1,7 +1,5 @@
+% !TEX program = xelatex
 \documentclass[czech,12pt,a4paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[sfdefault]{ClearSans}
-\usepackage[T1]{fontenc}
 \usepackage[left=35mm,right=20mm,top=25mm,bottom=25mm]{geometry}
 \usepackage[autostyle]{csquotes}
 \usepackage[czech]{babel}
@@ -18,11 +16,11 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{xcolor}
 \usepackage{sectsty}
-\usepackage[letterspace=-30]{microtype}
 \usepackage{tgtermes}
 \usepackage{afterpage}
+\usepackage{fontspec}
 
-%\setmainfont{Calibri}
+\setmainfont{Calibri}
 
 \newcommand\blankpage{%
     \null
@@ -32,14 +30,13 @@
 
 \definecolor{blue}{RGB}{32, 91, 157}
 
-\graphicspath{ {./img/} }
+\graphicspath{ {./final-report/img} }
 \setlength{\parindent}{2em}
 \setlength{\parskip}{0.1em}
 \linespread{1.5}
-\sectionfont{\color{blue}}
-\subsectionfont{\color{blue}}
-\subsubsectionfont{\color{blue}}
-
+\sectionfont{\color{blue}\fontsize{16}{20}\selectfont}
+\subsectionfont{\color{blue}\fontsize{14}{20}\selectfont}
+\subsubsectionfont{\color{blue}\fontsize{12}{20}\selectfont}
 
 \title{PlantHub}
 \author{Filip Sikora, Jakub Vantuch}
@@ -52,22 +49,22 @@
 
 \afterpage{\blankpage}
 \begin{titlepage}
-	\vspace*{-1.7cm}
+	\vspace*{-1.75cm}
 	\noindent\includegraphics[width=\linewidth]{header.png}
 	\begin{center}
-		\vspace*{4.4cm}
-		{\fontsize{19}{20}\selectfont\lsstyle{\textcolor{blue}{MATURITNÍ ZKOUŠKA}}}
+		\vspace*{4.5cm}
+		{\fontsize{19}{20}\selectfont\textcolor{blue}{MATURITNÍ ZKOUŠKA}}
 		\vspace*{7mm} \\
-		\small\textbf{\emph{PRAKTICKÁ ZKOUŠKA Z ODBORNÝCH PŘEDMĚTŮ}}
-		\vspace*{5.7cm} \\
-		\large\textbf{\textcolor{blue}{Zavlažovací systém PlantHub}} \\
-		\vspace*{5mm}
-		\large\textbf{\textcolor{blue}{Téma č. 4}} \\
-		\vfill
+		\textbf{\emph{PRAKTICKÁ ZKOUŠKA Z ODBORNÝCH PŘEDMĚTŮ}}
+		\vspace*{5.9cm} \\
+		{\fontsize{16}{20}\selectfont\textbf{\textcolor{blue}{Zavlažovací systém PlantHub}}} \\
+		\vspace*{6mm}
+		{\fontsize{16}{20}\selectfont\textbf{\textcolor{blue}{Téma č. 4}}} \\
 		\normalsize
 	\end{center}
-	%\vspace*{1cm}
-	\begin{tabularx}{\textwidth}{l@{\hskip 0.5cm}XXl}
+	\vspace*{\fill}
+	\renewcommand{\arraystretch}{0.5}
+	\begin{tabularx}{\textwidth}{lX@{\hskip 0.75cm}ll}
 		Obor vzdělání: & \multicolumn{2}{l}{\textbf{18 – 20 – M/01 Informační technologie}} \\[10pt]
 		& \multicolumn{2}{l}{\textbf{Informační technologie}} \\[10pt]
 		Třída: & \textbf{4. IT} & Autor práce: & \textbf{Jakub Vantuch, Filip sikora} \\[10pt]
@@ -81,6 +78,8 @@
 
 \section*{Prohlášení autora}
 
+\vspace*{\fill}
+
 „Prohlašujeme, že jsme tuto práci vypracovali samostatně a použili jsme literárních pramenů a informací, které citujeme a uvádíme v seznamu použité literatury a dalších zdrojů informací.“ \\
 \vspace*{0.5cm} \\
 \renewcommand{\arraystretch}{2}
@@ -91,7 +90,7 @@
 
 \clearpage
 
-\section*{Zadaní práce}
+\section*{Zadání práce}
 
 \subsection*{Jakub Vantuch}
 
