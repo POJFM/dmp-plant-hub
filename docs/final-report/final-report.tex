@@ -22,10 +22,10 @@
 
 \setmainfont{Calibri}
 
-\newcommand\blankpage{%
+\newcommand\blankpage{
     \null
-    \thispagestyle{empty}%
-    \addtocounter{page}{-1}%
+    \thispagestyle{empty}
+    \addtocounter{page}{-1}
     \newpage}
 
 \definecolor{blue}{RGB}{32, 91, 157}
@@ -67,7 +67,7 @@
 	\begin{tabularx}{\textwidth}{lX@{\hskip 0.75cm}ll}
 		Obor vzdělání: & \multicolumn{2}{l}{\textbf{18 – 20 – M/01 Informační technologie}} \\[10pt]
 		& \multicolumn{2}{l}{\textbf{Informační technologie}} \\[10pt]
-		Třída: & \textbf{4. IT} & Autor práce: & \textbf{Jakub Vantuch, Filip sikora} \\[10pt]
+		Třída: & \textbf{4. IT} & Autor práce: & \textbf{Jakub Vantuch, Filip Sikora} \\[10pt]
 		Školní rok: & \textbf{2021/22} & Vedoucí učitel práce: & \textbf{Ing. Jiří Sumbal} \\[10pt]
 		& & Oponent práce: & \textbf{Ing. Beňová Jiřina} \\[10pt]
 		\vspace*{1cm}
@@ -187,6 +187,8 @@ Hlavní program jsme napsali v programovacím jazyce Go, jehož hlavní využit�
 		Vysvětleno v kapitole \underline{\ref{secADC}}.
 	\acro{Vdac}[$ V_{dac}$]{Napětí převedené z digitální do analogové hodnoty} \\ 
 		Vysvětleno v kapitole \underline{\ref{secADC}}.
+	\acro{IoT}{Internet of things} \\ 
+		Vysvětleno v kapitole \underline{\ref{secBezpecnost}}.
 \end{acronym}
 
 \clearpage
@@ -352,13 +354,11 @@ Ve finální verzi jsme navrhli naše vlastní schéma hlavního obvodu (Obr. \r
 
 \section{Fyzická realizace} \label{secRealizace}
 
-% Vymstila se nám však nepřesnost rozměrů krytu a při vkládání stanice do krytu se nám podařilo zlomit SD kartu s operačním systémem, daty a nasazenými programy. Po reinstalaci operačního systému jsme opravili rozměry vytvořeného modelu krytu a vytiskli kryt podruhé, tentokrát ve správných rozměrech.
-
 \subsection{Pouzdro}
 
 Navrhli jsme vhodné pouzdro (Obr. \ref{fig:pouzdro}) pro naše \underline{\ac{RPi}}, abychom ochránili citlivé elektronické součástky a zároveň měli možnost jednoduše vyjmout stanici z krytu. Pouzdro jsme vytiskli na školní 3D tiskárně pevným Polyethylene terephthalate glycol (PETG) filamentem.
 
-Při první iteraci našeho pouzdra jsme nepřidali dostatečnou toleranci pro SD kartu, která přesahuje hranice PCB o několik milimetrů. Omámeni nadšením z první hmatatelné verze našeho pouzdra, jsme se neopatrně a rychle pokusili, napasovat pouzdro na Raspberry Pi. Naší neopatrností se nám podařilo zmiňovanou SD kartu zlomit. Za odměnu jsme si tedy znova procvičili instalaci a konfiguraci operačního systému Raspberry Pi.
+Při první verzi našeho pouzdra jsme nepřidali dostatečnou toleranci pro SD kartu, která přesahuje hranice \underline{\ac{PCB}} o několik milimetrů. Omámeni nadšením z první hmatatelné verze našeho pouzdra, jsme se neopatrně a rychle pokusili, napasovat pouzdro na \underline{\ac{RPi}}. Naší neopatrností se nám podařilo zmiňovanou SD kartu zlomit. Za odměnu jsme si tedy znova procvičili instalaci a konfiguraci operačního systému \underline{\ac{RPi}}.
 
 \vspace*{1cm}
 \begin{figure}[h]
@@ -574,13 +574,11 @@ Web server jsme napsali v moderním jazyku Go, který nyní získává na popula
 
 \section{Docker a kontejnerizace} \label{secDocker}
 
-% Docker kontejner si můžeme představit jako takový odlehčený virtuální počítač, ale s lepší škálovatelností a cílením hlavně na prostředí, důležité pro vývoj aplikací. Jde především o izolaci \underline{\ac{WUI}} od hostovaného systému, a plnou kontrolu nad prostředím \underline{\ac{WUI}}, databáze a hlavního programu.
-
 Kontejnerizace je zabalení aplikace spolu se všemi nutnými komponenty, jako jsou knihovny, frameworky a další závislosti (dependencies), do svého vlastního \enquote{kontejneru}, který je izolovaný od zbytku systému.
 
-Daná aplikace nebo program, potom může být spuštěna konzistentně kdekoliv, nezávisle na prostředí, operačním systému i architektury hostového systému. Aplikace běží zcela nezávisle na zbytku systému. Kontejner imituje jakousi bublinu, která aplikaci obklopuje a izoluje. Je to v podstatě plně funkční a přenosné výpočetní prostředí. Toto je hlavním důvodem, proč jsme zvolili kontejnerizaci pro náš projekt. V případě, že bychom chtěli vyrobit více jednotek, tak můžeme na jednotlivé Raspberry Pi nasadit předpřipravené kontejnery a nemusíme se skoro vůbec zabývat konfigurací operačního systému Raspberry Pi.
+Daná aplikace nebo program, potom může být spuštěna konzistentně kdekoliv, nezávisle na prostředí, operačním systému i architektury hostového systému. Aplikace běží zcela nezávisle na zbytku systému. Kontejner imituje jakousi bublinu, která aplikaci obklopuje a izoluje. Je to v podstatě plně funkční a přenosné výpočetní prostředí. Toto je hlavním důvodem, proč jsme zvolili kontejnerizaci pro náš projekt. V případě, že bychom chtěli vyrobit více jednotek, tak můžeme na jednotlivé \underline{\ac{RPi}} nasadit předpřipravené kontejnery a nemusíme se skoro vůbec zabývat konfigurací operačního systému \underline{\ac{RPi}}.
 
-Kontejnery poskytují alternativu ke klasickému vývoji aplikací na jedné platformě, nebo operačním systému. Tento přístup může zhoršit kompatibilitu aplikace s jinými systémy, které nemusí sdílet stejné prostředí, jako systém, na kterém byla aplikace původně vyvíjena. Tato zhoršená kompatibilita může způsobit všelijaké problémy a chyby aplikace, které se potom musí řešit navíc. V realitě to pak znamená prodloužený čas vývoje, snížení produktivity a frustraci vývojářů.
+Kontejnery poskytují alternativu ke klasickému vývoji aplikací na jedné platformě, nebo operačním systému. V něktérých případěch nevýhodou kontejnerů je, že mohou zhoršit kompatibilitu aplikace s jinými systémy, které nemusí sdílet stejné prostředí, jako systém, na kterém byla aplikace původně vyvíjena. Tato zhoršená kompatibilita může způsobit různorodé problémy a chyby aplikace, které se potom musí řešit navíc. V realitě to pak znamená prodloužený čas vývoje, snížení produktivity a frustraci vývojářů.
 
 Díky zabalení aplikace v kontejneru, pak může být jednoduše spouštěna napříč platformami a operačními systémy. Také ji můžeme jednoduše přesouvat mezi zařízeními, protože vše co potřebuje, má zabaleno ve svém kontejneru.
 
@@ -588,7 +586,7 @@ Myšlenka kontejnerizace existuje dlouho. Docker, ale v roce 2013 stanovil stand
 
 \subsection{Výhody kontejnerizace}
 
-Kontejnery sdílejí kernel (jádro) operačního systému s jejich hostem. Kontejnery tak nepotřebují svůj vlastní operační systém a díky tomu jsou výpočetně nenáročné. Můžou tak běžet stejně na jakémkoliv zařízení, ať už se jedná o malé Raspberry Pi, nebo cloudové datacentra.
+Kontejnery sdílejí kernel (jádro) operačního systému s jejich hostem. Kontejnery tak nepotřebují svůj vlastní operační systém a díky tomu jsou výpočetně nenáročné. Můžou tak běžet stejně na jakémkoliv zařízení, ať už se jedná o malé \underline{\ac{RPi}}, nebo cloudová datacentra.
 
 \subsection{Kontejnery vs. virtuální počítače}
 
@@ -606,13 +604,13 @@ Virtuální počítače fungují dobře v tradičních a monolitických IT archi
 
 \section{Bezpečnost} \label{secBezpecnost}
 
-Náš projekt spadá do kategorie zařízení IoT, neboli Internet of Things. Česky by to byl \enquote{Internet věcí}. Bezpečnost IoT zařízení bylo vždy velké téma. Zařízení IoT jsou totiž nechvalně známé svou nedostatečnou bezpečností. Tyto zařízení často bývají pro útočníky pomyslnou bránou do lokální sítě jejich oběti.
+Náš projekt spadá do kategorie zařízení \ac{IoT}, neboli Internet of Things. Česky by to byl \enquote{Internet věcí}. Bezpečnost \underline{\ac{IoT}} zařízení bylo vždy velké téma. Zařízení \underline{\ac{IoT}} jsou totiž nechvalně známé svou nedostatečnou bezpečností. Tyto zařízení často bývají pro útočníky pomyslnou bránou do lokální sítě jejich oběti.
 
-Rozmach těchto zařízení u běžných lidí tento problém zvýraznil. Mezi poslední trendy technologie patří chytré domy, kde je vše ovládáno chytrými zařízeními, které lze nastavovat na dálku pomocí telefonu. Hlavní charakteristikou IoT je schopnost zařízení připojit se k internetu, a interagovat se svým okolím pomocí sběru a výměny dat. Jedná se o zařízení od chytrých ledniček, termostatů, automatických vysavačů a žaluzií až po žárovky. Tím že jsou všechny tyto zařízení připojeny k internetu, jen zvyšujeme šanci napadení.
+Rozmach těchto zařízení u běžných lidí tento problém zvýraznil. Mezi poslední trendy technologie patří chytré domy, kde je vše ovládáno chytrými zařízeními, které lze nastavovat na dálku pomocí telefonu. Hlavní charakteristikou \underline{\ac{IoT}} je schopnost zařízení připojit se k internetu, a interagovat se svým okolím pomocí sběru a výměny dat. Jedná se o zařízení od chytrých ledniček, termostatů, automatických vysavačů a žaluzií až po žárovky. Tím že jsou všechny tyto zařízení připojeny k internetu, jen zvyšujeme šanci napadení.
 
 Náš projekt je zcela nezávislý na serverech v cloudu, místo toho je komunikace s PlantHubem zprostředkována pouze v lokální síti. Tímto designem jsme sice znemožnili přístup k PlantHubu mimo lokální síť, ale zároveň jsme velmi pozitivně ovlivnili bezpečnost celého systému. Zařízení stále musí být připojeno k internetu, z důvodu získávání dat ohledně předpovědi počasí a polohy z \underline{\ac{API}} třetí strany. K přístupu a možnosti ovládání mimo lokální síť bychom potřebovali VPN server v lokální síti.
 
-K tomu jsme vybrali Fedora IoT jako naši linuxovou distribuci. Tato distribuce je přímo určená zařízením jako je naše, jak již vyplývá z názvu distribuce. Byla navržena s velkým důrazem na bezpečnost a základní nastavení distribuce je velmi bezpečné. Mezi bezpečnostní funkce patří SecureBoot, automatické šifrování úložiště, firewall a další.
+K tomu jsme vybrali Fedora \underline{\ac{IoT}} jako naši linuxovou distribuci. Tato distribuce je přímo určená zařízením jako je naše, jak již vyplývá z názvu distribuce. Byla navržena s velkým důrazem na bezpečnost a základní nastavení distribuce je velmi bezpečné. Mezi bezpečnostní funkce patří SecureBoot, automatické šifrování úložiště, firewall a další.
 
 \clearpage
 
