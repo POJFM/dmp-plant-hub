@@ -82,9 +82,9 @@
 
 „Prohlašujeme, že jsme tuto práci vypracovali samostatně a použili jsme literárních pramenů a informací, které citujeme a uvádíme v seznamu použité literatury a dalších zdrojů informací.“ \\
 \vspace*{0.5cm} \\
-\renewcommand{\arraystretch}{2}
 \begin{tabularx}{\textwidth}{l@{\hskip 0.75cm}X@{\hskip 1.5cm}X@{\hskip 0.75cm}l}
 	Ve Frýdku-Místku, dne: & \dotfill & \dotfill & podpis \\
+	& & & \\
 	Ve Frýdku-Místku, dne: & \dotfill & \dotfill & podpis \\
 \end{tabularx}
 
@@ -132,7 +132,7 @@ PlantHub je zavlažovací systém, s plánovaným a automatickým způsobem zavl
 
 \clearpage
 
-\section{Úvod}
+\section{Úvod} \label{secUvod}
 
 Naším cílem je návrh, sestavení a naprogramování automatického zavlažovacího systému s názvem PlantHub. Systém se skládá z řídící jednotky (stanice), senzorů, čerpadla, nádrže a \space \underline{\ac{WUI}}. Tato stanice pravidelně snímá data ze senzorů měřících teplotu a vlhkost vzduchu, vlhkost půdy a stav hladiny v nádrži, ze které stanice přečerpává vodu. Naměřená data se živě odesílají a zobrazují ve \underline{\ac{WUI}}, ve stejné chvíli se samostatně, v periodě čtyř hodin ukládají do databáze. Přístup k naměřeným datům a \underline{\ac{WUI}} má pouze uživatel lokální sítě, do které je PlantHub připojen.
 
@@ -142,34 +142,56 @@ Jednotlivé součásti a moduly stanice jsme vybrali podle finanční dostupnost
 
 Hlavní program jsme napsali v programovacím jazyce Go, jehož hlavní využití je vytváření backendů webových aplikací. Tento jazyk se nám zalíbil natolik, že jsme se v něm rozhodli vytvořit jak \ac{API}, databázové funkce, tak i hlavní program. Program je rozdělen na několik sekvencí, z toho hlavní jsou měřící sekvence a sekvence controlleru, která pomocí snímání dat z databáze určuje, zda se jedná o první spuštění PlantHubu. Na základě toho určí, jestli se spustí incializační sekvence nebo sekvence samotného zavlažování.
 
+\begin{itemize}
+	\item Kapitoly \underline{\ref{secUvod}}, \underline{\ref{secAcronyms}}, \underline{\ref{secZaver}}, \underline{\ref{secObrazky}}, \underline{\ref{secReference}}, \underline{\ref{secSoftware}}, \underline{\ref{secSeznamPriloh}}, \underline{\ref{secPrilohy}} jsme zpracovali společně. 
+	\item Kapitoly \underline{\ref{secHardware}}, \underline{\ref{secPCB}}, \underline{\ref{secRealizace}}, \underline{\ref{secProgram}} zpracoval Jakub Vantuch.
+	\item Kapitoly \underline{\ref{secWUI}}, \underline{\ref{secDB}}, \underline{\ref{secWebServer}}, \underline{\ref{secDocker}}, \underline{\ref{secBezpecnost}} zpracoval Filip Sikora.
+\end{itemize}
+
+
 \clearpage
 
-\section{Seznam zkratek a pojmů}
+\section{Seznam zkratek a pojmů} \label{secAcronyms}
 \begin{acronym}
-	\acro{WUI}{webové uživatelské rozhraní}	
+	\acro{WUI}{webové uživatelské rozhraní} \\
+		Vysvětleno v kapitole \underline{\ref{secWUI}}.
 	\acro{API}{application programming interface} \\
-		Spojení pro přenos dat mezi zařízeními nebo programy pomocí http protokolu.
+		Spojení pro přenos dat mezi zařízeními nebo programy, v našem případě, pomocí http protokolu.
 	\acro{REST}{representaion programming interface} \\
 		Definuje strukturu \underline{\ac{API}} tak, že zobrazuje všechna data a vytváří k nim jednoduchý přístup. Protože, ale nenačítá pouze vybraná data, není tento proces vždy vhodný, jelikož může v mnoha případech zpomalovat celou aplikaci. 
-	\acro{GraphQL}{graph query language}
-	\acro{PCB}{plošný spoj}
-	\acro{RPi}{Raspberry Pi}
-	\acro{ADC}{analogově digitální převodník}
-	\acro{DHT11}{digital humidity temperature v.11}
-	\acro{HC-SR04}{Ultrasonický senzor vzdálenosti}
-	\acro{LED}{light emitting diode}
-	\acro{DHCP}{dynamic host configuration protocol}
-	\acro{SAR}{successive-approximation}
-	\acro{MSB}{most significant bit}
-	\acro{LSB}{least significant bit}
-	\acro{Vref}[$ V_{ref}$]{Referenční napětí}
-	\acro{Vin}[$ V_{in}$]{Vstupní napětí}
-	\acro{Vdac}[$ V_{dac}$]{Napětí převedené z digitální do analogové hodnoty}
+	\acro{GraphQL}{graph query language} \\
+		Vysvětleno v kapitole \underline{\ref{secGraphQL}}.
+	\acro{PCB}{plošný spoj} \\ 
+		Předem připravené pájecí pole, vytvořené tak aby přesně odpovídalo danému obvodu.
+	\acro{RPi}{Raspberry Pi} \\ 
+		Mikropočítač s podporou IoT. Více v kapitole \underline{\ref{secRPi}}.
+	\acro{ADC}{analogově digitální převodník} \\ 
+		Vysvětleno v kapitole \underline{\ref{secADC}}.
+	\acro{DHT11}{digital humidity temperature v.11} \\ 
+		Senzor pro čtení hodnot teploty a vlhkosti vzduchu.
+	\acro{HC-SR04}{Ultrasonický senzor vzdálenosti} \\ 
+		Vysvětleno v kapitole \underline{\ref{secSonic}}.
+	\acro{LED}{light emitting diode} \\ 
+		Polovodičová součástka vyzařující světlo.
+	\acro{DHCP}{dynamic host configuration protocol} \\ 
+		Protokol pro automatické přiřazování IP adres v dané síti.
+	\acro{SAR}{successive-approximation} \\ 
+		Metoda převodu analogového vstupu na digitální. Více v kapitole \underline{\ref{secADC}}.
+	\acro{MSB}{most significant bit} \\ 
+		Vysvětleno v kapitole \underline{\ref{secADC}}.
+	\acro{LSB}{least significant bit} \\ 
+		Vysvětleno v kapitole \underline{\ref{secADC}}.
+	\acro{Vref}[$ V_{ref}$]{Referenční napětí} \\ 
+		Vysvětleno v kapitole \underline{\ref{secADC}}.
+	\acro{Vin}[$ V_{in}$]{Vstupní napětí} \\ 
+		Vysvětleno v kapitole \underline{\ref{secADC}}.
+	\acro{Vdac}[$ V_{dac}$]{Napětí převedené z digitální do analogové hodnoty} \\ 
+		Vysvětleno v kapitole \underline{\ref{secADC}}.
 \end{acronym}
 
 \clearpage
 
-\section{Hardware}
+\section{Hardware} \label{secHardware}
 
 \subsection{Senzory}
 
@@ -185,17 +207,17 @@ Vlhkost měří senzor na základě rezistivity substrátu, umístěného mezi d
 
 Jedná se o kapacitní senzor, který se skládá ze dvou vodivých desek a převodníku. Čidlo funguje na způsob kapacitoru avšak jeho kapacita je ovlivněna vlhkostí, která ovlivňuje dielektrikum mezi dvěma deskami.
 
-\subsubsection{Analogově digitální převodník MCP3008}
+\subsubsection{Analogově digitální převodník MCP3008} \label{secADC}
 
 \underline{\ac{RPi}} má v rámci general-purpose input/output (GPIO) pinů pouze digitální vstupy, protože je ale senzor vlhkosti půdy analogový, museli jsme použít \ac{ADC}.
 
-Pomocí \underline{\ac{ADC}} v integrovaném obvodu s 10-bitovým rozlišením tedy přemapujeme analogový signál do osmi různých digitálních hodnot, kterým se také říká bitové rozlišení. \underline{\ac{ADC}} měří hodnoty od 0 až po 1023 a následně je pomocí Serial Peripheral Interface (SPI) komunikace posílá do \underline{\ac{RPi}}. \underline{\ac{RPi}} metodou \ac{SAR} definuje adresu v binární formě, srozumitelné pro digitální vstup. V první iteraci převodu se na \underline{\ac{SAR}} registru nastaví první bit na logickou hodnotu 1, stane se z něj \ac{MSB}, ten určuje pozici výstupu srovnávání dané iterace. Je nutné mít správné referenční napětí, to totiž určuje\linebreak nejvyšší možnou binární adresu. Adresa v první iteraci teda bude polovinou nejvyšší možné binární adresy + 1. V další iteraci je první bit \ac{LSB}, to je ten bit, který se v dané iteraci používá pro výstup srovnávání a druhý bit se stává \underline{\ac{MSB}}. Srovnává se hodnota zpětné konverze binární adresy s hodnotou analogového vstupu, pokud je větší, na \underline{\ac{MSB}} se nastaví logická hodnota 1, pokud menší tak logická hodnota 0. Podle počtu bitů \underline{\ac{ADC}} se určují iterace a přesnost převedené hodnoty.
+Pomocí \underline{\ac{ADC}} v integrovaném obvodu s 10-bitovým rozlišením tedy přemapujeme analogový signál do deseti různých digitálních hodnot, kterým se také říká bitové rozlišení. \underline{\ac{ADC}} měří hodnoty od 0 až po 1023 a následně je pomocí Serial Peripheral Interface (SPI) komunikace posílá do \underline{\ac{RPi}}. \underline{\ac{RPi}} metodou \ac{SAR} definuje adresu v binární formě, srozumitelné pro digitální vstup. V první iteraci převodu se na \underline{\ac{SAR}} registru nastaví první bit na logickou hodnotu 1, stane se z něj \ac{MSB}, ten určuje pozici výstupu srovnávání dané iterace. Je nutné mít správné referenční napětí, to totiž určuje\linebreak nejvyšší možnou binární adresu. Adresa v první iteraci teda bude polovinou nejvyšší možné binární adresy + 1. V další iteraci je první bit \ac{LSB}, to je ten bit, který se v dané iteraci používá pro výstup srovnávání a druhý bit se stává \underline{\ac{MSB}}. Srovnává se hodnota zpětné konverze binární adresy s hodnotou analogového vstupu, pokud je větší, na \underline{\ac{MSB}} se nastaví logická hodnota 1, pokud menší tak logická hodnota 0. Podle počtu bitů \underline{\ac{ADC}} se určují iterace a přesnost převedené hodnoty.
 
 \vspace*{1cm}
 \noindent Příklad funkcionality, pro jednoduchost se 4-bitovým \underline{\ac{ADC}}. \\
 
 \noindent\ac{Vref}$ = 16V$ \\
-\noindent\ac{Vin}$ = 11.2V$ \\
+\noindent\ac{Vin}$ = 11V$ \\
 
 1. iterace
 
@@ -259,7 +281,7 @@ $\ac{Vdac} = 10$
 	\end{tabular}
 \end{center}
 
-\subsubsection{Ultrasonický senzor HC-SR04}
+\subsubsection{Ultrasonický senzor HC-SR04} \label{secSonic}
 
 \ac{HC-SR04} vydává zvukové vibrace na vysoké frekvenci, neslyšitelné pro lidské ucho. Poté čeká, až se zvuk odrazí zpět od překážky a vypočítá vzdálenost, na základě času měřeného od vysílání zvukové vlny k zpětnému přijmutí.
 
@@ -277,9 +299,9 @@ Námi zvolené ponorné mini čerpadlo se skládá z DC motoru, na němž je upe
 
 \subsubsection{Tranzistor 2N2222}
 
-Protože samotný signální pin neposkytuje dostatečné napětí pro chod čerpadla, ovládáme jej tranzistorem 2N2222. Tento tranzistor je bipolární Negative-Positive-Negative tranzistor, to znamená, že jeho polarita je nastavená tak, aby na kolektoru přijímal pozitivní napětí. Díky našemu vyměnitelnému připojení modulů, je možné čerpadlo vyměnit za jiné a přívodný kabel používat jako spouštěč čerpadla jakéhokoliv výkonu a nároků na zdroj.
+Protože samotný signální pin neposkytuje dostatečné napětí pro chod čerpadla, ovládáme jej tranzistorem 2N2222. Při výměně čerpadla za jiné, které je spouštěno samostatným relé, jde napětí stále přes tranzistor. Tento tranzistor je bipolární Negative-Positive-Negative tranzistor, to znamená, že jeho polarita je nastavená tak, aby na kolektoru přijímal pozitivní napětí. Díky našemu vyměnitelnému připojení modulů, je možné čerpadlo vyměnit za jiné a přívodný kabel používat jako spouštěč čerpadla jakéhokoliv výkonu a nároků na zdroj. Při používání čerpadla na 5V stačí dva vstupní kontakty + a -, při použití čerpadla se samostatným relé stačí pouze vyměnit kabel za ten se třemi vstupy +, -, a Signal, v tomto případě bude Signal na stejném pinu jako +, pouze přidáme přívodné napětí.
 
-\subsection{Raspberry Pi}
+\subsection{Raspberry Pi} \label{secRPi}
 
 Vybrali jsme si jej, protože kombinuje malou velikost a vyšší výpočetní sílu, než Arduino. Musí totiž zvládnout řídit všechny senzory, ukládat data do databáze a zároveň hostuje i samotnou webovou aplikaci.
 
@@ -291,7 +313,9 @@ Advanced RISC Machines (ARM) je založen na Reduced Instruction Set Computing (R
 
 Připojení \underline{\ac{RPi}} do lokální sítě je provedeno pomocí ethernet kabelu do patřičného routeru s \ac{DHCP} mechanismem. Klientský počítač připojený do stejné sítě, si poté může jednoduše zobrazit \underline{\ac{WUI}} hostované na samotném \underline{\ac{RPi}}
 
-\section{Návrh obvodu a plošného spoje}
+\clearpage
+
+\section{Návrh obvodu a plošného spoje} \label{secPCB}
 
 \subsection{Testovací verze}
 
@@ -326,7 +350,7 @@ Ve finální verzi jsme navrhli naše vlastní schéma hlavního obvodu (Obr. \r
 
 \clearpage
 
-\section{Fyzická realizace}
+\section{Fyzická realizace} \label{secRealizace}
 
 % Vymstila se nám však nepřesnost rozměrů krytu a při vkládání stanice do krytu se nám podařilo zlomit SD kartu s operačním systémem, daty a nasazenými programy. Po reinstalaci operačního systému jsme opravili rozměry vytvořeného modelu krytu a vytiskli kryt podruhé, tentokrát ve správných rozměrech.
 
@@ -382,7 +406,7 @@ Celý systém se tedy skládá z Hubu, nádrže, rostliny, routeru a klientskéh
 
 \clearpage
 
-\section{Hlavní program}
+\section{Hlavní program} \label{secProgram}
 
 \subsection{Postup práce}
 
@@ -400,7 +424,7 @@ Fáze programu se spouštějí buďto v samostatné go rutině a komunikují spo
 
 \subsubsection{Měření}
 
-Senzor vlhkosti půdy a \underline{\ac{DHT11}} průběžně posílají naměřená data do \underline{\ac{WUI}}. Hlavní program ve stejné chvíli čte data ze senzorů a kontroluje jestli naměřené hodnoty nepřekračují limitní hodnoty pro spuštění zavlažování. Pokud ano, \underline{\ac{RPi}} pošle signál pro otevření tranzistoru, což spustí čerpadlo.
+Senzor vlhkosti půdy a \underline{\ac{DHT11}} průběžně posílají naměřená data do \underline{\ac{WUI}}. Hlavní program ve stejné chvíli čte data ze senzorů a kontroluje jestli naměřené hodnoty nepřekračují limitní hodnoty vlhkosti půdy pro spuštění zavlažování, a ve stejné chvíli kontroluje jestli jestli není čas spustit čerpadlo podle plánovaného zavlažování. Pokud ano, \underline{\ac{RPi}} pošle signál pro otevření tranzistoru, což spustí čerpadlo.
 
 \subsubsection{Periodické ukládání dat}
 
@@ -451,7 +475,7 @@ Pragmatický design Go neobsahuje klíčové slovo pro třídu a jeho objektová
 
 \clearpage
 
-\section{WUI}
+\section{WUI} \label{secWUI}
 
 \subsection{Programování WUI}
 
@@ -520,31 +544,35 @@ V nastavení lze změnit nastavení aplikace, včetně limitů pro zavlažován�
 
 Součástí webového rozhraní jsou i praktické notifikace, které uživatele upozorňují na aktuální stav PlantHubu. Poskytují vizuální zpětnou vazbu, při průběhu zavlažování a kontrole nádrže. Při úspěšném dokončení zavlažování, informují uživatele. V případě, že je nádrž na vodu prázdná, tak uživatele s touto skutečností seznámí.
 
-\section{Databáze}
+\clearpage
+
+\section{Databáze} \label{secDB}
 
 \subsection{SQL}
 
 Pro databázi jsme se rozhodli použít databázový systém PostgreSQL.\@ Jak vyplývá z názvu, jedná se o Structured Query Language (SQL) databázi, ty jsou vhodné pro ukládání velkého objemu dat, jako právě data z našich senzorů. Webová aplikace používá pro přístup k datům z databáze \ac{GraphQL} \space \underline{\ac{API}}.\@
 
-\subsection{GraphQL}
+\subsection{GraphQL} \label{secGraphQL}
 
 Jedná se o typ přenosu dat z možností filtrace a dotazovací funkcionality. V mnoha ohledech je to konkurent řešení přenosu dat pomocí \ac{REST} \space \underline{\ac{API}}.\@ Nabízí rychlejší tvorbu \underline{\ac{API}} \space a také umožňuje efektivnější přístup k datům z databáze. Umožňuje vybrat pouze data, která momentálně aplikace používá a dovoluje vynechat data, která zrovna potřebná nejsou.
-
-\clearpage
 
 \subsection{Schéma databáze}
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.9\linewidth]{db.png}
+	\includegraphics[width=0.8\linewidth]{db.png}
 	\caption{Schéma databáze}
 \end{figure}
 
-\section{Webový server}
+\clearpage
+
+\section{Webový server} \label{secWebServer}
 
 Web server jsme napsali v moderním jazyku Go, který nyní získává na popularitě, hlavně mezi cloudovými vývojáři a v oblasti vývoje microservices. Dokáže se v rychlosti provedení programu přiblížit k nízkoúrovňovým jazykům, jako je C nebo Rust, ale zároveň zůstává velmi lidsky čitelný a jednoduchý na použití. Na rozdíl od jazyků jako C a Rust, má například garbage collector (automatický správce paměti), který periodicky čistí paměť a zabraňuje memory leakům.
 
-\section{Docker a kontejnerizace}
+\clearpage
+
+\section{Docker a kontejnerizace} \label{secDocker}
 
 % Docker kontejner si můžeme představit jako takový odlehčený virtuální počítač, ale s lepší škálovatelností a cílením hlavně na prostředí, důležité pro vývoj aplikací. Jde především o izolaci \underline{\ac{WUI}} od hostovaného systému, a plnou kontrolu nad prostředím \underline{\ac{WUI}}, databáze a hlavního programu.
 
@@ -574,21 +602,21 @@ Kontejnery jsou mnohem menší, velikostí většinou v řádech megabytů a neo
 
 Virtuální počítače fungují dobře v tradičních a monolitických IT architekturách. Kontejnery byly navrženy s důrazem na nejnovější a vznikající technologie, jako cloudy, CI/CD a DevOps.
 
-\section{Bezpečnost}
+\clearpage
+
+\section{Bezpečnost} \label{secBezpecnost}
 
 Náš projekt spadá do kategorie zařízení IoT, neboli Internet of Things. Česky by to byl \enquote{Internet věcí}. Bezpečnost IoT zařízení bylo vždy velké téma. Zařízení IoT jsou totiž nechvalně známé svou nedostatečnou bezpečností. Tyto zařízení často bývají pro útočníky pomyslnou bránou do lokální sítě jejich oběti.
 
-Rozmach těchto zařízení u běžných lidí tento problém zvýraznil. Mezi poslední trendy technologie patří chytré domy, kde je vše ovládáno chytrými zařízeními, které lze nastavovat na dálku pomocí telefonu. Hlavní charakteristikou IoT je schopnost zařízení připojit se k internetu a interagovat se svým okolí pomocí sběrem a výměnou dat. Zařízení od chytrých ledniček, termostatů, automatických vysavačů a žaluzií až po žárovky. Tím že jsou všechny tyto zařízení připojeny k internetu, jen zvyšujeme šanci napadení.
+Rozmach těchto zařízení u běžných lidí tento problém zvýraznil. Mezi poslední trendy technologie patří chytré domy, kde je vše ovládáno chytrými zařízeními, které lze nastavovat na dálku pomocí telefonu. Hlavní charakteristikou IoT je schopnost zařízení připojit se k internetu, a interagovat se svým okolím pomocí sběru a výměny dat. Jedná se o zařízení od chytrých ledniček, termostatů, automatických vysavačů a žaluzií až po žárovky. Tím že jsou všechny tyto zařízení připojeny k internetu, jen zvyšujeme šanci napadení.
 
-% TODO: ono to je připojené k internetu - předpověď počasí, soo idk bout this brah
-
-Náš projekt je zcela nezávislý na serverech v cloudu, místo toho je komunikace s PlantHubem zprostředkována pouze v lokální síti. Tímto designem jsme sice znemožnili přístup k PlantHubu mimo lokální síť, ale zároveň jsme velmi pozitivně ovlivnili bezpečnost celého systému. Vyřadili jsme totiž nejpravděpodobnější zdroj nebezpečí - připojení k internetu. K přístupu mimo lokální síť bychom potřebovali VPN server v lokální síti.
+Náš projekt je zcela nezávislý na serverech v cloudu, místo toho je komunikace s PlantHubem zprostředkována pouze v lokální síti. Tímto designem jsme sice znemožnili přístup k PlantHubu mimo lokální síť, ale zároveň jsme velmi pozitivně ovlivnili bezpečnost celého systému. Zařízení stále musí být připojeno k internetu, z důvodu získávání dat ohledně předpovědi počasí a polohy z \underline{\ac{API}} třetí strany. K přístupu a možnosti ovládání mimo lokální síť bychom potřebovali VPN server v lokální síti.
 
 K tomu jsme vybrali Fedora IoT jako naši linuxovou distribuci. Tato distribuce je přímo určená zařízením jako je naše, jak již vyplývá z názvu distribuce. Byla navržena s velkým důrazem na bezpečnost a základní nastavení distribuce je velmi bezpečné. Mezi bezpečnostní funkce patří SecureBoot, automatické šifrování úložiště, firewall a další.
 
 \clearpage
 
-\section{Závěr}
+\section{Závěr} \label{secZaver}
 
 Náš projekt je stále ve vývoji a některé z funkcí tohoto projektu, nefungují podle našich představ. I přes to, je náš systém v této chvíli použitelný. Myslíme si, že tento projekt má v budoucnu potenciál stát se úspěšným startupem. Proto plánujeme pokračovat v jeho vývoji i po maturitě.
 
@@ -598,14 +626,14 @@ Tato práce, byla pro nás velkým přínosem. Naučili jsme se mnoho nových do
 
 \clearpage
 
-\section{Seznam obrázků}
+\section{Seznam obrázků} \label{secObrazky}
 
 \vspace*{-1.5cm}
 \listoffigures
 
 \clearpage
 
-\section{Reference}
+\section{Reference} \label{secReference}
 
 \begin{thebibliography}{9}
 	\vspace*{-1.5cm}
@@ -643,7 +671,9 @@ Tato práce, byla pro nás velkým přínosem. Naučili jsme se mnoho nových do
 	An easier and PowerfulOnline PCB design tool. EasyEDA. [Online]. Dostupné z: \underline{\href{https://easyeda.com/}{https://easyeda.com/}}. [Zpřístupněno: 10-Dubna-2022]. 
 \end{thebibliography}
 
-\section{Seznam použitého softwaru}
+\clearpage
+
+\section{Seznam použitého softwaru} \label{secSoftware}
 
 \begin{enumerate}
 	\item Visual Studio Code
@@ -654,7 +684,9 @@ Tato práce, byla pro nás velkým přínosem. Naučili jsme se mnoho nových do
 	\item Git
 \end{enumerate}
 
-\section{Seznam příloh}
+\clearpage
+
+\section{Seznam příloh} \label{secSeznamPriloh}
 
 \begin{itemize}
 	\item Příloha 1: Typový systém v Go.png
@@ -663,6 +695,8 @@ Tato práce, byla pro nás velkým přínosem. Naučili jsme se mnoho nových do
 	\item Příloha 4: Prezentace.pdf
 \end{itemize}
 
-\section{Přílohy}
+\clearpage
+
+\section{Přílohy} \label{secPrilohy}
 
 \end{document} 
