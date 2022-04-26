@@ -207,7 +207,7 @@ Vlhkost měří senzor na základě rezistivity substrátu, umístěného mezi d
 
 \subsubsection{Senzor vlhkosti půdy}
 
-Jedná se o kapacitní senzor, který se skládá ze dvou vodivých desek a převodníku. Čidlo funguje na způsob kapacitoru avšak jeho kapacita je ovlivněna vlhkostí, která ovlivňuje dielektrikum mezi dvěma deskami.
+Jedná se o kapacitní senzor, který se skládá ze dvou vodivých desek a převodníku. Čidlo funguje na způsob kapacitoru, avšak jeho kapacita je ovlivněna vlhkostí, která ovlivňuje dielektrikum mezi dvěma deskami.
 
 \subsubsection{Analogově digitální převodník MCP3008} \label{secADC}
 
@@ -321,7 +321,7 @@ Připojení \underline{\ac{RPi}} do lokální sítě je provedeno pomocí ethern
 
 \subsection{Testovací verze}
 
-V prvním kroku jsme si vytvořili grafické znázornění celého obvodu (Obr. \ref{fig:graficke-znazorneni-obvodu}) v nástroji figma \cite{figma}, Testovací verzi našeho obvodu jsme postavili na nepájivém kontaktním poli. Jakmile jsme měli vše plně odzkoušeno a plně otestováno, přešli jsme na profesionálnější řešení.
+V prvním kroku jsme si vytvořili grafické znázornění celého obvodu (Obr. \ref{fig:graficke-znazorneni-obvodu}) v nástroji figma \cite{figma}. Testovací verzi našeho obvodu jsme postavili na nepájivém kontaktním poli. Jakmile jsme měli vše plně odzkoušeno a plně otestováno, přešli jsme na profesionálnější řešení.
 
 \noindent\begin{figure}[h]
 	\includegraphics[width=\linewidth]{obvod.png}
@@ -424,7 +424,7 @@ Fáze programu se spouštějí buďto v samostatné go rutině a komunikují spo
 
 \subsubsection{Měření}
 
-Senzor vlhkosti půdy a \underline{\ac{DHT11}} průběžně posílají naměřená data do \underline{\ac{WUI}}. Hlavní program ve stejné chvíli čte data ze senzorů a kontroluje jestli naměřené hodnoty nepřekračují limitní hodnoty vlhkosti půdy pro spuštění zavlažování, a ve stejné chvíli kontroluje jestli jestli není čas spustit čerpadlo podle plánovaného zavlažování. Pokud ano, \underline{\ac{RPi}} pošle signál pro otevření tranzistoru, což spustí čerpadlo.
+Senzor vlhkosti půdy a \underline{\ac{DHT11}} průběžně posílají naměřená data do \underline{\ac{WUI}}. Hlavní program ve stejné chvíli čte data ze senzorů a kontroluje jestli naměřené hodnoty nepřekračují limitní hodnoty vlhkosti půdy pro spuštění zavlažování, a ve stejné chvíli kontroluje jestli není čas spustit čerpadlo podle plánovaného zavlažování. Pokud ano, \underline{\ac{RPi}} pošle signál pro otevření tranzistoru, což spustí čerpadlo.
 
 \subsubsection{Periodické ukládání dat}
 
@@ -452,7 +452,7 @@ Po ukončení přečerpávání se spustí \underline{\ac{HC-SR04}} a změří v
 
 \subsubsection{Ukládání dat}
 
-Náš systém ukládá zvlášť periodicky naměřená data a data naměřená před zavlažováním. Dále ukládá nastavení jak pro limity k zavlažování, tak pro \underline{\ac{WUI}}.
+Náš systém ukládá zvlášť periodicky naměřená data a data naměřená před zavlažováním. Dále ukládá nastavení, jak pro limity k zavlažování, tak pro \underline{\ac{WUI}}.
 
 \subsection{Programovací jazyk Go}
 
@@ -467,7 +467,7 @@ nepotřebujeme běhové prostředí jako Common Language Runtime (CLR) a Java Vi
 
 Vývoj počítačů se v průběhu posledního desetiletí značně posunul. V minulosti aplikace běžely na počítačích pouze s jediným procesorovým jádrem. Dnes jsou standartně k vidění čtyřjádrové procesory v uživatelských počítačích, dokonce i naše \underline{\ac{RPi}} má dvě jádra. Stále používáme programovací jazyky a technologie navržené v éře, kdy byly dostupné pouze jednojádrové procesory.
 
-Většina programovacích jazyků dnes nabízí knihovny, nebo frameworky pro \linebreak paralelní programování, ale nemají tuto vlastnost zabudovanou přímo v jádře jazyka. V Go je paralelní programování součástí jazyka už od samotného počátku. Používá takzvané Gorutiny, které umožňují spouštět funkce souběžně. Souběžné funkce pak mezi sebou mohou komunikovat a předávat data pomocí kanálů. Dokonce i některé standardní knihovny jazyka mají zabudovanou souběžnost. Například standardní knihovna `net/http' pro programování HTTP, zpracovává přicházející požadavky souběžně pomocí Gorutin.
+Většina programovacích jazyků dnes nabízí knihovny, nebo frameworky pro \linebreak paralelní programování, ale nemají tuto vlastnost zabudovanou přímo v jádře jazyka. V Go je paralelní programování součástí jazyka, už od samotného počátku. Používá takzvané Gorutiny, které umožňují spouštět funkce souběžně. Souběžné funkce pak mezi sebou mohou komunikovat a předávat data pomocí kanálů. Dokonce i některé standardní knihovny jazyka mají zabudovanou souběžnost. Například standardní knihovna `net/http' pro programování HTTP, zpracovává přicházející požadavky souběžně pomocí Gorutin.
 
 \subsubsection{Typový systém}
 
@@ -606,11 +606,11 @@ Virtuální počítače fungují dobře v tradičních a monolitických IT archi
 
 Náš projekt spadá do kategorie zařízení \ac{IoT}, neboli Internet of Things. Česky by to byl \enquote{Internet věcí}. Bezpečnost \underline{\ac{IoT}} zařízení bylo vždy velké téma. Zařízení \underline{\ac{IoT}} jsou totiž nechvalně známé svou nedostatečnou bezpečností. Tyto zařízení často bývají pro útočníky pomyslnou bránou do lokální sítě jejich oběti.
 
-Rozmach těchto zařízení u běžných lidí tento problém zvýraznil. Mezi poslední trendy technologie patří chytré domy, kde je vše ovládáno chytrými zařízeními, které lze nastavovat na dálku pomocí telefonu. Hlavní charakteristikou \underline{\ac{IoT}} je schopnost zařízení připojit se k internetu, a interagovat se svým okolím pomocí sběru a výměny dat. Jedná se o zařízení od chytrých ledniček, termostatů, automatických vysavačů a žaluzií až po žárovky. Tím že jsou všechny tyto zařízení připojeny k internetu, jen zvyšujeme šanci napadení.
+Rozmach těchto zařízení u běžných lidí tento problém zvýraznil. Mezi poslední trendy technologie patří chytré domy, kde je vše ovládáno chytrými zařízeními, které lze nastavovat na dálku pomocí telefonu. Hlavní charakteristikou \underline{\ac{IoT}} je schopnost zařízení připojit se k internetu a interagovat se svým okolím pomocí sběru a výměny dat. Jedná se o zařízení od chytrých ledniček, termostatů, automatických vysavačů a žaluzií, až po žárovky. Tím, že jsou všechny tyto zařízení připojeny k internetu, jen zvyšujeme šanci napadení.
 
-Náš projekt je zcela nezávislý na serverech v cloudu, místo toho je komunikace s PlantHubem zprostředkována pouze v lokální síti. Tímto designem jsme sice znemožnili přístup k PlantHubu mimo lokální síť, ale zároveň jsme velmi pozitivně ovlivnili bezpečnost celého systému. Zařízení stále musí být připojeno k internetu, z důvodu získávání dat ohledně předpovědi počasí a polohy z \underline{\ac{API}} třetí strany. K přístupu a možnosti ovládání mimo lokální síť bychom potřebovali VPN server v lokální síti.
+Náš projekt je zcela nezávislý na serverech v cloudu, místo toho je komunikace s PlantHubem zprostředkována pouze v lokální síti. Tímto designem jsme sice znemožnili přístup k PlantHubu mimo lokální síť, ale zároveň jsme velmi pozitivně ovlivnili bezpečnost celého systému. Zařízení stále musí být připojeno k internetu, z důvodu získávání dat ohledně předpovědi počasí a polohy z \underline{\ac{API}} třetí strany. K přístupu a možnosti ovládání mimo lokální síť, bychom potřebovali VPN server v lokální síti.
 
-K tomu jsme vybrali Fedora \underline{\ac{IoT}} jako naši linuxovou distribuci. Tato distribuce je přímo určená zařízením jako je naše, jak již vyplývá z názvu distribuce. Byla navržena s velkým důrazem na bezpečnost a základní nastavení distribuce je velmi bezpečné. Mezi bezpečnostní funkce patří SecureBoot, automatické šifrování úložiště, firewall a další.
+K tomu jsme vybrali Fedora \underline{\ac{IoT}}, jako naši linuxovou distribuci. Tato distribuce je přímo určená zařízením jako je naše, jak již vyplývá z názvu distribuce. Byla navržena s velkým důrazem na bezpečnost a základní nastavení distribuce je velmi bezpečné. Mezi bezpečnostní funkce patří SecureBoot, automatické šifrování úložiště, firewall a další.
 
 \clearpage
 
