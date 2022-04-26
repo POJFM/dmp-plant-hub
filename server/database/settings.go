@@ -80,9 +80,9 @@ func (db *DB) UpdateSettings(ctx context.Context, input *model.NewSettings) *mod
 
 // GetSettingByColumn
 // usage:
-//	var kokote = []string{"limits_trigger", "water_level_limit", "water_amount_limit", "moist_limit", "scheduled_trigger"}
-//	kokotiny := db.GetSettingByColumn(kokote)
-//	fmt.Println(*kokotiny.LimitsTrigger)
+//	var columns = []string{"limits_trigger", "water_level_limit", "water_amount_limit", "moist_limit", "scheduled_trigger"}
+//	data := db.GetSettingByColumn(columns)
+//	fmt.Println(*data.LimitsTrigger)
 func (db *DB) GetSettingByColumn(columns []string) model.Setting {
 	var settings []model.Setting
 	err := db.DB.NewSelect().Model(&settings).Column(columns...).Limit(1).Scan(context.Background())
