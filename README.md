@@ -1,4 +1,4 @@
-# 🌱 plant-hub
+# 🌱 PlantHub
 
 Ultra advanced smart irrigation system.
 
@@ -23,7 +23,7 @@ Ultra advanced smart irrigation system.
 - Material UI
 - [Design on Figma](https://www.figma.com/file/7gMKRPDOrkKOT5GKmOmfsu/PlantHub?node-id=0%3A1)
 
-##🔧 Setup on RPi
+## 🔧 Setup on RPi
 
 clone the repository
 
