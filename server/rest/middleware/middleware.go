@@ -149,7 +149,12 @@ func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 	if data.Restart {
 		utils.Exit()
 	}
-	pumpState = data.PumpState
+
+	if data.PumpState {
+		Isens.StartPump()
+	} else {
+		Isens.StopPump()
+	}
 }
 
 func HandleGetWeather(w http.ResponseWriter, _ *http.Request) {

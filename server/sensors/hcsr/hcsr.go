@@ -4,6 +4,7 @@ import (
 	"go.bug.st/serial"
 	"log"
 	"strconv"
+	"strings"
 )
 
 // HCSR04 implements DistanceMeter interface
@@ -34,6 +35,6 @@ func NewHCSR04(portName string, baudRate int) *HCSR04 {
 func (hc *HCSR04) Dist() (float64, error) {
 	buff := make([]byte, 100)
 	n, err := hc.port.Read(buff)
-	dist, _ := strconv.ParseFloat(string(buff[:n]), 64)
+	dist, _ := strconv.ParseFloat(strings.TrimSuffix(string(buff[:n]), "\r\n"), 64)
 	return dist, err
 }
