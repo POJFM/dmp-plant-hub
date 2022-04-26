@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/utils"
 	"log"
 	"net/http"
+
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/utils"
 
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/database"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
@@ -20,13 +21,6 @@ func main() {
 	sensei := sens.Init()
 	sensei.StopLED()
 	sensei.StopPump()
-
-	// for {
-	// 	measurement := sensei.Measure()
-	// 	wl := sensei.ReadWaterLevel()
-	// 	fmt.Printf("temp: %f\nhum: %f\nmoi: %f\nwl: %f\n", measurement.Temp, measurement.Hum, measurement.Moist, wl)
-	// 	time.Sleep(2 * time.Second)
-	// }
 
 	go seq.Controller(db, sensei)
 

@@ -58,3 +58,44 @@ docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t tassiloba
 # server image
 docker buildx build --platform linux/arm64,linux/arm/v7 -t tassilobalbo/planthub-server --push server/.
 ```
+
+## 📄 Compile XeLaTeX to pdf
+
+1. Add `XeLaTeX` config in vscode
+
+```
+    "latex-workshop.latex.recipe.default": "latexmk (xelatex)",
+    "latex-workshop.latex.tools": [
+        {
+            "name": "xelatexmk",
+            "command": "latexmk",
+            "args": [
+                "-xelatex",
+                "-outdir=out",
+                "final-report.tex"
+            ]
+        },
+        {
+            "name": "latexmk",
+            "command": "latexmk",
+            "args": [
+                "-xelatex",
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOC%"
+            ]
+        }
+    ],
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "latexmk (xelatex)",
+            "tools": [
+                "xelatexmk"
+            ]
+        }
+    ],
+```
+
+2. Download `Calibri.ttf` and put it in `~/.fonts`
+3. Compile with `latexmk -xelatex -outdir=final-report ./final-report/final-report.tex`

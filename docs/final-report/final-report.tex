@@ -143,7 +143,7 @@ Jednotlivé součásti a moduly stanice jsme vybrali podle finanční dostupnost
 Hlavní program jsme napsali v programovacím jazyce Go, jehož hlavní využití je vytváření backendů webových aplikací. Tento jazyk se nám zalíbil natolik, že jsme se v něm rozhodli vytvořit jak \ac{API}, databázové funkce, tak i hlavní program. Program je rozdělen na několik sekvencí, z toho hlavní jsou měřící sekvence a sekvence controlleru, která pomocí snímání dat z databáze určuje, zda se jedná o první spuštění PlantHubu. Na základě toho určí, jestli se spustí incializační sekvence nebo sekvence samotného zavlažování.
 
 \begin{itemize}
-	\item Kapitoly \underline{\ref{secUvod}}, \underline{\ref{secAcronyms}}, \underline{\ref{secZaver}}, \underline{\ref{secObrazky}}, \underline{\ref{secReference}}, \underline{\ref{secSoftware}}, \underline{\ref{secSeznamPriloh}}, \underline{\ref{secPrilohy}} jsme zpracovali společně. 
+	\item Kapitoly \underline{\ref{secUvod}}, \underline{\ref{secAcronyms}}, \underline{\ref{secZaver}}, \underline{\ref{secObrazky}}, \underline{\ref{secReference}}, \underline{\ref{secSoftware}}, \underline{\ref{secSeznamPriloh}} jsme zpracovali společně. 
 	\item Kapitoly \underline{\ref{secHardware}}, \underline{\ref{secPCB}}, \underline{\ref{secRealizace}}, \underline{\ref{secProgram}} zpracoval Jakub Vantuch.
 	\item Kapitoly \underline{\ref{secWUI}}, \underline{\ref{secDB}}, \underline{\ref{secWebServer}}, \underline{\ref{secDocker}}, \underline{\ref{secBezpecnost}} zpracoval Filip Sikora.
 \end{itemize}
@@ -199,11 +199,7 @@ Hlavní program jsme napsali v programovacím jazyce Go, jehož hlavní využit�
 
 \subsubsection{Senzor teploty a vlhkosti vzduchu DHT11}
 
-Senzor \ac{DHT11} se skládá z jednotky pro měření teploty, jednotky pro měření vlhkosti vzduchu a převodníku.
-
-Teplotu měří senzor termistorem. Termistor je keramický polovodič, který zmenšuje svou rezistivitu, když se okolní teplota zvýší.
-
-Vlhkost měří senzor na základě rezistivity substrátu, umístěného mezi dvěma elektrodami. Tento substrát zachytává vlhkost a vytváří tak vodivé prostředí.
+Senzor \ac{DHT11} se skládá z jednotky pro měření teploty, jednotky pro měření vlhkosti vzduchu a převodníku. Teplotu měří senzor termistorem. Termistor je keramický polovodič, který zmenšuje svou rezistivitu, když se okolní teplota zvýší. Vlhkost měří senzor na základě rezistivity substrátu, umístěného mezi dvěma elektrodami. Tento substrát zachytává vlhkost a vytváří tak vodivé prostředí.
 
 \subsubsection{Senzor vlhkosti půdy}
 
@@ -285,11 +281,11 @@ $\ac{Vdac} = 10$
 
 \subsubsection{Ultrasonický senzor HC-SR04} \label{secSonic}
 
-\ac{HC-SR04} vydává zvukové vibrace na vysoké frekvenci, neslyšitelné pro lidské ucho. Poté čeká, až se zvuk odrazí zpět od překážky a vypočítá vzdálenost, na základě času měřeného od vysílání zvukové vlny k zpětnému přijmutí.
+\ac{HC-SR04} vydává zvukové vibrace na vysoké frekvenci, neslyšitelné pro lidské ucho. Poté čeká, až se zvuk odrazí zpět od překážky a vypočítá vzdálenost, na základě času měřeného od vysílání zvukové vlny k zpětnému přijmutí. Z důvodu špatného a né tolik přesného převodu hodnot při použití kombinace \underline{\ac{RPi}} a Go jsme byli nuceni k tomuto senzoru připojit Arduino Nano jako prostředníka pro správný převod hodnot. To jsme poté pomocí USB portu připojili k \underline{\ac{RPi}}.
 
 \subsubsection{Čerpadlo}
 
-Námi zvolené ponorné mini čerpadlo se skládá z DC motoru, na němž je upevněna centrifuga pro čerpání vody a vlastního pouzdra, z kterého vede otvor pro napojení odtokové hadičky. Čerpadlo je připojeno na zdroj napětí a jeho kostra je uzemněna. Bohužel v procesu testování se nám pokazilo čerpadlo, takže jsme museli vymyslet alternativní cestu, která se nakonec ukázala tou lepší variantou. Koupili jsme nové silnější čerpadlo, připojili k němu samostatný zdroj a přidali relé na jeho spouštění, jako je ukázáno v schématu (Obr. \ref{fig:schema-obvodu-cerpadla}), které jsme vytvořili v nástroji EasyEDA \cite{easyeda}. Zdroj \underline{\ac{RPi}} jsme použili jako signální pin pro spínání relé a vše jsme poskládali do samostatného krytu.
+Námi původně zvolené ponorné mini čerpadlo se skládá z DC motoru, na němž je upevněna centrifuga pro čerpání vody a vlastního pouzdra, z kterého vede otvor pro napojení odtokové hadičky. Čerpadlo je připojeno na zdroj napětí a jeho kostra je uzemněna. Bohužel v procesu testování se nám pokazilo čerpadlo, takže jsme museli vymyslet alternativní cestu, která se nakonec ukázala tou lepší variantou. Koupili jsme nové silnější čerpadlo, fungující na stejném principu, připojili k němu samostatný zdroj a přidali relé na jeho spouštění, jako je ukázáno v schématu (Obr. \ref{fig:schema-obvodu-cerpadla}), které jsme vytvořili v nástroji EasyEDA \cite{easyeda}. Zdroj \underline{\ac{RPi}} jsme použili jako signální pin pro spínání relé a vše jsme poskládali do samostatného krytu.
 
 \vspace*{1cm}
 \begin{figure}[h]
@@ -321,7 +317,7 @@ Připojení \underline{\ac{RPi}} do lokální sítě je provedeno pomocí ethern
 
 \subsection{Testovací verze}
 
-V prvním kroku jsme si vytvořili grafické znázornění celého obvodu (Obr. \ref{fig:graficke-znazorneni-obvodu}) v nástroji figma \cite{figma}, Testovací verzi našeho obvodu jsme postavili na nepájivém kontaktním poli. Jakmile jsme měli vše plně odzkoušeno a plně otestováno, přešli jsme na profesionálnější řešení.
+V prvním kroku jsme si vytvořili grafické znázornění celého obvodu (Obr. \ref{fig:graficke-znazorneni-obvodu}) v nástroji figma \cite{figma}, Testovací verzi našeho obvodu jsme postavili na nepájivém kontaktním poli. Po úspěšném otestování a ověření funkčnosti všech senzorů jsme přešli na profesionálnější řešení.
 
 \noindent\begin{figure}[h]
 	\includegraphics[width=\linewidth]{obvod.png}
@@ -383,13 +379,19 @@ Zkompletovaný hub se tedy skládá z pouzdra, \underline{\ac{RPi}}, \underline{
 
 \subsection{Nádrž}
 
-K zavlažování bylo potřeba postavit nádrž na vodu, ze které bude naše čerpadlo přečerpávat vodu k zavlažování. Nejvhodnějším řešením je nádoba s co\linebreak největším objemem, která bude jednoduše přenosná, odolná a nebude složité\linebreak připevnit na ní senzory. Nakonec jsme ji postavili z upraveného 5L pivního soudku, natřeli antikorozní barvou a upravili podle našich potřeb.
+K zavlažování bylo potřeba postavit nádrž na vodu, ze které bude naše čerpadlo přečerpávat vodu k zavlažování. Nejvhodnějším řešením je nádoba s co\linebreak největším objemem, která bude jednoduše přenosná, odolná a nebude složité\linebreak připevnit na ní senzory. Naše první verze nádoby z upraveného 5L pivního soudku, nebyla tolik úspěšná. I přesto, že jsme ji natřeli antikorozní barvou tak začala na několika místech rezivět a z důvodu špatného upevnění čerpadla i protékat. Poté co se nám pokazilo původní čerpadlo jsme byli plně rozhodnuti pro změnu nádrže, kterou používáme doteď. Nádrž má stejný objem jako ta původní, tedy 5L, ale je lépe přenosná a odolnější, což přispívá její životnosti. Přívodová hadička je do ní vedena víčkem a vystužena polyvinyl chloride (PVC) trubkou aby se nekroutila a dosáhla až na dno.
 
 \vspace*{1cm}
 \begin{figure}[h]
-	\centering
-	\includegraphics[width=0.7\linewidth]{nadrz.jpeg}
-	\caption{Nádrž}
+	\begin{minipage}[t]{0.4\linewidth}
+		\includegraphics[width=\linewidth]{nadrz.jpeg}
+		\caption{První verze nádrže}
+	\end{minipage}
+	\hfill
+	\begin{minipage}[t]{0.6\linewidth}
+		\includegraphics[width=\linewidth]{nadrz-cerpadlo.jpeg}
+		\caption{Finální verze nádrže}
+	\end{minipage}
 \end{figure}
 
 \clearpage
@@ -398,6 +400,7 @@ K zavlažování bylo potřeba postavit nádrž na vodu, ze které bude naše č
 
 Celý systém se tedy skládá z Hubu, nádrže, rostliny, routeru a klientského zařízení. Sestavení trvá asi 5 minut, protože musíme počkat, než se načte OS \underline{\ac{RPi}} a následně zapojit všechny modulární části našeho systému.
 
+\vspace*{1cm}
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.9\linewidth]{planthub.jpeg}
@@ -412,6 +415,7 @@ Celý systém se tedy skládá z Hubu, nádrže, rostliny, routeru a klientskéh
 
 Náš hlavní program pro zavlažování, komunikaci s databází a \underline{\ac{WUI}} jsme začali psát ve vysokoúrovňovém programovacím jazyce Python. Od toho jsme nakonec upustili, kvůli horšímu výkonu. Program jsme přepsali v programovacím jazyku Go.
 
+\vspace*{1cm}
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.72\linewidth]{go.png}
@@ -550,19 +554,19 @@ Součástí webového rozhraní jsou i praktické notifikace, které uživatele 
 
 \subsection{SQL}
 
-Pro databázi jsme se rozhodli použít databázový systém PostgreSQL.\@ Jak vyplývá z názvu, jedná se o Structured Query Language (SQL) databázi, ty jsou vhodné pro ukládání velkého objemu dat, jako právě data z našich senzorů. Webová aplikace používá pro přístup k datům z databáze \ac{GraphQL} \space \underline{\ac{API}}.\@
+Pro databázi jsme se rozhodli použít relační databázový systém PostgreSQL.\@ Jak vyplývá z názvu, jedná se o Structured Query Language (SQL) databázi, ty jsou vhodné pro ukládání velkého objemu dat, jako právě data z našich senzorů. Webová aplikace používá pro přístup k datům z databáze \ac{GraphQL} \space \underline{\ac{API}}. Naše schéma, jako je ukázáno na (Obr. \ref{fig:schemaDB}), je propojeno pomocí \underline{\ac{GraphQL}}.
 
-\subsection{GraphQL} \label{secGraphQL}
-
-Jedná se o typ přenosu dat z možností filtrace a dotazovací funkcionality. V mnoha ohledech je to konkurent řešení přenosu dat pomocí \ac{REST} \space \underline{\ac{API}}.\@ Nabízí rychlejší tvorbu \underline{\ac{API}} \space a také umožňuje efektivnější přístup k datům z databáze. Umožňuje vybrat pouze data, která momentálně aplikace používá a dovoluje vynechat data, která zrovna potřebná nejsou.
-
-\subsection{Schéma databáze}
-
+\vspace*{1cm}
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.8\linewidth]{db.png}
 	\caption{Schéma databáze}
+	\label{fig:schemaDB}
 \end{figure}
+
+\subsection{GraphQL} \label{secGraphQL}
+
+Jedná se o typ přenosu dat z možností filtrace a dotazovací funkcionality. V mnoha ohledech je to konkurent řešení přenosu dat pomocí \ac{REST} \space \underline{\ac{API}}.\@ Nabízí rychlejší tvorbu \underline{\ac{API}} \space a také umožňuje efektivnější přístup k datům z databáze. Umožňuje vybrat pouze data, která momentálně aplikace používá a dovoluje vynechat data, která zrovna potřebná nejsou.
 
 \clearpage
 
@@ -688,13 +692,9 @@ Tato práce, byla pro nás velkým přínosem. Naučili jsme se mnoho nových do
 
 \begin{itemize}
 	\item Příloha 1: Typový systém v Go.png
-	\item Příloha 2: Zdrojový kód
-	\item Příloha 3: Modely krytu
-	\item Příloha 4: Prezentace.pdf
+	\item Příloha 2: Source-code
+	\item Příloha 3: Pcb
+	\item Příloha 4: Case
 \end{itemize}
-
-\clearpage
-
-\section{Přílohy} \label{secPrilohy}
 
 \end{document} 

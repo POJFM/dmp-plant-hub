@@ -3,14 +3,12 @@ import axios from 'axios'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import EditableField from './fields/EditableField'
-import EnumEditableField from './fields/EnumEditableField'
 import ToggleButton from './buttons/ToggleButton'
 import SaveButton from './buttons/SaveButton'
 import CancelButton from './buttons/CancelButton'
 import { useQuery, useMutation } from '@apollo/client'
 import { settings } from '../graphql/queries'
 import { updateSettingsMut } from '../graphql/mutations'
-//import { fetchCoordsFromLocation } from 'src/utils'
 
 export default function Settings() {
 	const { data: settingsData } = useQuery(settings),
@@ -198,8 +196,6 @@ export default function Settings() {
 				break
 			}
 		}
-
-		//buttonsState ? setIrrigationDurationStateClass('var(--inactiveGrey)') : setIrrigationDurationStateClass('#000000')
 	}
 
 	const handleCancelButton = () => {
@@ -375,7 +371,6 @@ export default function Settings() {
 									</div>
 									<div
 										className="flex-row pt-1"
-										// tohle je na prasáka ale funguje to
 										onChange={(data: any) => updateInputData('location', data)}
 										onBlur={(data: any) => updateInputData('location', data)}
 									>

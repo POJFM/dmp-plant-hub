@@ -143,17 +143,6 @@
 		font-size: 1.1em;
 	}
 
-	.refresh-button-wrapper {
-		position: relative;
-	}
-
-	.refresh-button {
-		float: right;
-		display: flex;
-		justify-content: right;
-		align-items: right;
-	}
-
 	.input-field {
 		border-bottom: 1px solid var(--darkGreen);
 		padding: 0 10px;
@@ -354,10 +343,6 @@
 	}
 
 	@variants hover, focus {
-		.refresh-button {
-			cursor: pointer;
-		}
-
 		.button-hover {
 			background: var(--lightGreen);
 			cursor: pointer;

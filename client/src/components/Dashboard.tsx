@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
-//import { RefreshButton } from './buttons/RefreshButton'
 import { useQuery } from '@apollo/client'
 import { dashboard } from '../graphql/queries'
 import {
@@ -197,30 +196,6 @@ export default function Dashboard() {
 			.catch((error) => {
 				console.error(error)
 			})
-	}
-
-	const useHorizontalScroll = () => {
-		const elRef = useRef()
-		useEffect(() => {
-			const el = elRef.current
-			if (el) {
-				const onWheel = (e: any) => {
-					if (e.deltaY == 0) return
-					e.preventDefault()
-					//@ts-ignore
-					el.scrollTo({
-						//@ts-ignore
-						left: el.scrollLeft + e.deltaY,
-						behavior: 'smooth',
-					})
-				}
-				//@ts-ignore
-				el.addEventListener('wheel', onWheel)
-				//@ts-ignore
-				return () => el.removeEventListener('wheel', onWheel)
-			}
-		}, [])
-		return elRef
 	}
 
 	ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend)

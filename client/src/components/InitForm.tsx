@@ -159,7 +159,6 @@ export default function InitForm(props: any) {
 				},
 			})
 			.then((res) => {
-				//console.log(res)
 				setMoistLimit(res.data.moistLimit)
 				setWaterLevelLimit(res.data.waterLevelLimit)
 				setLimitValues(true)
