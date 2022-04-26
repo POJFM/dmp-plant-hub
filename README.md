@@ -1,8 +1,14 @@
-# 🌱 plant-hub
+# 🌱 PlantHub
 
 Ultra advanced smart irrigation system.
 
-## 🖥️ Server and main program
+<div style="text-align: center;">
+  <img alt="planthub" src="docs/final-report/img/planthub.jpg">
+</div>
+
+## 🍔 Tech stack
+
+### 🖥️ Server and main app
 
 - Chad GoLang
 - Postgres DB :5420
@@ -10,21 +16,66 @@ Ultra advanced smart irrigation system.
 - GraphQL API for DB data
 - REST API for live data from sensors
 
-## 🖼️ Web app (client)
+### 🌿 Web app (client)
 
 - React
 - Tailwind
 - Material UI
 - [Design on Figma](https://www.figma.com/file/7gMKRPDOrkKOT5GKmOmfsu/PlantHub?node-id=0%3A1)
 
-## ⚙️ Setup cross-compile on Arch
+## 🔧 Setup on RPi
 
-```
-yay -S arm-linux-gnueabihf-glibc-headers
-yay -S arm-linux-gnueabihf-gcc-stage2 arm-linux-gnueabihf-glibc
+clone the repository
+
+```bash
+git clone git@github.com:POJFM/dmp-plant-hub.git
+cd dmp-plant-hub
 ```
 
-To anyone having issues building `arm-linux-gnueabihf-gcc-stage1` (`arm-linux-gnueabihf-glibc-headers` dependency), ensure that your makepkg.conf doesn't include "-Werror=format-security" in cflags. This might be causing the build to fail. <sup>[[1]](https://aur.archlinux.org/packages/arm-linux-gnueabihf-gcc-stage1/#pinned-806072)</sup>
+create server and docker `.env` files
+
+```bash
+# server .env
+cp server/.env.example server/.env
+# docker .env
+cp docker.env.example docker.env
+```
+
+let docker do its thing
+
+```bash
+docker-compose up -d
+```
+
+
+## 📦 Build docker images for arm
+
+create client `.env` file
+
+```bash
+cp client/.env.example client/.env
+```
+
+setup docker
+
+```bash
+# create bob the builder
+docker buildx create --name bob
+# switch to bob
+docker buildx use bob
+docker buildx inspect --bootstrap
+docker login
+docker buildx
+```
+
+build and push images or run `scripts/build-docker.sh`
+
+```bash
+# client image
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t tassilobalbo/planthub-client --push client/.
+# server image
+docker buildx build --platform linux/arm64,linux/arm/v7 -t tassilobalbo/planthub-server --push server/.
+```
 
 ## 🏠 Setup local subnet
 
