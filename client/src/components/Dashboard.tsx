@@ -152,7 +152,7 @@ export default function Dashboard() {
 		axios
 			.request({
 				method: 'GET',
-				url: `http://4.2.0.225:5000/api/weather`,
+				url: `${process.env.REACT_APP_GO_API_URL}/api/weather`,
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -170,7 +170,7 @@ export default function Dashboard() {
 		axios
 			.request({
 				method: 'GET',
-				url: `http://4.2.0.225:5000/live/measure`,
+				url: `${process.env.REACT_APP_GO_API_URL}/live/measure`,
 				headers: {
 					'Content-Type': 'application/json',
 				},

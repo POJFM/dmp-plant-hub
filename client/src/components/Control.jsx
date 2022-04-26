@@ -32,7 +32,7 @@ export default function Control(props) {
 
 		axios
 			.post(
-				`http://4.2.0.225:5000/live/control`,
+				`${process.env.REACT_APP_GO_API_URL}/live/control`,
 				{
 					pumpState: true,
 					restart: false,
@@ -63,7 +63,7 @@ export default function Control(props) {
 
 		axios
 		.post(
-			`http://4.2.0.225:5000/live/control`,
+			`${process.env.REACT_APP_GO_API_URL}/live/control`,
 			{
 				pumpState: false,
 				restart: false,
