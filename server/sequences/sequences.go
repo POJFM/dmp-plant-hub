@@ -74,26 +74,8 @@ func Controller(db *db.DB, sensei *sens.Sensors) {
 		go initializationSequence(sensei)
 		initializationFinished := true
 		for initializationFinished {
-			// stopLED := make(chan bool)
-			// go func() {
-			// 	for {
-			// 		select {
-			// 		case <-stopLED:
-			// 			return
-			// 		default:
-			// 			// for i := 0; i < 2; i++ {
-			// 			// 	sensei.StartLED()
-			// 			// 	time.Sleep(500 * time.Millisecond)
-			// 			// 	sensei.StopLED()
-			// 			// 	time.Sleep(500 * time.Millisecond)
-			// 			// }
-			// 			time.Sleep(1500 * time.Millisecond)
-			// 		}
-			// 	}
-			// }()
 			if db.CheckSettings() {
 				initializationFinished = false
-				// stopLED <- true
 				go measurementSequence(sensei)
 				go saveOnFourHoursPeriod(db)
 				go irrigationSequence(db, sensei)
@@ -106,30 +88,25 @@ func Controller(db *db.DB, sensei *sens.Sensors) {
 func CheckingSequence(db *db.DB, sensei *sens.Sensors) {
 	log.Println("Starting Checking Sequence...🌿🤖🚿")
 
-	// settings := db.GetSettingByColumn([]string{"water_level_limit"})
+	settings := db.GetSettingByColumn([]string{"water_level_limit"})
 
 	mid.LoadLiveNotify("Kontrola Nádrže", "inProgress", "Probíhá kontrola nádrže")
-	// req.PostLiveNotify(model.LiveNotify{Title: "Kontrola Nádrže", State: "inProgress", Action: "Probíhá kontrola nádrže"})
 
 	time.Sleep(3000 * time.Millisecond)
 
-	// if sensei.ReadWaterLevel() < *settings.WaterLevelLimit {
-	// 	mid.LoadLiveNotify("Doplňte nádrž", "physicalHelpRequired", "Nádrž je prázdná")
-	// 	//req.PostLiveNotify(model.LiveNotify{Title: "Doplňte nádrž", State: "physicalHelpRequired", Action: "Nádrž je prázdná"})
+	if sensei.ReadWaterLevel() < *settings.WaterLevelLimit {
+		mid.LoadLiveNotify("Doplňte nádrž", "physicalHelpRequired", "Nádrž je prázdná")
 
-	// 	fmt.Println("Water tank limit level reached...🚫🤖🚫")
+		log.Println("Water tank limit level reached...🚫🤖🚫")
 
-	// 	fmt.Println("namerena nadrz: ", sensei.ReadWaterLevel())
-	// 	fmt.Println("limit nadrze: ", *settings.WaterLevelLimit)
+		log.Println("namerena nadrz: ", sensei.ReadWaterLevel())
+		log.Println("limit nadrze: ", *settings.WaterLevelLimit)
 
-	// 	for sensei.ReadWaterLevel() < *settings.WaterLevelLimit {
-	// 		// sensei.StartLED()
-	// 		// time.Sleep(1000 * time.Millisecond)
-	// 		// sensei.StopLED()
-	// 		fmt.Println("dopln nadrz chuju")
-	// 		time.Sleep(1000 * time.Millisecond)
-	// 	}
-	// }
+		for sensei.ReadWaterLevel() < *settings.WaterLevelLimit {
+			log.Println("doplnit nadrz")
+			time.Sleep(1000 * time.Millisecond)
+		}
+	}
 
 	waterLevel := fmt.Sprintf("V nádrži zbývá %fl vody", sensei.ReadWaterLevel())
 	// Dodělat na water amount v litrech
@@ -299,7 +276,7 @@ func measurementSequence(sensei *sens.Sensors) {
 		gLastMoist = moist
 
 		// fmt.Printf("temp: %f\nhum: %f\nmoi: %f\n", temp, hum, moist)
-		// go fmt.Printf("sonicbuzik: %f", sensei.ReadWaterLevel())
+		go fmt.Printf("sonicbuzik: %f\n", sensei.ReadWaterLevel())
 
 		mid.LoadLiveMeasure(&moist, &hum, &temp)
 	},

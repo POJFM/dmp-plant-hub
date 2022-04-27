@@ -3,29 +3,32 @@ package middleware
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/SPSOAFM-IT18/dmp-plant-hub/utils"
 	"io"
+	"log"
 	"net/http"
+	"time"
 
 	db "github.com/SPSOAFM-IT18/dmp-plant-hub/database"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/env"
 	"github.com/SPSOAFM-IT18/dmp-plant-hub/rest/model"
 	sens "github.com/SPSOAFM-IT18/dmp-plant-hub/sensors"
-	"github.com/SPSOAFM-IT18/dmp-plant-hub/utils"
 )
 
 var (
-	pumpState = false
-	moist     float64
-	hum       float64
-	temp      float64
-	WLL       float64
-	LNtitle   string
-	LNstate   = "inactive"
-	LNaction  string
-	Isens     *sens.Sensors
-	Idb       *db.DB
-	lat       float64
-	lon       float64
+	pumpState  = false
+	moist      float64
+	hum        float64
+	temp       float64
+	WLL        float64
+	LNtitle    string
+	LNstate    = "inactive"
+	LNaction   string
+	Isens      *sens.Sensors
+	Idb        *db.DB
+	lat        float64
+	lon        float64
+	irrigation = false
 )
 
 func LoadInitMeasured(initM, initWLL *float64) {
@@ -90,7 +93,7 @@ func HandlePostInitMeasured(w http.ResponseWriter, r *http.Request) {
 	w = setPostHeader(w)
 	var data model.PostInitMeasured
 	_ = json.NewDecoder(r.Body).Decode(&data)
-	fmt.Print("POST INIT MEASURED: ", data)
+	log.Println("POST INIT MEASURED: ", data)
 
 	lat = data.Lat
 	lon = data.Lon
@@ -152,7 +155,53 @@ func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 
 	if data.PumpState {
 		Isens.StartPump()
+
+		log.Println("Starting irrigation...🌿🤖🚿")
+
+		LoadLiveNotify("Zavlažování", "inProgress", "Probíhá zavlažování")
+
+		irrigation = true
 	} else {
+		if irrigation {
+			Isens.StopPump()
+
+			LoadLiveNotify("Zavlažování", "finished", "Zavlažování dokončeno")
+
+			time.Sleep(2000 * time.Millisecond)
+
+			log.Println("Starting Checking Sequence...🌿🤖🚿")
+
+			settings := Idb.GetSettingByColumn([]string{"water_level_limit"})
+
+			LoadLiveNotify("Kontrola Nádrže", "inProgress", "Probíhá kontrola nádrže")
+
+			time.Sleep(2000 * time.Millisecond)
+
+			if Isens.ReadWaterLevel() < *settings.WaterLevelLimit {
+				LoadLiveNotify("Doplňte nádrž", "physicalHelpRequired", "Nádrž je prázdná")
+
+				log.Println("Water tank limit level reached...🚫🤖🚫")
+
+				log.Println("namerena nadrz: ", Isens.ReadWaterLevel())
+				log.Println("limit nadrze: ", *settings.WaterLevelLimit)
+
+				for Isens.ReadWaterLevel() < *settings.WaterLevelLimit {
+					log.Println("doplnit nadrz")
+					time.Sleep(1000 * time.Millisecond)
+				}
+			}
+
+			waterLevel := fmt.Sprintf("V nádrži zbývá %fl vody", Isens.ReadWaterLevel())
+			// Dodělat na water amount v litrech
+			LoadLiveNotify("Kontrola Nádrže", "finished", waterLevel)
+
+			time.Sleep(3000 * time.Millisecond)
+
+			LoadLiveNotify("", "inactive", "")
+
+			irrigation = false
+		}
+
 		Isens.StopPump()
 	}
 }
@@ -173,7 +222,7 @@ func HandleGetWeather(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(res.StatusCode)
 	}
 	defer res.Body.Close()
-	fmt.Println(res.Body)
+	log.Println(res.Body)
 
 	w.WriteHeader(http.StatusOK)
 	_, _ = io.Copy(w, res.Body)
@@ -182,7 +231,6 @@ func HandleGetWeather(w http.ResponseWriter, _ *http.Request) {
 func HandleGetGeocode(w http.ResponseWriter, _ *http.Request) {
 	w = setGetHeader(w)
 	w.WriteHeader(http.StatusOK)
-	//w = setGetHeader(w)
 
 	if Idb.CheckSettings() {
 		geocodes := Idb.GetSettingByColumn([]string{"lat", "lon"})
@@ -196,7 +244,6 @@ func HandleGetGeocode(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(res.StatusCode)
 	}
 	defer res.Body.Close()
-	//fmt.Println(res.Body)
 
 	w.WriteHeader(http.StatusOK)
 	_, _ = io.Copy(w, res.Body)

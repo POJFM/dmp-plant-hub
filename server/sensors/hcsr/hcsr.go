@@ -1,6 +1,7 @@
 package hcsr
 
 import (
+	"fmt"
 	"go.bug.st/serial"
 	"log"
 	"strconv"
@@ -33,8 +34,12 @@ func NewHCSR04(portName string, baudRate int) *HCSR04 {
 // Dist
 // Value returns distance in cm to objects
 func (hc *HCSR04) Dist() (float64, error) {
-	buff := make([]byte, 100)
+	buff := make([]byte, 4)
 	n, err := hc.port.Read(buff)
-	dist, _ := strconv.ParseFloat(strings.TrimSuffix(string(buff[:n]), "\r\n"), 64)
+	fmt.Println(n)
+	fmt.Println(string(buff[:n]))
+	dist, erik := strconv.ParseFloat(strings.TrimSuffix(string(buff[:n]), "\r\n"), 64)
+	fmt.Println(erik)
+
 	return dist, err
 }

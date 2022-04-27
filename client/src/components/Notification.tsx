@@ -30,6 +30,7 @@ export default function Notification(props: any) {
 				},
 			})
 			.then((res) => {
+				console.log(res)
 				if (res.data.state !== 'inactive') {
 					setTitle(res.data.title)
 					setState(res.data.state)
