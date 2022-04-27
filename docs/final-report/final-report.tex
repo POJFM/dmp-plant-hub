@@ -281,11 +281,11 @@ $\ac{Vdac} = 10$
 
 \subsubsection{Ultrasonický senzor HC-SR04} \label{secSonic}
 
-\ac{HC-SR04} vydává zvukové vibrace na vysoké frekvenci, neslyšitelné pro lidské ucho. Poté čeká, až se zvuk odrazí zpět od překážky a vypočítá vzdálenost, na základě času měřeného od vysílání zvukové vlny k zpětnému přijmutí. Z důvodu špatného a né tolik přesného převodu hodnot při použití kombinace \underline{\ac{RPi}} a Go jsme byli nuceni k tomuto senzoru připojit Arduino Nano jako prostředníka pro správný převod hodnot. To jsme poté pomocí USB portu připojili k \underline{\ac{RPi}}.
+\ac{HC-SR04} vydává zvukové vibrace na vysoké frekvenci, neslyšitelné pro lidské ucho. Poté čeká, až se zvuk odrazí zpět od překážky a vypočítá vzdálenost, na základě času měřeného od vysílání zvukové vlny k zpětnému přijmutí. Z důvodu špatného a né tolik přesného převodu hodnot, při použití kombinace \underline{\ac{RPi}} a Go, jsme byli nuceni k tomuto senzoru připojit Arduino Nano, jako prostředníka pro správný převod hodnot. To jsme poté pomocí USB portu připojili k \underline{\ac{RPi}}.
 
 \subsubsection{Čerpadlo}
 
-Námi původně zvolené ponorné mini čerpadlo se skládá z DC motoru, na němž je upevněna centrifuga pro čerpání vody a vlastního pouzdra, z kterého vede otvor pro napojení odtokové hadičky. Čerpadlo je připojeno na zdroj napětí a jeho kostra je uzemněna. Bohužel v procesu testování se nám pokazilo čerpadlo, takže jsme museli vymyslet alternativní cestu, která se nakonec ukázala tou lepší variantou. Koupili jsme nové silnější čerpadlo, fungující na stejném principu, připojili k němu samostatný zdroj a přidali relé na jeho spouštění, jako je ukázáno v schématu (Obr. \ref{fig:schema-obvodu-cerpadla}), které jsme vytvořili v nástroji EasyEDA \cite{easyeda}. Zdroj \underline{\ac{RPi}} jsme použili jako signální pin pro spínání relé a vše jsme poskládali do samostatného krytu.
+Námi původně zvolené ponorné mini čerpadlo se skládá z DC motoru, na němž je upevněna centrifuga pro čerpání vody a vlastního pouzdra, z kterého vede otvor pro napojení odtokové hadičky. Čerpadlo je připojeno na zdroj napětí a jeho kostra je uzemněna. Bohužel v procesu testování se nám pokazilo čerpadlo, takže jsme museli vymyslet alternativní cestu, která se nakonec ukázala tou lepší variantou. Koupili jsme nové silnější čerpadlo, fungující na stejném principu, připojili k němu samostatný zdroj a přidali relé na jeho spouštění, jak je ukázáno v schématu (Obr. \ref{fig:schema-obvodu-cerpadla}), které jsme vytvořili v nástroji EasyEDA \cite{easyeda}. Zdroj \underline{\ac{RPi}} jsme použili jako signální pin pro spínání relé a vše jsme poskládali do samostatného krytu.
 
 \vspace*{1cm}
 \begin{figure}[h]
@@ -379,7 +379,7 @@ Zkompletovaný hub se tedy skládá z pouzdra, \underline{\ac{RPi}}, \underline{
 
 \subsection{Nádrž}
 
-K zavlažování bylo potřeba postavit nádrž na vodu, ze které bude naše čerpadlo přečerpávat vodu k zavlažování. Nejvhodnějším řešením je nádoba s co\linebreak největším objemem, která bude jednoduše přenosná, odolná a nebude složité\linebreak připevnit na ní senzory. Naše první verze nádoby z upraveného 5L pivního soudku, nebyla tolik úspěšná. I přesto, že jsme ji natřeli antikorozní barvou tak začala na několika místech rezivět a z důvodu špatného upevnění čerpadla i protékat. Poté co se nám pokazilo původní čerpadlo jsme byli plně rozhodnuti pro změnu nádrže, kterou používáme doteď. Nádrž má stejný objem jako ta původní, tedy 5L, ale je lépe přenosná a odolnější, což přispívá její životnosti. Přívodová hadička je do ní vedena víčkem a vystužena polyvinyl chloride (PVC) trubkou aby se nekroutila a dosáhla až na dno.
+K zavlažování bylo potřeba postavit nádrž na vodu, ze které bude naše čerpadlo přečerpávat vodu k zavlažování. Nejvhodnějším řešením je nádoba s co\linebreak největším objemem, která bude jednoduše přenosná, odolná a nebude složité\linebreak připevnit na ní senzory. Naše první verze nádoby z upraveného 5L pivního soudku, nebyla tolik úspěšná. I přesto, že jsme ji natřeli antikorozní barvou, tak začala na několika místech rezivět a z důvodu špatného upevnění čerpadla i protékat. Poté co se nám pokazilo původní čerpadlo jsme se rozhodli pro změnu nádrže, kterou používáme doteď. Nádrž má stejný objem jako ta původní, tedy 5L, ale je lépe přenosná a odolnější, což přispívá k její životnosti. Přívodová hadička je do ní vedena víčkem a vystužena polyvinyl chloride (PVC) trubkou aby se nekroutila a dosáhla až na dno.
 
 \vspace*{1cm}
 \begin{figure}[h]
