@@ -30,7 +30,6 @@ export default function Notification(props: any) {
 				},
 			})
 			.then((res) => {
-				console.log(res)
 				if (res.data.state !== 'inactive') {
 					setTitle(res.data.title)
 					setState(res.data.state)
@@ -57,7 +56,7 @@ export default function Notification(props: any) {
 		} else {
 			setNotificationClass('hidden')
 		}
-	}, [notify])
+	}, [state])
 
 	return (
 		<div className={notificationClass}>
