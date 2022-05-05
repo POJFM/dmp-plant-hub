@@ -54,7 +54,6 @@ const GlobalChartOptions = {
 }
 
 export function LiveMeasurementsChart({ chartType, temp, hum, moist }: IMeasurementsChart) {
-	console.log(temp)
 	const liveMeasurementsChartData = {
 		data: {
 			// 25 cols
@@ -107,7 +106,7 @@ export function LiveMeasurementsChart({ chartType, temp, hum, moist }: IMeasurem
 
 	useEffect(() => {
 		setUserData(liveMeasurementsChartData)
-	}, [moist])
+	}, [moist.length])
 
 	if (!chartType)
 		return <Line options={userData.options} data={userData.data} />
