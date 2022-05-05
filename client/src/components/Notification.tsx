@@ -6,7 +6,7 @@ import Loading from './states/Loading'
 import Finished from './states/Finished'
 import Warning from './states/Warning'
 
-export default function Notification(props: any) {
+export default function Notification() {
 	const [title, setTitle] = useState<string>(),
 		[notificationClass, setNotificationClass] = useState('hidden'),
 		[notificationStateClass, setNotificationStateClass] = useState<string>(),
@@ -14,7 +14,7 @@ export default function Notification(props: any) {
 		[action, setAction] = useState<any>(),
 		[notify, setNotify] = useState(false)
 
-	let getNotificationsInterval: any
+	let getNotificationsInterval: ReturnType<typeof setTimeout>
 
 	useEffect(() => {
 		!getNotificationsInterval && (getNotificationsInterval = setInterval(() => getNotifications(), 2000))

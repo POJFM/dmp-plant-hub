@@ -1,9 +1,45 @@
+import { useState, useEffect, Component, createRef, RefObject } from "react";
 import { Line, Bar } from 'react-chartjs-2'
 import { getMonths } from 'src/utils'
+import {
+	Chart as ChartJS,
+	CategoryScale,
+	LinearScale,
+	PointElement,
+	LineElement,
+	BarElement,
+	Title,
+	Tooltip,
+	Legend,
+} from 'chart.js'
+
+interface IMeasurementsChart {
+	chartType: number
+	moist: number[],
+	hum: number[],
+	temp: number[]
+}
+
+interface IWaterConsumptionChart {
+	chartType: number
+	waterOverdrawn: number[],
+	irrigationCount: number[]
+}
+
+interface IIrrigationChart {
+	chartType: number,
+	moist: number[],
+	hum: number[],
+	temp: number[],
+	waterOverdrawn: number[],
+	dataframe: number[]
+}
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend)
 
 const months = getMonths()
 
-const chartOptions = {
+const GlobalChartOptions = {
 	responsive: true,
 	maintainAspectRatio: false,
 	interaction: {
@@ -17,7 +53,8 @@ const chartOptions = {
 	},
 }
 
-export function LiveMeasurementsChart({ chartType, temp, hum, moist }: any) {
+export function LiveMeasurementsChart({ chartType, temp, hum, moist }: IMeasurementsChart) {
+	console.log(temp)
 	const liveMeasurementsChartData = {
 		data: {
 			// 25 cols
@@ -50,7 +87,7 @@ export function LiveMeasurementsChart({ chartType, temp, hum, moist }: any) {
 			],
 		},
 		options: {
-			...chartOptions,
+			...GlobalChartOptions,
 			plugins: {
 				legend: {
 					display: false,
@@ -66,15 +103,21 @@ export function LiveMeasurementsChart({ chartType, temp, hum, moist }: any) {
 		},
 	}
 
+	const [userData, setUserData] = useState(liveMeasurementsChartData);
+
+	useEffect(() => {
+		setUserData(liveMeasurementsChartData)
+	}, [moist])
+
 	if (!chartType)
-		return <Line options={liveMeasurementsChartData.options} data={liveMeasurementsChartData.data} />
-	else return <Bar options={liveMeasurementsChartData.options} data={liveMeasurementsChartData.data} />
+		return <Line options={userData.options} data={userData.data} />
+	else return <Bar options={userData.options} data={userData.data} />
 }
 
-export const WaterConsumptionChart = ({ chartType, waterOverdrawn, irrigationCount }: any) => {
+export const WaterConsumptionChart = ({ chartType, waterOverdrawn, irrigationCount }: IWaterConsumptionChart) => {
 	const waterConsumptionChartData = {
 		data: {
-			labels: months,   
+			labels: months,
 			datasets: [
 				{
 					label: 'Spotřebováno vody',
@@ -95,7 +138,7 @@ export const WaterConsumptionChart = ({ chartType, waterOverdrawn, irrigationCou
 			],
 		},
 		options: {
-			...chartOptions,
+			...GlobalChartOptions,
 			plugins: {
 				legend: {
 					display: false,
@@ -113,12 +156,18 @@ export const WaterConsumptionChart = ({ chartType, waterOverdrawn, irrigationCou
 		},
 	}
 
+	const [userData, setUserData] = useState(waterConsumptionChartData);
+
+	useEffect(() => {
+		setUserData(waterConsumptionChartData)
+	}, [irrigationCount])
+
 	if (!chartType)
-		return <Line options={waterConsumptionChartData.options} data={waterConsumptionChartData.data} />
-	else return <Bar options={waterConsumptionChartData.options} data={waterConsumptionChartData.data} />
+		return <Line options={userData.options} data={userData.data} redraw />
+	else return <Bar options={userData.options} data={userData.data} redraw />
 }
 
-export function IrrigationChart({ chartType, moist, hum, temp, waterOverdrawn, dataframe }: any) {
+export function IrrigationChart({ chartType, moist, hum, temp, waterOverdrawn, dataframe }: IIrrigationChart) {
 	const irrigationChartData = {
 		data: {
 			labels: dataframe,
@@ -158,7 +207,7 @@ export function IrrigationChart({ chartType, moist, hum, temp, waterOverdrawn, d
 			],
 		},
 		options: {
-			...chartOptions,
+			...GlobalChartOptions,
 			plugins: {
 				legend: {
 					display: false,
@@ -197,12 +246,18 @@ export function IrrigationChart({ chartType, moist, hum, temp, waterOverdrawn, d
 		},
 	}
 
+	const [userData, setUserData] = useState(irrigationChartData);
+
+	useEffect(() => {
+		setUserData(irrigationChartData)
+	}, [temp])
+
 	if (!chartType)
-		return <Line options={irrigationChartData.options} data={irrigationChartData.data} />
-	else return <Bar options={irrigationChartData.options} data={irrigationChartData.data} />
+		return <Line options={userData.options} data={userData.data} redraw />
+	else return <Bar options={userData.options} data={userData.data} redraw />
 }
 
-export function MeasurementsHistoryChart({ chartType, moist, hum, temp }: any) {
+export function MeasurementsHistoryChart({ chartType, moist, hum, temp }: IMeasurementsChart) {
 	const measurementsHistoryChartData = {
 		data: {
 			labels: months,
@@ -236,7 +291,7 @@ export function MeasurementsHistoryChart({ chartType, moist, hum, temp }: any) {
 			],
 		},
 		options: {
-			...chartOptions,
+			...GlobalChartOptions,
 			scales: {
 				yAxis1: {
 					ticks: {
@@ -263,7 +318,13 @@ export function MeasurementsHistoryChart({ chartType, moist, hum, temp }: any) {
 		},
 	}
 
+	const [userData, setUserData] = useState(measurementsHistoryChartData);
+
+	useEffect(() => {
+		setUserData(measurementsHistoryChartData)
+	}, [temp])
+
 	if (!chartType)
-		return <Line options={measurementsHistoryChartData.options} data={measurementsHistoryChartData.data} />
-	else return <Bar options={measurementsHistoryChartData.options} data={measurementsHistoryChartData.data} />
+		return <Line options={userData.options} data={userData.data} redraw />
+	else return <Bar options={userData.options} data={userData.data} redraw />
 }

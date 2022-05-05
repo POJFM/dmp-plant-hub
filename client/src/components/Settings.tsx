@@ -262,10 +262,10 @@ export default function Settings() {
 										onChange={(data: any) => data.target.value == 0 && setButtonsState(false)}
 									>
 										<EditableField
-											key="irrigationDuration"
+											name="irrigationDuration"
 											defaultValue={irrigationDuration}
 											active={irrigationDurationStateClass === '#000000'}
-											width="10"
+											width={10}
 											dataType="number"
 										/>
 									</div>
@@ -274,10 +274,10 @@ export default function Settings() {
 										onBlur={(data: any) => updateInputData('moistLimit', data.target.value)}
 									>
 										<EditableField
-											key="moistLimit"
+											name="moistLimit"
 											defaultValue={moistLimit}
 											active={automaticIrrigationState}
-											width="10"
+											width={10}
 											dataType="number"
 										/>
 									</div>
@@ -286,10 +286,10 @@ export default function Settings() {
 										onBlur={(data: any) => updateInputData('waterAmountLimit', data.target.value)}
 									>
 										<EditableField
-											key="waterAmountLimit"
+											name="waterAmountLimit"
 											defaultValue={waterAmountLimit}
 											active={automaticIrrigationState}
-											width="10"
+											width={10}
 											dataType="number"
 										/>
 									</div>
@@ -298,10 +298,10 @@ export default function Settings() {
 										onBlur={(data: any) => updateInputData('waterLevelLimit', data.target.value)}
 									>
 										<EditableField
-											key="waterLevelLimit"
+											name="waterLevelLimit"
 											defaultValue={waterLevelLimit}
 											active={automaticIrrigationState}
-											width="10"
+											width={10}
 											dataType="number"
 										/>
 									</div>
@@ -310,10 +310,10 @@ export default function Settings() {
 										onBlur={(data: any) => updateInputData('hourRange', data.target.value)}
 									>
 										<EditableField
-											key="hourRange"
+											name="hourRange"
 											defaultValue={hourRange}
 											active={scheduledIrrigationState}
-											width="10"
+											width={10}
 											dataType="number"
 										/>
 									</div>
@@ -345,7 +345,7 @@ export default function Settings() {
 									<div className="flex-row pt-1">
 										<div onClick={() => updateToggleState('chartType')}>
 											<ToggleButton
-												key="chartType"
+												item="chartType"
 												toggleState={chartTypeState}
 												values={[{ label: 'lineGraph' }, { label: 'barGraph' }]}
 											/>
@@ -354,7 +354,7 @@ export default function Settings() {
 									<div className="flex-row pt-1">
 										<div onClick={() => updateToggleState('language')}>
 											<ToggleButton
-												key="language"
+												item="language"
 												toggleState={languageState}
 												values={[{ label: 'flagCZ' }, { label: 'flagGB' }]}
 											/>
@@ -363,7 +363,7 @@ export default function Settings() {
 									<div className="flex-row pt-1">
 										<div onClick={() => updateToggleState('theme')}>
 											<ToggleButton
-												key="theme"
+												item="theme"
 												toggleState={themeState}
 												values={[{ label: 'lightTheme' }, { label: 'darkTheme' }]}
 											/>
@@ -375,10 +375,10 @@ export default function Settings() {
 										onBlur={(data: any) => updateInputData('location', data)}
 									>
 										<EditableField 
-											key="city" 
+											name="city" 
 											defaultValue={location} 
-											active="true" 
-											width="40" 
+											active={true}
+											width={40}
 											dataType="string"
 										/>
 									</div>

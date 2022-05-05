@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 
 	db "github.com/SPSOAFM-IT18/dmp-plant-hub/test/database"
@@ -34,15 +35,31 @@ func LoadInstances(db *db.DB) {
 	Idb = db
 }
 
-func HandleGetInitMeasured(w http.ResponseWriter, _ *http.Request) {
-	data := model.GetInitMeasured{MoistLimit: 53.5, WaterLevelLimit: 50}
+func setPostHeader(w http.ResponseWriter) http.ResponseWriter {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Accept", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
+	w.Header().Set("Access-Control-Allow-Methods", "POST")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.WriteHeader(http.StatusOK)
+	return w
+}
 
+func setGetHeader(w http.ResponseWriter) http.ResponseWriter {
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Accept", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
 	w.Header().Set("Access-Control-Allow-Methods", "GET")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	return w
+}
+
+func HandleGetInitMeasured(w http.ResponseWriter, _ *http.Request) {
+	data := model.GetInitMeasured{MoistLimit: 53.5, WaterLevelLimit: 50}
+
+	w = setGetHeader(w)
 
 	res, err := json.Marshal(data)
 	if err != nil {
@@ -54,13 +71,7 @@ func HandleGetInitMeasured(w http.ResponseWriter, _ *http.Request) {
 }
 
 func HandlePostInitMeasured(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Accept", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
-
-	w.Header().Set("Access-Control-Allow-Methods", "POST")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w = setPostHeader(w)
 	w.WriteHeader(http.StatusOK)
 
 	var data model.PostInitMeasured
@@ -73,13 +84,7 @@ func HandlePostInitMeasured(w http.ResponseWriter, r *http.Request) {
 func HandleGetLiveMeasure(w http.ResponseWriter, _ *http.Request) {
 	data := model.LiveMeasure{Moist: moist, Hum: hum, Temp: temp}
 
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Accept", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
-
-	w.Header().Set("Access-Control-Allow-Methods", "GET")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w = setGetHeader(w)
 	w.WriteHeader(http.StatusOK)
 
 	res, err := json.Marshal(data)
@@ -91,13 +96,7 @@ func HandleGetLiveMeasure(w http.ResponseWriter, _ *http.Request) {
 }
 
 func HandlePostLiveMeasure(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Accept", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
-
-	w.Header().Set("Access-Control-Allow-Methods", "POST")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w = setPostHeader(w)
 	w.WriteHeader(http.StatusOK)
 
 	var data model.LiveMeasure
@@ -108,13 +107,7 @@ func HandlePostLiveMeasure(w http.ResponseWriter, r *http.Request) {
 func HandleGetLiveNotify(w http.ResponseWriter, _ *http.Request) {
 	data := model.LiveNotify{Title: LNtitle, State: LNstate, Action: LNaction}
 
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Accept", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
-
-	w.Header().Set("Access-Control-Allow-Methods", "GET")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w = setGetHeader(w)
 	w.WriteHeader(http.StatusOK)
 
 	res, err := json.Marshal(data)
@@ -126,13 +119,7 @@ func HandleGetLiveNotify(w http.ResponseWriter, _ *http.Request) {
 }
 
 func HandlePostLiveNotify(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Accept", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
-
-	w.Header().Set("Access-Control-Allow-Methods", "POST")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w = setPostHeader(w)
 	w.WriteHeader(http.StatusOK)
 
 	var data model.LiveNotify
@@ -144,13 +131,7 @@ func HandleGetLiveControl(w http.ResponseWriter, _ *http.Request) {
 	// actually default values, just haven't figured out how to pass them
 	data := model.LiveControl{Restart: false, PumpState: false}
 
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Accept", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
-
-	w.Header().Set("Access-Control-Allow-Methods", "POST")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w = setGetHeader(w)
 	w.WriteHeader(http.StatusOK)
 
 	res, err := json.Marshal(data)
@@ -162,12 +143,7 @@ func HandleGetLiveControl(w http.ResponseWriter, _ *http.Request) {
 }
 
 func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Accept", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
-	w.Header().Set("Access-Control-Allow-Methods", "POST")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w = setPostHeader(w)
 	w.WriteHeader(http.StatusOK)
 
 	var data model.LiveControl
@@ -195,13 +171,7 @@ func GetLiveControl(cPumpState chan bool) {
 }
 
 func HandleGetWeather(w http.ResponseWriter, _ *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Accept", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
-
-	w.Header().Set("Access-Control-Allow-Methods", "GET")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w = setGetHeader(w)
 	w.WriteHeader(http.StatusOK)
 	//w = setGetHeader(w)
 	if Idb.CheckSettings() {
@@ -216,22 +186,15 @@ func HandleGetWeather(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(res.StatusCode)
 	}
 	defer res.Body.Close()
-	fmt.Println(res.Body)
+	log.Println(res.Body)
 
 	w.WriteHeader(http.StatusOK)
 	_, _ = io.Copy(w, res.Body)
 }
 
 func HandleGetGeocode(w http.ResponseWriter, _ *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Accept", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", env.Process("CORS"))
-
-	w.Header().Set("Access-Control-Allow-Methods", "GET")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w = setGetHeader(w)
 	w.WriteHeader(http.StatusOK)
-	//w = setGetHeader(w)
 
 	if Idb.CheckSettings() {
 		geocodes := Idb.GetSettingByColumn([]string{"lat", "lon"})
@@ -239,18 +202,16 @@ func HandleGetGeocode(w http.ResponseWriter, _ *http.Request) {
 		lon = *geocodes.Lon
 	}
 
-	res, err := http.Get("https://api.opencagedata.com/geocode/v1/json?q=" + fmt.Sprintf("%f", lat) + "+" + fmt.Sprintf("%f", lon) + "&key=8304212f88754efebd94ab11c9689e19") //nolint:bodyclose
+	res, err := http.Get("https://api.opencagedata.com/geocode/v1/json?q=" + fmt.Sprintf("%f", lat) + "+" + fmt.Sprintf("%f", lon) + "&key=" + env.Process("GEOCODE_API_KEY")) //nolint:bodyclose
 
 	if err != nil {
 		w.WriteHeader(res.StatusCode)
 	}
 	defer res.Body.Close()
-	//fmt.Println(res.Body)
 
 	w.WriteHeader(http.StatusOK)
 	_, _ = io.Copy(w, res.Body)
 }
-
 func HandlePostGeocode(w http.ResponseWriter, r *http.Request) {
 
 }

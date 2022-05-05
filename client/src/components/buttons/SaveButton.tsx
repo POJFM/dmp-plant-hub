@@ -1,7 +1,12 @@
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 
-export default function SaveButton({ props, active }: any) {
+interface ISaveButton {
+	active: boolean
+	name?: string
+}
+
+export default function SaveButton({ active, name }: ISaveButton) {
 	let activeClass
 	active && (activeClass = 'button hover:button-hover')
 	!active && (activeClass = 'button-inactive')
@@ -11,7 +16,7 @@ export default function SaveButton({ props, active }: any) {
 			<Card className="button-card">
 				<CardContent>
 					<div className={activeClass}>
-						<span className="button-text">Uložit</span>
+						<button name={name} className="button-text">Uložit</button>
 					</div>
 				</CardContent>
 			</Card>

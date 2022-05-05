@@ -1,4 +1,13 @@
-export default function ToggleButton({ item, toggleState, values }: any) {
+interface IToggleButtonValues {
+	label: string
+}
+interface IToggleButton {
+	item: string,
+	toggleState: boolean,
+	values?: Array<IToggleButtonValues>
+}
+
+export default function ToggleButton({ item, toggleState, values }: IToggleButton) {
 	// if values are not set then toggle switch acts as an ON / OFF switch
 	let toggleStateClass, toggleIcon0Class, toggleIcon1Class
 

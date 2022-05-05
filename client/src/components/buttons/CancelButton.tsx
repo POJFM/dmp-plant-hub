@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 
-export default function CancelButton({ props, active }: any) {
+interface ICancelButton {
+	active: boolean
+}
+
+export default function CancelButton({ active }: ICancelButton) {
 	const [textColor, setTextColor] = useState<string>(),
 	[activeClass, setActiveClass] = useState<string>()
 

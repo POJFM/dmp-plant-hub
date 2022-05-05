@@ -1,17 +1,23 @@
-import { useState } from 'react'
+interface IEditableField {
+	name: string,
+	defaultValue: string | number | undefined,
+	active: boolean,
+	width: number,
+	dataType: string
+}
 
-export default function EditableField({ key, defaultValue, active, width, dataType }: any) {
+export default function EditableField({ name, defaultValue, active, width, dataType }: IEditableField) {
 	let activeClass
 	active && (activeClass = 'input-field')
 	!active && (activeClass = 'input-field-inactive')
 
 	return (
-		<div className={`float-left inline-block ${activeClass}`}>
+		<div className={`flex-col float-left ${activeClass} w-${width}`} >
 			<input
 				type={dataType === 'number' ? 'number' : 'text'}
-				id={key}
-				className={`w-${width} text-center float-left inline-block input-field-input`}
-				name={key}
+				id={name}
+				className="text-center float-left input-field-input"
+				name={name}
 				defaultValue={defaultValue}
 			/>
 		</div>

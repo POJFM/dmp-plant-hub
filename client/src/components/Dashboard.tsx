@@ -4,17 +4,6 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import { useQuery } from '@apollo/client'
 import { dashboard } from '../graphql/queries'
-import {
-	Chart as ChartJS,
-	CategoryScale,
-	LinearScale,
-	PointElement,
-	LineElement,
-	BarElement,
-	Title,
-	Tooltip,
-	Legend,
-} from 'chart.js'
 import { LiveMeasurementsChart, WaterConsumptionChart, IrrigationChart, MeasurementsHistoryChart } from './Chart'
 import ReactScrollWheelHandler from 'react-scroll-wheel-handler'
 import { getMonths, monthRegex, dayRegex, timeRegex } from 'src/utils'
@@ -38,25 +27,35 @@ export default function Dashboard() {
 	const { loading, error, data } = useQuery(dashboard),
 		chartType = data?.getSettings[0]?.chart_type === false ? 0 : 1
 
-	let liveMasurementsInterval: any,
-		weatherForecastInterval: any,
-		arrayPassTemp: any = [],
-		arrayPassHum: any = [],
-		arrayPassMoist: any = []
+	let liveMeasurementsInterval: ReturnType<typeof setTimeout>,
+		weatherForecastInterval: ReturnType<typeof setTimeout>,
+		arrayPassTemp: number[] = [],
+		arrayPassHum: number[] = [],
+		arrayPassMoist: number[] = []
 
 	useEffect(() => {
-		let measurementsDataNotMonth: any = [],
-			measurementsDataNotAvg: any = [],
-			irrigationCountObj: any = [],
-			waterOverdrawnObj: any = [],
-			irrigationHistoryData: any = {
+		let measurementsDataNotMonth: number[] = [],
+			measurementsDataNotAvg: number[] = [],
+			irrigationCountObj: number[] = [],
+			waterOverdrawnObj: number[] = [],
+			irrigationHistoryData: {
+				moist: number[],
+				temp: number[],
+				hum: number[],
+				water_overdrawn: number[],
+				dataframe: string[]
+			} = {
 				moist: [],
 				temp: [],
 				hum: [],
 				water_overdrawn: [],
 				dataframe: []
 			},
-			measurementsData: any = {
+			measurementsData: {
+				moist: number[],
+				temp: number[],
+				hum: number[]
+			} = {
 				moist: [],
 				temp: [],
 				hum: [],
@@ -144,7 +143,7 @@ export default function Dashboard() {
 		fetchWeatherForecast()
 
 		!weatherForecastInterval && (weatherForecastInterval = setInterval(() => fetchWeatherForecast(), 300_000))
-		!liveMasurementsInterval && (liveMasurementsInterval = setInterval(() => liveMeasurements(), 1000))
+		!liveMeasurementsInterval && (liveMeasurementsInterval = setInterval(() => liveMeasurements(), 1000))
 	}, [])
 
 	const fetchWeatherForecast = () => {
@@ -197,8 +196,6 @@ export default function Dashboard() {
 				console.error(error)
 			})
 	}
-
-	ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend)
 
 	const weatherForecastDataToIcons = (weatherState: any) => {
 		if (weatherState.icon.includes('01d')) {

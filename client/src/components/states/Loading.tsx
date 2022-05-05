@@ -7,7 +7,7 @@ const override = css`
 	margin: 0 auto;
 `
 
-export default function Loading(type: any) {
+export default function Loading() {
 	const [loading, setLoading] = useState(true),
 		[color, setColor] = useState<string>('var(--irrigationBlue)')
 

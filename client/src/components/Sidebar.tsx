@@ -6,7 +6,7 @@ import ControlIcon from '@material-ui/icons/ControlCamera'
 import SettingsIcon from '@material-ui/icons/Settings'
 import RefreshIcon from '@material-ui/icons/Refresh'
 
-export default function Sidebar(props: any) {
+export default function Sidebar() {
 	const [linkHover, setlinkHover] = useState('off'),
 		[activeLink, setActiveLink] = useState('blank'),
 		[christmas, setChristmas] = useState(false)

@@ -30,7 +30,9 @@ export default function InitForm(props: any) {
 		[longitude, setLongitude] = useState<number>(),
 		[mapClicked, setMapClicked] = useState(false)
 
-	let initMeasurementsInterval: any, fetchLocationFromCoordsInterval: any, fetchLocationFromCoordsFixingInterval: any
+	let initMeasurementsInterval: ReturnType<typeof setTimeout>,
+		fetchLocationFromCoordsInterval: ReturnType<typeof setTimeout>,
+		fetchLocationFromCoordsFixingInterval: ReturnType<typeof setTimeout>
 
 	useEffect(() => {
 		isSettings?.getSettings.length < 1 && setFormActiveState(true)
@@ -72,7 +74,7 @@ export default function InitForm(props: any) {
 		}
 
 		componentDidMount() {
-			navigator.geolocation.getCurrentPosition((position) => {
+			navigator.geolocation?.getCurrentPosition((position) => {
 				setLatitude(position.coords.latitude)
 				setLongitude(position.coords.longitude)
 				axios
@@ -316,7 +318,7 @@ export default function InitForm(props: any) {
 											name="Lokace"
 											defaultValue={location}
 											dataType="string"
-											active="true"
+											active={true}
 										/>
 									</div>
 									<div className="flex-row p-1 pt-5px mt-2">
@@ -326,7 +328,7 @@ export default function InitForm(props: any) {
 												setFormActiveState(false)
 											}}
 										>
-											<SaveButton active={saveButtonState} />
+											<SaveButton active={saveButtonState} name="initsave" />
 										</div>
 									</div>
 								</div>
