@@ -9,11 +9,15 @@ interface IToggleButton {
 
 export default function ToggleButton({ item, toggleState, values }: IToggleButton) {
 	// if values are not set then toggle switch acts as an ON / OFF switch
-	let toggleStateClass, toggleIcon0Class, toggleIcon1Class
+	let toggleStateClass, toggleIcon0Class, toggleIcon1Class, isDisabled
 
-	toggleState
-		? (toggleStateClass = 'input-field-input-toggle-slider-active')
-		: (toggleStateClass = 'input-field-input-toggle-slider-inactive')
+	if(toggleState) {
+		toggleStateClass = 'input-field-input-toggle-slider-active'
+		isDisabled = false
+	} else {
+		toggleStateClass = 'input-field-input-toggle-slider-inactive'
+		isDisabled = true
+	}
 
 	if (values) {
 		if (toggleState) {
@@ -38,7 +42,14 @@ export default function ToggleButton({ item, toggleState, values }: IToggleButto
 				/>
 			)}
 			<div className="flex-col mt-3px input-field-toggle-checkbox-wrapper"> 
-				<input type="checkbox" id={item} name={item} className="input-field-input-toggle" />
+				<input 
+					type="checkbox" 
+					id={item} 
+					name={item} 
+					data-testid={item}
+					className="input-field-input-toggle"
+					disabled={isDisabled}
+				/>
 				<span className={`input-field-input-toggle-slider ${toggleStateClass}`}></span>
 			</div>
 			{values && (

@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, screen, fireEvent } from '@testing-library/react'
+import '@testing-library/jest-dom'
 import InitForm from './../components/InitForm'
 import { ApolloProvider } from '@apollo/client'
 import client from './../apollo/client'
@@ -7,21 +7,65 @@ import client from './../apollo/client'
 test('Init logic', async () => {
 	render(
 		<ApolloProvider client={client}>
-			<InitForm />
+			<InitForm test={true} />
 		</ApolloProvider>
 	)
 
+	global.XMLHttpRequest = undefined
+
 	// limits on, scheduled off => everything apart from hour range is enabled
+
+	expect(await screen.findByRole('button', { name: /uložit/i })).toBeEnabled()
+	expect(screen.getByTestId('limitsTrigger')).toBeEnabled()
+	expect(screen.getByTestId('scheduledTrigger')).toBeDisabled()
+	expect(screen.getByTestId('irrigationDuration')).toBeEnabled()
+	expect(screen.getByTestId('moistLimit')).toBeEnabled()
+	expect(screen.getByTestId('waterAmountLimit')).toBeEnabled()
+	expect(screen.getByTestId('waterLevelLimit')).toBeEnabled()
+	expect(screen.getByTestId('hourRange')).toBeDisabled()
+	expect(screen.getByTestId('location')).toBeEnabled()
+
 	// limits off, scheduled on => moist limit, water amount limit and water level limit are disabled
-	// limits off, scheduled off => everything is disabled
+
+	fireEvent.click(screen.getByTestId('limitsTrigger'))
+	fireEvent.click(screen.getByTestId('scheduledTrigger'))
+
+	expect(await screen.findByRole('button', { name: /uložit/i })).toBeEnabled()
+	expect(screen.getByTestId('limitsTrigger')).toBeDisabled()
+	expect(screen.getByTestId('scheduledTrigger')).toBeEnabled()
+	expect(screen.getByTestId('irrigationDuration')).toBeEnabled()
+	expect(screen.getByTestId('moistLimit')).toBeDisabled()
+	expect(screen.getByTestId('waterAmountLimit')).toBeDisabled()
+	expect(screen.getByTestId('waterLevelLimit')).toBeDisabled()
+	expect(screen.getByTestId('hourRange')).toBeEnabled()
+	expect(screen.getByTestId('location')).toBeEnabled()
+
+	// limits off, scheduled off => irrigationDuration and location are enabled
+
+	fireEvent.click(screen.getByTestId('scheduledTrigger'))
+
+	expect(await screen.findByRole('button', { name: /uložit/i })).toBeDisabled()
+	expect(screen.getByTestId('limitsTrigger')).toBeDisabled()
+	expect(screen.getByTestId('scheduledTrigger')).toBeDisabled()
+	expect(screen.getByTestId('irrigationDuration')).toBeEnabled()
+	expect(screen.getByTestId('moistLimit')).toBeDisabled()
+	expect(screen.getByTestId('waterAmountLimit')).toBeDisabled()
+	expect(screen.getByTestId('waterLevelLimit')).toBeDisabled()
+	expect(screen.getByTestId('hourRange')).toBeDisabled()
+	expect(screen.getByTestId('location')).toBeEnabled()
+
 	// limits on, scheduled on => everything is enabled
 
-	// expect(await screen.findByRole('button', { name: /initsave/i })).toBeDisabled()
-	// expect(screen.findByRole('checkbox', { name: /limitsTrigger/i })).toBeEnabled()
-	// expect(screen.findByRole('checkbox', { name: /scheduledTrigger/i })).toBeDisabled()
+	fireEvent.click(screen.getByTestId('limitsTrigger'))
+	fireEvent.click(screen.getByTestId('scheduledTrigger'))
 
-	// userEvent.type(screen.getByPlaceholderText(/amount/i), "50");
-	// userEvent.type(screen.getByPlaceholderText(/add a note/i), "dinner");
-
-	// expect(await screen.findByRole("button", { name: /pay/i })).toBeEnabled();
+	expect(await screen.findByRole('button', { name: /uložit/i })).toBeEnabled()
+	expect(screen.getByTestId('limitsTrigger')).toBeEnabled()
+	expect(screen.getByTestId('scheduledTrigger')).toBeEnabled()
+	expect(screen.getByTestId('irrigationDuration')).toBeEnabled()
+	expect(screen.getByTestId('moistLimit')).toBeEnabled()
+	expect(screen.getByTestId('waterAmountLimit')).toBeEnabled()
+	expect(screen.getByTestId('waterLevelLimit')).toBeEnabled()
+	expect(screen.getByTestId('hourRange')).toBeEnabled()
+	expect(screen.getByTestId('location')).toBeEnabled()
 })

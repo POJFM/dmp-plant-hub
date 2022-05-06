@@ -7,9 +7,15 @@ interface IEditableField {
 }
 
 export default function EditableField({ name, defaultValue, active, width, dataType }: IEditableField) {
-	let activeClass
-	active && (activeClass = 'input-field')
-	!active && (activeClass = 'input-field-inactive')
+	let activeClass, isDisabled
+
+	if(active) {
+		activeClass = 'input-field'
+		isDisabled = false
+	} else {
+		activeClass = 'input-field-inactive'
+		isDisabled = true
+	}
 
 	return (
 		<div className={`flex-col float-left ${activeClass} w-${width}`} >
@@ -19,6 +25,7 @@ export default function EditableField({ name, defaultValue, active, width, dataT
 				className="text-center float-left input-field-input"
 				name={name}
 				defaultValue={defaultValue}
+				disabled={isDisabled}
 			/>
 		</div>
 	)

@@ -13,7 +13,7 @@ import { settings } from './../graphql/queries'
 
 export default function InitForm(props: any) {
 	const { data: isSettings } = useQuery(settings),
-		[formActiveState, setFormActiveState] = useState(false),
+		[formActiveState, setFormActiveState] = useState(props.test || false),
 		[saveButtonState, setSaveButtonState] = useState(true),
 		[automaticIrrigationState, setAutomaticIrrigationState] = useState(true),
 		[irrigationDuration, setIrrigationDuration] = useState<number>(),

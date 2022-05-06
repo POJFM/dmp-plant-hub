@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, screen, fireEvent } from '@testing-library/react'
+import '@testing-library/jest-dom'
 import Control from './../components/Control'
 import { ApolloProvider } from '@apollo/client'
 import client from './../apollo/client'
@@ -10,4 +10,6 @@ test('Control logic', async () => {
 			<Control />
 		</ApolloProvider>
 	)
+
+	global.XMLHttpRequest = undefined
 })

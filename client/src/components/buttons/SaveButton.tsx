@@ -7,16 +7,29 @@ interface ISaveButton {
 }
 
 export default function SaveButton({ active, name }: ISaveButton) {
-	let activeClass
-	active && (activeClass = 'button hover:button-hover')
-	!active && (activeClass = 'button-inactive')
+	let activeClass, isDisabled
+
+	if(active) {
+		activeClass = 'button hover:button-hover'
+		isDisabled = false
+	} else {
+		activeClass = 'button-inactive'
+		isDisabled = true
+	}
 
 	return (
 		<div className="button-wrapper">
 			<Card className="button-card">
 				<CardContent>
 					<div className={activeClass}>
-						<button name={name} className="button-text">Uložit</button>
+						<button 
+							name={name} 
+							className="button-text" 
+							data-testid={name}
+							disabled={isDisabled}
+						>
+							Uložit
+						</button>
 					</div>
 				</CardContent>
 			</Card>

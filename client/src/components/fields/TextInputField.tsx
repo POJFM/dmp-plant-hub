@@ -7,9 +7,15 @@ interface ITextInputField {
 }
 
 export default function TextInputField({ item, name, defaultValue, active, dataType }: ITextInputField) {
-	let activeClass
-	active && (activeClass = 'input-field')
-	!active && (activeClass = 'input-field-inactive')
+	let activeClass, isDisabled
+
+	if(active) {
+		activeClass = 'input-field'
+		isDisabled = false
+	} else {
+		activeClass = 'input-field-inactive'
+		isDisabled = true
+	}
 
 	return (
 		<div className={activeClass}>
@@ -19,9 +25,11 @@ export default function TextInputField({ item, name, defaultValue, active, dataT
 			<input 
 				type={dataType === 'number' ? 'number' : 'text'} 
 				id={item} 
+				data-testid={item} 
 				className="input-field-input mt-4" 
 				name={item} 
 				defaultValue={defaultValue}
+				disabled={isDisabled}
 			/>
 		</div>
 	)
