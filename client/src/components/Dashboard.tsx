@@ -258,14 +258,14 @@ export default function Dashboard() {
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterLevel.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? data?.getIrrigation[0]?.water_level : 0
+										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? data?.getIrrigation[data?.getIrrigation.length - 1]?.water_level : 0
 											} cm`}</span>
 									</div>
 									<div className="flex-row pt-5px" title="Objem vody v nádrži">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterAmount.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? data?.getIrrigation[0]?.water_amount : 0
+										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? data?.getIrrigation[data?.getIrrigation.length - 1]?.water_amount : 0
 											} l`}</span>
 									</div>
 									<div className="flex-row pt-5px" title="Celkový vyčerpaný objem vody">

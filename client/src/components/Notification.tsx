@@ -25,6 +25,16 @@ export default function Notification() {
 		setState(res.data.state)
 		setAction(res.data.action)
 		setNotify(state)
+		if(state) {
+			setNotificationClass('notification')
+			switch (res.data.state) {
+				case 'inProgress': setNotificationStateClass('var(--irrigationBlue)'); break
+				case 'finished': setNotificationStateClass('var(--green)'); break
+				case 'physicalHelpRequired': setNotificationStateClass('var(--warningRed)'); break
+			}
+		} else {
+			setNotificationClass('hidden')
+		}
 	}
 
 	const getNotifications = () => {
@@ -37,6 +47,7 @@ export default function Notification() {
 				},
 			})
 			.then((res) => {
+				console.log(res)
 				if (res.data.state !== 'inactive') {
 					triggerNotification(res, true)
 				} else {
@@ -47,20 +58,6 @@ export default function Notification() {
 				console.error(error)
 			})
 	}
-
-	useEffect(() => {
-		if (notify) {
-			setNotificationClass('notification')
-
-			switch (state) {
-				case 'inProgress': setNotificationStateClass('var(--irrigationBlue)'); break
-				case 'finished': setNotificationStateClass('var(--green)'); break
-				case 'physicalHelpRequired': setNotificationStateClass('var(--warningRed)'); break
-			}
-		} else {
-			setNotificationClass('hidden')
-		}
-	}, [state])
 
 	return (
 		<div className={notificationClass}>
