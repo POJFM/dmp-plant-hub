@@ -271,7 +271,7 @@ export default function InitForm(props: any) {
 										<TextInputField
 											item="moistLimit"
 											name="Limit vlhkosti půdy (%)"
-											defaultValue={moistLimit}
+											defaultValue={moistLimit ? Math.round(moistLimit * 100) / 100 : undefined}
 											dataType="number"
 											active={automaticIrrigationState}
 										/>
@@ -295,7 +295,7 @@ export default function InitForm(props: any) {
 										<TextInputField
 											item="waterLevelLimit"
 											name="Limit hladiny vody (cm)"
-											defaultValue={waterLevelLimit}
+											defaultValue={waterLevelLimit ? Math.round(waterLevelLimit * 100) / 100 : undefined}
 											dataType="number"
 											active={automaticIrrigationState}
 										/>

@@ -240,19 +240,19 @@ export default function Dashboard() {
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/temperature.svg" />
 										</span>
-										<span className="flex-col w-18 flex-center ml-2">{`${currentTemp} °C`}</span>
+										<span className="flex-col w-18 flex-center ml-2">{`${Math.round(currentTemp * 100) / 100} °C`}</span>
 									</div>
 									<div className="flex-row pt-5px" title="Vlhkost vzduchu">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/humidity.svg" />
 										</span>
-										<span className="flex-col w-18 flex-center ml-2">{`${currentHum} %`}</span>
+										<span className="flex-col w-18 flex-center ml-2">{`${Math.round(currentHum * 100) / 100} %`}</span>
 									</div>
 									<div className="flex-row pt-5px" title="Vlhkost půdy">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/moisture.svg" />
 										</span>
-										<span className="flex-col w-18 flex-center ml-2">{`${currentMoist} %`}</span>
+										<span className="flex-col w-18 flex-center ml-2">{`${Math.round(currentMoist * 100) / 100} %`}</span>
 									</div>
 								</div>
 								<div className="flex-col ml-5 w-32">
