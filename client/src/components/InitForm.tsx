@@ -17,6 +17,7 @@ export default function InitForm(props: any) {
 		[saveButtonState, setSaveButtonState] = useState(true),
 		[automaticIrrigationState, setAutomaticIrrigationState] = useState(true),
 		[irrigationDuration, setIrrigationDuration] = useState<number>(),
+		[defaultWaterAmount, setDefaultWaterAmount] = useState<number>(),
 		[scheduledIrrigationState, setScheduledIrrigationState] = useState(false),
 		[limitValues, setLimitValues] = useState<any>(),
 		[moistLimit, setMoistLimit] = useState<number>(),
@@ -260,6 +261,21 @@ export default function InitForm(props: any) {
 											item="irrigationDuration"
 											name="Doba zavlažování (s)"
 											defaultValue={irrigationDuration}
+											dataType="number"
+											active={true}
+										/>
+									</div>
+									<div
+										className="flex-row p-1 pt-5px mt-2"
+										onBlur={(data: any) => setDefaultWaterAmount(data.target.value)}
+										onChange={(data: any) =>
+											data.target.value == 0 ? setSaveButtonState(false) : setSaveButtonState(true)
+										}
+									>
+										<TextInputField
+											item="defaultWaterAmount"
+											name="Objem nádrže (l)"
+											defaultValue={defaultWaterAmount}
 											dataType="number"
 											active={true}
 										/>

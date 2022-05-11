@@ -10,6 +10,7 @@ export const settings = gql`
 			scheduled_trigger
 			hour_range
 			irrigation_duration
+			default_water_amount
 			chart_type
 			theme
 			language

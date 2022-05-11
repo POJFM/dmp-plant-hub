@@ -22,6 +22,8 @@ export default function Settings() {
 		[scheduledIrrigationState, setScheduledIrrigationState] = useState(settingsData?.getSettings[0]?.scheduled_trigger),
 		[irrigationDuration, setIrrigationDuration] = useState(settingsData?.getSettings[0]?.irrigation_duration),
 		[irrigationDurationStateClass, setIrrigationDurationStateClass] = useState('#000000'),
+		[defaultWaterAmount, setDefaultWaterAmount] = useState(settingsData?.getSettings[0]?.irrigation_duration),
+		[defaultWaterAmountStateClass, setDefaultWaterAmountStateClass] = useState('#000000'),
 		[scheduledIrrigationStateClass, setScheduledIrrigationStateClass] = useState<string>(
 			settingsData?.getSettings[0]?.scheduled_trigger ? '#000000' : 'var(--inactiveGrey)'
 		),
@@ -49,6 +51,7 @@ export default function Settings() {
 		setScheduledIrrigationStateClass(settingsData?.getSettings[0]?.scheduled_trigger ? '#000000' : 'var(--inactiveGrey)')
 
 		setIrrigationDuration(settingsData?.getSettings[0]?.irrigation_duration)
+		setDefaultWaterAmount(settingsData?.getSettings[0]?.default_water_amount)
 		setMoistLimit(settingsData?.getSettings[0]?.moist_limit)
 		setWaterAmountLimit(settingsData?.getSettings[0]?.water_amount_limit)
 		setWaterLevelLimit(settingsData?.getSettings[0]?.water_level_limit)
@@ -77,6 +80,7 @@ export default function Settings() {
 			hour_range: hourRange,
 			location: location,
 			irrigation_duration: irrigationDuration,
+			default_water_amount: defaultWaterAmount,
 			chart_type: chartTypeState,
 			language: languageState,
 			theme: themeState,
@@ -112,6 +116,7 @@ export default function Settings() {
 		setButtonsState(true)
 		switch (type) {
 			case 'irrigationDuration': setIrrigationDuration(data?.target?.value); break
+			case 'defaultWaterAmount': setDefaultWaterAmount(data?.target?.value); break
 			case 'moistLimit': setMoistLimit(data?.target?.value); break
 			case 'waterAmountLimit': setWaterAmountLimit(data?.target?.value); break
 			case 'waterLevelLimit': setWaterLevelLimit(data?.target?.value); break
@@ -138,6 +143,7 @@ export default function Settings() {
 					setAutomaticIrrigationState(true)
 					setButtonsState(true)
 					setIrrigationDurationStateClass('#000000')
+					setDefaultWaterAmountStateClass('#000000')
 					setAutomaticIrrigationStateClass('#000000')
 				} else {
 					setAutomaticIrrigationState(false)
@@ -145,6 +151,7 @@ export default function Settings() {
 					if (scheduledIrrigationState === false) {
 						setButtonsState(false)
 						setIrrigationDurationStateClass('var(--inactiveGrey)')
+						setDefaultWaterAmountStateClass('var(--inactiveGrey)')
 					}
 				}
 				break
@@ -154,6 +161,7 @@ export default function Settings() {
 					setScheduledIrrigationState(true)
 					setButtonsState(true)
 					setIrrigationDurationStateClass('#000000')
+					setDefaultWaterAmountStateClass('#000000')
 					setScheduledIrrigationStateClass('#000000')
 					if (irrigationDuration == 0) {
 						setButtonsState(false)
@@ -164,6 +172,7 @@ export default function Settings() {
 					if (automaticIrrigationState === false) {
 						setButtonsState(false)
 						setIrrigationDurationStateClass('var(--inactiveGrey)')
+						setDefaultWaterAmountStateClass('var(--inactiveGrey)')
 					}
 				}
 				break
@@ -202,6 +211,7 @@ export default function Settings() {
 		updateDataStates()
 		setButtonsState(false)
 		setIrrigationDurationStateClass(buttonsState ? '#000000' : 'var(--inactiveGrey)')
+		setDefaultWaterAmountStateClass(buttonsState ? '#000000' : 'var(--inactiveGrey)')
 		setGetCoordsState(false)
 		setGetCoords('')
 	}
@@ -243,6 +253,9 @@ export default function Settings() {
 										<span style={{ color: irrigationDurationStateClass }}>Doba zavlažování (s): </span>
 									</div>
 									<div className="flex-row pt-2">
+										<span style={{ color: irrigationDurationStateClass }}>Objem nádrže (l): </span>
+									</div>
+									<div className="flex-row pt-2">
 										<span style={{ color: automaticIrrigationStateClass }}>Limit vlhkosti půdy (%): </span>
 									</div>
 									<div className="flex-row pt-2">
@@ -265,6 +278,19 @@ export default function Settings() {
 											name="irrigationDuration"
 											defaultValue={irrigationDuration}
 											active={irrigationDurationStateClass === '#000000'}
+											width={10}
+											dataType="number"
+										/>
+									</div>
+									<div
+										className="flex-row pt-1"
+										onBlur={(data: any) => updateInputData('defaultWaterAmount', data.target.value)}
+										onChange={(data: any) => data.target.value == 0 && setButtonsState(false)}
+									>
+										<EditableField
+											name="defaultWaterAmount"
+											defaultValue={defaultWaterAmount}
+											active={defaultWaterAmountStateClass === '#000000'}
 											width={10}
 											dataType="number"
 										/>
@@ -374,9 +400,9 @@ export default function Settings() {
 										onChange={(data: any) => updateInputData('location', data)}
 										onBlur={(data: any) => updateInputData('location', data)}
 									>
-										<EditableField 
-											name="city" 
-											defaultValue={location} 
+										<EditableField
+											name="city"
+											defaultValue={location}
 											active={true}
 											width={40}
 											dataType="string"

@@ -85,35 +85,57 @@ func Controller(db *db.DB, sensei *sens.Sensors) {
 	}
 }
 
-func CheckingSequence(db *db.DB, sensei *sens.Sensors) {
+func CheckingSequence(db *db.DB, sensei *sens.Sensors, flowMeasure, pumpFlow *float64) {
 	log.Println("Starting Checking Sequence...🌿🤖🚿")
 
-	settings := db.GetSettingByColumn([]string{"water_level_limit"})
+	settings := db.GetSettingByColumn([]string{"water_level_limit, default_water_amount"})
+	ctx := context.Background()
+	waterOverdrawn := 0.0
+	waterAmount := 0.0
+	waterOverdrawn = float64(*pumpFlow * (*flowMeasure / 1))
+	irrigationHistory := db.GetIrrigation(ctx)
+
+	if len(irrigationHistory) == 0 {
+		waterAmount = *settings.DefaultWaterAmount - waterOverdrawn
+	} else {
+		waterAmount = float64(*irrigationHistory[len(irrigationHistory)-1].WaterAmount - waterOverdrawn)
+	}
 
 	mid.LoadLiveNotify("Kontrola Nádrže", "inProgress", "Probíhá kontrola nádrže")
 
 	time.Sleep(3000 * time.Millisecond)
 
-	waterlevel := sensei.ReadWaterLevel()
-	log.Println("namerena nadrz: ", waterlevel)
+	log.Println("namerena nadrz: ", sensei.ReadWaterLevel())
 
-	if waterlevel > *settings.WaterLevelLimit {
+	if sensei.ReadWaterLevel() > *settings.WaterLevelLimit {
 		mid.LoadLiveNotify("Doplňte nádrž", "physicalHelpRequired", "Nádrž je prázdná")
 
 		log.Println("Water tank limit level reached...🚫🤖🚫")
 
-		log.Println("namerena nadrz: ", waterlevel)
+		log.Println("namerena nadrz: ", sensei.ReadWaterLevel())
 		log.Println("limit nadrze: ", *settings.WaterLevelLimit)
 
-		for waterlevel > *settings.WaterLevelLimit {
+		for sensei.ReadWaterLevel() > *settings.WaterLevelLimit {
 			log.Println("doplnit nadrz")
 			time.Sleep(1000 * time.Millisecond)
 		}
+
+		waterAmount = *settings.DefaultWaterAmount
 	}
 
-	waterLevel := fmt.Sprintf("V nádrži zbývá %fl vody", sensei.ReadWaterLevel())
+	waterLevel := fmt.Sprintf("V nádrži zbývá %fl vody", waterAmount)
 	// Dodělat na water amount v litrech
 	mid.LoadLiveNotify("Kontrola Nádrže", "finished", waterLevel)
+
+	newWaterLevel := sensei.ReadWaterLevel()
+
+	NewirrigationHistory := &graphmodel.NewIrrigation{
+		WaterLevel:     &newWaterLevel,
+		WaterAmount:    &waterAmount,
+		WaterOverdrawn: &waterOverdrawn,
+	}
+
+	db.CreateIrrigation(ctx, NewirrigationHistory)
 
 	time.Sleep(3000 * time.Millisecond)
 
@@ -155,7 +177,7 @@ func irrigationSequenceMode(db *db.DB, sensei *sens.Sensors, limitsTrigger, sche
 
 		mid.LoadLiveNotify("Zavlažování", "finished", "Zavlažování dokončeno")
 
-		CheckingSequence(db, sensei)
+		CheckingSequence(db, sensei, &flowMeasure, pumpFlow)
 	}
 
 	if limitsTrigger {
@@ -190,7 +212,7 @@ func irrigationSequenceMode(db *db.DB, sensei *sens.Sensors, limitsTrigger, sche
 					}
 				}
 				sensei.StopPump()
-				CheckingSequence(db, sensei)
+				CheckingSequence(db, sensei, &flowMeasure, pumpFlow)
 			}
 			time.Sleep(2 * time.Second)
 		}
@@ -203,7 +225,7 @@ func irrigationSequence(db *db.DB, sensei *sens.Sensors) {
 	settings := db.GetSettingByColumn([]string{"limits_trigger", "scheduled_trigger", "moist_limit", "water_amount_limit", "irrigation_duration", "hour_range"})
 
 	// Definovaný průtok čerpadla
-	var pumpFlow = 1.75 // litr/min
+	var pumpFlow = 0.05 // liter / second
 
 	if *settings.LimitsTrigger && !(*settings.ScheduledTrigger) {
 		irrigationSequenceMode(db, sensei, true, false, settings.MoistLimit, settings.WaterAmountLimit, &pumpFlow, settings.IrrigationDuration)
