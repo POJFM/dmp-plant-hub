@@ -460,7 +460,6 @@ type IrrigationHistory {
 }
 
 input NewIrrigation {
-    timestamp: Timestamp
     water_level: Float
     water_amount: Float
     water_overdrawn: Float
@@ -2892,14 +2891,6 @@ func (ec *executionContext) unmarshalInputNewIrrigation(ctx context.Context, obj
 
 	for k, v := range asMap {
 		switch k {
-		case "timestamp":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("timestamp"))
-			it.Timestamp, err = ec.unmarshalOTimestamp2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "water_level":
 			var err error
 

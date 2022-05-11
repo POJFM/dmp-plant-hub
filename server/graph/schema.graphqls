@@ -33,7 +33,6 @@ type IrrigationHistory {
 }
 
 input NewIrrigation {
-    timestamp: Timestamp
     water_level: Float
     water_amount: Float
     water_overdrawn: Float

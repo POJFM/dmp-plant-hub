@@ -84,7 +84,6 @@ func (db *DB) CreateIrrigation(ctx context.Context, input *model.NewIrrigation) 
 		log.Println(err)
 	}
 	return &model.IrrigationHistory{
-		Timestamp:      input.Timestamp,
 		WaterLevel:     input.WaterLevel,
 		WaterAmount:    input.WaterAmount,
 		WaterOverdrawn: input.WaterOverdrawn,
