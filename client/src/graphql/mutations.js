@@ -10,12 +10,12 @@ export const createSettingsMut = gql`
 		$hour_range: Int
 		$location: String
 		$irrigation_duration: Int
-		$default_water_amount: Float
 		$chart_type: Boolean
 		$language: Boolean
 		$theme: Boolean
 		$lat: Float
 		$lon: Float
+		$default_water_amount: Float
 	) {
 		createSettings(
 			input: {
@@ -27,12 +27,12 @@ export const createSettingsMut = gql`
 				hour_range: $hour_range
 				location: $location
 				irrigation_duration: $irrigation_duration
-				default_water_amount: $default_water_amount
 				chart_type: $chart_type
 				language: $language
 				theme: $theme
 				lat: $lat
 				lon: $lon
+				default_water_amount: $default_water_amount
 			}
 		) {
 			id
@@ -50,12 +50,12 @@ export const updateSettingsMut = gql`
 		$hour_range: Int
 		$location: String
 		$irrigation_duration: Int
-		$default_water_amount: Float
 		$chart_type: Boolean
 		$language: Boolean
 		$theme: Boolean
 		$lat: Float
 		$lon: Float
+		$default_water_amount: Float
 	) {
 		updateSettings(
 			input: {
@@ -67,12 +67,12 @@ export const updateSettingsMut = gql`
 				hour_range: $hour_range
 				location: $location
 				irrigation_duration: $irrigation_duration
-				default_water_amount: $default_water_amount
 				chart_type: $chart_type
 				language: $language
 				theme: $theme
 				lat: $lat
 				lon: $lon
+				default_water_amount: $default_water_amount
 			}
 		) {
 			id
