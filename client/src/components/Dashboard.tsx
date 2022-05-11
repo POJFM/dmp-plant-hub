@@ -226,6 +226,8 @@ export default function Dashboard() {
 		}
 	}
 
+	console.log(Math.round(data?.getIrrigation[data?.getIrrigation.length - 1]?.water_level * 100) / 100)
+
 	return (
 		<div className="dashboard">
 			<Card className="card h-52">
@@ -258,21 +260,21 @@ export default function Dashboard() {
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterLevel.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? data?.getIrrigation[data?.getIrrigation.length - 1]?.water_level : 0
+										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? Math.round(data?.getIrrigation[data?.getIrrigation.length - 1]?.water_level * 100) / 100 : 0
 											} cm`}</span>
 									</div>
 									<div className="flex-row pt-5px" title="Objem vody v nádrži">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterAmount.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? data?.getIrrigation[data?.getIrrigation.length - 1]?.water_amount : 0
+										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? Math.round(data?.getIrrigation[data?.getIrrigation.length - 1]?.water_amount * 100) / 100 : 0
 											} l`}</span>
 									</div>
 									<div className="flex-row pt-5px" title="Celkový vyčerpaný objem vody">
 										<span className="flex-col w-12 max-h-full">
 											<img src="/assets/icons/dashboard/waterOverdrawn.svg" />
 										</span>
-										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? overallWaterConsumption : 0
+										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? Math.round(overallWaterConsumption * 100) / 100 : 0
 											} l`}</span>
 									</div>
 								</div>
