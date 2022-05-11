@@ -94,15 +94,18 @@ func CheckingSequence(db *db.DB, sensei *sens.Sensors) {
 
 	time.Sleep(3000 * time.Millisecond)
 
-	if sensei.ReadWaterLevel() < *settings.WaterLevelLimit {
+	waterlevel := sensei.ReadWaterLevel()
+	log.Println("namerena nadrz: ", waterlevel)
+
+	if waterlevel > *settings.WaterLevelLimit {
 		mid.LoadLiveNotify("Doplňte nádrž", "physicalHelpRequired", "Nádrž je prázdná")
 
 		log.Println("Water tank limit level reached...🚫🤖🚫")
 
-		log.Println("namerena nadrz: ", sensei.ReadWaterLevel())
+		log.Println("namerena nadrz: ", waterlevel)
 		log.Println("limit nadrze: ", *settings.WaterLevelLimit)
 
-		for sensei.ReadWaterLevel() < *settings.WaterLevelLimit {
+		for waterlevel > *settings.WaterLevelLimit {
 			log.Println("doplnit nadrz")
 			time.Sleep(1000 * time.Millisecond)
 		}
@@ -276,7 +279,7 @@ func measurementSequence(sensei *sens.Sensors) {
 		gLastMoist = moist
 
 		// fmt.Printf("temp: %f\nhum: %f\nmoi: %f\n", temp, hum, moist)
-		go fmt.Printf("sonicbuzik: %f\n", sensei.ReadWaterLevel())
+		// go fmt.Printf("sonic: %f\n", sensei.ReadWaterLevel())
 
 		mid.LoadLiveMeasure(&moist, &hum, &temp)
 	},

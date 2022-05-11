@@ -78,6 +78,19 @@ func (db *DB) GetMeasurements(ctx context.Context) []*model.Measurement {
 	return measurements
 }
 
+func (db *DB) CreateIrrigation(ctx context.Context, input *model.NewIrrigation) *model.IrrigationHistory {
+	_, err := db.DB.NewInsert().Model(input).ModelTableExpr("irrigation_history").Exec(ctx)
+	if err != nil {
+		log.Println(err)
+	}
+	return &model.IrrigationHistory{
+		Timestamp:      input.Timestamp,
+		WaterLevel:     input.WaterLevel,
+		WaterAmount:    input.WaterAmount,
+		WaterOverdrawn: input.WaterOverdrawn,
+	}
+}
+
 func (db *DB) GetIrrigation(ctx context.Context) []*model.IrrigationHistory {
 	irrigationHistory := make([]*model.IrrigationHistory, 0)
 	err := db.DB.NewSelect().Model(&irrigationHistory).ModelTableExpr("irrigation_history").Scan(ctx)

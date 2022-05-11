@@ -177,7 +177,7 @@ func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 
 			time.Sleep(2000 * time.Millisecond)
 
-			if Isens.ReadWaterLevel() < *settings.WaterLevelLimit {
+			if Isens.ReadWaterLevel() > *settings.WaterLevelLimit {
 				LoadLiveNotify("Doplňte nádrž", "physicalHelpRequired", "Nádrž je prázdná")
 
 				log.Println("Water tank limit level reached...🚫🤖🚫")
@@ -185,7 +185,7 @@ func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 				log.Println("namerena nadrz: ", Isens.ReadWaterLevel())
 				log.Println("limit nadrze: ", *settings.WaterLevelLimit)
 
-				for Isens.ReadWaterLevel() < *settings.WaterLevelLimit {
+				for Isens.ReadWaterLevel() > *settings.WaterLevelLimit {
 					log.Println("doplnit nadrz")
 					time.Sleep(1000 * time.Millisecond)
 				}
@@ -209,7 +209,6 @@ func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 func HandleGetWeather(w http.ResponseWriter, _ *http.Request) {
 	w = setGetHeader(w)
 	w.WriteHeader(http.StatusOK)
-	//w = setGetHeader(w)
 	if Idb.CheckSettings() {
 		geocodes := Idb.GetSettingByColumn([]string{"lat", "lon"})
 		lat = *geocodes.Lat

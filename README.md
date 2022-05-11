@@ -94,22 +94,6 @@ subnet 192.168.0.0 netmask 255.255.255.224 {
 - Restart dhcp daemon
   `systemctl restart dhcpd4`
 
-## 📦 Build docker image for arm
-
-```
-# create bob the builder
-docker buildx create --name bob
-# switch to bob
-docker buildx use bob
-docker buildx inspect --bootstrap
-docker login
-docker buildx
-# build and push client image
-docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t tassilobalbo/planthub-client --push client/.
-# server image
-docker buildx build --platform linux/arm64,linux/arm/v7 -t tassilobalbo/planthub-server --push server/.
-```
-
 ## 📄 Compile XeLaTeX to pdf
 
 1. Add `XeLaTeX` config in vscode

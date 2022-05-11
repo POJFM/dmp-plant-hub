@@ -19,6 +19,13 @@ type Measurement struct {
 	WithIrrigation *bool    `json:"with_irrigation"`
 }
 
+type NewIrrigation struct {
+	Timestamp      *string  `json:"timestamp"`
+	WaterLevel     *float64 `json:"water_level"`
+	WaterAmount    *float64 `json:"water_amount"`
+	WaterOverdrawn *float64 `json:"water_overdrawn"`
+}
+
 type NewMeasurement struct {
 	Hum            *float64 `json:"hum"`
 	Temp           *float64 `json:"temp"`

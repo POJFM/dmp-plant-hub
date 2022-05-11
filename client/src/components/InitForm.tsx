@@ -46,7 +46,7 @@ export default function InitForm(props: any) {
 	const [createSettings] = useMutation(createSettingsMut, {
 		variables: {
 			limits_trigger: automaticIrrigationState,
-			water_level_limit: waterLevelLimit,
+			water_level_limit: waterLevelLimit && waterLevelLimit - waterLevelLimit * 0.1,
 			water_amount_limit: waterAmountLimit,
 			moist_limit: moistLimit,
 			scheduled_trigger: scheduledIrrigationState,

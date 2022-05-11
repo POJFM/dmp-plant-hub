@@ -20,6 +20,13 @@ export default function Notification() {
 		!getNotificationsInterval && (getNotificationsInterval = setInterval(() => getNotifications(), 2000))
 	}, [])
 
+	const triggerNotification = (res: any, state: boolean) => {
+		setTitle(res.data.title)
+		setState(res.data.state)
+		setAction(res.data.action)
+		setNotify(state)
+	}
+
 	const getNotifications = () => {
 		axios
 			.request({
@@ -31,12 +38,9 @@ export default function Notification() {
 			})
 			.then((res) => {
 				if (res.data.state !== 'inactive') {
-					setTitle(res.data.title)
-					setState(res.data.state)
-					setAction(res.data.action)
-					setNotify(true)
+					triggerNotification(res, true)
 				} else {
-					setNotify(false)
+					triggerNotification(res, false)
 				}
 			})
 			.catch((error) => {

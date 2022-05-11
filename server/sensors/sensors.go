@@ -83,6 +83,7 @@ func (s *Sensors) StopLED() {
 
 func (s *Sensors) ReadDHT() (hum, temp float64) {
 	temp, hum, err := s.dht.ReadData()
+	// TODO: vyjebat tento error?
 	if err != nil && err != errors.New("data verification failed") {
 		log.Printf("DHT11 Error: %v", err)
 	}
@@ -108,10 +109,6 @@ func (s *Sensors) ReadMoisture() (moisture float64) {
 	res := int(data[1]&3)<<8 + int(data[2])
 
 	moisture = 100 - 100*float64(res)/1023
-	// TODO: map moisture value to percentage
-	// Vdd and Vref are at 5v. Change *5 to *3.3 if you are
-	// powering the chip with 3.3v
-	// voltage := (float64(code) * 5) / 1024
 
 	rpio.SpiEnd(rpio.Spi0)
 	return

@@ -38,7 +38,6 @@ func (db *DB) GetSettings(ctx context.Context) []*model.Setting {
 	return settings
 }
 
-// TODO: DIS IS FOKEN RETARDED, WE NEED TO FIX THIS CRAP FUCK SHIT
 func (db *DB) UpdateSettings(ctx context.Context, input *model.NewSettings) *model.Setting {
 	values := db.DB.NewValues(input)
 	_, err := db.DB.NewUpdate().With("_data", values).Model(input).TableExpr("_data").Bulk().Where("settings.id = 1").Exec(ctx)

@@ -32,6 +32,13 @@ type IrrigationHistory {
     water_overdrawn: Float
 }
 
+input NewIrrigation {
+    timestamp: Timestamp
+    water_level: Float
+    water_amount: Float
+    water_overdrawn: Float
+}
+
 # TODO: vymyslet query pomoci timestamp range somehow
 
 type Query {
@@ -68,6 +75,7 @@ type Mutation {
     createMeasurement(input: NewMeasurement): Measurement!
     createSettings(input: NewSettings): Setting!
     updateSettings(input: NewSettings): Setting!
+    createIrrigation(input: NewIrrigation): IrrigationHistory!
 }
 
 scalar Timestamp
