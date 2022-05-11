@@ -268,7 +268,7 @@ export default function InitForm(props: any) {
 									</div>
 									<div
 										className="flex-row p-1 pt-5px mt-2"
-										onBlur={(data: any) => setDefaultWaterAmount(data.target.value)}
+										onBlur={(data: any) => setDefaultWaterAmount(parseInt(data.target.value))}
 										onChange={(data: any) =>
 											data.target.value == 0 ? setSaveButtonState(false) : setSaveButtonState(true)
 										}
@@ -328,7 +328,10 @@ export default function InitForm(props: any) {
 									</div>
 									<div
 										className="flex-row p-1 pt-5px mt-2"
-										onBlur={(data: any) => fetchCoordsFromLocation(data.target.value)}
+										onBlur={(data: any) => {
+											setLocation(data.target.value)
+											fetchCoordsFromLocation(data.target.value)
+										}}
 									>
 										<TextInputField
 											item="location"
