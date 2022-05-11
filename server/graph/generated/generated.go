@@ -74,6 +74,7 @@ type ComplexityRoot struct {
 
 	Setting struct {
 		ChartType          func(childComplexity int) int
+		DefaultWaterAmount func(childComplexity int) int
 		HourRange          func(childComplexity int) int
 		ID                 func(childComplexity int) int
 		IrrigationDuration func(childComplexity int) int
@@ -270,6 +271,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Setting.ChartType(childComplexity), true
 
+	case "Setting.default_water_amount":
+		if e.complexity.Setting.DefaultWaterAmount == nil {
+			break
+		}
+
+		return e.complexity.Setting.DefaultWaterAmount(childComplexity), true
+
 	case "Setting.hour_range":
 		if e.complexity.Setting.HourRange == nil {
 			break
@@ -439,6 +447,7 @@ type Setting {
     limits_trigger: Boolean
     water_level_limit: Float
     water_amount_limit: Float
+    default_water_amount: Float
     moist_limit: Float
     scheduled_trigger: Boolean
     hour_range: Int
@@ -485,6 +494,7 @@ input NewSettings {
     limits_trigger: Boolean
     water_level_limit: Float
     water_amount_limit: Float
+    default_water_amount: Float
     moist_limit: Float
     scheduled_trigger: Boolean
     hour_range: Int
@@ -1427,6 +1437,38 @@ func (ec *executionContext) _Setting_water_amount_limit(ctx context.Context, fie
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.WaterAmountLimit, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*float64)
+	fc.Result = res
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Setting_default_water_amount(ctx context.Context, field graphql.CollectedField, obj *model.Setting) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Setting",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DefaultWaterAmount, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3001,6 +3043,14 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 			if err != nil {
 				return it, err
 			}
+		case "default_water_amount":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("default_water_amount"))
+			it.DefaultWaterAmount, err = ec.unmarshalOFloat2ᚖfloat64(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "moist_limit":
 			var err error
 
@@ -3289,6 +3339,8 @@ func (ec *executionContext) _Setting(ctx context.Context, sel ast.SelectionSet, 
 			out.Values[i] = ec._Setting_water_level_limit(ctx, field, obj)
 		case "water_amount_limit":
 			out.Values[i] = ec._Setting_water_amount_limit(ctx, field, obj)
+		case "default_water_amount":
+			out.Values[i] = ec._Setting_default_water_amount(ctx, field, obj)
 		case "moist_limit":
 			out.Values[i] = ec._Setting_moist_limit(ctx, field, obj)
 		case "scheduled_trigger":

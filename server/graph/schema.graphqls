@@ -12,6 +12,7 @@ type Setting {
     limits_trigger: Boolean
     water_level_limit: Float
     water_amount_limit: Float
+    default_water_amount: Float
     moist_limit: Float
     scheduled_trigger: Boolean
     hour_range: Int
@@ -58,6 +59,7 @@ input NewSettings {
     limits_trigger: Boolean
     water_level_limit: Float
     water_amount_limit: Float
+    default_water_amount: Float
     moist_limit: Float
     scheduled_trigger: Boolean
     hour_range: Int
