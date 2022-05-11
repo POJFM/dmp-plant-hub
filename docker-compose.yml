@@ -32,6 +32,7 @@ services:
       - ./server/.env:/app/.env
     devices:
       - /dev/mem:/dev/mem
+      - /dev/ttyUSB0:/dev/ttyUSB0
     restart: always
 volumes:
   dbdata:
