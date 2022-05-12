@@ -33,10 +33,10 @@ type NewMeasurement struct {
 }
 
 type NewSettings struct {
+	ID                 *int     `json:"id"`
 	LimitsTrigger      *bool    `json:"limits_trigger"`
 	WaterLevelLimit    *float64 `json:"water_level_limit"`
 	WaterAmountLimit   *float64 `json:"water_amount_limit"`
-	DefaultWaterAmount *float64 `json:"default_water_amount"`
 	MoistLimit         *float64 `json:"moist_limit"`
 	ScheduledTrigger   *bool    `json:"scheduled_trigger"`
 	HourRange          *int     `json:"hour_range"`
@@ -47,6 +47,7 @@ type NewSettings struct {
 	Theme              *bool    `json:"theme"`
 	Lat                *float64 `json:"lat"`
 	Lon                *float64 `json:"lon"`
+	DefaultWaterAmount *float64 `json:"default_water_amount"`
 }
 
 type Setting struct {
@@ -54,7 +55,6 @@ type Setting struct {
 	LimitsTrigger      *bool    `json:"limits_trigger"`
 	WaterLevelLimit    *float64 `json:"water_level_limit"`
 	WaterAmountLimit   *float64 `json:"water_amount_limit"`
-	DefaultWaterAmount *float64 `json:"default_water_amount"`
 	MoistLimit         *float64 `json:"moist_limit"`
 	ScheduledTrigger   *bool    `json:"scheduled_trigger"`
 	HourRange          *int     `json:"hour_range"`
@@ -65,4 +65,5 @@ type Setting struct {
 	Theme              *bool    `json:"theme"`
 	Lat                *float64 `json:"lat"`
 	Lon                *float64 `json:"lon"`
+	DefaultWaterAmount *float64 `json:"default_water_amount"`
 }

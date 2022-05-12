@@ -88,7 +88,7 @@ func Controller(db *db.DB, sensei *sens.Sensors) {
 func CheckingSequence(db *db.DB, sensei *sens.Sensors, flowMeasure, pumpFlow *float64) {
 	log.Println("Starting Checking Sequence...🌿🤖🚿")
 
-	settings := db.GetSettingByColumn([]string{"water_level_limit, default_water_amount"})
+	settings := db.GetSettingByColumn([]string{"water_level_limit", "default_water_amount"})
 	ctx := context.Background()
 	waterOverdrawn := 0.0
 	waterAmount := 0.0
@@ -180,43 +180,43 @@ func irrigationSequenceMode(db *db.DB, sensei *sens.Sensors, limitsTrigger, sche
 		CheckingSequence(db, sensei, &flowMeasure, pumpFlow)
 	}
 
-	if limitsTrigger {
-		for {
-			moist := gMoist
-			temp := gTemp
-			hum := gHum
-			// time passed from running pump will be represented as liters
-			var flowMeasure float64
-			t0 := time.Now()
-			if (moist > *moistureLimit) || mid.GetLiveControl() {
-				log.Println("Starting irrigation...🌿🤖🚿")
-
-				measurement := &graphmodel.NewMeasurement{
-					Hum:            &hum,
-					Temp:           &temp,
-					Moist:          &moist,
-					WithIrrigation: &irr,
-				}
-				ctx := context.Background()
-				db.CreateMeasurement(ctx, measurement)
-				mid.LoadLiveNotify("Zavlažování", "inProgress", "Probíhá zavlažování")
-				sensei.StartPump()
-				if moist > *moistureLimit {
-					// TimeToOverdraw is calculated by dividing amount by flow
-					for i := 0; i < *irrigationDuration; i++ {
-						flowMeasure = time.Since(t0).Seconds()
-						if moist < *moistureLimit || flowMeasure < *waterAmountLimit/(*pumpFlow) {
-							i = *irrigationDuration
-						}
-						time.Sleep(1 * time.Second)
-					}
-				}
-				sensei.StopPump()
-				CheckingSequence(db, sensei, &flowMeasure, pumpFlow)
-			}
-			time.Sleep(2 * time.Second)
-		}
-	}
+	//if limitsTrigger {
+	//	for {
+	//		moist := gMoist
+	//		temp := gTemp
+	//		hum := gHum
+	//		// time passed from running pump will be represented as liters
+	//		var flowMeasure float64
+	//		t0 := time.Now()
+	//		if (moist > *moistureLimit) || mid.GetLiveControl() {
+	//			log.Println("Starting irrigation...🌿🤖🚿")
+	//
+	//			measurement := &graphmodel.NewMeasurement{
+	//				Hum:            &hum,
+	//				Temp:           &temp,
+	//				Moist:          &moist,
+	//				WithIrrigation: &irr,
+	//			}
+	//			ctx := context.Background()
+	//			db.CreateMeasurement(ctx, measurement)
+	//			mid.LoadLiveNotify("Zavlažování", "inProgress", "Probíhá zavlažování")
+	//			sensei.StartPump()
+	//			if moist > *moistureLimit {
+	//				// TimeToOverdraw is calculated by dividing amount by flow
+	//				for i := 0; i < *irrigationDuration; i++ {
+	//					flowMeasure = time.Since(t0).Seconds()
+	//					if moist < *moistureLimit || flowMeasure < *waterAmountLimit/(*pumpFlow) {
+	//						i = *irrigationDuration
+	//					}
+	//					time.Sleep(1 * time.Second)
+	//				}
+	//			}
+	//			sensei.StopPump()
+	//			CheckingSequence(db, sensei, &flowMeasure, pumpFlow)
+	//		}
+	//		time.Sleep(2 * time.Second)
+	//	}
+	//}
 }
 
 func irrigationSequence(db *db.DB, sensei *sens.Sensors) {
@@ -269,7 +269,8 @@ func initializationSequence(sensei *sens.Sensors) {
 	}
 
 	moistureLevel := utils.ArithmeticMean(moistureAvg)
-	waterLevel := utils.ArithmeticMean(waterLevelAvg)
+	//waterLevel := utils.ArithmeticMean(waterLevelAvg)
+	waterLevel := sensei.ReadWaterLevel()
 
 	mid.LoadInitMeasured(&moistureLevel, &waterLevel)
 }

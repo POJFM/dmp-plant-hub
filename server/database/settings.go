@@ -7,14 +7,15 @@ import (
 )
 
 func (db *DB) CreateSettings(ctx context.Context, input *model.NewSettings) *model.Setting {
+	*input.ID = 0
 	_, err := db.DB.NewInsert().Model(input).ModelTableExpr("settings").Exec(ctx)
 	if err != nil {
 		log.Println(err)
 	}
 	return &model.Setting{
+		ID:                 input.ID,
 		LimitsTrigger:      input.LimitsTrigger,
 		WaterLevelLimit:    input.WaterLevelLimit,
-		WaterAmountLimit:   input.WaterAmountLimit,
 		DefaultWaterAmount: input.DefaultWaterAmount,
 		MoistLimit:         input.MoistLimit,
 		ScheduledTrigger:   input.ScheduledTrigger,
@@ -26,6 +27,7 @@ func (db *DB) CreateSettings(ctx context.Context, input *model.NewSettings) *mod
 		Theme:              input.Theme,
 		Lat:                input.Lat,
 		Lon:                input.Lon,
+		WaterAmountLimit:   input.WaterAmountLimit,
 	}
 }
 
@@ -47,7 +49,6 @@ func (db *DB) UpdateSettings(ctx context.Context, input *model.NewSettings) *mod
 		LimitsTrigger:      input.LimitsTrigger,
 		WaterLevelLimit:    input.WaterLevelLimit,
 		WaterAmountLimit:   input.WaterAmountLimit,
-		DefaultWaterAmount: input.DefaultWaterAmount,
 		MoistLimit:         input.MoistLimit,
 		ScheduledTrigger:   input.ScheduledTrigger,
 		HourRange:          input.HourRange,
@@ -58,6 +59,7 @@ func (db *DB) UpdateSettings(ctx context.Context, input *model.NewSettings) *mod
 		Theme:              input.Theme,
 		Lat:                input.Lat,
 		Lon:                input.Lon,
+		DefaultWaterAmount: input.DefaultWaterAmount,
 	}
 	_, err := db.DB.NewUpdate().Model(&settings).Where("id = ?", 0).Exec(ctx)
 	if err != nil {
@@ -67,7 +69,6 @@ func (db *DB) UpdateSettings(ctx context.Context, input *model.NewSettings) *mod
 		LimitsTrigger:      input.LimitsTrigger,
 		WaterLevelLimit:    input.WaterLevelLimit,
 		WaterAmountLimit:   input.WaterAmountLimit,
-		DefaultWaterAmount: input.DefaultWaterAmount,
 		MoistLimit:         input.MoistLimit,
 		ScheduledTrigger:   input.ScheduledTrigger,
 		HourRange:          input.HourRange,
@@ -78,6 +79,7 @@ func (db *DB) UpdateSettings(ctx context.Context, input *model.NewSettings) *mod
 		Theme:              input.Theme,
 		Lat:                input.Lat,
 		Lon:                input.Lon,
+		DefaultWaterAmount: input.DefaultWaterAmount,
 	}
 }
 
@@ -108,6 +110,7 @@ func (db *DB) GetSettingByColumn(columns []string) model.Setting {
 		Theme:              settingsRow.Theme,
 		Lat:                settingsRow.Lat,
 		Lon:                settingsRow.Lon,
+		DefaultWaterAmount: settingsRow.DefaultWaterAmount,
 	}
 }
 

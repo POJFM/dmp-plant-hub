@@ -20,9 +20,9 @@ export default function Settings() {
 			settingsData?.getSettings[0]?.limits_trigger ? '#000000' : 'var(--inactiveGrey)'
 		),
 		[scheduledIrrigationState, setScheduledIrrigationState] = useState(settingsData?.getSettings[0]?.scheduled_trigger),
-		[irrigationDuration, setIrrigationDuration] = useState(settingsData?.getSettings[0]?.irrigation_duration),
+		[irrigationDuration, setIrrigationDuration] = useState<number>(settingsData?.getSettings[0]?.irrigation_duration),
 		[irrigationDurationStateClass, setIrrigationDurationStateClass] = useState('#000000'),
-		[defaultWaterAmount, setDefaultWaterAmount] = useState(settingsData?.getSettings[0]?.irrigation_duration),
+		[defaultWaterAmount, setDefaultWaterAmount] = useState<number>(settingsData?.getSettings[0]?.default_water_amount),
 		[defaultWaterAmountStateClass, setDefaultWaterAmountStateClass] = useState('#000000'),
 		[scheduledIrrigationStateClass, setScheduledIrrigationStateClass] = useState<string>(
 			settingsData?.getSettings[0]?.scheduled_trigger ? '#000000' : 'var(--inactiveGrey)'
@@ -115,14 +115,14 @@ export default function Settings() {
 	const updateInputData = (type: string, data: any) => {
 		setButtonsState(true)
 		switch (type) {
-			case 'irrigationDuration': setIrrigationDuration(data?.target?.value); break
-			case 'defaultWaterAmount': setDefaultWaterAmount(data?.target?.value); break
-			case 'moistLimit': setMoistLimit(data?.target?.value); break
-			case 'waterAmountLimit': setWaterAmountLimit(data?.target?.value); break
-			case 'waterLevelLimit': setWaterLevelLimit(data?.target?.value); break
-			case 'hourRange': setHourRange(data?.target?.value); break
+			case 'irrigationDuration': setIrrigationDuration(data); break
+			case 'defaultWaterAmount': setDefaultWaterAmount(data); break
+			case 'moistLimit': setMoistLimit(data); break
+			case 'waterAmountLimit': setWaterAmountLimit(data); break
+			case 'waterLevelLimit': setWaterLevelLimit(data); break
+			case 'hourRange': setHourRange(data); break
 			case 'location': {
-				setGetCoords(data?.target?.value)
+				setGetCoords(data)
 				setGetCoordsState(true)
 				break
 			}
@@ -215,7 +215,7 @@ export default function Settings() {
 		setGetCoordsState(false)
 		setGetCoords('')
 	}
-
+console.log(settingsData?.getSettings[0])
 	return (
 		<div className="settings">
 			<Card className="card">
@@ -259,7 +259,7 @@ export default function Settings() {
 										<span style={{ color: automaticIrrigationStateClass }}>Limit vlhkosti půdy (%): </span>
 									</div>
 									<div className="flex-row pt-2">
-										<span style={{ color: automaticIrrigationStateClass }}>Limit přečerpané vody (l): </span>
+										<span style={{ color: automaticIrrigationStateClass }}>Limit objemu nádrže (l): </span>
 									</div>
 									<div className="flex-row pt-2">
 										<span style={{ color: automaticIrrigationStateClass }}>Limit hladiny vody (cm): </span>
@@ -271,8 +271,10 @@ export default function Settings() {
 								<div className="flex-col ml-3">
 									<div
 										className="flex-row pt-1"
-										onBlur={(data: any) => updateInputData('irrigationDuration', data.target.value)}
-										onChange={(data: any) => data.target.value == 0 && setButtonsState(false)}
+										onChange={(data: any) => {
+											updateInputData('irrigationDuration', parseInt(data.target.value))
+											data.target.value == 0 && setButtonsState(false)
+										}}
 									>
 										<EditableField
 											name="irrigationDuration"
@@ -284,8 +286,10 @@ export default function Settings() {
 									</div>
 									<div
 										className="flex-row pt-1"
-										onBlur={(data: any) => updateInputData('defaultWaterAmount', data.target.value)}
-										onChange={(data: any) => data.target.value == 0 && setButtonsState(false)}
+										onChange={(data: any) => {
+											updateInputData('defaultWaterAmount', data.target.value)
+											data.target.value == 0 && setButtonsState(false)
+										}}
 									>
 										<EditableField
 											name="defaultWaterAmount"
@@ -297,7 +301,7 @@ export default function Settings() {
 									</div>
 									<div
 										className="flex-row pt-1"
-										onBlur={(data: any) => updateInputData('moistLimit', data.target.value)}
+										onChange={(data: any) => updateInputData('moistLimit', data.target.value)}
 									>
 										<EditableField
 											name="moistLimit"
@@ -309,7 +313,7 @@ export default function Settings() {
 									</div>
 									<div
 										className="flex-row pt-1"
-										onBlur={(data: any) => updateInputData('waterAmountLimit', data.target.value)}
+										onChange={(data: any) => updateInputData('waterAmountLimit', data.target.value)}
 									>
 										<EditableField
 											name="waterAmountLimit"
@@ -321,7 +325,7 @@ export default function Settings() {
 									</div>
 									<div
 										className="flex-row pt-1"
-										onBlur={(data: any) => updateInputData('waterLevelLimit', data.target.value)}
+										onChange={(data: any) => updateInputData('waterLevelLimit', data.target.value)}
 									>
 										<EditableField
 											name="waterLevelLimit"
@@ -333,7 +337,7 @@ export default function Settings() {
 									</div>
 									<div
 										className="flex-row pt-1"
-										onBlur={(data: any) => updateInputData('hourRange', data.target.value)}
+										onChange={(data: any) => updateInputData('hourRange', data.target.value)}
 									>
 										<EditableField
 											name="hourRange"
@@ -398,7 +402,6 @@ export default function Settings() {
 									<div
 										className="flex-row pt-1"
 										onChange={(data: any) => updateInputData('location', data)}
-										onBlur={(data: any) => updateInputData('location', data)}
 									>
 										<EditableField
 											name="city"

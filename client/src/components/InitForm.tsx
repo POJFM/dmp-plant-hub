@@ -59,7 +59,7 @@ export default function InitForm(props: any) {
 			theme: false,
 			lat: latitude,
 			lon: longitude,
-			default_water_amount: defaultWaterAmount,
+			default_water_amount: 5,
 		},
 		refetchQueries: [{ query: settings }],
 	})

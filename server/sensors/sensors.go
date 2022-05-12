@@ -1,7 +1,6 @@
 package sensors
 
 import (
-	"errors"
 	"log"
 	"time"
 
@@ -82,11 +81,11 @@ func (s *Sensors) StopLED() {
 }
 
 func (s *Sensors) ReadDHT() (hum, temp float64) {
-	temp, hum, err := s.dht.ReadData()
-	// TODO: vyjebat tento error?
-	if err != nil && err != errors.New("data verification failed") {
-		log.Printf("DHT11 Error: %v", err)
-	}
+	temp, hum, _ = s.dht.ReadData()
+	// this spams logs too much and isn't important
+	//if err != nil {
+	//	log.Printf("DHT11 Error: %v", err)
+	//}
 	return
 }
 

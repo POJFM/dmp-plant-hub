@@ -1,6 +1,7 @@
 package hcsr
 
 import (
+	"fmt"
 	"go.bug.st/serial"
 	"log"
 	"strconv"
@@ -33,32 +34,55 @@ func NewHCSR04(portName string, baudRate int) *HCSR04 {
 // Dist
 // Value returns distance in cm to objects
 func (hc *HCSR04) Dist() (float64, error) {
-	port, err := serial.Open(hc.portName, hc.mode)
-	sendSignal(port)
-	time.Sleep(100 * time.Microsecond)
-	buff, n := readSerial(port)
+	// hc.openPort()
+	time.Sleep(2 * time.Second)
+	hc.sendSignal()
+	log.Println("wait 100 ms")
+	//time.Sleep(100 * time.Microsecond)
+	log.Println("done waiting, read")
+	//go func() {
+	//		time.Sleep(2 * time.Second)
+	//		hc.sendSignal()
+	//	}()
+	buff, n := hc.readSerial()
+	log.Println("data read")
 	//dist, _ := strconv.ParseFloat(strings.TrimSuffix(string(buff[:n]), "\r\n"), 64)
-	dist, jsikokot := strconv.ParseFloat(string(buff[:n]), 64)
-	if jsikokot != nil {
-		log.Fatal(jsikokot)
+	dist, err := strconv.ParseFloat(string(buff[:n]), 64)
+	log.Println("read data: " + fmt.Sprintf("%f", dist))
+	if err != nil {
+		log.Println(err)
 	}
-	_ = port.Close()
+	log.Println("close port")
+	// err = hc.port.Close()
+
 	return dist, err
 }
 
-func sendSignal(port serial.Port) {
-	n, err := port.Write([]byte("1"))
+func (hc *HCSR04) openPort() {
+	var err error
+	hc.port, err = serial.Open(hc.portName, hc.mode)
+	if err != nil {
+		log.Printf("Failed to open serial: %v\n", err)
+	}
+}
+
+func (hc *HCSR04) sendSignal() {
+	n, err := hc.port.Write([]byte("1"))
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Printf("Sonic signal sent. %v bytes \n", n)
 }
 
-func readSerial(port serial.Port) (buff []byte, n int) {
+func (hc *HCSR04) readSerial() (buff []byte, n int) {
+	log.Println("kokot")
 	buff = make([]byte, 100)
-	n, err := port.Read(buff)
+	log.Println("kokot")
+	n, err := hc.port.Read(buff)
+	log.Println("kokot")
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Println("kokot")
 	return
 }
