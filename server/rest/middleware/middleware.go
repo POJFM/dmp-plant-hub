@@ -191,7 +191,7 @@ func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 
-			waterLevel := fmt.Sprintf("V nádrži zbývá %fl vody", Isens.ReadWaterLevel())
+			waterLevel := fmt.Sprintf("V nádrži zbývá %fcm vody", Isens.ReadWaterLevel())
 			// Dodělat na water amount v litrech
 			LoadLiveNotify("Kontrola Nádrže", "finished", waterLevel)
 

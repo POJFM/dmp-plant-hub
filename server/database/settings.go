@@ -7,7 +7,6 @@ import (
 )
 
 func (db *DB) CreateSettings(ctx context.Context, input *model.NewSettings) *model.Setting {
-	*input.ID = 0
 	_, err := db.DB.NewInsert().Model(input).ModelTableExpr("settings").Exec(ctx)
 	if err != nil {
 		log.Println(err)

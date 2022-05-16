@@ -75,14 +75,10 @@ func (hc *HCSR04) sendSignal() {
 }
 
 func (hc *HCSR04) readSerial() (buff []byte, n int) {
-	log.Println("kokot")
 	buff = make([]byte, 100)
-	log.Println("kokot")
 	n, err := hc.port.Read(buff)
-	log.Println("kokot")
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("kokot")
 	return
 }

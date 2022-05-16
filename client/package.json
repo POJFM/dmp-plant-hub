@@ -131,7 +131,6 @@
     "autoprefixer": "^10.4.0",
     "chai": "^4.3.6",
     "concurrently": "^6.3.0",
-    "cypress": "^9.6.0",
     "enzyme": "^3.11.0",
     "jest-environment-jsdom": "^28.1.0",
     "mocha": "^10.0.0",
