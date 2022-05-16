@@ -2,6 +2,7 @@ import gql from 'graphql-tag'
 
 export const createSettingsMut = gql`
 	mutation createSettings(
+		$id: Int
 		$limits_trigger: Boolean
 		$water_level_limit: Float
 		$water_amount_limit: Float
@@ -19,6 +20,7 @@ export const createSettingsMut = gql`
 	) {
 		createSettings(
 			input: {
+				id: $id
 				limits_trigger: $limits_trigger
 				water_level_limit: $water_level_limit
 				water_amount_limit: $water_amount_limit
@@ -76,15 +78,6 @@ export const updateSettingsMut = gql`
 			}
 		) {
 			id
-		}
-	}
-`
-
-const ADD_TODO = gql`
-	mutation AddTodo($type: String!) {
-		addTodo(type: $type) {
-			id
-			type
 		}
 	}
 `
