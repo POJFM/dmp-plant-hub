@@ -123,7 +123,7 @@ func CheckingSequence(db *db.DB, sensei *sens.Sensors, flowMeasure, pumpFlow *fl
 		waterAmount = *settings.DefaultWaterAmount
 	}
 
-	waterLevel := fmt.Sprintf("V nádrži zbývá %fcm vody", waterAmount)
+	waterLevel := fmt.Sprintf("V nádrži zbývá %fcm vody", sensei.ReadWaterLevel())
 	// Dodělat na water amount v litrech
 	mid.LoadLiveNotify("Kontrola Nádrže", "finished", waterLevel)
 
