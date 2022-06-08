@@ -55,7 +55,7 @@ func main() {
 
 	// // port := fmt.Sprint(":" + env.Process("GO_API_PORT"))
 	// // fmt.Print(port)
-	// fmt.Println("Starting server on the port", env.Process("GO_API_PORT"))
+	fmt.Println("Starting server on the port", env.Process("GO_API_PORT"))
 	// go kokot(cPumpState)
 	// //go executeCronJob()
 	log.Fatal(http.ListenAndServe(":"+env.Process("GO_API_PORT"), r.Router(db)))

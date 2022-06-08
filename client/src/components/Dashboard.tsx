@@ -1,7 +1,7 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import axios from 'axios'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
+import { useTranslation } from 'react-i18next'
+import { MuiCard as Card } from './Card'
 import { useQuery } from '@apollo/client'
 import { dashboard } from '../graphql/queries'
 import { LiveMeasurementsChart, WaterConsumptionChart, IrrigationChart, MeasurementsHistoryChart } from './Chart'
@@ -9,6 +9,7 @@ import ReactScrollWheelHandler from 'react-scroll-wheel-handler'
 import { getMonths, monthRegex, dayRegex, timeRegex } from 'src/utils'
 
 export default function Dashboard() {
+	const { t } = useTranslation()
 	const [liveMeasure, setLiveMeasure] = useState(false),
 		[currentTemp, setCurrentTemp] = useState(0),
 		[currentMoist, setCurrentMoist] = useState(0),
@@ -25,7 +26,9 @@ export default function Dashboard() {
 		[weather, setWeather] = useState<any>()
 
 	const { loading, error, data } = useQuery(dashboard),
-		chartType = data?.getSettings[0]?.chart_type === false ? 0 : 1
+		chartType = useMemo(() => {
+			return data?.getSettings[0]?.chart_type === false ? 0 : 1
+		}, [data])
 
 	let liveMeasurementsInterval: ReturnType<typeof setTimeout>,
 		weatherForecastInterval: ReturnType<typeof setTimeout>,
@@ -96,7 +99,7 @@ export default function Dashboard() {
 
 			data?.getIrrigation.map((item: any) => {
 				let tMonth = monthRegex(item?.timestamp)
-				if(i === tMonth) {
+				if (i === tMonth) {
 					month++
 					waterOverdrawnInMonth += item?.water_overdrawn
 				}
@@ -159,9 +162,9 @@ export default function Dashboard() {
 				setWeather(res.data.hourly.slice(0, 15))
 				console.log(res)
 			})
-			// .catch((error) => {
-			// 	console.error(error)
-			// })
+		// .catch((error) => {
+		// 	console.error(error)
+		// })
 	}
 
 	const liveMeasurements = () => {
@@ -231,169 +234,161 @@ export default function Dashboard() {
 	return (
 		<div className="dashboard">
 			<Card className="card h-52">
-				<CardContent>
-					<div className="flex-row">
-						<div className="flex-col w-4/12">
-							<div className="flex-row">
-								<div className="flex-col ml-5 w-32">
-									<div className="flex-row pt-5px" title="Teplota vzduchu">
-										<span className="flex-col w-12 max-h-full">
-											<img src="/assets/icons/dashboard/temperature.svg" />
-										</span>
-										<span className="flex-col w-18 flex-center ml-2">{`${Math.round(currentTemp * 100) / 100} °C`}</span>
-									</div>
-									<div className="flex-row pt-5px" title="Vlhkost vzduchu">
-										<span className="flex-col w-12 max-h-full">
-											<img src="/assets/icons/dashboard/humidity.svg" />
-										</span>
-										<span className="flex-col w-18 flex-center ml-2">{`${Math.round(currentHum * 100) / 100} %`}</span>
-									</div>
-									<div className="flex-row pt-5px" title="Vlhkost půdy">
-										<span className="flex-col w-12 max-h-full">
-											<img src="/assets/icons/dashboard/moisture.svg" />
-										</span>
-										<span className="flex-col w-18 flex-center ml-2">{`${Math.round(currentMoist * 100) / 100} %`}</span>
-									</div>
+				<div className="flex-row">
+					<div className="flex-col w-4/12">
+						<div className="flex-row">
+							<div className="flex-col ml-5 w-32">
+								<div className="flex-row pt-5px" title={t('dashboard.temperature')}>
+									<span className="flex-col w-12 max-h-full">
+										<img src="/assets/icons/dashboard/temperature.svg" />
+									</span>
+									<span className="flex-col w-18 flex-center ml-2">{`${Math.round(currentTemp * 100) / 100} °C`}</span>
 								</div>
-								<div className="flex-col ml-5 w-32">
-									<div className="flex-row pt-5px" title="Výška vody v nádrži">
-										<span className="flex-col w-12 max-h-full">
-											<img src="/assets/icons/dashboard/waterLevel.svg" />
-										</span>
-										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? Math.round(data?.getIrrigation[data?.getIrrigation.length - 1]?.water_level * 100) / 100 : 0
-											} cm`}</span>
-									</div>
-									<div className="flex-row pt-5px" title="Objem vody v nádrži">
-										<span className="flex-col w-12 max-h-full">
-											<img src="/assets/icons/dashboard/waterAmount.svg" />
-										</span>
-										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? Math.round(data?.getIrrigation[data?.getIrrigation.length - 1]?.water_amount * 100) / 100 : 0
-											} l`}</span>
-									</div>
-									<div className="flex-row pt-5px" title="Celkový vyčerpaný objem vody">
-										<span className="flex-col w-12 max-h-full">
-											<img src="/assets/icons/dashboard/waterOverdrawn.svg" />
-										</span>
-										<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? Math.round(overallWaterConsumption * 100) / 100 : 0
-											} l`}</span>
-									</div>
+								<div className="flex-row pt-5px" title={t('dashboard.humidity')}>
+									<span className="flex-col w-12 max-h-full">
+										<img src="/assets/icons/dashboard/humidity.svg" />
+									</span>
+									<span className="flex-col w-18 flex-center ml-2">{`${Math.round(currentHum * 100) / 100} %`}</span>
+								</div>
+								<div className="flex-row pt-5px" title={t('dashboard.moisture')}>
+									<span className="flex-col w-12 max-h-full">
+										<img src="/assets/icons/dashboard/moisture.svg" />
+									</span>
+									<span className="flex-col w-18 flex-center ml-2">{`${Math.round(currentMoist * 100) / 100} %`}</span>
 								</div>
 							</div>
-						</div>
-						<div className="flex-col w-8/12">
-							<div className="flex-row h-44 -mt-2">
-								<LiveMeasurementsChart
-									chartType={chartType}
-									temp={temp}
-									hum={hum}
-									moist={moist}
-								/>
+							<div className="flex-col ml-5 w-32">
+								<div className="flex-row pt-5px" title={t('dashboard.waterLevel')}>
+									<span className="flex-col w-12 max-h-full">
+										<img src="/assets/icons/dashboard/waterLevel.svg" />
+									</span>
+									<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? Math.round(data?.getIrrigation[data?.getIrrigation.length - 1]?.water_level * 100) / 100 : 0
+										} cm`}</span>
+								</div>
+								<div className="flex-row pt-5px" title={t('dashboard.waterAmount')}>
+									<span className="flex-col w-12 max-h-full">
+										<img src="/assets/icons/dashboard/waterAmount.svg" />
+									</span>
+									<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? Math.round(data?.getIrrigation[data?.getIrrigation.length - 1]?.water_amount * 100) / 100 : 0
+										} l`}</span>
+								</div>
+								<div className="flex-row pt-5px" title={t('dashboard.waterOverdrawn')}>
+									<span className="flex-col w-12 max-h-full">
+										<img src="/assets/icons/dashboard/waterOverdrawn.svg" />
+									</span>
+									<span className="flex-col flex-center ml-2">{`${data?.getIrrigation[0] ? Math.round(overallWaterConsumption * 100) / 100 : 0
+										} l`}</span>
+								</div>
 							</div>
 						</div>
 					</div>
-				</CardContent>
+					<div className="flex-col w-8/12">
+						<div className="flex-row h-44 -mt-2">
+							<LiveMeasurementsChart
+								chartType={chartType}
+								temp={temp}
+								hum={hum}
+								moist={moist}
+							/>
+						</div>
+					</div>
+				</div>
 			</Card>
 			<div className="flex-row">
 				<div className="flex-col w-6/12">
 					<div className="flex-row">
 						<div className="flex-col w-full">
 							<Card className="card-left">
-								<CardContent>
-									<ReactScrollWheelHandler
-										upHandler={(e) => console.log('scroll up')}
-										downHandler={(e) => console.log('scroll down')}
-										leftHandler={(e) => console.log('scroll left')}
-										rightHandler={(e) => console.log('scroll right')}
-									>
-										<div /* ref={() => useHorizontalScroll} */ className="flex-row overflow-x-scroll">
-											{weather?.map((weatherItem: any, i: number) => {
-												const date = new Date()
-												let time = date.getHours() + i
-												time > 23 && (time = i)
+								<ReactScrollWheelHandler
+									upHandler={(e) => console.log('scroll up')}
+									downHandler={(e) => console.log('scroll down')}
+									leftHandler={(e) => console.log('scroll left')}
+									rightHandler={(e) => console.log('scroll right')}
+								>
+									<div /* ref={() => useHorizontalScroll} */ className="flex-row overflow-x-scroll">
+										{weather?.map((weatherItem: any, i: number) => {
+											const date = new Date()
+											let time = date.getHours() + i
+											time > 23 && (time = i)
 
-												return (
-													<div className="flex-col mx-2 mb-2 weatherWrapper">
-														<div className="flex-row mx-2 w-14 flex-center">
-															<div className="flex-col">
-																<span className="text-2xl">{`${time}:00`}</span>
-															</div>
-														</div>
+											return (
+												<div className="flex-col mx-2 mb-2 weatherWrapper">
+													<div className="flex-row mx-2 w-14 flex-center">
 														<div className="flex-col">
-															<div className="flex-row text-xs">
-																<img src="/assets/icons/dashboard/temperature.svg" className="w-8 max-h-full" />
-																<span> {`${weatherItem.temp}°C`}</span>
-															</div>
-															<div className="flex-row text-xs">
-																<img src="/assets/icons/dashboard/humidity.svg" className="w-8 max-h-full" />
-																<span> {`${weatherItem.humidity}%`}</span>
-															</div>
-														</div>
-														<div className="flex-row">
-															<div className="flex-col flex-center">
-																<img
-																	src={`/assets/icons/weatherForecast/${weatherForecastDataToIcons(
-																		weatherItem.weather[0]
-																	)}.svg`}
-																	className="dashboard w-14 h-full"
-																/>
-															</div>
+															<span className="text-2xl">{`${time}:00`}</span>
 														</div>
 													</div>
-												)
-											})}
-										</div>
-									</ReactScrollWheelHandler>
-								</CardContent>
+													<div className="flex-col">
+														<div className="flex-row text-xs">
+															<img src="/assets/icons/dashboard/temperature.svg" className="w-8 max-h-full" />
+															<span> {`${weatherItem.temp}°C`}</span>
+														</div>
+														<div className="flex-row text-xs">
+															<img src="/assets/icons/dashboard/humidity.svg" className="w-8 max-h-full" />
+															<span> {`${weatherItem.humidity}%`}</span>
+														</div>
+													</div>
+													<div className="flex-row">
+														<div className="flex-col flex-center">
+															<img
+																src={`/assets/icons/weatherForecast/${weatherForecastDataToIcons(
+																	weatherItem.weather[0]
+																)}.svg`}
+																className="dashboard w-14 h-full"
+															/>
+														</div>
+													</div>
+												</div>
+											)
+										})}
+									</div>
+								</ReactScrollWheelHandler>
 							</Card>
 						</div>
 					</div>
 					<div className="flex-row">
 						<div className="flex-col w-full">
 							<Card className="card-left">
-								<CardContent>
-									<div className="flex-row ">
-										<span>Historie zavlažování</span>
-									</div>
-									<div className="flex-row 2xl:h-96 lg:h-52">
-										<IrrigationChart
-											chartType={chartType}
-											moist={irrigationHistory?.moist}
-											hum={irrigationHistory?.hum}
-											temp={irrigationHistory?.temp}
-											waterOverdrawn={irrigationHistory?.water_overdrawn}
-											dataframe={irrigationHistory?.dataframe}
-										/>
-									</div>
-								</CardContent>
+								<div className="flex-row ">
+									<span>{t('dashboard.irrigationHistory')}</span>
+								</div>
+								<div className="flex-row 2xl:h-96 lg:h-52">
+									<IrrigationChart
+										chartType={chartType}
+										moist={irrigationHistory?.moist}
+										hum={irrigationHistory?.hum}
+										temp={irrigationHistory?.temp}
+										waterOverdrawn={irrigationHistory?.water_overdrawn}
+										dataframe={irrigationHistory?.dataframe}
+									/>
+								</div>
 							</Card>
 						</div>
 					</div>
 				</div>
 				<div className="flex-col w-6/12">
 					<Card className="card-right h-full">
-						<CardContent>
-							<div className="flex-row">
-								<span>Spotřeba vody</span>
-							</div>
-							<div className="flex-row 2xl:h-64 lg:h-48">
-								<WaterConsumptionChart
-									chartType={chartType}
-									waterOverdrawn={waterOverdrawn}
-									irrigationCount={irrigationCount}
-								/>
-							</div>
-							<div className="flex-row mt-3">
-								<span>Historie měření (průměr za měsíc)</span>
-							</div>
-							<div className="flex-row 2xl:h-80 lg:h-52">
-								<MeasurementsHistoryChart
-									chartType={chartType}
-									moist={measurements?.moist}
-									hum={measurements?.hum}
-									temp={measurements?.temp}
-								/>
-							</div>
-						</CardContent>
+						<div className="flex-row">
+							<span>{t('dashboard.waterConsumption')}</span>
+						</div>
+						<div className="flex-row 2xl:h-64 lg:h-48">
+							<WaterConsumptionChart
+								chartType={chartType}
+								waterOverdrawn={waterOverdrawn}
+								irrigationCount={irrigationCount}
+							/>
+						</div>
+						<div className="flex-row mt-3">
+							<span>{t('dashboard.measurementsHistory')}</span>
+						</div>
+						<div className="flex-row 2xl:h-80 lg:h-52">
+							<MeasurementsHistoryChart
+								chartType={chartType}
+								moist={measurements?.moist}
+								hum={measurements?.hum}
+								temp={measurements?.temp}
+							/>
+						</div>
 					</Card>
 				</div>
 			</div>

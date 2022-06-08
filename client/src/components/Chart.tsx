@@ -1,4 +1,5 @@
 import { useState, useEffect, Component, createRef, RefObject } from "react";
+import i18n from 'i18next'
 import { Line, Bar } from 'react-chartjs-2'
 import { getMonths } from 'src/utils'
 import {
@@ -60,7 +61,7 @@ export function LiveMeasurementsChart({ chartType, temp, hum, moist }: IMeasurem
 			labels: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 			datasets: [
 				{
-					label: 'Vlhkost půdy (%)',
+					label: `${i18n.t("dashboard.moisture")} (%)`,
 					backgroundColor: 'rgb(172, 130, 49)',
 					borderColor: 'rgb(137, 98, 21)',
 					data: moist,
@@ -68,7 +69,7 @@ export function LiveMeasurementsChart({ chartType, temp, hum, moist }: IMeasurem
 					yAxisID: 'vp',
 				},
 				{
-					label: 'Vlhkost vzduchu (%)',
+					label: `${i18n.t("dashboard.humidity")} (%)`,
 					backgroundColor: 'rgb(120, 206, 255)',
 					borderColor: 'rgb(30, 141, 203)',
 					data: hum,
@@ -76,7 +77,7 @@ export function LiveMeasurementsChart({ chartType, temp, hum, moist }: IMeasurem
 					yAxisID: 'vv',
 				},
 				{
-					label: 'Teplota vzduchu (°C)',
+					label: `${i18n.t("dashboard.temperature")} (°C)`,
 					backgroundColor: 'rgb(255, 99, 132)',
 					borderColor: 'rgb(255, 0, 0)',
 					data: temp,
@@ -119,7 +120,7 @@ export const WaterConsumptionChart = ({ chartType, waterOverdrawn, irrigationCou
 			labels: months,
 			datasets: [
 				{
-					label: 'Spotřebováno vody',
+					label: i18n.t("dashboard.waterConsumption"),
 					backgroundColor: 'rgb(120, 206, 255)',
 					borderColor: 'rgb(30, 141, 203)',
 					data: waterOverdrawn,
@@ -127,7 +128,7 @@ export const WaterConsumptionChart = ({ chartType, waterOverdrawn, irrigationCou
 					yAxisID: 'yAxis1',
 				},
 				{
-					label: 'Počet zavlažení',
+					label: i18n.t("dashboard.irrigationCount"),
 					backgroundColor: 'rgb(162, 231, 130)',
 					borderColor: 'rgb(102, 188, 62)',
 					data: irrigationCount,
@@ -172,7 +173,7 @@ export function IrrigationChart({ chartType, moist, hum, temp, waterOverdrawn, d
 			labels: dataframe,
 			datasets: [
 				{
-					label: 'Vlhkost půdy',
+					label: i18n.t("dashboard.moisture"),
 					backgroundColor: 'rgb(172, 130, 49)',
 					borderColor: 'rgb(137, 98, 21)',
 					data: moist,
@@ -180,7 +181,7 @@ export function IrrigationChart({ chartType, moist, hum, temp, waterOverdrawn, d
 					yAxisID: 'yAxis1',
 				},
 				{
-					label: 'Vlhkost vzduchu',
+					label: i18n.t("dashboard.humidity"),
 					backgroundColor: 'rgb(120, 206, 255)',
 					borderColor: 'rgb(30, 141, 203)',
 					data: hum,
@@ -188,7 +189,7 @@ export function IrrigationChart({ chartType, moist, hum, temp, waterOverdrawn, d
 					yAxisID: 'yAxis2',
 				},
 				{
-					label: 'Teplota vzduchu',
+					label: i18n.t("dashboard.temperature"),
 					backgroundColor: 'rgb(255, 99, 132)',
 					borderColor: 'rgb(255, 0, 0)',
 					data: temp,
@@ -196,7 +197,7 @@ export function IrrigationChart({ chartType, moist, hum, temp, waterOverdrawn, d
 					yAxisID: 'yAxis3',
 				},
 				{
-					label: 'Spotřebováno vody',
+					label: i18n.t("dashboard.waterConsumption"),
 					backgroundColor: 'rgb(162, 231, 130)',
 					borderColor: 'rgb(102, 188, 62)',
 					data: waterOverdrawn,
@@ -262,7 +263,7 @@ export function MeasurementsHistoryChart({ chartType, moist, hum, temp }: IMeasu
 			labels: months,
 			datasets: [
 				{
-					label: 'Vlhkost půdy',
+					label: i18n.t("dashboard.moisture"),
 					backgroundColor: 'rgb(172, 130, 49)',
 					borderColor: 'rgb(137, 98, 21)',
 					data: moist,
@@ -270,7 +271,7 @@ export function MeasurementsHistoryChart({ chartType, moist, hum, temp }: IMeasu
 					yAxisID: 'yAxis1',
 				},
 				{
-					label: 'Vlhkost vzduchu',
+					label: i18n.t("dashboard.humidity"),
 					backgroundColor: 'rgb(120, 206, 255)',
 					borderColor: 'rgb(30, 141, 203)',
 					data: hum,
@@ -278,7 +279,7 @@ export function MeasurementsHistoryChart({ chartType, moist, hum, temp }: IMeasu
 					yAxisID: 'yAxis2',
 				},
 				{
-					label: 'Teplota vzduchu',
+					label: i18n.t("dashboard.temperature"),
 					backgroundColor: 'rgb(255, 99, 132)',
 					borderColor: 'rgb(255, 0, 0)',
 					circular: true,

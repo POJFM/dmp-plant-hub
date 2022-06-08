@@ -1,20 +1,21 @@
 import axios from 'axios'
+import i18n from 'i18next'
 
 export const getMonths = () => {
 	let months = []
 	const monthsTranslate = {
-			Jan: 'Leden',
-			Feb: 'Únor',
-			Mar: 'Březen',
-			Apr: 'Duben',
-			May: 'Květen',
-			Jun: 'Červen',
-			Jul: 'Červenec',
-			Aug: 'Srpen',
-			Sep: 'Září',
-			Oct: 'Říjen',
-			Nov: 'Listopad',
-			Dec: 'Prosinec',
+			Jan: i18n.t("months.january"),
+			Feb: i18n.t("months.february"),
+			Mar: i18n.t("months.march"),
+			Apr: i18n.t("months.april"),
+			May: i18n.t("months.may"),
+			Jun: i18n.t("months.june"),
+			Jul: i18n.t("months.july"),
+			Aug: i18n.t("months.august"),
+			Sep: i18n.t("months.september"),
+			Oct: i18n.t("months.october"),
+			Nov: i18n.t("months.november"),
+			Dec: i18n.t("months.december"),
 		},
 		monthsOrigin = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 		currentMonth = new Date().getMonth(),

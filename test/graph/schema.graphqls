@@ -22,11 +22,18 @@ type Setting {
     theme: Boolean
     lat: Float
     lon: Float
+    default_water_amount: Float
 }
 
 type IrrigationHistory {
     id: Int
     timestamp: Timestamp
+    water_level: Float
+    water_amount: Float
+    water_overdrawn: Float
+}
+
+input NewIrrigation {
     water_level: Float
     water_amount: Float
     water_overdrawn: Float
@@ -49,6 +56,7 @@ input NewMeasurement {
 }
 
 input NewSettings {
+    id: Int
     limits_trigger: Boolean
     water_level_limit: Float
     water_amount_limit: Float
@@ -62,12 +70,14 @@ input NewSettings {
     theme: Boolean
     lat: Float
     lon: Float
+    default_water_amount: Float
 }
 
 type Mutation {
     createMeasurement(input: NewMeasurement): Measurement!
     createSettings(input: NewSettings): Setting!
     updateSettings(input: NewSettings): Setting!
+    createIrrigation(input: NewIrrigation): IrrigationHistory!
 }
 
 scalar Timestamp

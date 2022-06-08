@@ -156,9 +156,9 @@ func HandlePostLiveControl(w http.ResponseWriter, r *http.Request) {
 	pumpState = data.PumpState
 
 	if data.PumpState {
-		LNtitle = "Zavlažování"
+		LNtitle = "irrigation"
 		LNstate = "inProgress"
-		LNaction = "Probíhá zavlažování"
+		LNaction = "irrigationInProgress"
 	} else {
 		LNtitle = ""
 		LNstate = "inactive"

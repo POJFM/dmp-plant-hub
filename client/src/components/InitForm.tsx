@@ -1,8 +1,8 @@
 import { useEffect, useState, Component } from 'react'
 import axios from 'axios'
+import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from '@apollo/client'
-import { createSettingsMut, measurements } from '../graphql/mutations'
-import { Mutation } from '@apollo/react-components';
+import { createSettingsMut } from '../graphql/mutations'
 import Map from './Map'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
@@ -12,8 +12,9 @@ import SaveButton from './buttons/SaveButton'
 import { settings } from './../graphql/queries'
 
 export default function InitForm(props: any) {
-	const { data: isSettings } = useQuery(settings),
-		[formActiveState, setFormActiveState] = useState(props.test || false),
+	const { t } = useTranslation()
+	const { data: isSettings } = useQuery(settings)
+	const [formActiveState, setFormActiveState] = useState(props.test || false),
 		[saveButtonState, setSaveButtonState] = useState(true),
 		[automaticIrrigationState, setAutomaticIrrigationState] = useState(true),
 		[irrigationDuration, setIrrigationDuration] = useState<number>(),
@@ -228,15 +229,15 @@ export default function InitForm(props: any) {
 							<div className="flex-row">
 								<div className="flex-col pl-8 pt-8 pr-3 pb-8">
 									<div className="flex-row flex-center p-1 mb-2">
-										<span className="title-1">PlantHub - Inicializace</span>
+										<span className="title-1">PlantHub - {t('initForm.title')}</span>
 									</div>
 									<div className="flex-row mb-2">
 										<div className="flex-col p-1 pt-5px mt-2">
 											<div className="flex-row">
-												<span className="title-2">Automaticky</span>
+												<span className="title-2">{t('initForm.automatic')}</span>
 											</div>
 											<div className="flex-row mt-2">
-												<span className="title-2">Plánovaně</span>
+												<span className="title-2">{t('initForm.scheduled')}</span>
 											</div>
 										</div>
 										<div className="flex-col p-1 pt-5px mt-2 ml-2">
@@ -261,7 +262,7 @@ export default function InitForm(props: any) {
 									>
 										<TextInputField
 											item="irrigationDuration"
-											name="Doba zavlažování (s)"
+											name={`${t('initForm.irrigationDuration')} (s)`}
 											defaultValue={irrigationDuration}
 											dataType="number"
 											active={true}
@@ -276,7 +277,7 @@ export default function InitForm(props: any) {
 									>
 										<TextInputField
 											item="defaultWaterAmount"
-											name="Objem nádrže (l)"
+											name={`${t('initForm.defaultWaterAmount')} (l)`}
 											defaultValue={defaultWaterAmount}
 											dataType="number"
 											active={true}
@@ -288,7 +289,7 @@ export default function InitForm(props: any) {
 									>
 										<TextInputField
 											item="moistLimit"
-											name="Limit vlhkosti půdy (%)"
+											name={`${t('initForm.moistLimit')} (%)`}
 											defaultValue={moistLimit ? Math.round(moistLimit * 100) / 100 : undefined}
 											dataType="number"
 											active={automaticIrrigationState}
@@ -300,7 +301,7 @@ export default function InitForm(props: any) {
 									>
 										<TextInputField
 											item="waterAmountLimit"
-											name="Limit objemu nádrže (l)"
+											name={`${t('initForm.waterAmountLimit')} (l)`}
 											defaultValue={waterAmountLimit}
 											dataType="number"
 											active={automaticIrrigationState}
@@ -312,7 +313,7 @@ export default function InitForm(props: any) {
 									>
 										<TextInputField
 											item="waterLevelLimit"
-											name="Limit hladiny vody (cm)"
+											name={`${t('initForm.waterLevelLimit')} (cm)`}
 											defaultValue={waterLevelLimit ? Math.round(waterLevelLimit * 100) / 100 : undefined}
 											dataType="number"
 											active={automaticIrrigationState}
@@ -321,7 +322,7 @@ export default function InitForm(props: any) {
 									<div className="flex-row p-1 pt-5px mt-2" onBlur={(data: any) => setHourRange(data.target.value)}>
 										<TextInputField
 											item="hourRange"
-											name="Rozsah hodin (h)"
+											name={`${t('initForm.hourRange')} (h)`}
 											defaultValue={hourRange}
 											dataType="number"
 											active={scheduledIrrigationState}
@@ -336,7 +337,7 @@ export default function InitForm(props: any) {
 									>
 										<TextInputField
 											item="location"
-											name="Lokace"
+											name={t('initForm.location')}
 											defaultValue={location}
 											dataType="string"
 											active={true}

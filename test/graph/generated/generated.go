@@ -60,6 +60,7 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
+		CreateIrrigation  func(childComplexity int, input *model.NewIrrigation) int
 		CreateMeasurement func(childComplexity int, input *model.NewMeasurement) int
 		CreateSettings    func(childComplexity int, input *model.NewSettings) int
 		UpdateSettings    func(childComplexity int, input *model.NewSettings) int
@@ -73,6 +74,7 @@ type ComplexityRoot struct {
 
 	Setting struct {
 		ChartType          func(childComplexity int) int
+		DefaultWaterAmount func(childComplexity int) int
 		HourRange          func(childComplexity int) int
 		ID                 func(childComplexity int) int
 		IrrigationDuration func(childComplexity int) int
@@ -93,6 +95,7 @@ type MutationResolver interface {
 	CreateMeasurement(ctx context.Context, input *model.NewMeasurement) (*model.Measurement, error)
 	CreateSettings(ctx context.Context, input *model.NewSettings) (*model.Setting, error)
 	UpdateSettings(ctx context.Context, input *model.NewSettings) (*model.Setting, error)
+	CreateIrrigation(ctx context.Context, input *model.NewIrrigation) (*model.IrrigationHistory, error)
 }
 type QueryResolver interface {
 	GetMeasurements(ctx context.Context) ([]*model.Measurement, error)
@@ -192,6 +195,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Measurement.WithIrrigation(childComplexity), true
 
+	case "Mutation.createIrrigation":
+		if e.complexity.Mutation.CreateIrrigation == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createIrrigation_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateIrrigation(childComplexity, args["input"].(*model.NewIrrigation)), true
+
 	case "Mutation.createMeasurement":
 		if e.complexity.Mutation.CreateMeasurement == nil {
 			break
@@ -255,6 +270,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Setting.ChartType(childComplexity), true
+
+	case "Setting.default_water_amount":
+		if e.complexity.Setting.DefaultWaterAmount == nil {
+			break
+		}
+
+		return e.complexity.Setting.DefaultWaterAmount(childComplexity), true
 
 	case "Setting.hour_range":
 		if e.complexity.Setting.HourRange == nil {
@@ -435,11 +457,18 @@ type Setting {
     theme: Boolean
     lat: Float
     lon: Float
+    default_water_amount: Float
 }
 
 type IrrigationHistory {
     id: Int
     timestamp: Timestamp
+    water_level: Float
+    water_amount: Float
+    water_overdrawn: Float
+}
+
+input NewIrrigation {
     water_level: Float
     water_amount: Float
     water_overdrawn: Float
@@ -462,6 +491,7 @@ input NewMeasurement {
 }
 
 input NewSettings {
+    id: Int
     limits_trigger: Boolean
     water_level_limit: Float
     water_amount_limit: Float
@@ -475,12 +505,14 @@ input NewSettings {
     theme: Boolean
     lat: Float
     lon: Float
+    default_water_amount: Float
 }
 
 type Mutation {
     createMeasurement(input: NewMeasurement): Measurement!
     createSettings(input: NewSettings): Setting!
     updateSettings(input: NewSettings): Setting!
+    createIrrigation(input: NewIrrigation): IrrigationHistory!
 }
 
 scalar Timestamp`, BuiltIn: false},
@@ -490,6 +522,21 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Mutation_createIrrigation_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.NewIrrigation
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalONewIrrigation2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐNewIrrigation(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) field_Mutation_createMeasurement_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -1065,6 +1112,48 @@ func (ec *executionContext) _Mutation_updateSettings(ctx context.Context, field 
 	res := resTmp.(*model.Setting)
 	fc.Result = res
 	return ec.marshalNSetting2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐSetting(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_createIrrigation(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createIrrigation_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateIrrigation(rctx, args["input"].(*model.NewIrrigation))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.IrrigationHistory)
+	fc.Result = res
+	return ec.marshalNIrrigationHistory2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigationHistory(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getMeasurements(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1669,6 +1758,38 @@ func (ec *executionContext) _Setting_lon(ctx context.Context, field graphql.Coll
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Lon, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*float64)
+	fc.Result = res
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Setting_default_water_amount(ctx context.Context, field graphql.CollectedField, obj *model.Setting) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Setting",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DefaultWaterAmount, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2804,6 +2925,45 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputNewIrrigation(ctx context.Context, obj interface{}) (model.NewIrrigation, error) {
+	var it model.NewIrrigation
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "water_level":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("water_level"))
+			it.WaterLevel, err = ec.unmarshalOFloat2ᚖfloat64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "water_amount":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("water_amount"))
+			it.WaterAmount, err = ec.unmarshalOFloat2ᚖfloat64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "water_overdrawn":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("water_overdrawn"))
+			it.WaterOverdrawn, err = ec.unmarshalOFloat2ᚖfloat64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputNewMeasurement(ctx context.Context, obj interface{}) (model.NewMeasurement, error) {
 	var it model.NewMeasurement
 	asMap := map[string]interface{}{}
@@ -2860,6 +3020,14 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 
 	for k, v := range asMap {
 		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "limits_trigger":
 			var err error
 
@@ -2961,6 +3129,14 @@ func (ec *executionContext) unmarshalInputNewSettings(ctx context.Context, obj i
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lon"))
 			it.Lon, err = ec.unmarshalOFloat2ᚖfloat64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "default_water_amount":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("default_water_amount"))
+			it.DefaultWaterAmount, err = ec.unmarshalOFloat2ᚖfloat64(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3071,6 +3247,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "updateSettings":
 			out.Values[i] = ec._Mutation_updateSettings(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createIrrigation":
+			out.Values[i] = ec._Mutation_createIrrigation(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -3187,6 +3368,8 @@ func (ec *executionContext) _Setting(ctx context.Context, sel ast.SelectionSet, 
 			out.Values[i] = ec._Setting_lat(ctx, field, obj)
 		case "lon":
 			out.Values[i] = ec._Setting_lon(ctx, field, obj)
+		case "default_water_amount":
+			out.Values[i] = ec._Setting_default_water_amount(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3461,6 +3644,10 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNIrrigationHistory2githubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigationHistory(ctx context.Context, sel ast.SelectionSet, v model.IrrigationHistory) graphql.Marshaler {
+	return ec._IrrigationHistory(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNIrrigationHistory2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐIrrigationHistory(ctx context.Context, sel ast.SelectionSet, v *model.IrrigationHistory) graphql.Marshaler {
@@ -3919,6 +4106,14 @@ func (ec *executionContext) marshalOMeasurement2ᚕᚖgithubᚗcomᚋSPSOAFMᚑI
 	}
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalONewIrrigation2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐNewIrrigation(ctx context.Context, v interface{}) (*model.NewIrrigation, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputNewIrrigation(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalONewMeasurement2ᚖgithubᚗcomᚋSPSOAFMᚑIT18ᚋdmpᚑplantᚑhubᚋgraphᚋmodelᚐNewMeasurement(ctx context.Context, v interface{}) (*model.NewMeasurement, error) {

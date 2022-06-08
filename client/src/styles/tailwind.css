@@ -3,13 +3,9 @@
 @import "tailwindcss/utilities";
 @import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-.root,
-#root,
-#docs-root {
+html {
+	--text: #000000;
+	--input: #FFFFFF;
 	--bg: #F5F5D1;
 	--green: #66BC3E;
 	--lightGreen: #7FD059;
@@ -20,7 +16,20 @@
 	--inactiveLightGrey: #CCCCCC;
 	--warningRed: #DB4C4C;
 	--irrigationBlue: #78CEFF;
+	--dt-green: #144000;
+	--dt-bg-green: #0F2A03;
+	--dt-card-green: #314428;
+	--dt-hover-green: #416A2D;
+	--dt-text-green: #66BC3E;
 	--transition: all .2s ease-in-out;
+}
+
+html[theme='dark'] {
+	--bg: #0F2A03;
+	--green: #144000;
+	--cardGreen: #314428;
+	--text: #FFFFFF;
+	--input: #314428;
 }
 
 @layer utilities {
@@ -31,6 +40,7 @@
 		max-width: 100%;
 		overflow: hidden;
 		font-weight: 500;
+		color: (var(--text));
 	}
 
 	span {
@@ -137,10 +147,21 @@
 	.title-1 {
 		font-size: 1.575em;
 		font-weight: 600;
+		color: var(--text);
 	}
 
 	.title-2 {
 		font-size: 1.1em;
+		color: var(--text);
+	}
+
+	.sidebar-title-2 {
+		font-size: 1.1em;
+	}
+
+	input {
+		background: var(--input);
+		color: var(--text);
 	}
 
 	.input-field {
@@ -326,6 +347,10 @@
 		margin-top: -1px;
 	}
 
+	.dashboard span {
+		color: var(--text);
+	}
+
 	/* width */
 	::-webkit-scrollbar {
 		height: 10px;
@@ -368,6 +393,11 @@
 	align-items: center;
 }
 
+.init-form > div, 
+.init-form > div > div{
+	padding: 0 !important;
+}
+
 .notification {
 	display: block;
 	position: absolute;
@@ -384,8 +414,13 @@
 }
 
 @keyframes TranslateDownNotification {
-  from {transform: translateY(-8rem);}
-  to {transform: translateY(0);}
+	from {
+		transform: translateY(-8rem);
+	}
+
+	to {
+		transform: translateY(0);
+	}
 }
 
 .rotate-clockwise {
@@ -484,6 +519,7 @@
 	from {
 		transform: rotateZ(0deg);
 	}
+
 	to {
 		transform: rotateZ(360deg);
 	}
@@ -493,6 +529,7 @@
 	from {
 		transform: translateY(-10vh) rotateZ(0deg);
 	}
+
 	to {
 		transform: translateY(110vh) rotateZ(360deg);
 	}
@@ -502,7 +539,12 @@
 	from {
 		transform: translateY(-75px);
 	}
+
 	to {
 		transform: translateY(0);
 	}
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

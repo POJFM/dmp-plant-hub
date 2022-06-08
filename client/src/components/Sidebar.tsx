@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import ControlIcon from '@material-ui/icons/ControlCamera'
@@ -7,6 +8,7 @@ import SettingsIcon from '@material-ui/icons/Settings'
 import RefreshIcon from '@material-ui/icons/Refresh'
 
 export default function Sidebar() {
+	const { t } = useTranslation()
 	const [linkHover, setlinkHover] = useState('off'),
 		[activeLink, setActiveLink] = useState('blank'),
 		[christmas, setChristmas] = useState(false)
@@ -33,12 +35,12 @@ export default function Sidebar() {
 					},
 				}
 			)
-			// .then((res) => {
-			// 	console.log(res)
-			// })
-			// .catch((error) => {
-			// 	console.error(error)
-			// })
+		// .then((res) => {
+		// 	console.log(res)
+		// })
+		// .catch((error) => {
+		// 	console.error(error)
+		// })
 	}
 
 	return (
@@ -53,9 +55,8 @@ export default function Sidebar() {
 				</div>
 				<Link to="/">
 					<div
-						className={`flex-row sidebar-row ${linkHover === 'dashboard' && 'sidebar-row-hover'} ${
-							activeLink === '/' && 'sidebar-row-active'
-						}`}
+						className={`flex-row sidebar-row ${linkHover === 'dashboard' && 'sidebar-row-hover'} ${activeLink === '/' && 'sidebar-row-active'
+							}`}
 						onMouseEnter={() => setlinkHover('dashboard')}
 						onMouseLeave={() => setlinkHover('off')}
 						onClick={() => setActiveLink('/')}
@@ -64,17 +65,16 @@ export default function Sidebar() {
 							<div className="text-2xl flex items-center">
 								<DashboardIcon />
 							</div>
-							<span className={`sidebar-row-tf ml-1 title-2 ${activeLink === '/' && 'sidebar-row-tf-active'}`}>
-								Dashboard
+							<span className={`sidebar-row-tf ml-1 sidebar-title-2 ${activeLink === '/' && 'sidebar-row-tf-active'}`}>
+								{t('sidebar.dashboard')}
 							</span>
 						</div>
 					</div>
 				</Link>
 				<Link to="/control">
 					<div
-						className={`flex-row sidebar-row ${linkHover === 'control' && 'sidebar-row-hover'} ${
-							activeLink === '/control' && 'sidebar-row-active'
-						}`}
+						className={`flex-row sidebar-row ${linkHover === 'control' && 'sidebar-row-hover'} ${activeLink === '/control' && 'sidebar-row-active'
+							}`}
 						onMouseEnter={() => setlinkHover('control')}
 						onMouseLeave={() => setlinkHover('off')}
 						onClick={() => setActiveLink('/control')}
@@ -83,17 +83,16 @@ export default function Sidebar() {
 							<div className="text-2xl flex items-center">
 								<ControlIcon />
 							</div>
-							<span className={`sidebar-row-tf ml-1 title-2 ${activeLink === '/control' && 'sidebar-row-tf-active'}`}>
-								Control
+							<span className={`sidebar-row-tf ml-1 sidebar-title-2 ${activeLink === '/control' && 'sidebar-row-tf-active'}`}>
+							{t('sidebar.control')}
 							</span>
 						</div>
 					</div>
 				</Link>
 				<Link to="/settings">
 					<div
-						className={`flex-row sidebar-row ${linkHover === 'settings' && 'sidebar-row-hover'} ${
-							activeLink === '/settings' && 'sidebar-row-active'
-						}`}
+						className={`flex-row sidebar-row ${linkHover === 'settings' && 'sidebar-row-hover'} ${activeLink === '/settings' && 'sidebar-row-active'
+							}`}
 						onMouseEnter={() => setlinkHover('settings')}
 						onMouseLeave={() => setlinkHover('off')}
 						onClick={() => setActiveLink('/settings')}
@@ -102,8 +101,8 @@ export default function Sidebar() {
 							<div className="text-2xl flex items-center">
 								<SettingsIcon />
 							</div>
-							<span className={`sidebar-row-tf ml-1 title-2 ${activeLink === '/settings' && 'sidebar-row-tf-active'}`}>
-								Settings
+							<span className={`sidebar-row-tf ml-1 sidebar-title-2 ${activeLink === '/settings' && 'sidebar-row-tf-active'}`}>
+							{t('sidebar.settings')}
 							</span>
 						</div>
 					</div>
@@ -119,7 +118,7 @@ export default function Sidebar() {
 							<div className="text-2xl flex items-center">
 								<RefreshIcon />
 							</div>
-							<span className={`sidebar-row-tf ml-1 title-2`}>Restart HW</span>
+							<span className={`sidebar-row-tf ml-1 sidebar-title-2`}>{t('sidebar.restartHW')}</span>
 						</div>
 					</div>
 				</span>

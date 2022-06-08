@@ -1,0 +1,90 @@
+{
+  "langShortcut": "CS",
+  "langKey": "cs",
+  "applicationName": "PlantHub",
+  "dateFormatString": "dd.MM.yyyy",
+  "errors": {
+    "NaN": "{{value}} must be a number",
+    "notString": "{{value}} must be text",
+    "cannotSave": "Settings cannot be saved"
+  },
+  "months": {
+    "january": "January",
+    "february": "February",
+    "march": "March",
+    "april": "April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December"
+  },
+  "buttons": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "irrigate": "Irrigate"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "control": "Manual Control",
+    "settings": "Settings",
+    "restartHW": "Restart HW"
+  },
+  "notification": {
+    "irrigation": "Irrigation",
+    "irrigationInProgress": "Irrigation in progress",
+    "irrigationFinished": "Finished irrigation process",
+    "tankCheck": "Checking water level",
+    "checkInProgress": "Water level check in progress",
+    "waterLeft": "There is {{value}}cm of water left",
+    "tankIsEmpty": "Water tank is empty",
+    "refillTank": "Refill water tank"
+  },
+  "initForm": {
+    "title": "Inicialization",
+    "automatic": "Automatic",
+    "scheduled": "Scheduled",
+    "irrigationDuration": "Irrigation duration",
+    "defaultWaterAmount": "Tank volume",
+    "moistLimit": "Moisture limit",
+    "waterAmountLimit": "Water amount limit",
+    "waterLevelLimit": "Water level limit",
+    "hourRange": "Hour range",
+    "location": "Location"
+  },
+  "dashboard": {
+    "temperature": "Temperature",
+    "humidity": "Humidity",
+    "moisture": "Moisture",
+    "waterLevel": "Water tank level",
+    "waterAmount": "Water tank volume",
+    "waterOverdrawn": "Total depleted volume of water",
+    "waterConsumption": "Water consumption",
+    "irrigationHistory": "Irrigation history",
+    "measurementsHistory": "Measurements history (average per month)",
+    "irrigationCount": "Number of irrigations"
+  },
+  "control": {
+    "title": "Manual Control",
+    "irrigationTime": "Time since launch"
+  },
+  "settings": {
+    "irrigationSettings": "Irrigation settings",
+    "applicationSettings": "Application settings",
+    "automatic": "Automatic",
+    "scheduled": "Scheduled",
+    "irrigationDuration": "Irrigation duration",
+    "defaultWaterAmount": "Tank volume",
+    "moistLimit": "Moisture limit",
+    "waterAmountLimit": "Water amount limit",
+    "waterLevelLimit": "Water level limit",
+    "hourRange": "Hour range",
+    "chartType": "Chart type",
+    "language": "Language",
+    "theme": "Theme",
+    "location": "Location"
+  }
+}

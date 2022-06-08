@@ -1,0 +1,90 @@
+{
+  "langShortcut": "CS",
+  "langKey": "cs",
+  "applicationName": "PlantHub",
+  "dateFormatString": "dd.MM.yyyy",
+  "errors": {
+    "NaN": "{{value}} musí být číslo",
+    "notString": "{{value}} musí být text",
+    "cannotSave": "Nastavení nelze uložit"
+  },
+  "months": {
+    "january": "Leden",
+    "february": "Únor",
+    "march": "Březen",
+    "april": "Duben",
+    "may": "Květen",
+    "june": "Červen",
+    "july": "Červenec",
+    "august": "Srpen",
+    "september": "Září",
+    "october": "Říjen",
+    "november": "Listopad",
+    "december": "Prosinec"
+  },
+  "buttons": {
+    "save": "Uložit",
+    "cancel": "Zrušit",
+    "irrigate": "Zavlažit"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "control": "Manuální Ovládání",
+    "settings": "Nastavení",
+    "restartHW": "Restartovat HW"
+  },
+  "notification": {
+    "irrigation": "Zavlažování",
+    "irrigationInProgress": "Probíhá zavlažování",
+    "irrigationFinished": "Zavlažování dokončeno",
+    "tankCheck": "Kontrola nádrže",
+    "checkInProgress": "Probíhá kontrola nádrže",
+    "waterLeft": "V nádrži zbývá {{value}}cm vody",
+    "refillTank": "Doplňte nádrž",
+    "tankIsEmpty": "Nádrž je prázdná"
+  },
+  "initForm": {
+    "title": "Inicializace",
+    "automatic": "Automaticky",
+    "scheduled": "Plánovaně",
+    "irrigationDuration": "Doba zavlažování",
+    "defaultWaterAmount": "Objem nádrže",
+    "moistLimit": "Limit vlhkosti půdy",
+    "waterAmountLimit": "Limit objemu nádrže",
+    "waterLevelLimit": "Limit hladiny vody",
+    "hourRange": "Rozsah hodin",
+    "location": "Lokace"
+  },
+  "dashboard": {
+    "temperature": "Teplota vzduchu",
+    "humidity": "Vlhkost vzduchu",
+    "moisture": "Vlhkost půdy",
+    "waterLevel": "Výška vody v nádrži",
+    "waterAmount": "Objem vody v nádrži",
+    "waterOverdrawn": "Celkový vyčerpaný objem vody",
+    "waterConsumption": "Spotřeba vody",
+    "irrigationHistory": "Historie zavlažování",
+    "measurementsHistory": "Historie měření (průměr za měsíc)",
+    "irrigationCount": "Počet zavlažení"
+  },
+  "control": {
+    "title": "Manuální zavlažování",
+    "irrigationTime": "Čas od spuštění"
+  },
+  "settings": {
+    "irrigationSettings": "Nastavení zavlažování",
+    "applicationSettings": "Nastavení aplikace",
+    "automatic": "Automaticky",
+    "scheduled": "Plánovaně",
+    "irrigationDuration": "Doba zavlažování",
+    "defaultWaterAmount": "Objem nádrže",
+    "moistLimit": "Limit vlhkosti půdy",
+    "waterAmountLimit": "Limit objemu nádrže",
+    "waterLevelLimit": "Limit hladiny vody",
+    "hourRange": "Rozsah hodin",
+    "chartType": "Typ grafu",
+    "language": "Jazyk",
+    "theme": "Motiv",
+    "location": "Lokace"
+  }
+}

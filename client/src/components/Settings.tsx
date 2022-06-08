@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import axios from 'axios'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
+import { useTranslation } from 'react-i18next'
+import { MuiCard as Card } from './Card'
 import EditableField from './fields/EditableField'
 import ToggleButton from './buttons/ToggleButton'
 import SaveButton from './buttons/SaveButton'
@@ -11,6 +11,7 @@ import { settings } from '../graphql/queries'
 import { updateSettingsMut } from '../graphql/mutations'
 
 export default function Settings() {
+	const { t, i18n } = useTranslation()
 	const { data: settingsData } = useQuery(settings),
 		[buttonsState, setButtonsState] = useState(false),
 		[automaticIrrigationState, setAutomaticIrrigationState] = useState(
@@ -136,6 +137,18 @@ export default function Settings() {
 		}
 	}, [getCoordsState])
 
+	useEffect(() => {
+		if (themeState === true) {
+			document.body.classList.add('dark')
+			document.documentElement.setAttribute("theme", "dark")
+			localStorage.setItem("theme", "dark")
+		} else {
+			document.body.classList.remove('dark')
+			document.documentElement.setAttribute("theme", "light")
+			localStorage.setItem("theme", "light")
+		}
+	}, [themeState])
+
 	const updateToggleState = (type: string) => {
 		switch (type) {
 			case 'automaticIrrigation': {
@@ -190,8 +203,10 @@ export default function Settings() {
 				setButtonsState(true)
 				if (!languageState) {
 					setLanguageState(true)
+					i18n.changeLanguage("en")
 				} else {
 					setLanguageState(false)
+					i18n.changeLanguage("cs")
 				}
 				break
 			}
@@ -215,220 +230,218 @@ export default function Settings() {
 		setGetCoordsState(false)
 		setGetCoords('')
 	}
-console.log(settingsData?.getSettings[0])
+
 	return (
 		<div className="settings">
-			<Card className="card">
-				<CardContent>
-					<div className="flex-row">
-						<div className="flex-col">
-							<div className="flex-row pt-2 title-2">
-								<span className="title-1">Nastavení zavlažování</span>
+			<Card>
+				<div className="flex-row">
+					<div className="flex-col">
+						<div className="flex-row pt-2 title-2">
+							<span className="title-1">{t('settings.irrigationSettings')}</span>
+						</div>
+						<div className="flex-row mb-2">
+							<div className="flex-col p-1 pt-5px mt-2">
+								<div className="flex-row">
+									<span className="title-2">{t('settings.automatic')}</span>
+								</div>
+								<div className="flex-row mt-2">
+									<span className="title-2">{t('settings.scheduled')}</span>
+								</div>
 							</div>
-							<div className="flex-row mb-2">
-								<div className="flex-col p-1 pt-5px mt-2">
-									<div className="flex-row">
-										<span className="title-2">Automaticky</span>
-									</div>
-									<div className="flex-row mt-2">
-										<span className="title-2">Plánovaně</span>
+							<div className="flex-col p-1 pt-5px mt-2 ml-2">
+								<div className="flex-row">
+									<div onClick={() => updateToggleState('automaticIrrigation')}>
+										<ToggleButton item="limitsTrigger" toggleState={automaticIrrigationState} />
 									</div>
 								</div>
-								<div className="flex-col p-1 pt-5px mt-2 ml-2">
-									<div className="flex-row">
-										<div onClick={() => updateToggleState('automaticIrrigation')}>
-											<ToggleButton item="limitsTrigger" toggleState={automaticIrrigationState} />
-										</div>
-									</div>
-									<div className="flex-row mt-2">
-										<div onClick={() => updateToggleState('scheduledIrrigation')}>
-											<ToggleButton item="scheduledTrigger" toggleState={scheduledIrrigationState} />
-										</div>
+								<div className="flex-row mt-2">
+									<div onClick={() => updateToggleState('scheduledIrrigation')}>
+										<ToggleButton item="scheduledTrigger" toggleState={scheduledIrrigationState} />
 									</div>
 								</div>
 							</div>
-							<div className="flex-row">
-								<div className="flex-col">
-									<div className="flex-row pt-2">
-										<span style={{ color: irrigationDurationStateClass }}>Doba zavlažování (s): </span>
-									</div>
-									<div className="flex-row pt-2">
-										<span style={{ color: irrigationDurationStateClass }}>Objem nádrže (l): </span>
-									</div>
-									<div className="flex-row pt-2">
-										<span style={{ color: automaticIrrigationStateClass }}>Limit vlhkosti půdy (%): </span>
-									</div>
-									<div className="flex-row pt-2">
-										<span style={{ color: automaticIrrigationStateClass }}>Limit objemu nádrže (l): </span>
-									</div>
-									<div className="flex-row pt-2">
-										<span style={{ color: automaticIrrigationStateClass }}>Limit hladiny vody (cm): </span>
-									</div>
-									<div className="flex-row pt-2">
-										<span style={{ color: scheduledIrrigationStateClass }}>Rozsah hodin (h): </span>
-									</div>
+						</div>
+						<div className="flex-row">
+							<div className="flex-col">
+								<div className="flex-row pt-2">
+									<span style={{ color: irrigationDurationStateClass }}>{t('settings.irrigationDuration')} (s): </span>
 								</div>
-								<div className="flex-col ml-3">
-									<div
-										className="flex-row pt-1"
-										onChange={(data: any) => {
-											updateInputData('irrigationDuration', parseInt(data.target.value))
-											data.target.value == 0 && setButtonsState(false)
-										}}
-									>
-										<EditableField
-											name="irrigationDuration"
-											defaultValue={irrigationDuration}
-											active={irrigationDurationStateClass === '#000000'}
-											width={10}
-											dataType="number"
-										/>
-									</div>
-									<div
-										className="flex-row pt-1"
-										onChange={(data: any) => {
-											updateInputData('defaultWaterAmount', data.target.value)
-											data.target.value == 0 && setButtonsState(false)
-										}}
-									>
-										<EditableField
-											name="defaultWaterAmount"
-											defaultValue={defaultWaterAmount}
-											active={defaultWaterAmountStateClass === '#000000'}
-											width={10}
-											dataType="number"
-										/>
-									</div>
-									<div
-										className="flex-row pt-1"
-										onChange={(data: any) => updateInputData('moistLimit', data.target.value)}
-									>
-										<EditableField
-											name="moistLimit"
-											defaultValue={moistLimit}
-											active={automaticIrrigationState}
-											width={10}
-											dataType="number"
-										/>
-									</div>
-									<div
-										className="flex-row pt-1"
-										onChange={(data: any) => updateInputData('waterAmountLimit', data.target.value)}
-									>
-										<EditableField
-											name="waterAmountLimit"
-											defaultValue={waterAmountLimit}
-											active={automaticIrrigationState}
-											width={10}
-											dataType="number"
-										/>
-									</div>
-									<div
-										className="flex-row pt-1"
-										onChange={(data: any) => updateInputData('waterLevelLimit', data.target.value)}
-									>
-										<EditableField
-											name="waterLevelLimit"
-											defaultValue={waterLevelLimit}
-											active={automaticIrrigationState}
-											width={10}
-											dataType="number"
-										/>
-									</div>
-									<div
-										className="flex-row pt-1"
-										onChange={(data: any) => updateInputData('hourRange', data.target.value)}
-									>
-										<EditableField
-											name="hourRange"
-											defaultValue={hourRange}
-											active={scheduledIrrigationState}
-											width={10}
-											dataType="number"
-										/>
-									</div>
+								<div className="flex-row pt-2">
+									<span style={{ color: irrigationDurationStateClass }}>{t('settings.defaultWaterAmount')} (l): </span>
+								</div>
+								<div className="flex-row pt-2">
+									<span style={{ color: automaticIrrigationStateClass }}>{t('settings.moistLimit')} (%): </span>
+								</div>
+								<div className="flex-row pt-2">
+									<span style={{ color: automaticIrrigationStateClass }}>{t('settings.waterAmountLimit')} (l): </span>
+								</div>
+								<div className="flex-row pt-2">
+									<span style={{ color: automaticIrrigationStateClass }}>{t('settings.waterLevelLimit')} (cm): </span>
+								</div>
+								<div className="flex-row pt-2">
+									<span style={{ color: scheduledIrrigationStateClass }}>{t('settings.hourRange')} (h): </span>
+								</div>
+							</div>
+							<div className="flex-col ml-3">
+								<div
+									className="flex-row pt-1"
+									onChange={(data: any) => {
+										updateInputData('irrigationDuration', parseInt(data.target.value))
+										data.target.value == 0 && setButtonsState(false)
+									}}
+								>
+									<EditableField
+										name="irrigationDuration"
+										defaultValue={irrigationDuration}
+										active={irrigationDurationStateClass === '#000000'}
+										width={10}
+										dataType="number"
+									/>
+								</div>
+								<div
+									className="flex-row pt-1"
+									onChange={(data: any) => {
+										updateInputData('defaultWaterAmount', data.target.value)
+										data.target.value == 0 && setButtonsState(false)
+									}}
+								>
+									<EditableField
+										name="defaultWaterAmount"
+										defaultValue={defaultWaterAmount}
+										active={defaultWaterAmountStateClass === '#000000'}
+										width={10}
+										dataType="number"
+									/>
+								</div>
+								<div
+									className="flex-row pt-1"
+									onChange={(data: any) => updateInputData('moistLimit', data.target.value)}
+								>
+									<EditableField
+										name="moistLimit"
+										defaultValue={moistLimit}
+										active={automaticIrrigationState}
+										width={10}
+										dataType="number"
+									/>
+								</div>
+								<div
+									className="flex-row pt-1"
+									onChange={(data: any) => updateInputData('waterAmountLimit', data.target.value)}
+								>
+									<EditableField
+										name="waterAmountLimit"
+										defaultValue={waterAmountLimit}
+										active={automaticIrrigationState}
+										width={10}
+										dataType="number"
+									/>
+								</div>
+								<div
+									className="flex-row pt-1"
+									onChange={(data: any) => updateInputData('waterLevelLimit', data.target.value)}
+								>
+									<EditableField
+										name="waterLevelLimit"
+										defaultValue={waterLevelLimit}
+										active={automaticIrrigationState}
+										width={10}
+										dataType="number"
+									/>
+								</div>
+								<div
+									className="flex-row pt-1"
+									onChange={(data: any) => updateInputData('hourRange', data.target.value)}
+								>
+									<EditableField
+										name="hourRange"
+										defaultValue={hourRange}
+										active={scheduledIrrigationState}
+										width={10}
+										dataType="number"
+									/>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div className="flex-row">
-						<div className="flex-col">
-							<div className="flex-row pt-2 title-2">
-								<span className="title-1">Nastavení aplikace</span>
-							</div>
-							<div className="flex-row">
-								<div className="flex-col">
-									<div className="flex-row pt-2">
-										<span>Typ grafu: </span>
-									</div>
-									<div className="flex-row pt-3">
-										<span>Jazyk: </span>
-									</div>
-									<div className="flex-row pt-3">
-										<span>Motiv: </span>
-									</div>
-									<div className="flex-row pt-3">
-										<span>Lokace: </span>
-									</div>
+				</div>
+				<div className="flex-row">
+					<div className="flex-col">
+						<div className="flex-row pt-2 title-2">
+							<span className="title-1">{t('settings.applicationSettings')}</span>
+						</div>
+						<div className="flex-row">
+							<div className="flex-col">
+								<div className="flex-row pt-2">
+									<span>{t('settings.chartType')}: </span>
 								</div>
-								<div className="flex-col ml-3">
-									<div className="flex-row pt-1">
-										<div onClick={() => updateToggleState('chartType')}>
-											<ToggleButton
-												item="chartType"
-												toggleState={chartTypeState}
-												values={[{ label: 'lineGraph' }, { label: 'barGraph' }]}
-											/>
-										</div>
-									</div>
-									<div className="flex-row pt-1">
-										<div onClick={() => updateToggleState('language')}>
-											<ToggleButton
-												item="language"
-												toggleState={languageState}
-												values={[{ label: 'flagCZ' }, { label: 'flagGB' }]}
-											/>
-										</div>
-									</div>
-									<div className="flex-row pt-1">
-										<div onClick={() => updateToggleState('theme')}>
-											<ToggleButton
-												item="theme"
-												toggleState={themeState}
-												values={[{ label: 'lightTheme' }, { label: 'darkTheme' }]}
-											/>
-										</div>
-									</div>
-									<div
-										className="flex-row pt-1"
-										onChange={(data: any) => updateInputData('location', data)}
-									>
-										<EditableField
-											name="city"
-											defaultValue={location}
-											active={true}
-											width={40}
-											dataType="string"
+								<div className="flex-row pt-3">
+									<span>{t('settings.language')}: </span>
+								</div>
+								<div className="flex-row pt-3">
+									<span>{t('settings.theme')}: </span>
+								</div>
+								<div className="flex-row pt-3">
+									<span>{t('settings.location')}: </span>
+								</div>
+							</div>
+							<div className="flex-col ml-3">
+								<div className="flex-row pt-1">
+									<div onClick={() => updateToggleState('chartType')}>
+										<ToggleButton
+											item="chartType"
+											toggleState={chartTypeState}
+											values={[{ label: 'lineGraph' }, { label: 'barGraph' }]}
 										/>
 									</div>
 								</div>
+								<div className="flex-row pt-1">
+									<div onClick={() => updateToggleState('language')}>
+										<ToggleButton
+											item="language"
+											toggleState={languageState}
+											values={[{ label: 'flagCZ' }, { label: 'flagGB' }]}
+										/>
+									</div>
+								</div>
+								<div className="flex-row pt-1">
+									<div onClick={() => updateToggleState('theme')}>
+										<ToggleButton
+											item="theme"
+											toggleState={themeState}
+											values={[{ label: 'lightTheme' }, { label: 'darkTheme' }]}
+										/>
+									</div>
+								</div>
+								<div
+									className="flex-row pt-1"
+									onChange={(data: any) => updateInputData('location', data)}
+								>
+									<EditableField
+										name="city"
+										defaultValue={location}
+										active={true}
+										width={40}
+										dataType="string"
+									/>
+								</div>
 							</div>
 						</div>
 					</div>
-					<div className="flex-row mt-5">
-						<div className="flex-col">
-							<div onClick={() => buttonsState && handleCancelButton()}>
-								<CancelButton active={buttonsState} />
-							</div>
-						</div>
-						<div className="flex-col ml-3">
-							<div onClick={() => buttonsState && createSettings()}>
-								<SaveButton active={buttonsState} />
-							</div>
+				</div>
+				<div className="flex-row mt-5">
+					<div className="flex-col">
+						<div onClick={() => buttonsState && handleCancelButton()}>
+							<CancelButton active={buttonsState} />
 						</div>
 					</div>
-				</CardContent>
+					<div className="flex-col ml-3">
+						<div onClick={() => buttonsState && createSettings()}>
+							<SaveButton active={buttonsState} />
+						</div>
+					</div>
+				</div>
 			</Card>
-		</div>
+		</div >
 	)
 }

@@ -6,19 +6,20 @@ create table if not exists public.settings
     ID                  serial
         constraint settings_pk
             primary key,
-    limits_trigger      boolean default true  not null,
-    water_level_limit   float,
-    water_amount_limit  float,
-    moist_limit         float,
-    scheduled_trigger   boolean default false not null,
-    hour_range          int,
-    location            varchar               not null,
-    irrigation_duration int                   not null,
-    chart_type          boolean default false not null,
-    language            boolean default false not null,
-    theme               boolean default false not null,
-    lat                 float,
-    lon                 float
+    limits_trigger          boolean default true  not null,
+    water_level_limit       float,
+    water_amount_limit      float,
+    moist_limit             float,
+    scheduled_trigger       boolean default false not null,
+    hour_range              int,
+    location                varchar               not null,
+    irrigation_duration     int                   not null,
+    chart_type              boolean default false not null,
+    language                boolean default false not null,
+    theme                   boolean default false not null,
+    lat                     float,
+    lon                     float,
+    default_water_amount    float
 );
 
 create unique index settings_id_uindex

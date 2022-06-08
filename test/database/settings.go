@@ -13,9 +13,10 @@ func (db *DB) CreateSettings(ctx context.Context, input *model.NewSettings) *mod
 		log.Println(err)
 	}
 	return &model.Setting{
+		ID:                 input.ID,
 		LimitsTrigger:      input.LimitsTrigger,
 		WaterLevelLimit:    input.WaterLevelLimit,
-		WaterAmountLimit:   input.WaterAmountLimit,
+		DefaultWaterAmount: input.DefaultWaterAmount,
 		MoistLimit:         input.MoistLimit,
 		ScheduledTrigger:   input.ScheduledTrigger,
 		HourRange:          input.HourRange,
@@ -26,6 +27,7 @@ func (db *DB) CreateSettings(ctx context.Context, input *model.NewSettings) *mod
 		Theme:              input.Theme,
 		Lat:                input.Lat,
 		Lon:                input.Lon,
+		WaterAmountLimit:   input.WaterAmountLimit,
 	}
 }
 
@@ -39,8 +41,27 @@ func (db *DB) GetSettings(ctx context.Context) []*model.Setting {
 }
 
 func (db *DB) UpdateSettings(ctx context.Context, input *model.NewSettings) *model.Setting {
-	values := db.DB.NewValues(input)
-	_, err := db.DB.NewUpdate().With("_data", values).Model(input).TableExpr("_data").Bulk().Where("settings.id = 1").Exec(ctx)
+	// values := db.DB.NewValues(input)
+	// modl := make([]*model.Setting, 0)
+	wellthisiskindadumb := 0
+	settings := model.Setting{
+		ID:                 &wellthisiskindadumb,
+		LimitsTrigger:      input.LimitsTrigger,
+		WaterLevelLimit:    input.WaterLevelLimit,
+		WaterAmountLimit:   input.WaterAmountLimit,
+		MoistLimit:         input.MoistLimit,
+		ScheduledTrigger:   input.ScheduledTrigger,
+		HourRange:          input.HourRange,
+		Location:           input.Location,
+		IrrigationDuration: input.IrrigationDuration,
+		ChartType:          input.ChartType,
+		Language:           input.Language,
+		Theme:              input.Theme,
+		Lat:                input.Lat,
+		Lon:                input.Lon,
+		DefaultWaterAmount: input.DefaultWaterAmount,
+	}
+	_, err := db.DB.NewUpdate().Model(&settings).Where("id = ?", 0).Exec(ctx)
 	if err != nil {
 		log.Println(err)
 	}
@@ -58,14 +79,15 @@ func (db *DB) UpdateSettings(ctx context.Context, input *model.NewSettings) *mod
 		Theme:              input.Theme,
 		Lat:                input.Lat,
 		Lon:                input.Lon,
+		DefaultWaterAmount: input.DefaultWaterAmount,
 	}
 }
 
 // GetSettingByColumn
 // usage:
-//	var kokote = []string{"limits_trigger", "water_level_limit", "water_amount_limit", "moist_limit", "scheduled_trigger"}
-//	kokotiny := db.GetSettingByColumn(kokote)
-//	fmt.Println(*kokotiny.LimitsTrigger)
+//	var columns = []string{"limits_trigger", "water_level_limit", "water_amount_limit", "moist_limit", "scheduled_trigger"}
+//	data := db.GetSettingByColumn(columns)
+//	fmt.Println(*data.LimitsTrigger)
 func (db *DB) GetSettingByColumn(columns []string) model.Setting {
 	var settings []model.Setting
 	err := db.DB.NewSelect().Model(&settings).Column(columns...).Limit(1).Scan(context.Background())
@@ -88,6 +110,7 @@ func (db *DB) GetSettingByColumn(columns []string) model.Setting {
 		Theme:              settingsRow.Theme,
 		Lat:                settingsRow.Lat,
 		Lon:                settingsRow.Lon,
+		DefaultWaterAmount: settingsRow.DefaultWaterAmount,
 	}
 }
 
@@ -95,7 +118,7 @@ func (db *DB) GetSettingByColumn(columns []string) model.Setting {
 // checks if settings are already present
 func (db *DB) CheckSettings() (isSettingsPresent bool) {
 	var s []model.Setting
-	err := db.DB.NewSelect().Model(s).Limit(1).Scan(context.Background())
+	err := db.DB.NewSelect().Model(&s).Limit(1).Scan(context.Background())
 	if err != nil {
 		log.Println(err)
 	}

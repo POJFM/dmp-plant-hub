@@ -19,6 +19,12 @@ type Measurement struct {
 	WithIrrigation *bool    `json:"with_irrigation"`
 }
 
+type NewIrrigation struct {
+	WaterLevel     *float64 `json:"water_level"`
+	WaterAmount    *float64 `json:"water_amount"`
+	WaterOverdrawn *float64 `json:"water_overdrawn"`
+}
+
 type NewMeasurement struct {
 	Hum            *float64 `json:"hum"`
 	Temp           *float64 `json:"temp"`
@@ -27,6 +33,7 @@ type NewMeasurement struct {
 }
 
 type NewSettings struct {
+	ID                 *int     `json:"id"`
 	LimitsTrigger      *bool    `json:"limits_trigger"`
 	WaterLevelLimit    *float64 `json:"water_level_limit"`
 	WaterAmountLimit   *float64 `json:"water_amount_limit"`
@@ -40,6 +47,7 @@ type NewSettings struct {
 	Theme              *bool    `json:"theme"`
 	Lat                *float64 `json:"lat"`
 	Lon                *float64 `json:"lon"`
+	DefaultWaterAmount *float64 `json:"default_water_amount"`
 }
 
 type Setting struct {
@@ -57,4 +65,5 @@ type Setting struct {
 	Theme              *bool    `json:"theme"`
 	Lat                *float64 `json:"lat"`
 	Lon                *float64 `json:"lon"`
+	DefaultWaterAmount *float64 `json:"default_water_amount"`
 }

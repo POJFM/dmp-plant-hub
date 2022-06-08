@@ -14,14 +14,14 @@ services:
       - "docker.env"
     restart: always
   client:
-    image: "tassilobalbo/planthub-client:latest"
+    image: "orexinmaster/planthub-client:latest"
     container_name: planthub-client
     user: root
     ports:
-      - "80:80"
+      - "3000:3000"
     restart: unless-stopped
   server:
-    image: "tassilobalbo/planthub-server:latest"
+    image: "orexinmaster/planthub-server:latest"
     container_name: planthub-server
     user: root
     ports:
@@ -29,7 +29,8 @@ services:
     privileged: true
     volumes:
       - /sys:/sys
-      - ./server/.env:/app/.env
+      #- ./server/.env:/app/.env
+      - ./test/.env:/app/.env
     devices:
       - /dev/mem:/dev/mem
       - /dev/ttyUSB0:/dev/ttyUSB0

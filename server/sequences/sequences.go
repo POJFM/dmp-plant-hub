@@ -101,14 +101,14 @@ func CheckingSequence(db *db.DB, sensei *sens.Sensors, flowMeasure, pumpFlow *fl
 		waterAmount = float64(*irrigationHistory[len(irrigationHistory)-1].WaterAmount - waterOverdrawn)
 	}
 
-	mid.LoadLiveNotify("Kontrola Nádrže", "inProgress", "Probíhá kontrola nádrže")
+	mid.LoadLiveNotify("tankCheck", "inProgress", "checkInProgress")
 
 	time.Sleep(3000 * time.Millisecond)
 
 	log.Println("namerena nadrz: ", sensei.ReadWaterLevel())
 
 	if sensei.ReadWaterLevel() > *settings.WaterLevelLimit {
-		mid.LoadLiveNotify("Doplňte nádrž", "physicalHelpRequired", "Nádrž je prázdná")
+		mid.LoadLiveNotify("refillTank", "physicalHelpRequired", "tankIsEmpty")
 
 		log.Println("Water tank limit level reached...🚫🤖🚫")
 
@@ -123,9 +123,9 @@ func CheckingSequence(db *db.DB, sensei *sens.Sensors, flowMeasure, pumpFlow *fl
 		waterAmount = *settings.DefaultWaterAmount
 	}
 
-	waterLevel := fmt.Sprintf("V nádrži zbývá %fcm vody", sensei.ReadWaterLevel())
+	waterLevel := fmt.Sprintf("waterLeft-%f", sensei.ReadWaterLevel())
 	// Dodělat na water amount v litrech
-	mid.LoadLiveNotify("Kontrola Nádrže", "finished", waterLevel)
+	mid.LoadLiveNotify("tankCheck", "finished", waterLevel)
 
 	newWaterLevel := sensei.ReadWaterLevel()
 

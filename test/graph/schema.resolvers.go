@@ -23,6 +23,10 @@ func (r *mutationResolver) UpdateSettings(ctx context.Context, input *model.NewS
 	return r.DB.UpdateSettings(ctx, input), nil
 }
 
+func (r *mutationResolver) CreateIrrigation(ctx context.Context, input *model.NewIrrigation) (*model.IrrigationHistory, error) {
+	return r.DB.CreateIrrigation(ctx, input), nil
+}
+
 func (r *queryResolver) GetMeasurements(ctx context.Context) ([]*model.Measurement, error) {
 	return r.DB.GetMeasurements(ctx), nil
 }
